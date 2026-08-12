@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.36631.11
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "EGGISNEW", ".", "{40EC10AC-7442-4816-B93D-018F156E9C18}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_63539"
+		Debug.AspNetCompiler.PhysicalPath = "..\..\..\..\..\projects\EGGISNEW\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_63539\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_63539"
+		Release.AspNetCompiler.PhysicalPath = "..\..\..\..\..\projects\EGGISNEW\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_63539\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "63539"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{40EC10AC-7442-4816-B93D-018F156E9C18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40EC10AC-7442-4816-B93D-018F156E9C18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5DA75B35-4243-4BF8-B03C-6BE6FA6EAFB1}
+	EndGlobalSection
+EndGlobal
