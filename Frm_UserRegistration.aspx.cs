@@ -1,20 +1,17 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.SqlClient;
-using System.Collections;
-using System.Web.Security;
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
-using System.Globalization;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 
 public partial class Frm_UserRegistration : System.Web.UI.Page
 {
-    clsMain objMain = new clsMain(); 
+    clsMain objMain = new clsMain();
     Password objPass = new Password();
     Comman objComman = new Comman();
     public DataTable dtUserDeatils;
@@ -25,39 +22,38 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
         if (Convert.ToString(Session["username"]) != "")
         {
             if (!IsPostBack)
-        {
-            fillleftgrid();
-          //  showcontrols();
-            b.Visible = false;
-            c.Visible = false;
-            d.Visible = false;
-            
-           ec.Visible = false;
-            M1.Visible = false;
-            M2.Visible = false;
-                M3.Visible = false;
+            {
+                fillleftgrid();
+                //  showcontrols();
+                b.Visible = false;
+                c.Visible = false;
+                d.Visible = false;
+
+                ec.Visible = false;
+                M1.Visible = false;
+                M2.Visible = false;
                 fillstate();
-            fillrole();
-            txtuname.Text = "";
-            //fillemployee();
-            ddlstate.Enabled = false;
-            
-            ddldistrict.Enabled = false;
-            ddlemployee.Enabled = false;
-            ddlblbock.Enabled = false;
+                fillrole();
+                txtuname.Text = "";
+                //fillemployee();
+                ddlstate.Enabled = false;
 
-            txtFristName.Enabled = false;
-            
-            rblExternal.Enabled = false;
-            rblInternal.Enabled = false;
-            txtuname.Enabled = true;
+                ddldistrict.Enabled = false;
+                ddlemployee.Enabled = false;
+                ddlblbock.Enabled = false;
 
-            txtuname.Enabled = false;
-            txtpw.Enabled = false;
-            txtcpassword.Enabled = false;
-            ddllevel.Enabled = false;
-     
-        }
+                txtFristName.Enabled = false;
+
+                rblExternal.Enabled = false;
+                rblInternal.Enabled = false;
+                txtuname.Enabled = true;
+
+                txtuname.Enabled = false;
+                txtpw.Enabled = false;
+                txtcpassword.Enabled = false;
+                ddllevel.Enabled = false;
+
+            }
         }
         else
         {
@@ -68,13 +64,13 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
     protected void btnDelete_Click(object sender, EventArgs e)
     {
 
-        int icount = objMain.DeleteUserActivity(txtuname.Text,2);
-            if (icount > 0)
-            {
-                ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Delete Successfully')</script>", false);
-                
-            }
-       
+        int icount = objMain.DeleteUserActivity(txtuname.Text, 2);
+        if (icount > 0)
+        {
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Delete Successfully')</script>", false);
+
+        }
+
 
     }
     protected void OOD2Dtargetmet_Click(object sender, EventArgs e)
@@ -82,14 +78,9 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
         LinkButton bt = (LinkButton)sender;
         GridViewRow gvr = (GridViewRow)bt.NamingContainer;
         string values = (gvr.FindControl("lblCategory") as LinkButton).Text;
-        string StudentTSInsertQuery = " Update mstUser set AndroidID='' where Username ='" + values + "'";
-        bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
-        if (UpdateTs == true)
-        {
-            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved sucessfully')</script>", false);
 
 
-        }
+        //}
 
 
     }
@@ -110,16 +101,16 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
 
         }
 
-   
- 
+
+
         Int32 Icoutn = 0;
         SqlParameter[] cmdParameters = new SqlParameter[]
-		{
-			new SqlParameter("@level", txtuname.Text),
+        {
+            new SqlParameter("@level", txtuname.Text),
             new SqlParameter("@ActiveStatus ", iActivity),
            new SqlParameter("@ActivemodifyBy ", Session["username"].ToString())
-			
-		};
+
+        };
         Icoutn = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Sp__GetUseMaterDelete", cmdParameters);
 
         if (Icoutn > 0)
@@ -142,7 +133,7 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
             string conditionsCLuster = "";
             if (Session["user_level"].ToString() == "1")
             {
-              
+
             }
 
             else if (Session["user_level"].ToString() == "79")
@@ -160,12 +151,12 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
             }
             else if (Session["user_level"].ToString() == "94")
             {
-                
+
             }
             else
             {
-                conditions += " and DistrictCode='" + Session["DistrictCode"].ToString() + "' ";
-               
+                conditions += " and DistrictCode='" + Session["DistrictCode"].ToString() + "' ";			 
+
 
             }
             if (ddlType.SelectedIndex > 0)
@@ -182,12 +173,12 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
 
 
             DataTable dtuser = null;
-          
-         
-              
-                dtuser = Select_All_DataNew("mstuser", "*", conditions, "UserID", "ASC");
 
-            
+
+
+            dtuser = Select_All_DataNew("mstuser", "*", conditions, "UserID", "ASC");
+
+
 
 
             if (dtuser.Rows.Count > 0)
@@ -210,30 +201,22 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
         }
 
     }
-   
-   
+
+
     protected void ddlstate_selectindexchnaged(object sender, EventArgs e)
     {
         filldistrict();
-  
+
     }
     protected void lstState_selectindexchnaged(object sender, EventArgs e)
     {
         filldistrict();
-  
-    }
-    protected void lstDist_selectindexchnaged(object sender, EventArgs e)
-    {
-        filldistrictBlockmuli();
 
     }
+
     protected void ddldistrict_selectindexchnaged(object sender, EventArgs e)
     {
         fillblock();
-        if (lblBlockMul.Visible==true)
-        {
-            filldistrictBlockmuli();
-        }
     }
 
     protected void ddlblock_selectindexchnaged(object sender, EventArgs e)
@@ -243,7 +226,7 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
 
     public void getvillagedata()
     {
-        
+
         string vill = "";
         if (ddlstate.SelectedIndex > 0)
         {
@@ -278,7 +261,7 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
 
     }
     //ddlemployee
-    
+
     public void fillstate()
     {
         SqlParameter[] par1 = new SqlParameter[]
@@ -289,7 +272,7 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
                        new SqlParameter("@Year", "2024"),
               };
         DataTable dtstate = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "rptLoadAllState", par1);
-       // DataTable dtstate = Select_All_Data("mst1State", "*", "", "", "");
+        // DataTable dtstate = Select_All_Data("mst1State", "*", "", "", "");
         if (dtstate.Rows.Count > 0)
         {
             ddlstate.DataSource = dtstate;
@@ -310,44 +293,44 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
         try
         {
 
-      
-        string dist = "";
 
-        if (ddlstate.SelectedIndex > 0)
-        {
+            string dist = "";
 
-        
-            
-                dist = "Statecode='" + ddlstate.SelectedValue.ToString() + "' and FYear ='"+ Session["FinYear"] + "'";
-            
-        }
-
-
-            string Statecode = "";
-            if (lstState.Visible == true)
-        {
-          
-            foreach (ListItem item in lstState.Items)
+            if (ddlstate.SelectedIndex > 0)
             {
-                if (item.Selected)
-                {
-
-                    Statecode += "'" + item.Value + "'" + ",";
 
 
-                }
+
+                dist = "Statecode='" + ddlstate.SelectedValue.ToString() + "' and FYear ='" + Session["FinYear"] + "'";
+
             }
-            //if (Session["user_level"].ToString() == "1")
-            //{
-            //    if (Statecode.Length > 0)
-            //    {
-            //        Statecode = Statecode.Substring(0, Statecode.LastIndexOf(","));
 
-            //        dist = "Statecode in(" + Statecode + ") and FYear in('2017-2018','2018-2019')";
-            //    }
-            //}
-            //else
-            //{
+
+
+            if (lstState.Visible == true)
+            {
+                string Statecode = "";
+                foreach (ListItem item in lstState.Items)
+                {
+                    if (item.Selected)
+                    {
+
+                        Statecode += "'" + item.Value + "'" + ",";
+
+
+                    }
+                }
+                //if (Session["user_level"].ToString() == "1")
+                //{
+                //    if (Statecode.Length > 0)
+                //    {
+                //        Statecode = Statecode.Substring(0, Statecode.LastIndexOf(","));
+
+                //        dist = "Statecode in(" + Statecode + ") and FYear in('2017-2018','2018-2019')";
+                //    }
+                //}
+                //else
+                //{
 
                 if (Statecode.Length > 0)
                 {
@@ -355,9 +338,9 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
 
                     dist = "Statecode in(" + Statecode + ") and FYear ='" + Session["FinYear"] + "'";
                 }
-            //}
-        }
-        DataTable dtdist = null;
+                //}
+            }
+            DataTable dtdist = null;
 
 
 
@@ -367,8 +350,8 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
             //}
             //else
             //{
-            
-                dtdist = Select_All_Data("mst2District", "DistrictCode,DistrictName,Statecode", dist, "DistrictName", "ASC");
+
+            dtdist = Select_All_Data("mst2District", "DistrictCode,DistrictName,Statecode", dist, "DistrictName", "ASC");
             //}
             if (dtdist.Rows.Count > 0)
             {
@@ -392,73 +375,11 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
                 ViewState["Dist"] = dtdist;
 
             }
-        
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            throw ex;
-        }
-
-    }
-
-    public void filldistrictBlockmuli()
-    {
-        try
-        {
-
-
-            string dist = "";
-
-            if (ddlstate.SelectedIndex > 0)
-            {
-
-
-
-                dist = "Statecode='" + ddlstate.SelectedValue.ToString() + "' and FYear ='" + Session["FinYear"] + "'";
-
-            }
-
-
-
-          
-
-                if (ddldistrict.SelectedIndex > 0)
-                {
-    
-
-                    dist += " and Districtcode in('" + ddldistrict.SelectedValue + "') and FYear ='" + Session["FinYear"] + "'";
-                }
-                //}
-    
-            DataTable dtdist = null;
-
-
-
-            //if (Session["user_level"].ToString() == "1")
-            //{
-            //    dtdist = Select_All_Data("mst2District", " DistrictName +' ('+ Fyear +')'  as   DistrictName ,DistrictCode", dist, "DistrictName", "ASC");
-            //}
-            //else
-            //{
-
-            dtdist = Select_All_Data("mst3Block", " BlockCode,Blockname,Districtcode", dist, "Blockname", "ASC");
-            //}
-            if (dtdist.Rows.Count > 0)
-            {
-
-
-                lblBlockMul.DataSource = dtdist;
-                lblBlockMul.DataTextField = "Blockname";
-                lblBlockMul.DataValueField = "BlockCode";
-                lblBlockMul.DataBind();
-
-                ViewState["MulBlock"] = dtdist;
-
-            }
-        }
-        catch (Exception ex)
-        {
-            throw ex;
+            //throw;
+            throw;
         }
 
     }
@@ -496,7 +417,7 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
 
         if (Session["user_level"].ToString() == "1")
         {
-           
+
 
         }
         else
@@ -532,22 +453,23 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
             string sortbycondi = Sortcondition.Length > 0 ? "" + Sortcondition : "";
             string FieldName = TFieldName.Length > 0 ? TFieldName : "";
             SqlParameter[] paramv = new SqlParameter[]
-                    {                            
+                    {
                             new SqlParameter("@TableName",TableName),
                             new SqlParameter("@Condition",WConditions),
                             new SqlParameter("@OrderbyvalueMem",OrderbyvalueMem),
-                            new SqlParameter("@sortbycondi",sortbycondi), 
-                            new SqlParameter("@FieldName",FieldName),                            
-                        
+                            new SqlParameter("@sortbycondi",sortbycondi),
+                            new SqlParameter("@FieldName",FieldName),
+
                     };
 
             DataSet ds = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Get_Select_AllTableData", paramv);
             dtcombo = ds.Tables[0] as DataTable;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             //string mmsg = ex.Message; showMessages(mmsg);
             //showMessages("(SelectAllData)  " + mmsg);
+            throw;
         }
         return dtcombo;
     }
@@ -562,22 +484,23 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
             string sortbycondi = Sortcondition.Length > 0 ? "" + Sortcondition : "";
             string FieldName = TFieldName.Length > 0 ? TFieldName : "";
             SqlParameter[] paramv = new SqlParameter[]
-                    {                            
+                    {
                             new SqlParameter("@TableName",TableName),
                             new SqlParameter("@Condition",WConditions),
                             new SqlParameter("@OrderbyvalueMem",OrderbyvalueMem),
-                            new SqlParameter("@sortbycondi",sortbycondi), 
-                            new SqlParameter("@FieldName",FieldName),                            
-                        
+                            new SqlParameter("@sortbycondi",sortbycondi),
+                            new SqlParameter("@FieldName",FieldName),
+
                     };
 
             DataSet ds = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Get_Select_AllTableData", paramv);
             dtcombo = ds.Tables[0] as DataTable;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             //string mmsg = ex.Message; showMessages(mmsg);
             //showMessages("(SelectAllData)  " + mmsg);
+            throw;
         }
         return dtcombo;
     }
@@ -587,14 +510,13 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
     {
 
         if (ddllevel.SelectedIndex > 0)
-        
+
         {
             string Cond2 = "Role_Level ='" + ddllevel.SelectedValue + "'";
             DataTable dtstate = Select_All_Data("Mstuserrole", "RID", Cond2, "RID", "");
-            Int32 RoleLevel =Convert.ToInt32( dtstate.Rows[0]["RID"].ToString());
+            Int32 RoleLevel = Convert.ToInt32(dtstate.Rows[0]["RID"].ToString());
             M1.Visible = false;
             M2.Visible = false;
-            M3.Visible = false;
             divBas.Visible = false;
             if (RoleLevel == 1)
             {
@@ -648,52 +570,35 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
 
             }
 
-            if (RoleLevel == 6)
-            {
-
-                b.Visible = true;
-                c.Visible = true;
-                d.Visible = false;
-                ec.Visible = false;
-
-
-            }
-
 
             DataTable dtRoleLevel = Select_All_Data("Mstusermultiplerole", "RID", Cond2, "RID", "");
             if (dtRoleLevel.Rows.Count > 0)
             {
                 Int32 RoleLevelNee = Convert.ToInt32(dtRoleLevel.Rows[0]["RID"].ToString());
-                if (RoleLevelNee == 6)
-                {
-                }
-                else
-                {
-                    b.Visible = false;
-                    c.Visible = false;
-                    d.Visible = false;
-                    ec.Visible = false;
-                    divBas.Visible = false;
-                }
+
+                b.Visible = false;
+                c.Visible = false;
+                d.Visible = false;
+                ec.Visible = false;
+                divBas.Visible = false;
                 if (RoleLevelNee == 1)
                 {
-                   
+
                     M1.Visible = true;
-                  
+
 
 
                 }
                 if (RoleLevelNee == 2)
                 {
-                 
+
                     M1.Visible = true;
                     M2.Visible = true;
-                    M3.Visible = false;
                     divBas.Visible = true;
                     foreach (ListItem item in lstState.Items)
                     {
                         item.Selected = false;
-                      
+
                     }
                     lstDistrict.Items.Clear();
                 }
@@ -712,24 +617,9 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
                 if (RoleLevel == 5)
                 {
 
-                 
 
 
-                }
-                if (RoleLevelNee == 6)
-                {
 
-                    M1.Visible = false;
-                    M2.Visible = false;
-                    M3.Visible = true;
-                    divBas.Visible = false;
-                    foreach (ListItem item in lstState.Items)
-                    {
-                        item.Selected = false;
-
-                    }
-                    lstDistrict.Items.Clear();
-                    lblBlockMul.Items.Clear();
                 }
 
             }
@@ -742,7 +632,7 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
             //    c.Visible = true;
             //    d.Visible = true;
             //    ec.Visible = false;
-               
+
             //}
             //else if (ddllevel.SelectedValue == "39" || ddllevel.SelectedValue == "25"  || ddllevel.SelectedValue == "61" || ddllevel.SelectedValue == "60" || ddllevel.SelectedValue == "30" || ddllevel.SelectedValue == "29")
             //{
@@ -755,7 +645,7 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
             //    c.Visible = true;
             //    d.Visible = false;
             //    ec.Visible = false;
-              
+
 
             //}
             //else if (ddllevel.SelectedValue == "59")
@@ -789,15 +679,15 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
             {
                 SqlParameter[] pa = new SqlParameter[]
                  {
-                 new SqlParameter("@UserName", dtEmp.Rows[0]["EmployeeID"].ToString() ),   
-        
+                 new SqlParameter("@UserName", dtEmp.Rows[0]["EmployeeID"].ToString() ),
+
                  };
                 DataSet ds = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "checkUserAvailability", pa);
                 if (ds.Tables[0].Rows.Count > 0)
                 {
                     ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('User Already Exist!.')</script>", false);
                     txtFristName.Text = "";
-                  
+
                     txtuname.Text = "";
                     ddlemployee.SelectedIndex = 0;
                 }
@@ -805,21 +695,21 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
                 else
                 {
                     txtFristName.Text = dtEmp.Rows[0]["firstname"].ToString();
-                    
+
                     txtuname.Text = dtEmp.Rows[0]["EmployeeID"].ToString();
                 }
             }
             else
             {
                 txtFristName.Text = "";
-              
+
                 txtuname.Text = "";
             }
         }
         else
         {
             txtFristName.Text = "";
-           
+
             txtuname.Text = "";
         }
     }
@@ -899,13 +789,13 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
         }
         else
         {
-          
-                cond = " DistrictCode='" + Session["DistrictCode"].ToString() + "' ";
-            
+
+            cond = " DistrictCode='" + Session["DistrictCode"].ToString() + "' ";
+
             dtuser = Select_All_Data("mstuser", "top 50 *", "", "UserID", "desc");
-  
+
         }
-       
+
 
         if (dtuser.Rows.Count > 0)
         {
@@ -945,7 +835,7 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
 
                 ViewState["Save"] = "Update";
                 fillcontrols(id);
-               // showcontrols();
+                // showcontrols();
                 ddlstate.Enabled = true;
                 rblExternal.Enabled = false;
                 rblInternal.Enabled = false;
@@ -964,19 +854,19 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
 
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-
+            throw;
         }
     }
-   
+
     protected void fillcontrols(int UserID)
     {
         string condition = "";
         condition = "UserID=" + UserID + "";
         DataTable dt = Select_All_Data("mstuser", "*,case  when ActiveStatus=2 then  isnull(DATEDIFF(month, ActivemodifyDate,getdate()),0) else 0 end as fDay", condition, "", "");
 
-     
+
         if (dt.Rows.Count > 0)
         {
             if (dt.Rows[0]["UserType"].ToString() == "2")
@@ -1005,26 +895,26 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
             }
             txtuname.Text = dt.Rows[0]["UserName"].ToString();
             txtFristName.Text = dt.Rows[0]["FristName"].ToString();
-          
+
             fillemployeeNew();
             string condition1 = "UserName='" + dt.Rows[0]["UserName"].ToString().Trim() + " '";
-            DataTable dtMultipul = Select_All_Data("MstusermultipleDist inner join mst2District on mst2District.DistrictCode=[MstusermultipleDist].DistrictCode ", "mst2District.DistrictCode,mst2District.StateCode ,blockcode", condition1, "", "");
-           
+            DataTable dtMultipul = Select_All_Data("MstusermultipleDist inner join mst2District on mst2District.DistrictCode=[MstusermultipleDist].DistrictCode ", "mst2District.DistrictCode,mst2District.StateCode ", condition1, "", "");
+
 
             txtImi.Text = dt.Rows[0]["IMEINo"].ToString();
             txtAndroidID.Text = dt.Rows[0]["AndroidID"].ToString();
 
             if (dt.Rows[0]["ActiveStatus"].ToString() == "2")
-               {
-                   lnkActivate.Visible = true;
-                   lnkActivate.Text = "DeActive User";
-               }
-               else
-               {
+            {
+                lnkActivate.Visible = true;
+                lnkActivate.Text = "DeActive User";
+            }
+            else
+            {
 
-                   lnkActivate.Visible = true;
-                   lnkActivate.Text = "Active User";
-               }
+                lnkActivate.Visible = true;
+                lnkActivate.Text = "Active User";
+            }
 
             if (Convert.ToString(Session["username"]) == "PMSAdmin" || Convert.ToString(Session["username"]) == "SuperAdmin" || Convert.ToString(Session["username"]) == "EGE7557")
             {
@@ -1036,15 +926,15 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
                     lnkActivate.Visible = false;
                 }
             }
-                //if (Convert.ToInt32(ddllevel.SelectedValue) == 24)
-                //{
-                //    IM.Visible = true;
-                //}
-                //else
-                //{
-                //    IM.Visible = false;
-                //}
-                if (dt.Rows[0]["UserOnline"].ToString() == "True")
+            //if (Convert.ToInt32(ddllevel.SelectedValue) == 24)
+            //{
+            //    IM.Visible = true;
+            //}
+            //else
+            //{
+            //    IM.Visible = false;
+            //}
+            if (dt.Rows[0]["UserOnline"].ToString() == "True")
             {
                 chkOnline.Checked = true;
             }
@@ -1090,7 +980,7 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
                 ddlstate.SelectedIndex = -1;
             }
 
-            
+
             filldistrict();
             if (dt.Rows[0]["Districtcode"].ToString() != "")
             {
@@ -1108,12 +998,8 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
             {
                 ddldistrict.SelectedIndex = -1;
             }
-          
-            if (lblBlockMul.Visible==true)
-            {
-                ddldistrict.SelectedValue = dt.Rows[0]["Districtcode"].ToString();
 
-            }
+
             fillblock();
             if (dtMultipul.Rows.Count > 0)
             {
@@ -1156,22 +1042,6 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
                 {
                     ddlBaseDist.SelectedIndex = -1;
                 }
-                lstDist_selectindexchnaged(lstDistrict, null);
-
-                for (int r = 0; r < dtMultipul.Rows.Count; r++)
-                {
-
-                    foreach (ListItem item in lblBlockMul.Items)
-                    {
-                        if (item.Value.ToString() == dtMultipul.Rows[r]["Blockcode"].ToString())
-                        {
-
-                            item.Selected = true;
-
-
-                        }
-                    }
-                }
             }
             if (dt.Rows[0]["BlockCode"].ToString() != "")
             {
@@ -1189,19 +1059,19 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
             }
             else
             {
-                ddlCluster.SelectedValue = dt.Rows[0]["VillageCode"].ToString();
-               
+                ddlCluster.SelectedValue = dt.Rows[0]["VillageCode"].ToString();	   
+
             }
 
             //if ((dt.Rows[0]["VillageCode"].ToString() != "") || (dt.Rows[0]["VillageCode"].ToString() != null))
             //{
             //    //getvillagedata();
             //    //string vilage = Convert.ToString(dt.Rows[0]["VillageCode"].ToString());
-                  
+
             //    //  vilage = vilage.Replace("'", "");
 
             //    //string[] str = vilage.Split(',');
-               
+
             //    //for (int i = 0; i <= chkvillage.Items.Count - 1; i++)
             //    //{
             //    //    for (int j = 0; j <= str.Length-1 ; j++)
@@ -1228,27 +1098,27 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
     {
         demp.Visible = true;
         txtFristName.Enabled = false;
-       
+
         ddllevel.SelectedIndex = -1;
         ddldistrict.SelectedIndex = -1;
         ddlblbock.SelectedIndex = -1;
         ddlemployee.SelectedIndex = -1;
         txtFristName.Text = "";
-       
+
         txtuname.Text = "";
     }
     protected void rblExternal_CheckedChanged(object sender, EventArgs e)
     {
         demp.Visible = false;
         txtFristName.Enabled = true;
-      
+
         ddllevel.SelectedIndex = -1;
         ddldistrict.SelectedIndex = -1;
         ddlblbock.SelectedIndex = -1;
         ddlemployee.SelectedIndex = -1;
         txtFristName.Text = "";
         txtuname.Text = "Auto generated number";
-      
+
     }
     protected void btn_Add_click(object sender, EventArgs e)
     {
@@ -1260,15 +1130,14 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
         ddllevel.SelectedIndex = -1;
         ddldistrict.SelectedIndex = -1;
         ddlblbock.SelectedIndex = -1;
-       // chkvillage.SelectedIndex = -1;
+        // chkvillage.SelectedIndex = -1;
         b.Visible = false;
         c.Visible = false;
         d.Visible = false;
 
         ec.Visible = false;
         M1.Visible = false;
-        M2.Visible = false;
-        M3.Visible = false;
+        M2.Visible = false;						   
         divBas.Visible = false;
         ViewState["Save"] = "Save";
         demp.Visible = true;
@@ -1291,7 +1160,7 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
         ddlemployee.Enabled = true;
         ddlblbock.Enabled = true;
 
-       // chkvillage.Enabled = true;
+        // chkvillage.Enabled = true;
         txtuname.Enabled = false;
         txtpw.Enabled = true;
         txtcpassword.Enabled = true;
@@ -1314,7 +1183,7 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
 
     private string GetCheckBoxListSelection(CheckBoxList chbx)
     {
-        
+
         ArrayList cblSelections = new ArrayList();
         string a = "";
 
@@ -1327,7 +1196,7 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
             }
         }
         return a;
-       
+
     }
 
     public static byte[] HashPassword(string password)
@@ -1342,15 +1211,64 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
 
         dtUserDeatils = new DataTable();
 
-        dtUserDeatils.Columns.Add(new DataColumn("UserName", System.Type.GetType("System.String")));    
+        dtUserDeatils.Columns.Add(new DataColumn("UserName", System.Type.GetType("System.String")));
         dtUserDeatils.Columns.Add(new DataColumn("DistrictCode", System.Type.GetType("System.String")));
-        dtUserDeatils.Columns.Add(new DataColumn("Blockcode", System.Type.GetType("System.String")));
 
 
     }
- 
+    public bool InterventionSql_Injection(string RVal)
+    {
+        SqlInjection objAudit = new SqlInjection();
+        bool injection = false;
+
+
+        injection = objAudit.CheckInputBool(RVal);
+
+        return injection;
+
+    }
+    public static List<Control> GetAllControls(List<Control> controls, Type t, Control parent /* can be Page */)
+    {
+        foreach (Control c in parent.Controls)
+        {
+            if (c.GetType() == t)
+                controls.Add(c);
+            if (c.HasControls())
+                controls = GetAllControls(controls, t, c);
+        }
+        return controls;
+    }
+    public string SetTextBoxFocusSelect(Page page)
+    {
+        string ALlTestBoxValue = "";
+        List<Control> list = new List<Control>();
+        list = GetAllControls(list, typeof(TextBox), page);
+        foreach (Control ctl in list)
+        {
+            if (ctl.GetType() == typeof(TextBox))
+            {
+                ((TextBox)ctl).Attributes.Add("onfocus", "this.select()");
+                string TempVari = ((TextBox)ctl).Text;
+                if (TempVari.Length > 0)
+                {
+                    ALlTestBoxValue += TempVari + "  ";
+                }
+            }
+        }
+        return ALlTestBoxValue;
+    }
     protected void btn_Save_Click(object sender, EventArgs e)
     {
+        string RVal = SetTextBoxFocusSelect(this.Page);
+        if (!InterventionSql_Injection(RVal))
+        {
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Spurious input detected. Data rejected')</script>", false);
+
+            return;
+        }
         if (ViewState["Save"].ToString() == "Save")
         {
             if (txtpw.Text == "")
@@ -1370,13 +1288,13 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
             }
         }
 
-        if (chkOnline.Checked == false && chkOffline.Checked==false)
+        if (chkOnline.Checked == false && chkOffline.Checked == false)
         {
-            
-                ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Select Offline or Online')</script>", false);
-                return;
 
-           
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Select Offline or Online')</script>", false);
+            return;
+
+
         }
         if (lstDistrict.Visible == true)
         {
@@ -1401,7 +1319,7 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
                     sDist = true;
                 }
             }
-            if (sSate == false )
+            if (sSate == false)
             {
 
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Select State')</script>", false);
@@ -1418,88 +1336,15 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
 
             }
         }
+        string userlevel = "", FristName = "", LastName = "", statecode = "", districtcode = "", blockcode = "", villagecode = "", uname = "", pw = "", cpw = "", staffid = "";
 
-        if (lblBlockMul.Visible == true)
-        {
-            Boolean sblock = false;
-           
-            foreach (ListItem item in lblBlockMul.Items)
-            {
-                if (item.Selected)
-                {
-                    sblock = true;
-
-                }
-            }
-
-
-
-           
-            if (sblock == false)
-            {
-
-                ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Select Block')</script>", false);
-                return;
-
-
-            }
-          
-        }
-        string userlevel = "", FristName="",LastName="",statecode = "", districtcode = "", blockcode = "", villagecode = "", uname = "", pw = "", cpw = "", staffid = "";
-        Int32 UserType = 1;
-        Int32 SerialNo = 0;
-        if (rblExternal.Checked == true)
-        {
-            if (ViewState["Save"].ToString() == "Save")
-            {
-                Unique();
-                txtuname.Text = ViewState["UCode"].ToString();
-                uname = txtuname.Text;
-                UserType = 2;
-                SerialNo = Convert.ToInt32(ViewState["NumNo"].ToString());
-            }
-            staffid = txtuname.Text;
-        }
-        if (lblBlockMul.Visible == true)
+        if (lstDistrict.Visible == true)
         {
             CreateDataTableUserDetails();
 
 
 
-            DataTable dtblk = ViewState["MulBlock"] as DataTable;
-            foreach (ListItem item in lblBlockMul.Items)
-            {
-                if (item.Selected)
-                {
-                    DataRow[] dr5 = dtblk.Select("Blockcode='" + item.Value + "'");
-                    if (dr5.Length > 0)
-                    {
-                        DataRow Item1;
-                        Item1 = dtUserDeatils.NewRow();
-                        dtUserDeatils.Rows.Add(Item1);
-                        Item1["UserName"] = txtuname.Text.Trim();
 
-                        Item1["DistrictCode"] = dr5[0]["DistrictCode"].ToString();
-                        Item1["BlockCode"] = dr5[0]["BlockCode"].ToString();
-                    }
-                }
-            }
-
-            DataTable dt = ViewState["Dist"] as DataTable;
-            //DataRow[] dr = dt.Select("DistrictCode='" + dtUserDeatils.Rows[0]["districtcode"].ToString() + "'");
-            //if (dr.Length > 0)
-            //{
-            //    //statecode = dr[0]["statecode"].ToString();
-            //    districtcode = dr[0]["DistrictCode"].ToString();
-            //}
-        }
-       else     if (lstDistrict.Visible == true)
-        {
-            CreateDataTableUserDetails();
-           
-
-           
-           
             foreach (ListItem item in lstDistrict.Items)
             {
                 if (item.Selected)
@@ -1510,12 +1355,12 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
                     Item1["UserName"] = txtuname.Text.Trim();
 
                     Item1["DistrictCode"] = item.Value;
-                    Item1["BlockCode"] = "";
+
                 }
             }
 
             DataTable dt = ViewState["Dist"] as DataTable;
-            DataRow [] dr = dt.Select("DistrictCode='" + dtUserDeatils.Rows[0]["districtcode"].ToString() + "'");
+            DataRow[] dr = dt.Select("DistrictCode='" + dtUserDeatils.Rows[0]["districtcode"].ToString() + "'");
             if (dr.Length > 0)
             {
                 //statecode = dr[0]["statecode"].ToString();
@@ -1523,15 +1368,15 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
             }
 
         }
-   
-
+        Int32 UserType = 1;
+        Int32 SerialNo = 0;
         if (ddllevel.SelectedIndex > 0)
         {
             userlevel = ddllevel.SelectedValue.ToString();
         }
         if (txtuname.Text == "TestAdmin")
         {
-           
+
         }
         else
         {
@@ -1569,20 +1414,32 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
         {
             cpw = txtcpassword.Text;
         }
-       
-            //if (ddlBaseDist.SelectedIndex > 0)
-            //{
 
-            //    districtcode = ddlBaseDist.SelectedValue.ToString();
-            //}
-       
-  
-         if ((txtFristName.Text != null) || (txtFristName.Text != ""))
+        //if (ddlBaseDist.SelectedIndex > 0)
+        //{
+
+        //    districtcode = ddlBaseDist.SelectedValue.ToString();
+        //}
+
+        if (rblExternal.Checked == true)
+        {
+            if (ViewState["Save"].ToString() == "Save")
+            {
+                Unique();
+                txtuname.Text = ViewState["UCode"].ToString();
+                uname = txtuname.Text;
+                UserType = 2;
+                SerialNo = Convert.ToInt32(ViewState["NumNo"].ToString());
+            }
+            staffid = txtuname.Text;
+        }
+
+        if ((txtFristName.Text != null) || (txtFristName.Text != ""))
         {
             FristName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(txtFristName.Text);
 
         }
-        
+
 
 
         bool checkpsw = false;
@@ -1602,20 +1459,20 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
         }
         if (ViewState["Save"].ToString() == "Save")
         {
-           
+
         }
-      
-
-                //if (chkvillage.SelectedIndex != -1)
-                //{
-                //    villagecode = GetCheckBoxListSelection(chkvillage);
-                //}
 
 
-                SqlParameter[] parm = new SqlParameter[]
-            {
-           
-           
+        //if (chkvillage.SelectedIndex != -1)
+        //{
+        //    villagecode = GetCheckBoxListSelection(chkvillage);
+        //}
+
+
+        SqlParameter[] parm = new SqlParameter[]
+    {
+
+
             new SqlParameter("@userlevel", userlevel),
             new SqlParameter("@statecode", statecode),
             new SqlParameter("@district", districtcode),
@@ -1636,64 +1493,62 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
                            new SqlParameter("@CreateBy",  Session["username"].ToString()),
                              new SqlParameter("@BaseDist",  ddlBaseDist.SelectedValue),
                                 new SqlParameter("@AndroidID", txtAndroidID.Text.Trim()),
-           
-              };
-                int result =Convert.ToInt32(SqlHelper.ExecuteScaler(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "sp_insert_update_usermaster", parm));
-                if (ViewState["id"].ToString() == null || ViewState["id"].ToString()=="")
-              {
-                  ViewState["id"]=result.ToString();
-              }
-                if (dtUserDeatils != null)
-                {
-                    if (dtUserDeatils.Rows.Count > 0)
-                    {
-                        SqlParameter[] parm1 = new SqlParameter[]
-                         {
-           
-           
+
+      };
+        int result = Convert.ToInt32(SqlHelper.ExecuteScaler(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "sp_insert_update_usermaster", parm));
+        if (ViewState["id"].ToString() == null || ViewState["id"].ToString() == "")
+        {
+            ViewState["id"] = result.ToString();
+        }
+        if (dtUserDeatils != null)
+        {
+            if (dtUserDeatils.Rows.Count > 0)
+            {
+                SqlParameter[] parm1 = new SqlParameter[]
+                 {
+
+
                             new SqlParameter("@UserName",  dtUserDeatils.Rows[0]["UserName"].ToString()),
                             new SqlParameter("@DistrictCode",  dtUserDeatils.Rows[0]["DistrictCode"].ToString()),
-                                 new SqlParameter("@Blockcode", dtUserDeatils.Rows[0]["Blockcode"].ToString()),
                               new SqlParameter("@Flag", 1),
-           
-                           };
-                        int result1 = Convert.ToInt32(SqlHelper.ExecuteScaler(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUsermultipleDist2026", parm1));
-                        for (int r = 0; r < dtUserDeatils.Rows.Count; r++)
-                        {
-                            SqlParameter[] parm2 = new SqlParameter[]
-                                 {
-           
-           
+
+                   };
+                int result1 = Convert.ToInt32(SqlHelper.ExecuteScaler(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUsermultipleDist", parm1));
+                for (int r = 0; r < dtUserDeatils.Rows.Count; r++)
+                {
+                    SqlParameter[] parm2 = new SqlParameter[]
+                         {
+
+
                                     new SqlParameter("@UserName", dtUserDeatils.Rows[r]["UserName"].ToString()),
                                     new SqlParameter("@DistrictCode", dtUserDeatils.Rows[r]["DistrictCode"].ToString()),
-                                     new SqlParameter("@Blockcode", dtUserDeatils.Rows[r]["Blockcode"].ToString()),
                                       new SqlParameter("@Flag", 2),
-           
-                                   };
-                            int result4 = Convert.ToInt32(SqlHelper.ExecuteScaler(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUsermultipleDist2026", parm2));
 
-                        }
+                           };
+                    int result4 = Convert.ToInt32(SqlHelper.ExecuteScaler(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUsermultipleDist", parm2));
 
-
-                    }
                 }
-                //if (result > 0)
-                //{
-                    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved Successfully')</script>", false);
 
-                    fillleftgrid();
-                    //txtpw.Text = "";
-                    //txtuname.Text = "";
-                    //ddlblbock.SelectedIndex = -1;
-                    //ddlstate.SelectedIndex = -1;
 
-                //}
-                    if (ViewState["Save"].ToString() == "Save")
-                    {
-                        ViewState["Save"] = "Update";
-                    }
-            
-        
+            }
+        }
+        //if (result > 0)
+        //{
+        ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved Successfully')</script>", false);
+
+        fillleftgrid();
+        //txtpw.Text = "";
+        //txtuname.Text = "";
+        //ddlblbock.SelectedIndex = -1;
+        //ddlstate.SelectedIndex = -1;
+
+        //}
+        if (ViewState["Save"].ToString() == "Save")
+        {
+            ViewState["Save"] = "Update";
+        }
+
+
     }
     protected void Txtuser_TextChanged(object sender, EventArgs e)
     {
@@ -1705,8 +1560,8 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
         {
             SqlParameter[] pa = new SqlParameter[]
      {
-     new SqlParameter("@UserName", username ),   
-        
+     new SqlParameter("@UserName", username ),
+
      };
             DataSet ds = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "checkUserAvailability", pa);
             if (ds.Tables[0].Rows.Count > 0)
@@ -1714,53 +1569,53 @@ public partial class Frm_UserRegistration : System.Web.UI.Page
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('User Already Exist!.')</script>", false);
                 txtuname.Text = "";
             }
-          
+
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            
+            throw;
         }
 
 
     }
     public void Unique()
     {
-       
-                Int32 mNewNo = 0;
-                string strAlias;
-                string strQry = " Select isnull(max(SerialNo),0) as Serial from MstUser where  UserType=2 ";
-                //string strQry = " Select top 1 Serial from tblDTD   order by Serial desc ";
-                DataTable dt = objMain.LoadData(strQry);
-            
-                if (dt.Rows.Count > 0)
-                {
-                    if (dt.Rows[0]["Serial"].ToString() == "" || dt.Rows[0]["Serial"].ToString() == "-1")
-                    {
-                        mNewNo += 1;
-                        strAlias = mNewNo.ToString().PadLeft(4, '0');
-                        ViewState["UCode"] = "EGEX" + "" + strAlias;
-                        ViewState["NumNo"] = strAlias;
-                    }
-                    else
-                    {
-                        mNewNo = Convert.ToInt32(dt.Rows[0]["Serial"].ToString());
-                        mNewNo += 1;
-                        strAlias = mNewNo.ToString().PadLeft(4, '0');
 
-                        ViewState["NumNo"] = strAlias;
-                        ViewState["UCode"] = "EGEX" + "" + strAlias;
+        Int32 mNewNo = 0;
+        string strAlias;
+        string strQry = " Select isnull(max(SerialNo),0) as Serial from MstUser where  UserType=2 ";
+        //string strQry = " Select top 1 Serial from tblDTD   order by Serial desc ";
+        DataTable dt = objMain.LoadData(strQry);
 
-                    }
+        if (dt.Rows.Count > 0)
+        {
+            if (dt.Rows[0]["Serial"].ToString() == "" || dt.Rows[0]["Serial"].ToString() == "-1")
+            {
+                mNewNo += 1;
+                strAlias = mNewNo.ToString().PadLeft(4, '0');
+                ViewState["UCode"] = "EGEX" + "" + strAlias;
+                ViewState["NumNo"] = strAlias;
+            }
+            else
+            {
+                mNewNo = Convert.ToInt32(dt.Rows[0]["Serial"].ToString());
+                mNewNo += 1;
+                strAlias = mNewNo.ToString().PadLeft(4, '0');
 
-                }
-                else
-                {
-                    mNewNo += 1;
-                    strAlias = mNewNo.ToString().PadLeft(4, '0');
-                    ViewState["UCode"] = "EGEX" + "" + strAlias;
-                    ViewState["NumNo"] = strAlias;
-                }
-        
+                ViewState["NumNo"] = strAlias;
+                ViewState["UCode"] = "EGEX" + "" + strAlias;
+
+            }
+
+        }
+        else
+        {
+            mNewNo += 1;
+            strAlias = mNewNo.ToString().PadLeft(4, '0');
+            ViewState["UCode"] = "EGEX" + "" + strAlias;
+            ViewState["NumNo"] = strAlias;
+        }
+
 
     }
 

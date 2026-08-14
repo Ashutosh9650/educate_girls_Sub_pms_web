@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Newtonsoft.Json;
+using System;
 using System.Data;
-using System.Web;
-using System.Data.SqlClient;
-using System.Web.UI.WebControls;
 using System.Data.OleDb;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Web.UI.WebControls;
 public class Comman
 {
-      Password objPass = new Password();
+    public const int PasswordSaltSize = 16;
+    Password objPass = new Password();
     public DataTable Select_All_Data(string TableName, string TFieldName, string Condition, string OrderbyCondition, string Sortcondition)
     {
         DataTable dtcombo = new DataTable();
@@ -20,19 +19,19 @@ public class Comman
             string sortbycondi = Sortcondition.Length > 0 ? "" + Sortcondition : "";
             string FieldName = TFieldName.Length > 0 ? TFieldName : "";
             SqlParameter[] paramvT = new SqlParameter[]
-                    {                            
+                    {
                             new SqlParameter("@TableName",TableName),
                             new SqlParameter("@Condition",WConditions),
                             new SqlParameter("@OrderbyvalueMem",OrderbyvalueMem),
-                            new SqlParameter("@sortbycondi",sortbycondi), 
-                            new SqlParameter("@FieldName",FieldName),                            
-                           
+                            new SqlParameter("@sortbycondi",sortbycondi),
+                            new SqlParameter("@FieldName",FieldName),
+
                     };
 
             DataSet ds = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Get_Select_AllTableData", paramvT);
             dtcombo = ds.Tables[0] as DataTable;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             //string mmsg = ex.Message; showMessages(mmsg);
             //showMessages("(SelectAllData)  " + mmsg);
@@ -84,11 +83,12 @@ public class Comman
 
             dtcombo = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Get_Select_Table_Data_Common", paramvT);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            string msg = ex.Message;
+            //string msg = ex.Message;
             //string mmsg = ex.Message; showMessages(mmsg);
             //showMessages("(SelectAllData)  " + mmsg);
+            throw;
         }
         return dtcombo;
     }
@@ -128,9 +128,9 @@ public class Comman
             dll.Items.Insert(0, new System.Web.UI.WebControls.ListItem("  " + ZeroIndex + "  ", "0"));
 
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            string msg = ex.Message;
+            throw;
         }
     }
     public DataTable Select_All_DataNew(string TableName, string TFieldName, string Condition, string OrderbyCondition, string Sortcondition, string Sortcofndition)
@@ -155,7 +155,7 @@ public class Comman
             DataSet ds = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Get_Select_AllTableData", paramvT);
             dtcombo = ds.Tables[0] as DataTable;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             //string mmsg = ex.Message; showMessages(mmsg);
             //showMessages("(SelectAllData)  " + mmsg);
@@ -341,7 +341,7 @@ public class Comman
 
 
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             //string mmsg = ex.Message; showMessages(mmsg);
             //showMessages("(SelectAllData)  " + mmsg);
@@ -365,7 +365,7 @@ public class Comman
         System.Threading.Thread.Sleep(100);
         var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         var random = new Random();
-      //  var result = new string(Enumerable.Repeat(chars, NoChar).Select(s => s[random.Next(s.Length)]).ToArray());
+        //  var result = new string(Enumerable.Repeat(chars, NoChar).Select(s => s[random.Next(s.Length)]).ToArray());
         var result = new string(Enumerable.Repeat(chars, NoChar).Select(s => s[random.Next(s.Length)]).ToArray()) + DateTime.Now.ToString("yyyyMMddhhmmssfff");
         UNICode = result.ToString();
         return UNICode;
@@ -392,21 +392,21 @@ public class Comman
             return dbOleDataTable;
 
         }
-        catch (OleDbException sqlEx)
+        catch (OleDbException)
         {
             if (dbOleconnection.State == ConnectionState.Open)
             {
                 dbOleconnection.Close();
             }
-            throw sqlEx;
+            throw;
         }
-        catch (Exception ex1)
+        catch (Exception)
         {
             if (dbOleconnection.State == ConnectionState.Open)
             {
                 dbOleconnection.Close();
             }
-            throw ex1;
+            throw;
         }
         finally
         {
@@ -438,9 +438,9 @@ public class Comman
                 cmd.Dispose();
                 return (true);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {
@@ -467,22 +467,23 @@ public class Comman
             sqlcmd.Connection = sqlConnection;
             sqlcmd.CommandType = CommandType.StoredProcedure;
             sqlcmd.CommandText = "Tablet_AuthenticateUser";
-            sqlcmd.Parameters.AddWithValue("@UserName", pUsername);
-            sqlcmd.Parameters.AddWithValue("@Password", pPassword);
+            sqlcmd.Parameters.Add("@UserName", SqlDbType.NVarChar, 100).Value = pUsername;
+            sqlcmd.Parameters.Add("@Password", SqlDbType.NVarChar, 256).Value = pPassword;
+
             SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlcmd);
 
             sqlDataAdapter.Fill(dbSqlDataSet);
             return dbSqlDataSet;
         }
-        catch (SqlException e)
+        catch (SqlException)
         {
             if (!(sqlConnection.State == ConnectionState.Closed))
             {
                 sqlConnection.Close();
                 sqlConnection.Dispose();
             }
-            IUErrorDetail(e.ToString());
-            throw e;
+            //IUErrorDetail(e.ToString());
+            throw;
         }
         finally
         {
@@ -511,22 +512,22 @@ public class Comman
             sqlcmd.Connection = sqlConnection;
             sqlcmd.CommandType = CommandType.StoredProcedure;
             sqlcmd.CommandText = "Tablet_AuthenticateUser2024";
-            sqlcmd.Parameters.AddWithValue("@UserName", pUsername);
-            sqlcmd.Parameters.AddWithValue("@Password", checkpass);
+            sqlcmd.Parameters.Add("@UserName", SqlDbType.NVarChar, 100).Value = pUsername;
+            sqlcmd.Parameters.Add("@Password", SqlDbType.NVarChar, 100).Value = pPassword;
             SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlcmd);
 
             sqlDataAdapter.Fill(dbSqlDataSet);
             return dbSqlDataSet;
         }
-        catch (SqlException e)
+        catch (SqlException)
         {
             if (!(sqlConnection.State == ConnectionState.Closed))
             {
                 sqlConnection.Close();
                 sqlConnection.Dispose();
             }
-            IUErrorDetail(e.ToString());
-            throw e;
+            //  IUErrorDetail(e.ToString());
+            throw;
         }
         finally
         {
@@ -554,8 +555,8 @@ public class Comman
             sqlcmd.Connection = sqlConnection;
             sqlcmd.CommandType = CommandType.StoredProcedure;
             sqlcmd.CommandText = "Tablet_AuthenticateUser2023";
-            sqlcmd.Parameters.AddWithValue("@UserName", pUsername);
-            sqlcmd.Parameters.AddWithValue("@Password", pPassword);
+            sqlcmd.Parameters.Add("@UserName", SqlDbType.NVarChar, 100).Value = pUsername;
+            sqlcmd.Parameters.Add("@Password", SqlDbType.NVarChar, 256).Value = pPassword;
             SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlcmd);
 
             sqlDataAdapter.Fill(dbSqlDataSet);
@@ -568,8 +569,8 @@ public class Comman
                 sqlConnection.Close();
                 sqlConnection.Dispose();
             }
-            IUErrorDetail(e.ToString());
-            throw e;
+            //IUErrorDetail(e.ToString());
+            throw;
         }
         finally
         {
@@ -581,43 +582,7 @@ public class Comman
 
         }
     }
-    public void IUErrorDetail(string sError)
-    {
-        SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
-        try
-        {
-            if (sqlConnection.State != ConnectionState.Open)
-            {
-                sqlConnection.Open();
-            }
 
-            DataTable dbSqlDataSet = new DataTable();
-            SqlCommand sqlcmd = new SqlCommand();
-            sqlcmd.Connection = sqlConnection;
-            sqlcmd.CommandType = CommandType.StoredProcedure;
-            sqlcmd.CommandText = "[Tablet_IUErrorDetail]";
-            sqlcmd.Parameters.AddWithValue("@Error", sError);
-            sqlcmd.ExecuteNonQuery();
-        }
-        catch (SqlException e)
-        {
-            if (!(sqlConnection.State == ConnectionState.Closed))
-            {
-                sqlConnection.Close();
-                sqlConnection.Dispose();
-            }
-            throw e;
-        }
-        finally
-        {
-            if (!(sqlConnection.State == ConnectionState.Closed))
-            {
-                sqlConnection.Close();
-                sqlConnection.Dispose();
-            }
-
-        }
-    }
     public DataTable CreateDataTable(string sTableTypeName)
     {
         DataTable dt = new DataTable();
@@ -645,13 +610,13 @@ public class Comman
             sqlcmd.Connection = sqlConnection;
             sqlcmd.CommandType = CommandType.StoredProcedure;
             sqlcmd.CommandText = "Tablet_GetTableTypeColumns";
-            sqlcmd.Parameters.AddWithValue("@TableType", sTableTypeName);
+            sqlcmd.Parameters.Add("@TableType", SqlDbType.VarChar, 50).Value = sTableTypeName;
             SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlcmd);
 
             sqlDataAdapter.Fill(dbSqlDataSet);
             return dbSqlDataSet;
         }
-        catch (SqlException e)
+        catch (SqlException)
         {
             if (!(sqlConnection.State == ConnectionState.Closed))
             {
@@ -659,7 +624,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
             //IUErrorDetail(e.ToString());
-            throw e;
+            throw;
         }
         finally
         {
@@ -688,20 +653,20 @@ public class Comman
             sqlcmd.Connection = sqlConnection;
             sqlcmd.CommandType = CommandType.StoredProcedure;
             sqlcmd.CommandText = "[Tablet_Post_Session_Data]";
-            sqlcmd.Parameters.AddWithValue("@Tbl_User_Login", dtTbl_User_Login);
-            sqlcmd.Parameters.AddWithValue("@tblActivityUpdate_CLT", DttblActivityUpdate_CLT);
-            sqlcmd.Parameters.AddWithValue("@tblActivityUpdate_CTLImplementation", DttblActivityUpdate_CTLImplementation);
-            sqlcmd.Parameters.AddWithValue("@tblActivityUpdate_LifeskillGames", DttblActivityUpdate_LifeskillGames);
-            sqlcmd.Parameters.AddWithValue("@tblActivityUpdate_School", DttblActivityUpdate_School);
-            sqlcmd.Parameters.AddWithValue("@tblActivityUpdate_Village", DttblActivityUpdate_Village);
-            sqlcmd.Parameters.AddWithValue("@tblDTD", dttblDTD);
-            sqlcmd.Parameters.AddWithValue("@UserID", iUserID);
-            sqlcmd.Parameters.AddWithValue("@JSON", sJason);
+            sqlcmd.Parameters.Add(new SqlParameter("@Tbl_User_Login", SqlDbType.Structured) { TypeName = "dtTbl_User_Login", Value = dtTbl_User_Login });
+            sqlcmd.Parameters.Add(new SqlParameter("@tblActivityUpdate_CLT", SqlDbType.Structured) { TypeName = "DttblActivityUpdate_CLT", Value = DttblActivityUpdate_CLT });
+            sqlcmd.Parameters.Add(new SqlParameter("@tblActivityUpdate_CTLImplementation", SqlDbType.Structured) { TypeName = "DttblActivityUpdate_CTLImplementation", Value = DttblActivityUpdate_CTLImplementation });
+            sqlcmd.Parameters.Add(new SqlParameter("@tblActivityUpdate_LifeskillGames", SqlDbType.Structured) { TypeName = "DttblActivityUpdate_LifeskillGames", Value = DttblActivityUpdate_LifeskillGames });
+            sqlcmd.Parameters.Add(new SqlParameter("@tblActivityUpdate_School", SqlDbType.Structured) { TypeName = "DttblActivityUpdate_School", Value = DttblActivityUpdate_School });
+            sqlcmd.Parameters.Add(new SqlParameter("@tblActivityUpdate_Village", SqlDbType.Structured) { TypeName = "DttblActivityUpdate_Village", Value = DttblActivityUpdate_Village });
+            sqlcmd.Parameters.Add(new SqlParameter("@tblDTD", SqlDbType.Structured) { TypeName = "dttblDTD", Value = dttblDTD });
+            sqlcmd.Parameters.Add("@UserID", SqlDbType.Int).Value = iUserID;
+            sqlcmd.Parameters.Add("@JSON", SqlDbType.VarChar, -1).Value = sJason;
             SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
             da.Fill(dbSqlDataSet);
             return dbSqlDataSet;
         }
-        catch (SqlException e)
+        catch (SqlException)
         {
             if (!(sqlConnection.State == ConnectionState.Closed))
             {
@@ -709,7 +674,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -736,14 +701,19 @@ public class Comman
             sqlcmd.Connection = sqlConnection;
             sqlcmd.CommandType = CommandType.StoredProcedure;
             sqlcmd.CommandText = "[Tablet_Post_Session_User_Login]";
-            sqlcmd.Parameters.AddWithValue("@Tbl_User_Login", dtTbl_User_Login);
-            sqlcmd.Parameters.AddWithValue("@UserID", iUserID);
-            sqlcmd.Parameters.AddWithValue("@JSON", sJason);
+            sqlcmd.Parameters.Add(new SqlParameter("@Tbl_User_Login", SqlDbType.Structured)
+            {
+                TypeName = "dbo.Tbl_User_LoginVersion",
+                Value = dtTbl_User_Login
+            });
+            sqlcmd.Parameters.Add("@UserID", SqlDbType.Int).Value = iUserID;
+            sqlcmd.Parameters.Add("@JSON", SqlDbType.VarChar, -1).Value = sJason;
+
             SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
             da.Fill(dbSqlDataSet);
             return dbSqlDataSet;
         }
-        catch (SqlException e)
+        catch (SqlException)
         {
             if (!(sqlConnection.State == ConnectionState.Closed))
             {
@@ -751,7 +721,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -780,14 +750,14 @@ public class Comman
             sqlcmd.Connection = sqlConnection;
             sqlcmd.CommandType = CommandType.StoredProcedure;
             sqlcmd.CommandText = "[Tablet_Post_Session_ActivityUpdate_CLT]";
-            sqlcmd.Parameters.AddWithValue("@tblActivityUpdate_CLT", DttblActivityUpdate_CLT);
-            sqlcmd.Parameters.AddWithValue("@UserID", iUserID);
-            sqlcmd.Parameters.AddWithValue("@JSON", sJason);
+            sqlcmd.Parameters.Add(new SqlParameter("@tblActivityUpdate_CLT", SqlDbType.Structured) { TypeName = "DttblActivityUpdate_CLT", Value = DttblActivityUpdate_CLT });
+            sqlcmd.Parameters.Add("@UserID", SqlDbType.Int).Value = iUserID;
+            sqlcmd.Parameters.Add("@JSON", SqlDbType.VarChar, -1).Value = sJason;
             SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
             da.Fill(dbSqlDataSet);
             return dbSqlDataSet;
         }
-        catch (SqlException e)
+        catch (SqlException)
         {
             if (!(sqlConnection.State == ConnectionState.Closed))
             {
@@ -795,7 +765,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -824,14 +794,14 @@ public class Comman
             sqlcmd.Connection = sqlConnection;
             sqlcmd.CommandType = CommandType.StoredProcedure;
             sqlcmd.CommandText = "Tablet_Post_Session_CTLImplementation";
-            sqlcmd.Parameters.AddWithValue("@tblActivityUpdate_CTLImplementation", DttblActivityUpdate_CTLImplementation);
-            sqlcmd.Parameters.AddWithValue("@UserID", iUserID);
-            sqlcmd.Parameters.AddWithValue("@JSON", sJason);
+            sqlcmd.Parameters.Add(new SqlParameter("@tblActivityUpdate_CTLImplementation", SqlDbType.Structured) { TypeName = "DttblActivityUpdate_CTLImplementation", Value = DttblActivityUpdate_CTLImplementation });
+            sqlcmd.Parameters.Add("@UserID", SqlDbType.Int).Value = iUserID;
+            sqlcmd.Parameters.Add("@JSON", SqlDbType.VarChar, -1).Value = sJason;
             SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
             da.Fill(dbSqlDataSet);
             return dbSqlDataSet;
         }
-        catch (SqlException e)
+        catch (SqlException)
         {
             if (!(sqlConnection.State == ConnectionState.Closed))
             {
@@ -839,7 +809,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -868,14 +838,14 @@ public class Comman
             sqlcmd.Connection = sqlConnection;
             sqlcmd.CommandType = CommandType.StoredProcedure;
             sqlcmd.CommandText = "Tablet_Post_Session_LifeskillGames";
-            sqlcmd.Parameters.AddWithValue("@tblActivityUpdate_LifeskillGames", DttblActivityUpdate_LifeskillGames);
-            sqlcmd.Parameters.AddWithValue("@UserID", iUserID);
-            sqlcmd.Parameters.AddWithValue("@JSON", sJason);
+            sqlcmd.Parameters.Add(new SqlParameter("@tblActivityUpdate_LifeskillGames", SqlDbType.Structured) { TypeName = "DttblActivityUpdate_LifeskillGames", Value = DttblActivityUpdate_LifeskillGames });
+            sqlcmd.Parameters.Add("@UserID", SqlDbType.Int).Value = iUserID;
+            sqlcmd.Parameters.Add("@JSON", SqlDbType.VarChar, -1).Value = sJason;
             SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
             da.Fill(dbSqlDataSet);
             return dbSqlDataSet;
         }
-        catch (SqlException e)
+        catch (SqlException)
         {
             if (!(sqlConnection.State == ConnectionState.Closed))
             {
@@ -883,7 +853,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -919,7 +889,7 @@ public class Comman
             da.Fill(dbSqlDataSet);
             return dbSqlDataSet;
         }
-        catch (SqlException e)
+        catch (SqlException)
         {
             if (!(sqlConnection.State == ConnectionState.Closed))
             {
@@ -927,7 +897,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -962,7 +932,7 @@ public class Comman
             da.Fill(dbSqlDataSet);
             return dbSqlDataSet;
         }
-        catch (SqlException e)
+        catch (SqlException)
         {
             if (!(sqlConnection.State == ConnectionState.Closed))
             {
@@ -970,7 +940,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1006,7 +976,7 @@ public class Comman
             da.Fill(dbSqlDataSet);
             return dbSqlDataSet;
         }
-        catch (SqlException e)
+        catch (SqlException)
         {
             if (!(sqlConnection.State == ConnectionState.Closed))
             {
@@ -1014,7 +984,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1050,7 +1020,7 @@ public class Comman
             da.Fill(dbSqlDataSet);
             return dbSqlDataSet;
         }
-        catch (SqlException e)
+        catch (SqlException)
         {
             if (!(sqlConnection.State == ConnectionState.Closed))
             {
@@ -1058,7 +1028,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1102,7 +1072,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1144,7 +1114,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1187,7 +1157,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1230,7 +1200,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1274,7 +1244,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1317,7 +1287,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1360,7 +1330,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1389,7 +1359,7 @@ public class Comman
             sqlcmd.CommandType = CommandType.StoredProcedure;
             sqlcmd.CommandText = "Tablet_Post_Session_Insert_Update_tblOOSC";
             sqlcmd.Parameters.AddWithValue("@tblChildRegFKP", DttblActivityUpdate_School);
-          
+
             SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
             da.Fill(dbSqlDataSet);
             return dbSqlDataSet;
@@ -1402,7 +1372,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1443,7 +1413,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1485,7 +1455,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1527,7 +1497,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1569,7 +1539,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1610,7 +1580,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1652,7 +1622,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1693,7 +1663,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1734,7 +1704,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1775,7 +1745,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1817,7 +1787,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1860,7 +1830,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1904,7 +1874,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1917,7 +1887,7 @@ public class Comman
         }
     }
 
-        public DataSet Tablet_Post_Session_ActivityUpdate_Village2021(DataTable DttblActivityUpdate_Village, int iUserID, string sJason)
+    public DataSet Tablet_Post_Session_ActivityUpdate_Village2021(DataTable DttblActivityUpdate_Village, int iUserID, string sJason)
     {
         SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
         try
@@ -1947,7 +1917,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1990,7 +1960,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -2033,7 +2003,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -2075,7 +2045,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -2118,7 +2088,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -2161,7 +2131,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -2204,7 +2174,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -2247,7 +2217,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -2289,7 +2259,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -2331,7 +2301,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -2407,38 +2377,38 @@ public class Comman
         {
 
             SqlBulkCopyColumnMapping mapping01 = new SqlBulkCopyColumnMapping("DistrictCode", "DistrictCode");
-           // SqlBulkCopyColumnMapping mapping02 = new SqlBulkCopyColumnMapping("OldDistrictCode", "OldDistrictCode");
+            // SqlBulkCopyColumnMapping mapping02 = new SqlBulkCopyColumnMapping("OldDistrictCode", "OldDistrictCode");
             SqlBulkCopyColumnMapping mapping03 = new SqlBulkCopyColumnMapping("EGBlockCode", "EGBlockCode");
             //SqlBulkCopyColumnMapping mapping04 = new SqlBulkCopyColumnMapping("OldBlockCode", "OldBlockCode");
             SqlBulkCopyColumnMapping mapping05 = new SqlBulkCopyColumnMapping("GP_CODE", "GP_CODE");
             SqlBulkCopyColumnMapping mapping06 = new SqlBulkCopyColumnMapping("OldPanchayatCode", "OldPanchayatCode");
             SqlBulkCopyColumnMapping mapping07 = new SqlBulkCopyColumnMapping("VillageCode", "VillageCode");
-          //  SqlBulkCopyColumnMapping mapping08 = new SqlBulkCopyColumnMapping("OldUniqueCode", "OldUniqueCode");
-          //  SqlBulkCopyColumnMapping mapping09 = new SqlBulkCopyColumnMapping("OldVillageUniqueCode", "OldVillageUniqueCode");
+            //  SqlBulkCopyColumnMapping mapping08 = new SqlBulkCopyColumnMapping("OldUniqueCode", "OldUniqueCode");
+            //  SqlBulkCopyColumnMapping mapping09 = new SqlBulkCopyColumnMapping("OldVillageUniqueCode", "OldVillageUniqueCode");
             SqlBulkCopyColumnMapping mapping10 = new SqlBulkCopyColumnMapping("DISECODE", "DISECODE");
-           // SqlBulkCopyColumnMapping mapping11 = new SqlBulkCopyColumnMapping("OldSchoolUniqueCode", "OldSchoolUniqueCode");
+            // SqlBulkCopyColumnMapping mapping11 = new SqlBulkCopyColumnMapping("OldSchoolUniqueCode", "OldSchoolUniqueCode");
 
             SqlBulkCopy bulkCopy = new SqlBulkCopy(SqlHelper.mainConnectionString);
             bulkCopy.BatchSize = 100;
             bulkCopy.BulkCopyTimeout = 5;
             bulkCopy.ColumnMappings.Add(mapping01);
-           // bulkCopy.ColumnMappings.Add(mapping02);
+            // bulkCopy.ColumnMappings.Add(mapping02);
             bulkCopy.ColumnMappings.Add(mapping03);
             //bulkCopy.ColumnMappings.Add(mapping04);
             bulkCopy.ColumnMappings.Add(mapping05);
             bulkCopy.ColumnMappings.Add(mapping06);
             bulkCopy.ColumnMappings.Add(mapping07);
-           // bulkCopy.ColumnMappings.Add(mapping08);
-           // bulkCopy.ColumnMappings.Add(mapping09);
+            // bulkCopy.ColumnMappings.Add(mapping08);
+            // bulkCopy.ColumnMappings.Add(mapping09);
             bulkCopy.ColumnMappings.Add(mapping10);
-          //  bulkCopy.ColumnMappings.Add(mapping11);
+            //  bulkCopy.ColumnMappings.Add(mapping11);
 
             bulkCopy.DestinationTableName = "TempDistProfile";
             bulkCopy.NotifyAfter = 200;
             bulkCopy.WriteToServer(dt);
             return true;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return false;
         }
@@ -2477,7 +2447,7 @@ public class Comman
             bulkCopy.WriteToServer(dt);
             return true;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return false;
         }
@@ -2506,7 +2476,7 @@ public class Comman
             bulkCopy.WriteToServer(dt);
             return true;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return false;
         }
@@ -2554,7 +2524,7 @@ public class Comman
             bulkCopy.WriteToServer(dt);
             return true;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return false;
         }
@@ -2799,7 +2769,7 @@ public class Comman
         }
     }
 
-    public int Update_AnnualExamStatusNew(string str, string UID, string Flag, string ReasonforAbsent,string ReasonOther)
+    public int Update_AnnualExamStatusNew(string str, string UID, string Flag, string ReasonforAbsent, string ReasonOther)
     {
         SqlConnection dbSqlconnection = new SqlConnection(SqlHelper.mainConnectionString);
         try
@@ -2813,7 +2783,7 @@ public class Comman
                 dbSqlCommand.Parameters.AddWithValue("@UID", UID);
                 dbSqlCommand.Parameters.AddWithValue("@Flag", Flag);
                 dbSqlCommand.Parameters.AddWithValue("@ReasonforAbsent", ReasonforAbsent);
-                dbSqlCommand.Parameters.AddWithValue("@ReasonOther",ReasonOther);
+                dbSqlCommand.Parameters.AddWithValue("@ReasonOther", ReasonOther);
                 SqlParameter ReturnAffectedRows = new SqlParameter("@RowAffected", System.Data.SqlDbType.Int);
                 ReturnAffectedRows.Direction = ParameterDirection.Output;
                 dbSqlCommand.Parameters.Add(ReturnAffectedRows);
@@ -2958,7 +2928,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -2998,7 +2968,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3037,7 +3007,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3078,7 +3048,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3120,7 +3090,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3162,7 +3132,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3206,7 +3176,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3218,7 +3188,7 @@ public class Comman
 
         }
     }
- 
+
     public DataSet Tablet_Post_Session_DTDMobileActivity2018(DataTable DttblActivityUpdate_Village, int iUserID, string sJason)
     {
         SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
@@ -3249,7 +3219,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3291,7 +3261,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3333,7 +3303,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3347,7 +3317,7 @@ public class Comman
     }
 
 
-  
+
     public DataSet Tablet_Post_Session_DTDMobileActivity2020NewChange(DataTable DttblActivityUpdate_Village, int iUserID, string sJason)
     {
         SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
@@ -3378,7 +3348,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3423,7 +3393,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3465,7 +3435,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3509,7 +3479,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3552,7 +3522,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3594,7 +3564,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3637,7 +3607,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3679,7 +3649,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3722,7 +3692,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3765,7 +3735,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3809,7 +3779,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3851,7 +3821,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3893,7 +3863,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3935,7 +3905,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -3977,7 +3947,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -4020,7 +3990,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -4050,7 +4020,7 @@ public class Comman
             sqlcmd.CommandType = CommandType.StoredProcedure;
             sqlcmd.CommandText = "[Tablet_Post_Session_Insert_TblCommunitySMC]";
             sqlcmd.Parameters.AddWithValue("@tblEnrolment_Temp", dtTbl_User_Login);
-                      SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
+            SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
             da.Fill(dbSqlDataSet);
             return dbSqlDataSet;
         }
@@ -4062,7 +4032,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -4103,7 +4073,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -4145,7 +4115,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -4185,7 +4155,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -4226,7 +4196,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -4270,7 +4240,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -4312,7 +4282,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -4355,7 +4325,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -4423,53 +4393,53 @@ public class Comman
         int GivenYear1 = GivenDate1.Year;
         DataTable dtYear = CreateDataTable();
         DataRow dr;
-       
-            string mYear1 = GivenYear1.ToString();
-            for (int j = 0; j < 1; j++)
+
+        string mYear1 = GivenYear1.ToString();
+        for (int j = 0; j < 1; j++)
+        {
+            if (m > 3)
             {
-                if (m > 3)
-                {
-                    dr = dtYear.NewRow();
-                    dr["Type"] = GivenYear.ToString() + "-" + Convert.ToString((GivenYear + 1));
-                    dr["ID"] = y;
-                    dtYear.Rows.Add(dr);
-                    dr = dtYear.NewRow();
-                    dr["Type"] = GivenYear - 1 + "-" + Convert.ToString((GivenYear - 1 + 1));
-                    dr["ID"] = y - 1;
-                    dtYear.Rows.Add(dr);
+                dr = dtYear.NewRow();
+                dr["Type"] = GivenYear.ToString() + "-" + Convert.ToString((GivenYear + 1));
+                dr["ID"] = y;
+                dtYear.Rows.Add(dr);
+                dr = dtYear.NewRow();
+                dr["Type"] = GivenYear - 1 + "-" + Convert.ToString((GivenYear - 1 + 1));
+                dr["ID"] = y - 1;
+                dtYear.Rows.Add(dr);
 
-                    dr = dtYear.NewRow();
-                    dr["Type"] = GivenYear - 2 + "-" + Convert.ToString((GivenYear - 2 + 1));
-                    dr["ID"] = y - 2;
-                    dtYear.Rows.Add(dr);
-                    //get last  two digits (eg: 10 from 2010);
-
-                }
-                else
-                {
-                    //Int32 m7 = y + 1;
-                    //dr = dtYear.NewRow();
-                    //dr["Type"] = Convert.ToString((y)) + "-" + m7.ToString();
-                    ////y = y - 1;
-                    //dr["ID"] = y;
-                    //dtYear.Rows.Add(dr);
-
-                    dr = dtYear.NewRow();
-                    dr["Type"] = Convert.ToString((y - 1)) + "-" + y.ToString();
-                    //y = y - 1;
-                    dr["ID"] = y - 1;
-
-                    dtYear.Rows.Add(dr);
-
-                    dr = dtYear.NewRow();
-                    dr["Type"] = GivenYear - 2 + "-" + Convert.ToString((GivenYear - 2 + 1));
-                    dr["ID"] = y - 2;
-                    dtYear.Rows.Add(dr);
-                }
+                dr = dtYear.NewRow();
+                dr["Type"] = GivenYear - 2 + "-" + Convert.ToString((GivenYear - 2 + 1));
+                dr["ID"] = y - 2;
+                dtYear.Rows.Add(dr);
+                //get last  two digits (eg: 10 from 2010);
 
             }
+            else
+            {
+                //Int32 m7 = y + 1;
+                //dr = dtYear.NewRow();
+                //dr["Type"] = Convert.ToString((y)) + "-" + m7.ToString();
+                ////y = y - 1;
+                //dr["ID"] = y;
+                //dtYear.Rows.Add(dr);
 
-        
+                dr = dtYear.NewRow();
+                dr["Type"] = Convert.ToString((y - 1)) + "-" + y.ToString();
+                //y = y - 1;
+                dr["ID"] = y - 1;
+
+                dtYear.Rows.Add(dr);
+
+                dr = dtYear.NewRow();
+                dr["Type"] = GivenYear - 2 + "-" + Convert.ToString((GivenYear - 2 + 1));
+                dr["ID"] = y - 2;
+                dtYear.Rows.Add(dr);
+            }
+
+        }
+
+
         bool status = false;
         string conditions = Condition == "" ? "" : " where " + Condition;
         string orberbyfields = orberbyfield == "" ? "" : " order by " + orberbyfield;
@@ -4499,7 +4469,7 @@ public class Comman
         return status;
 
     }
-   
+
     public DataSet Tablet_Post_Session_tblDTDNew(DataTable dttblDTD, int iUserID, string sJason)
     {
         SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
@@ -4522,14 +4492,14 @@ public class Comman
             sqlDataAdapter.Fill(dataSet);
             result = dataSet;
         }
-        catch (SqlException ex)
+        catch (SqlException)
         {
             if (sqlConnection.State != ConnectionState.Closed)
             {
                 sqlConnection.Close();
                 sqlConnection.Dispose();
             }
-            throw ex;
+            throw;
         }
         finally
         {
@@ -4564,14 +4534,14 @@ public class Comman
             sqlDataAdapter.Fill(dataSet);
             result = dataSet;
         }
-        catch (SqlException ex)
+        catch (SqlException)
         {
             if (sqlConnection.State != ConnectionState.Closed)
             {
                 sqlConnection.Close();
                 sqlConnection.Dispose();
             }
-            throw ex;
+            throw;
         }
         finally
         {
@@ -4635,7 +4605,7 @@ public class Comman
         return status;
 
     }
- 
+
     public bool BindDLLDatatableV(string dtname, DataTable dt, string fieldname, string Condition, string orberbyfield, string orderby, DropDownList ddl, string textData, string valData, string ZeroIndex)
     {
         bool status = false;
@@ -4740,7 +4710,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -4783,7 +4753,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -4827,7 +4797,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -4870,7 +4840,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -4913,7 +4883,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -4956,7 +4926,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -4999,7 +4969,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5041,7 +5011,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5083,7 +5053,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5126,7 +5096,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5169,7 +5139,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5211,7 +5181,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5255,7 +5225,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5298,7 +5268,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5340,7 +5310,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5383,7 +5353,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5425,7 +5395,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5469,7 +5439,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5513,7 +5483,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5555,7 +5525,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5597,7 +5567,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5611,7 +5581,7 @@ public class Comman
     }
 
 
- 
+
     public DataSet Tablet_Post_Session_InserttblVisitors(DataTable DttblEnrolment_Temp)
     {
         SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
@@ -5642,7 +5612,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5685,7 +5655,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5729,7 +5699,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5772,7 +5742,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5816,7 +5786,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5859,7 +5829,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5901,7 +5871,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5943,7 +5913,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -5987,7 +5957,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6000,7 +5970,7 @@ public class Comman
         }
     }
 
-    
+
 
     public DataSet Tablet_Post_Session_InserttblChildAttendance(DataTable DttblEnrolment_Temp)
     {
@@ -6032,7 +6002,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6075,7 +6045,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6118,7 +6088,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6161,7 +6131,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6204,7 +6174,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6246,7 +6216,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6289,7 +6259,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6332,7 +6302,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6375,7 +6345,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6418,7 +6388,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6461,7 +6431,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6504,7 +6474,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6546,7 +6516,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6589,7 +6559,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6632,7 +6602,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6675,7 +6645,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6718,7 +6688,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6760,7 +6730,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6803,7 +6773,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6817,7 +6787,7 @@ public class Comman
     }
 
 
-  
+
     public DataSet Tablet_Post_Session_Insert_Update_tblChildRegistrationGKP2023(DataTable DttblEnrolment_Temp)
     {
         SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
@@ -6848,7 +6818,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6890,7 +6860,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6933,7 +6903,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6975,7 +6945,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7017,7 +6987,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7059,7 +7029,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7102,7 +7072,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7144,7 +7114,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7188,7 +7158,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7231,7 +7201,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7274,7 +7244,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7316,7 +7286,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7359,7 +7329,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7403,7 +7373,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7446,7 +7416,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7488,7 +7458,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7530,7 +7500,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7573,7 +7543,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7616,7 +7586,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7659,7 +7629,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7701,7 +7671,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7744,7 +7714,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7786,7 +7756,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7828,7 +7798,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7870,7 +7840,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7913,7 +7883,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7956,7 +7926,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -7998,7 +7968,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8041,7 +8011,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8084,7 +8054,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8126,7 +8096,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8169,7 +8139,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8213,7 +8183,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8256,7 +8226,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8300,7 +8270,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8343,7 +8313,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8386,7 +8356,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8429,7 +8399,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8472,7 +8442,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8515,7 +8485,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8559,7 +8529,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8603,7 +8573,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8645,7 +8615,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8688,7 +8658,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8731,7 +8701,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8749,7 +8719,7 @@ public class Comman
         dt.Columns.Add("ID");
         dt.Columns.Add("Type");
         DataRow dr;
-        int stYr =  DateTime.Today.Year+1;
+        int stYr = DateTime.Today.Year + 1;
         for (int i = stYr; i > 2016; i--)
         {
             dr = dt.NewRow();
@@ -8790,7 +8760,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8836,7 +8806,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8878,7 +8848,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8920,7 +8890,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -8962,7 +8932,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9005,7 +8975,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9046,7 +9016,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9088,7 +9058,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9131,7 +9101,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9145,7 +9115,7 @@ public class Comman
     }
 
 
-    public DataSet Tablet_Post_Session_Insert_Update_Tbl_Photo_Attendance(DataTable DttblActivityUpdate_School, DataTable Dttbltraning )
+    public DataSet Tablet_Post_Session_Insert_Update_Tbl_Photo_Attendance(DataTable DttblActivityUpdate_School, DataTable Dttbltraning)
     {
         SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
         try
@@ -9174,7 +9144,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9203,7 +9173,7 @@ public class Comman
             sqlcmd.Connection = sqlConnection;
             sqlcmd.CommandType = CommandType.StoredProcedure;
             sqlcmd.CommandText = "Tablet_Post_Session_Insert_UpdateJson";
-    
+
             sqlcmd.Parameters.AddWithValue("@Json", Json);
             sqlcmd.Parameters.AddWithValue("@UserName", UserName);
             SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
@@ -9218,7 +9188,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9232,7 +9202,7 @@ public class Comman
     }
 
 
-    public DataSet Tablet_Post_Session_Insert_Update_Tbl_Photo_Attendance2027(DataTable DttblActivityUpdate_School, DataTable Dttbltraning,string Json,string UserName)
+    public DataSet Tablet_Post_Session_Insert_Update_Tbl_Photo_Attendance2027(DataTable DttblActivityUpdate_School, DataTable Dttbltraning, string Json, string UserName)
     {
         SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
         try
@@ -9263,7 +9233,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9305,7 +9275,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9347,7 +9317,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9389,7 +9359,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9431,7 +9401,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9474,7 +9444,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9517,7 +9487,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9559,7 +9529,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9601,7 +9571,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9645,7 +9615,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9675,7 +9645,7 @@ public class Comman
         return dt;
     }
 
-    public DataSet tablet_Post_Session_Insert_Update_tblTravelMatrixDeatils2024(DataTable DtttblTravelMatrixDeatils2024, DataTable DtttblTravelMatrixExpens, DataTable DtttblTravelMatrixPerDiem,DataTable dtTravelConsent)
+    public DataSet tablet_Post_Session_Insert_Update_tblTravelMatrixDeatils2024(DataTable DtttblTravelMatrixDeatils2024, DataTable DtttblTravelMatrixExpens, DataTable DtttblTravelMatrixPerDiem, DataTable dtTravelConsent)
     {
         SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
         try
@@ -9694,7 +9664,7 @@ public class Comman
             sqlcmd.Parameters.AddWithValue("@MatrixExpens", DtttblTravelMatrixExpens);
             sqlcmd.Parameters.AddWithValue("@MatrixPerDiem", DtttblTravelMatrixPerDiem);
             sqlcmd.Parameters.AddWithValue("@TravelConsentTemp", dtTravelConsent);
-            
+
             //sqlcmd.Parameters.AddWithValue("@UserID", iUserID);
             //sqlcmd.Parameters.AddWithValue("@JSON", sJason);
             SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
@@ -9709,7 +9679,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9757,7 +9727,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9771,7 +9741,7 @@ public class Comman
     }
 
 
-   
+
     public DataSet Tablet_Post_Session_Insert_Update_SessionWiseDetails(DataTable DtttblTravelMatrixDeatils2024, DataTable DtttblTravelMatrixExpens)
     {
         SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
@@ -9789,7 +9759,7 @@ public class Comman
             sqlcmd.CommandText = "Tablet_Post_Session_Insert_Update_SessionWiseDetails";
             sqlcmd.Parameters.AddWithValue("@SessionWiseDetails", DtttblTravelMatrixDeatils2024);
             sqlcmd.Parameters.AddWithValue("@LocationDetails", DtttblTravelMatrixExpens);
- 
+
 
             //sqlcmd.Parameters.AddWithValue("@UserID", iUserID);
             //sqlcmd.Parameters.AddWithValue("@JSON", sJason);
@@ -9805,7 +9775,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9850,7 +9820,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9879,7 +9849,7 @@ public class Comman
             sqlcmd.CommandType = CommandType.StoredProcedure;
             sqlcmd.CommandText = "Tablet_Post_Session_Insert_Update_tblTravelMatrixDeatils2024WithoutExpen";
             sqlcmd.Parameters.AddWithValue("@MatrixDeatils2024", DtttblTravelMatrixDeatils2024);
-          // sqlcmd.Parameters.AddWithValue("@MatrixExpens", DtttblTravelMatrixExpens);
+            // sqlcmd.Parameters.AddWithValue("@MatrixExpens", DtttblTravelMatrixExpens);
             //sqlcmd.Parameters.AddWithValue("@MatrixPerDiem", DtttblTravelMatrixPerDiem);
             //sqlcmd.Parameters.AddWithValue("@UserID", iUserID);
             //sqlcmd.Parameters.AddWithValue("@JSON", sJason);
@@ -9895,7 +9865,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9925,7 +9895,7 @@ public class Comman
             sqlcmd.CommandText = "Tablet_Post_Session_Insert_Update_tblTravelMatrixDeatils2024WithExprn";
             sqlcmd.Parameters.AddWithValue("@MatrixDeatils2024", DtttblTravelMatrixDeatils2024);
             sqlcmd.Parameters.AddWithValue("@MatrixExpens", DtttblTravelMatrixExpens);
-           // sqlcmd.Parameters.AddWithValue("@MatrixPerDiem", DtttblTravelMatrixPerDiem);
+            // sqlcmd.Parameters.AddWithValue("@MatrixPerDiem", DtttblTravelMatrixPerDiem);
             //sqlcmd.Parameters.AddWithValue("@UserID", iUserID);
             //sqlcmd.Parameters.AddWithValue("@JSON", sJason);
             SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
@@ -9940,7 +9910,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -9984,7 +9954,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -10026,7 +9996,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -10068,7 +10038,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -10110,7 +10080,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -10152,7 +10122,7 @@ public class Comman
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -10248,5 +10218,11 @@ public class Comman
 
 }
 
+
+public class GoogleCaptchaResponse
+{
+    [JsonProperty("success")]
+    public bool Success { get; set; }
+}
 
 

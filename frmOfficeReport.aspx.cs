@@ -584,8 +584,59 @@ public partial class frmOfficeReport : System.Web.UI.Page
             ViewState["GUID"] = "";
         }
     }
+    public bool InterventionSql_Injection(string RVal)
+    {
+        SqlInjection objAudit = new SqlInjection();
+        bool injection = false;
+
+
+        injection = objAudit.CheckInputBool(RVal);
+
+        return injection;
+
+    }
+    public static List<Control> GetAllControls(List<Control> controls, Type t, Control parent /* can be Page */)
+    {
+        foreach (Control c in parent.Controls)
+        {
+            if (c.GetType() == t)
+                controls.Add(c);
+            if (c.HasControls())
+                controls = GetAllControls(controls, t, c);
+        }
+        return controls;
+    }
+    public string SetTextBoxFocusSelect(Page page)
+    {
+        string ALlTestBoxValue = "";
+        List<Control> list = new List<Control>();
+        list = GetAllControls(list, typeof(TextBox), page);
+        foreach (Control ctl in list)
+        {
+            if (ctl.GetType() == typeof(TextBox))
+            {
+                ((TextBox)ctl).Attributes.Add("onfocus", "this.select()");
+                string TempVari = ((TextBox)ctl).Text;
+                if (TempVari.Length > 0)
+                {
+                    ALlTestBoxValue += TempVari + "  ";
+                }
+            }
+        }
+        return ALlTestBoxValue;
+    }
     protected void BtnSave_Click(object sender, EventArgs e)
     {
+		string RVal = SetTextBoxFocusSelect(this.Page);
+        if (!InterventionSql_Injection(RVal))
+        {
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Spurious input detected. Data rejected')</script>", false);
+
+            return;
+        }
         SaveData();
 
     }
@@ -884,7 +935,7 @@ public partial class frmOfficeReport : System.Web.UI.Page
         {
             UNICOde = objMain.Generate_RandomString(8);
         }
-
+        int result = 0;
         string Dateof = txtDate.Text;
         string[] b = Dateof.Split('/');
 
@@ -895,29 +946,130 @@ public partial class frmOfficeReport : System.Web.UI.Page
         {
             if (Session["user_level"].ToString() == "19")
             {
-                SQL = "Update TblActivityUpdate_Office set [Meeting]='" + Meeting + "',modifyBy='" + Session["username"].ToString() + "',modifyDate='" + DateTime.Now.ToString("yyyy-MM-dd") + "', [Meeting_FC]='" + MeetingFC + "',[MeetingType]='" + MeetingType + "',[MeetingType_Other]='" + txtTraingOtherDec.Text + "',[Training]='" + Trainging + "',[Training_FC]=" + TraingingFC + ",[TrainingType]='" + TraingingType + "',[TrainingType_Other]='" + Txt_OtherDesc.Text + "',[Other_FC]='" + OtherDesc + "',[Other_specify]='" + Txt_OtherDesc.Text + "',UserEntry='2',Remarks='" + ddlRemark.SelectedValue + "' where GUID_Office ='" + ViewState["GUID"].ToString() + "' ";
-                InsertTS = objMain.AddUpdate(SQL);
+                 SqlParameter[] parm = new SqlParameter[]
+				 {
+                     new SqlParameter("@GUID_Office",ViewState["GUID"].ToString()),
+                        new SqlParameter("@Meeting", Meeting),
+                        new SqlParameter("@Meeting_FC", MeetingFC),
+                        new SqlParameter("@MeetingType",MeetingType),
+                        new SqlParameter("@MeetingType_Other", MeetingFC),
+                                          new SqlParameter("@Other_FC",OtherDesc),
+                        new SqlParameter("@Training", Trainging),
+                        new SqlParameter("@Training_FC", TraingingFC),
+                        new SqlParameter("@TrainingType", TraingingType),
+                         new SqlParameter("@TrainingType_Other",txtTraingOther.Text),
+  
+                        new SqlParameter("@Other_specify", Txt_OtherDesc.Text),
+                        new SqlParameter("@ActivityDate", Convert.ToDateTime(FcDate).ToString("yyy/MM/dd")),
+                       new SqlParameter("@UserID",ddlUser.SelectedValue ),
+
+                             new SqlParameter("@VillageCode", ddlVilage.SelectedValue),
+                                 new SqlParameter("@ApproveStatus","FC"),
+                       new SqlParameter("@UserEntry", "2"),
+                         new SqlParameter("@Remarks", ddlRemark.SelectedValue),
+                                new SqlParameter("@CreateBy", Convert.ToString(Session["username"] )),
+                                  new SqlParameter("@Flag", "U"),
+
+                          };
+                result = Convert.ToInt32(SqlHelper.ExecuteScaler(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUpdateOffice", parm));
+		 
             }
             if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "145")
             {
-                SQL = "Update TblActivityUpdate_Office set [Meeting]='" + Meeting + "',modifyBy='" + Session["username"].ToString() + "',modifyDate='" + DateTime.Now.ToString("yyyy-MM-dd") + "', [Meeting_FC]='" + MeetingFC + "',[MeetingType]='" + MeetingType + "',[MeetingType_Other]='" + txtTraingOtherDec.Text + "',[Training]='" + Trainging + "',[Training_FC]=" + TraingingFC + ",[TrainingType]='" + TraingingType + "',[TrainingType_Other]='" + Txt_OtherDesc.Text + "',[Other_FC]='" + OtherDesc + "',[Other_specify]='" + Txt_OtherDesc.Text + "' ,UserEntry='3',Remarks='" + ddlRemark.SelectedValue + "' where GUID_Office ='" + ViewState["GUID"].ToString() + "' ";
-                InsertTS = objMain.AddUpdate(SQL);
+                 SqlParameter[] parm = new SqlParameter[]
+                        {
+                     new SqlParameter("@GUID_Office",ViewState["GUID"].ToString()),
+                        new SqlParameter("@Meeting", Meeting),
+                        new SqlParameter("@Meeting_FC", MeetingFC),
+                        new SqlParameter("@MeetingType",MeetingType),
+                        new SqlParameter("@MeetingType_Other", MeetingFC),
+                                          new SqlParameter("@Other_FC",OtherDesc),
+                        new SqlParameter("@Training", Trainging),
+                        new SqlParameter("@Training_FC", TraingingFC),
+                        new SqlParameter("@TrainingType", TraingingType),
+                         new SqlParameter("@TrainingType_Other",txtTraingOther.Text),
+
+                        new SqlParameter("@Other_specify", Txt_OtherDesc.Text),
+                        new SqlParameter("@ActivityDate", Convert.ToDateTime(FcDate).ToString("yyy/MM/dd")),
+                       new SqlParameter("@UserID",ddlUser.SelectedValue ),
+
+                             new SqlParameter("@VillageCode", ddlVilage.SelectedValue),
+                                 new SqlParameter("@ApproveStatus","B"),
+                       new SqlParameter("@UserEntry", "3"),
+                         new SqlParameter("@Remarks", ddlRemark.SelectedValue),
+                                new SqlParameter("@CreateBy", Convert.ToString(Session["username"] )),
+                                  new SqlParameter("@Flag", "U"),
+
+                          };
+                result = Convert.ToInt32(SqlHelper.ExecuteScaler(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUpdateOffice", parm));
+
             }
         }
         else
         {
             if (Session["user_level"].ToString() == "19")
             {
-                SQL = "INSERT INTO TblActivityUpdate_Office ( [GUID_Office],[Meeting], [Meeting_FC],[MeetingType],[MeetingType_Other],[Training],[Training_FC],[TrainingType],[TrainingType_Other],[Other_FC],[Other_specify],[ActivityDate],[CreatedOn],[UserID],[VillageCode] ,ApproveStatus,UserEntry,Remarks,CreateBy) VALUES ( '" + UNICOde + "','" + Meeting + "','" + MeetingFC + "','" + MeetingType + "'," + MeetingFC + ",'" + Trainging + "'," + TraingingFC + ",'" + TraingingType + "','" + txtTraingOther.Text + "','" + OtherDesc + "','" + Txt_OtherDesc.Text + "','" + Convert.ToDateTime(FcDate).ToString("yyy/MM/dd") + "','" + Convert.ToDateTime(FcDate).ToString("yyy/MM/dd") + "','" + ddlUser.SelectedValue + "','" + ddlVilage.SelectedValue + "','FC','3','" + ddlRemark.SelectedValue + "','" + Session["username"].ToString() + "') ";
-                InsertTS = objMain.AddUpdate(SQL);
+               SqlParameter[] parm = new SqlParameter[]
+                          {
+                                          new SqlParameter("@GUID_Office",UNICOde),
+                        new SqlParameter("@Meeting", Meeting),
+                        new SqlParameter("@Meeting_FC", MeetingFC),
+                        new SqlParameter("@MeetingType",MeetingType),
+                        new SqlParameter("@MeetingType_Other", MeetingFC),
+                        new SqlParameter("@Training", Trainging),
+                        new SqlParameter("@Training_FC", TraingingFC),
+                        new SqlParameter("@TrainingType", TraingingType),
+       
+                           new SqlParameter("@TrainingType_Other",txtTraingOther.Text),
+                                             new SqlParameter("@Other_FC",OtherDesc),
+
+                        new SqlParameter("@Other_specify", Txt_OtherDesc.Text),
+                        new SqlParameter("@ActivityDate", Convert.ToDateTime(FcDate).ToString("yyy/MM/dd")),
+                       new SqlParameter("@UserID",ddlUser.SelectedValue ),
+
+                             new SqlParameter("@VillageCode", ddlVilage.SelectedValue),
+                                 new SqlParameter("@ApproveStatus","FC"),
+                       new SqlParameter("@UserEntry", "2"),
+                         new SqlParameter("@Remarks", ddlRemark.SelectedValue),
+                                new SqlParameter("@CreateBy", Convert.ToString(Session["username"] )),
+                                  new SqlParameter("@Flag", "I"),
+
+                            };
+                result = Convert.ToInt32(SqlHelper.ExecuteScaler(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUpdateOffice", parm));
+											  
             }
             if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "145")
             {
-                SQL = "INSERT INTO TblActivityUpdate_Office ( [GUID_Office],[Meeting], [Meeting_FC],[MeetingType],[MeetingType_Other],[Training],[Training_FC],[TrainingType],[TrainingType_Other],[Other_FC],[Other_specify],[ActivityDate],[CreatedOn],[UserID],[VillageCode],ApproveStatus,UserEntry,Remarks,CreateBy ) VALUES ( '" + UNICOde + "','" + Meeting + "','" + MeetingFC + "','" + MeetingType + "','" + txtTraingOtherDec.Text + "','" + Trainging + "'," + TraingingFC + ",'" + TraingingType + "','" + txtTraingOther.Text + "','" + OtherDesc + "','" + Txt_OtherDesc.Text + "','" + Convert.ToDateTime(FcDate).ToString("yyy/MM/dd") + "','" + Convert.ToDateTime(FcDate).ToString("yyy/MM/dd") + "','" + ddlUser.SelectedValue + "','" + ddlVilage.SelectedValue + "' ,'B','3','" + ddlRemark.SelectedValue + "','" + Session["username"].ToString() + "') ";
-                InsertTS = objMain.AddUpdate(SQL);
+              SqlParameter[] parm = new SqlParameter[]
+                          {
+                                          new SqlParameter("@GUID_Office",UNICOde),
+                        new SqlParameter("@Meeting", Meeting),
+                        new SqlParameter("@Meeting_FC", MeetingFC),
+                        new SqlParameter("@MeetingType",MeetingType),
+                        new SqlParameter("@MeetingType_Other", MeetingFC),
+                        new SqlParameter("@Training", Trainging),
+                        new SqlParameter("@Training_FC", TraingingFC),
+                        new SqlParameter("@TrainingType", TraingingType),
+                         new SqlParameter("@TrainingType_Other",txtTraingOther.Text),
+                                           new SqlParameter("@Other_FC",OtherDesc),
+
+                        new SqlParameter("@Other_specify", Txt_OtherDesc.Text),
+                        new SqlParameter("@ActivityDate", Convert.ToDateTime(FcDate).ToString("yyy/MM/dd")),
+                       new SqlParameter("@UserID",ddlUser.SelectedValue ),
+
+                             new SqlParameter("@VillageCode", ddlVilage.SelectedValue),
+                                 new SqlParameter("@ApproveStatus","FC"),
+                       new SqlParameter("@UserEntry", "3"),
+                         new SqlParameter("@Remarks", ddlRemark.SelectedValue),
+                                new SqlParameter("@CreateBy", Convert.ToString(Session["username"] )),
+                                  new SqlParameter("@Flag", "B"),
+
+                            };
+                result = Convert.ToInt32(SqlHelper.ExecuteScaler(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUpdateOffice", parm));
+																	   
             }
         }
-        if (InsertTS == true)
+        if (result>0)
         {
 
 

@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Globalization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Data;
-using System.Globalization;
-using System.Drawing;
-using System.Data.SqlClient;
-
 public partial class frmNewSchoolActivity : System.Web.UI.Page
 {
     clsMain objMain = new clsMain();
@@ -24,10 +21,10 @@ public partial class frmNewSchoolActivity : System.Web.UI.Page
 
 
             ModalPopupExtender.Hide();
-          
+
             LoadEnrolled();
             dropdownbind();
-            if (Session["StateCode"].ToString() == "9A" || Session["StateCode"].ToString() == "9B" || Session["StateCode"].ToString() == "9C") 
+            if (Session["StateCode"].ToString() == "9A" || Session["StateCode"].ToString() == "9B" || Session["StateCode"].ToString() == "9C")
             {
                 DV.Visible = true;
                 Slides.Visible = false;
@@ -36,56 +33,40 @@ public partial class frmNewSchoolActivity : System.Web.UI.Page
             {
                 Slides.Visible = true;
                 DV.Visible = false;
-              
+
             }
-                 CalendarExtenderTourdate.StartDate = Convert.ToDateTime(Session["FromDate"].ToString());
-                if (Convert.ToString(Session["user_level"]) == "")
+            CalendarExtenderTourdate.StartDate = Convert.ToDateTime(Session["FromDate"].ToString());
+            if (Convert.ToString(Session["user_level"]) == "")
+            {
+                Response.Redirect("login.aspx");
+            }
+
+            if (Session["user_level"].ToString() == "19")
+            {
+                DataTable dt = objMain.GetActivityUpdateDateWiseBlockWiseNew(Convert.ToString(Session["BlockCodeAct"]), "2", "FC");
+                if (dt.Rows.Count > 0)
                 {
-                    Response.Redirect("login.aspx");
+													
                 }
-
-                if (Session["user_level"].ToString() == "19")
+                else
                 {
-                    DataTable dt = objMain.GetActivityUpdateDateWiseBlockWiseNew(Convert.ToString(Session["BlockCodeAct"]), "2", "FC");
-                    if (dt.Rows.Count > 0)
-                    {
-                    }
-                    else
-                    {
 
-                        dt = objMain.GetActivityUserWiseMaxDateNew(ddlUser.SelectedValue, Convert.ToString(Session["BlockCodeAct"]));
-                    }
-                    if (dt.Rows.Count > 0)
-                    {
-                        if (Convert.ToString(dt.Rows[0]["ActivityDate"].ToString()) != "")
-                        {
-                            DateTime Activitydate1 = Convert.ToDateTime(dt.Rows[0]["ActivityDate"].ToString());
-                            if (Activitydate1.Day == 1 && Activitydate1.Month == 4)
-                            {
-                                    CalendarExtenderTourdate.StartDate = Convert.ToDateTime(dt.Rows[0]["ActivityDate"].ToString()).AddDays(0);
-                            }
-                            else
-                            {
-                                  CalendarExtenderTourdate.StartDate = Convert.ToDateTime(dt.Rows[0]["ActivityDate"].ToString()).AddDays(1);
-                            }
-                        }
-                    }
-
+                    dt = objMain.GetActivityUserWiseMaxDateNew(ddlUser.SelectedValue, Convert.ToString(Session["BlockCodeAct"]));
                 }
-                if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "145")
+                if (dt.Rows.Count > 0)
                 {
-                    DataTable dt = objMain.GetActivityUpdateDateWiseBlockWiseNew(Convert.ToString(Session["BlockCodeAct"]), "2", "B");
-                    if (dt.Rows.Count > 0)
-                    {
-                    }
-                    else
+                    if (Convert.ToString(dt.Rows[0]["ActivityDate"].ToString()) != "")
+										  
+					 
+					 
+						
                     {
 
-                        dt = objMain.GetActivityUserWiseMaxDateNewIO(ddlUser.SelectedValue, Convert.ToString(Session["BlockCodeAct"]));
-                    }
+																																	   
+					 
 
-                    if (dt.Rows.Count > 0)
-                    {
+										  
+					 
                         DateTime Activitydate1 = Convert.ToDateTime(dt.Rows[0]["ActivityDate"].ToString());
                         if (Activitydate1.Day == 1 && Activitydate1.Month == 4)
                         {
@@ -98,63 +79,90 @@ public partial class frmNewSchoolActivity : System.Web.UI.Page
                     }
                 }
 
-                txtDate.Text = DateTime.Now.ToString("dd/MM/yyyy");
-
-                if (Request.QueryString["ID"] != null)
+            }
+            if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "145")
+            {
+                DataTable dt = objMain.GetActivityUpdateDateWiseBlockWiseNew(Convert.ToString(Session["BlockCodeAct"]), "2", "B");
+                if (dt.Rows.Count > 0)
+                {
+                }
+                else
                 {
 
-                    string QueryString = Request.QueryString["ID"];
-                    string[] a = QueryString.Split(',');
-                    txtDate.Text = a[0].ToString();
-                    LoadData(Session["Cluseter"].ToString());
-
-
-                    string ToDate = txtDate.Text;
-                    string[] c = ToDate.Split('/');
-                    string aToDate = c[2] + '-' + c[1] + '-' + c[0];
-
-                    string con = "";
-                    DataTable dtMain = null;
-                    if (Session["user_level"].ToString() == "19")
-                    {
-                        con = "ActivityDate =('" + aToDate + "') and UserEntry=2  and ApproveStatus='FC'  and mst5village.ClusterCode='" + Session["Cluseter"].ToString() + "' ";
-                        dtMain = LoadAllActivtiyDatewise(con, 1);
-
-                    }
-                    if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "145")
-                    {
-                        con = "ActivityDate =('" + aToDate + "') and UserEntry=3  and ApproveStatus='B' and mst5village.ClusterCode='" + Session["Cluseter"].ToString() + "' ";
-                        dtMain = LoadAllActivtiyDatewise(con, 1);
-                        // dtMain = objMain.LoadSchoolActivtiyCluseterIO(afromDate, aToDate, ddlBlock.SelectedValue, con);
-                    }
-                    if (dtMain.Rows.Count > 0)
-                    {
-                        ddlUser.SelectedValue = dtMain.Rows[0]["UserName"].ToString();
-                        ddlUser_SelectedIndexChanged(ddlUser, null);
-                        if (ddlUser.SelectedIndex > 0)
-                        {
-                            ddlVilage.SelectedValue = dtMain.Rows[0]["Villagecode"].ToString();
-                            ddlVilage_SelectedIndexChanged(ddlVilage, null);
-                            ddlSchool.SelectedValue = dtMain.Rows[0]["SchoolCode"].ToString();
-
-                            btnSerach_Click(btnSerach, null);
-                        }
-                    }
-
-                    //DataTable dt = objMain.GetActivityUserWiseMaxDate(ddlUser.SelectedValue);
-                    //if (dt.Rows.Count > 0)
-                    //{
-                    //    CalendarExtenderTourdate.StartDate = Convert.ToDateTime(dtMain.Rows[0]["Villagecode"].ToString());
-                    //}
-                    pnlMain.Enabled = false;
-                    //btnSerach_Click(btnSerach, null);
+                    dt = objMain.GetActivityUserWiseMaxDateNewIO(ddlUser.SelectedValue, Convert.ToString(Session["BlockCodeAct"]));
                 }
-                ViewState["GUID_School"] = "";
+
+                if (dt.Rows.Count > 0)
+                {
+                    DateTime Activitydate1 = Convert.ToDateTime(dt.Rows[0]["ActivityDate"].ToString());
+                    if (Activitydate1.Day == 1 && Activitydate1.Month == 4)
+                    {
+                        CalendarExtenderTourdate.StartDate = Convert.ToDateTime(dt.Rows[0]["ActivityDate"].ToString()).AddDays(0);
+                    }
+                    else
+                    {
+                        CalendarExtenderTourdate.StartDate = Convert.ToDateTime(dt.Rows[0]["ActivityDate"].ToString()).AddDays(1);
+                    }
+                }
+            }
+
+            txtDate.Text = DateTime.Now.ToString("dd/MM/yyyy");
+
+            if (Request.QueryString["ID"] != null)
+            {
+
+                string QueryString = Request.QueryString["ID"];
+                string[] a = QueryString.Split(',');
+                txtDate.Text = a[0].ToString();
+                LoadData(Session["Cluseter"].ToString());
 
 
-                
+                string ToDate = txtDate.Text;
+                string[] c = ToDate.Split('/');
+                string aToDate = c[2] + '-' + c[1] + '-' + c[0];
+
+                string con = "";
+                DataTable dtMain = null;
+                if (Session["user_level"].ToString() == "19")
+                {
+                    con = "ActivityDate =('" + aToDate + "') and UserEntry=2  and ApproveStatus='FC'  and mst5village.ClusterCode='" + Session["Cluseter"].ToString() + "' ";
+                    dtMain = LoadAllActivtiyDatewise(con, 1);
+
+                }						
+                if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "145")
+                {
+                    con = "ActivityDate =('" + aToDate + "') and UserEntry=3  and ApproveStatus='B' and mst5village.ClusterCode='" + Session["Cluseter"].ToString() + "' ";
+                    dtMain = LoadAllActivtiyDatewise(con, 1);
+                    // dtMain = objMain.LoadSchoolActivtiyCluseterIO(afromDate, aToDate, ddlBlock.SelectedValue, con);
+                }
+                if (dtMain.Rows.Count > 0)
+                {
+                    ddlUser.SelectedValue = dtMain.Rows[0]["UserName"].ToString();
+                    ddlUser_SelectedIndexChanged(ddlUser, null);
+                    if (ddlUser.SelectedIndex > 0)
+                    {
+                        ddlVilage.SelectedValue = dtMain.Rows[0]["Villagecode"].ToString();
+                        ddlVilage_SelectedIndexChanged(ddlVilage, null);
+                        ddlSchool.SelectedValue = dtMain.Rows[0]["SchoolCode"].ToString();
+
+                        btnSerach_Click(btnSerach, null);
+                    }
+                }
+
+                //DataTable dt = objMain.GetActivityUserWiseMaxDate(ddlUser.SelectedValue);
+                //if (dt.Rows.Count > 0)
+                //{
+                //    CalendarExtenderTourdate.StartDate = Convert.ToDateTime(dtMain.Rows[0]["Villagecode"].ToString());
+                //}
+                pnlMain.Enabled = false;
+                //btnSerach_Click(btnSerach, null);
+            }
+            ViewState["GUID_School"] = "";
+
+
+
         }
-        
+
     }
     public DataTable LoadAllActivtiyDatewise(string WhereQuery, int flag)
     {
@@ -168,7 +176,7 @@ public partial class frmNewSchoolActivity : System.Web.UI.Page
 
     protected void txtchdate(object sender, EventArgs e)
     {
-        btnSerach_Click(btnSerach,null);
+        btnSerach_Click(btnSerach, null);
     }
     #region anuj  code
     public void dropdownbind()
@@ -280,23 +288,23 @@ public partial class frmNewSchoolActivity : System.Web.UI.Page
             {
                 txtage.Text = Convert.ToString(dt.Rows[0]["Age"]);
             }
-           
 
-                txtGirlChildName.Text = Convert.ToString(dt.Rows[0]["ChildName"]);
-         
-                ddlCategory.SelectedValue = Convert.ToString(dt.Rows[0]["Category"]);
-           
-                txtFathername.Text = Convert.ToString(dt.Rows[0]["FatherName"]);
-          
-           
-                ddlClass.SelectedValue = Convert.ToString(dt.Rows[0]["LookupCode"]);
-           
-                txtParentMobileNumber.Text = Convert.ToString(dt.Rows[0]["MobileNo"]);
-           
-                txtSRNumber.Text = Convert.ToString(dt.Rows[0]["SRnumber"]);
-           
-                ddlgender.SelectedValue = Convert.ToString(dt.Rows[0]["Gender"]);
-         
+
+            txtGirlChildName.Text = Convert.ToString(dt.Rows[0]["ChildName"]);
+
+            ddlCategory.SelectedValue = Convert.ToString(dt.Rows[0]["Category"]);
+
+            txtFathername.Text = Convert.ToString(dt.Rows[0]["FatherName"]);
+
+
+            ddlClass.SelectedValue = Convert.ToString(dt.Rows[0]["LookupCode"]);
+
+            txtParentMobileNumber.Text = Convert.ToString(dt.Rows[0]["MobileNo"]);
+
+            txtSRNumber.Text = Convert.ToString(dt.Rows[0]["SRnumber"]);
+
+            ddlgender.SelectedValue = Convert.ToString(dt.Rows[0]["Gender"]);
+
             ModalAddclass.Show();
         }
 
@@ -357,40 +365,36 @@ public partial class frmNewSchoolActivity : System.Web.UI.Page
         string UniqueChildRCode = "", SRnumber = "", SchoolCode = "", CreatedBy = "", MobileNo = "", FatherName = "", ChildName = "", VillageCode = "", flag = "", session2 = "";
         int Class = 0, Category = 0, Age = 0, DOBAvailable = 0, Gender = 0, ID = 0;
         DateTime? DOB = null; DateTime? Registrationdate = null;
-           if (Convert.ToString(hdnUniqueChildRCode.Value) != "")
+        if (Convert.ToString(hdnUniqueChildRCode.Value) != "")
+        {
+            UniqueChildRCode = Convert.ToString(hdnUniqueChildRCode.Value);
+            flag = "U";
+            if (Convert.ToString(ViewState["session2"]) != "")
             {
-                UniqueChildRCode = Convert.ToString(hdnUniqueChildRCode.Value);
-                flag = "U";
-                if (Convert.ToString(ViewState["session2"]) != "")
+			  session2 = Convert.ToString(ViewState["session2"]);
+            }
+        }
+        else
+        {
+            UniqueChildRCode = objMain.Generate_RandomString(8);
+            flag = "I";
+        }
+        if (txtRegistration.Text != "")
+        {
+            Registrationdate = Convert.ToDateTime(txtRegistration.Text);
+            if (Convert.ToString(session2) != "")
+            {
+                if (Convert.ToDateTime(txtRegistration.Text) > Convert.ToDateTime(session2))
                 {
-                    session2 = Convert.ToString(ViewState["session2"]);
+
                 }
-            }
-            else
-            {
-                UniqueChildRCode = objMain.Generate_RandomString(8);
-                flag = "I";
-            }
-            if (txtRegistration.Text != "")
-            {
-                Registrationdate = Convert.ToDateTime(txtRegistration.Text);
-                if (Convert.ToString(session2) != "")
+                else
                 {
-                    if (Convert.ToDateTime(txtRegistration.Text) > Convert.ToDateTime(session2))
-                    {
-
-                    }
-                    else
-                    {
-
                     ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Registration date should be greater  then Session2 date')</script>", false);
-                        return;
-                    }
-
+                    return;
                 }
-           
 
-
+            }
             if (Convert.ToInt32(ddldobavail.SelectedValue) == 1)
             {
                 DateTime DOB1;
@@ -405,7 +409,7 @@ public partial class frmNewSchoolActivity : System.Web.UI.Page
 
 
 
-                Age1 = Convert.ToInt32(a[2]) - Convert.ToInt32(b[2] );
+                Age1 = Convert.ToInt32(a[2]) - Convert.ToInt32(b[2]);
                 DOB1 = Convert.ToDateTime(a[2] + '-' + a[1] + '-' + a[0]);
 
                 Int32 iyear = Convert.ToInt32(a[2]) + Age1;
@@ -419,9 +423,8 @@ public partial class frmNewSchoolActivity : System.Web.UI.Page
 
 
                     this.txtDOB.Focus();
-                  
                     ModalAddclass.Show();
-                    return ;
+                    return;
 
                 }
                 if (Age1 > 18)
@@ -430,95 +433,103 @@ public partial class frmNewSchoolActivity : System.Web.UI.Page
 
                     ModalAddclass.Show();
                     this.txtDOB.Focus();
-                    return ;
+                    return;
                 }
             }
 
-            }
+        }
 
-            if (ddldobavail.SelectedValue != "")
-            {
-                DOBAvailable = Convert.ToInt32(ddldobavail.SelectedValue);
-            }
-            if (ddldobavail.SelectedValue == "1")
-            {
-                DOB = Convert.ToDateTime(txtDOB.Text);
-            }
-            else if (ddldobavail.SelectedValue != "")
-            {
-                Age = Convert.ToInt32(txtage.Text);
-            }
-            if (txtGirlChildName.Text != "")
-            {
-                ChildName = Convert.ToString(txtGirlChildName.Text);
-            }
-            if (ddlCategory.SelectedValue != "")
-            {
-                Category = Convert.ToInt32(ddlCategory.SelectedValue);
-            }
-            if (txtFathername.Text != "")
-            {
-                FatherName = Convert.ToString(txtFathername.Text);
-            }
-            if (ddlClass.SelectedValue != "")
-            {
-                Class = Convert.ToInt32(ddlClass.SelectedValue);
-            }
-            if (txtParentMobileNumber.Text != "")
-            {
-                MobileNo = Convert.ToString(txtParentMobileNumber.Text);
-            }
+        if (ddldobavail.SelectedValue != "")
+        {
+            DOBAvailable = Convert.ToInt32(ddldobavail.SelectedValue);
+        }
+        if (ddldobavail.SelectedValue == "1")
+        {
+            DOB = Convert.ToDateTime(txtDOB.Text);
+        }
+        else if (ddldobavail.SelectedValue != "")
+        {
+            Age = Convert.ToInt32(txtage.Text);
+        }
+        if (txtGirlChildName.Text != "")
+        {
+            ChildName = Convert.ToString(txtGirlChildName.Text);
+        }
+        if (ddlCategory.SelectedValue != "")
+        {
+            Category = Convert.ToInt32(ddlCategory.SelectedValue);
+        }
+        if (txtFathername.Text != "")
+        {
+            FatherName = Convert.ToString(txtFathername.Text);
+        }
+        if (ddlClass.SelectedValue != "")
+        {
+            Class = Convert.ToInt32(ddlClass.SelectedValue);
+        }
+        if (txtParentMobileNumber.Text != "")
+        {
+            MobileNo = Convert.ToString(txtParentMobileNumber.Text);
+        }
         SRnumber = Convert.ToString(txtSRNumber.Text);
         bool Alf = CheckAllphanumeric(txtSRNumber.Text);
-                if (Alf == true)
-                {
-                    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please enter atleast one numbe')</script>", false);
+        if (Alf == true)
+        {
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please enter atleast one numbe')</script>", false);
 
-                    ModalAddclass.Show();
-                    return;
-                }
-            if (txtSRNumber.Text != "" && flag == "I")
+            ModalAddclass.Show();
+            return;
+        }
+        if (txtSRNumber.Text != "" && flag == "I")
+        {
+            SRnumber = Convert.ToString(txtSRNumber.Text);
+            DataTable dtcheck = new DataTable();
+            DataTable dtcheck2 = new DataTable();
+
+            string condition = " where villagecode= '" + ddlVilage.SelectedValue + "' and Schoolcode= '" + ddlSchool.SelectedValue + "' and SrNumber= '" + SRnumber + "'";
+            string whr1 = " where villagecode= '" + ddlVilage.SelectedValue + "' and Schoolcode= '" + ddlSchool.SelectedValue + "' ";
+		    dtcheck = GetSRNumberData(condition);
+            if (dtcheck.Rows.Count > 0)
             {
-                SRnumber = Convert.ToString(txtSRNumber.Text);
-                DataTable dtcheck = new DataTable();
-                DataTable dtcheck2 = new DataTable();
+                ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Duplicate SRNumber .Please enter New SRNumber')</script>", false);
+					  
+											 
+						   
+				 
 
-                string condition = " where villagecode= '" + ddlVilage.SelectedValue + "' and Schoolcode= '" + ddlSchool.SelectedValue + "' and SrNumber= '" + SRnumber + "'";
-                string whr1 = " where villagecode= '" + ddlVilage.SelectedValue + "' and Schoolcode= '" + ddlSchool.SelectedValue + "' ";
-          
-                dtcheck = GetSRNumberData(condition);
-                if (dtcheck.Rows.Count > 0)
-                {
-                    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Duplicate SRNumber .Please enter New SRNumber')</script>", false);
-                      
-                        ModalAddclass.Show();
-                    return;
-                }
-
-                dtcheck2 = GetSRNumberData(whr1);
-                if (dtcheck2.Rows.Count > 12)
-                {
-                    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Number of child already added')</script>", false);
-
-                      
-                      ModalAddclass.Show();
-                        return;
-                }
+                ModalAddclass.Show();
+                return;
             }
-            if (ddlgender.SelectedValue != "")
-            {
-                Gender = Convert.ToInt32(ddlgender.SelectedValue);
-            }
-            if (Convert.ToString(Session["username"]) != "" && Convert.ToString(Session["username"]) != null)
-            {
-                CreatedBy = Convert.ToString(Session["username"]);
-            }
+																																											
 
-            ID = InsertRetentionChildata(UniqueChildRCode, ddlVilage.SelectedValue, ddlSchool.SelectedValue, Registrationdate, DOBAvailable, DOB, Age, ChildName, Category, FatherName, Class, MobileNo, SRnumber, Gender, CreatedBy, flag);
-            if (ID > 0)
+            dtcheck2 = GetSRNumberData(whr1);
+            if (dtcheck2.Rows.Count > 12)
+							   
+				 
+			 
+											  
             {
-                ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Save Successfull')</script>", false);
-                Session["asdsa"] = "1";
+                ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Number of child already added')</script>", false);
+
+
+                ModalAddclass.Show();
+                return;
+            }
+        }
+        if (ddlgender.SelectedValue != "")
+        {
+            Gender = Convert.ToInt32(ddlgender.SelectedValue);
+        }
+        if (Convert.ToString(Session["username"]) != "" && Convert.ToString(Session["username"]) != null)
+        {
+            CreatedBy = Convert.ToString(Session["username"]);
+        }
+
+        ID = InsertRetentionChildata(UniqueChildRCode, ddlVilage.SelectedValue, ddlSchool.SelectedValue, Registrationdate, DOBAvailable, DOB, Age, ChildName, Category, FatherName, Class, MobileNo, SRnumber, Gender, CreatedBy, flag);
+        if (ID > 0)
+        {
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Save Successfull')</script>", false);
+            Session["asdsa"] = "1";
             DataTable dt = new DataTable();
             string con = "";
             if (ddlVilage.SelectedIndex > 0)
@@ -537,7 +548,7 @@ public partial class frmNewSchoolActivity : System.Web.UI.Page
             {
                 DateTime currentdate = Convert.ToDateTime(txtDate.Text);
                 string Cdate = currentdate.ToString("dd/M/yyyy", CultureInfo.InvariantCulture);
-              
+
                 if (Convert.ToDateTime(Cdate) > Convert.ToDateTime(hdnsession2.Value))
                 {
 
@@ -548,7 +559,6 @@ public partial class frmNewSchoolActivity : System.Web.UI.Page
                 }
 
             }
-
             //      Response.Redirect("./frmNewSchoolActivity.aspx?ID=5",true);
             //if (Convert.ToString(ddldobavail.SelectedValue) != "")
             //{
@@ -577,12 +587,11 @@ public partial class frmNewSchoolActivity : System.Web.UI.Page
 
 
         }
-            else
-            {
-                ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Save Unsuccessfull')</script>", false);
+        else
+        {
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Save Unsuccessfull')</script>", false);
 
-            }
-        
+        }        
     }
     public int InsertRetentionChildata(string UniqueChildRCode, string VillageCode, string SchoolCode, DateTime? Registrationdate, int DOBAvailable, DateTime? DOB, int Age, string ChildName, int Category, string FatherName, int Class, string MobileNo, string SRnumber, int Gender, string CreatedBy, string flag)
     {
@@ -648,7 +657,7 @@ public partial class frmNewSchoolActivity : System.Web.UI.Page
 
         }
       
-            if (dtchk.Rows.Count > 12)
+        if (dtchk.Rows.Count > 12)
         {
             ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('only  13 girls can be added')</script>", false);
             return;
@@ -697,7 +706,7 @@ public partial class frmNewSchoolActivity : System.Web.UI.Page
                 ddlAttendance.Enabled = false;
                 ddlsession.Enabled = false;
             }
-            if(ddlAttendance.SelectedValue=="0")
+            if (ddlAttendance.SelectedValue == "0")
             {
                 LinkButton.Visible = false;
             }
@@ -712,10 +721,8 @@ public partial class frmNewSchoolActivity : System.Web.UI.Page
         //    ddlsession.SelectedIndex = 0;
         //    return;
 
-        //}
-
-            
-            string cond = " where 1=1 and";
+        //}            
+        string cond = " where 1=1 and";
         string cond1 = " where 1=1 and";
         if (ddlsession.SelectedIndex > 0)
         {
@@ -733,13 +740,13 @@ public partial class frmNewSchoolActivity : System.Web.UI.Page
             }
             if (ddlsession.SelectedValue == "228")
             {
-                cond = cond + " and Session = " + (Convert.ToInt32(ddlsession.SelectedValue) ) + " ";
-               
+                cond = cond + " and Session = " + (Convert.ToInt32(ddlsession.SelectedValue)) + " ";
+
             }
-                if (ddlsession.SelectedValue != "228")
+            if (ddlsession.SelectedValue != "228")
             {
-                cond = cond + " and Session = " + (Convert.ToInt32(ddlsession.SelectedValue) ) + " ";
-           
+                cond = cond + " and Session = " + (Convert.ToInt32(ddlsession.SelectedValue)) + " ";
+
             }
             if (ddlsession.SelectedValue != "228")
             {
@@ -757,10 +764,8 @@ public partial class frmNewSchoolActivity : System.Web.UI.Page
                     cond1 = cond1 + " and Session = " + (Convert.ToInt32(ddlsession.SelectedValue) - 1) + " ";
                 }
             }
-           
-         
-            dtsessionchcek = Getatt_SessionData(cond);
-          DataTable  dtsessionchcek1 = Getatt_SessionData(cond1);
+			dtsessionchcek = Getatt_SessionData(cond);
+            DataTable dtsessionchcek1 = Getatt_SessionData(cond1);
 
             DataTable dtrecordcheck = new DataTable();
             string whr1 = " where villagecode= '" + ddlVilage.SelectedValue + "' and Schoolcode= '" + ddlSchool.SelectedValue + "' and convert(varchar(50),AttDate,103) = convert(varchar(50),'" + txtDate.Text + "',103)  ";
@@ -798,7 +803,7 @@ public partial class frmNewSchoolActivity : System.Web.UI.Page
                 }
             }
 
-                if (dtsessionchcek.Rows.Count > 0)
+            if (dtsessionchcek.Rows.Count > 0)
             {
 
                 ScriptManager.RegisterStartupScript(this, GetType(), "importingdone", "alert('" + ddlsession.SelectedItem.Text + "   Attendance already upload Previous Date');", true);
@@ -825,9 +830,7 @@ public partial class frmNewSchoolActivity : System.Web.UI.Page
 
             }
         }
-    }
-
-   
+    }  
 
     public DataTable Get_Attendance_Data(string condition)
     {
@@ -920,7 +923,7 @@ new SqlParameter("@Flag", flag)
             }
               
         }
-            if (dt.Rows.Count > 0)
+        if (dt.Rows.Count > 0)
         {
             
             Session["GridViewData_Reg"] = dt;
@@ -940,7 +943,7 @@ new SqlParameter("@Flag", flag)
                     DataRow[] dr = dtLiff.Select("UniqueChildRCode='" + lblUniqueChildCode.Text + "'");
                     if (dr.Length > 0)
                     {
-                        if (Convert.ToInt32(dr[0]["Present"])==1)
+                        if (Convert.ToInt32(dr[0]["Present"]) == 1)
                         {
                             Attendance.SelectedValue = "1";
                             LinkButton.Visible = true;
@@ -988,7 +991,6 @@ new SqlParameter("@Flag", flag)
     {
         if (chkSession2.Checked == true)
         {
-           
             Imgaddclass.Enabled = true;
         }
     }
@@ -1277,7 +1279,7 @@ new SqlParameter("@Flag", flag)
             for (kk = 0; kk < dtUseryyy.Rows.Count; kk++)
             {
 
-                 UserName += "'" + dtUseryyy.Rows[kk]["UserID"].ToString() + "'" + ",";
+                UserName += "'" + dtUseryyy.Rows[kk]["UserID"].ToString() + "'" + ",";
 
             }
         }
@@ -1292,28 +1294,7 @@ new SqlParameter("@Flag", flag)
         strQry = "Select  distinct UserName as UserId,[FristName]+' ('+ UserName +')' as [UserName]  from MstUser  where UserLevel=24 and VillageCode   = '" + Session["Cluseter"].ToString() + "'   ";
 
         strQry += "union  ";
-        strQry += " Select  distinct UserName as UserId,[FristName]+' ('+ UserName +')' as [UserName]  from MstUser  where UserLevel=24 and UserName in("+ UserName + ")";
-        //strQry += " Select  distinct UserName as UserId,[FristName]+' ('+ UserName +')' as [UserName]  from MstUser  where UserLevel=24 and UserName in(  ";
-        //strQry += " select UserID from tblActivityUpdate_School  ";
-        //strQry += " inner join mst5village on mst5village.villagecode=tblActivityUpdate_School.villagecode  ";
-        //strQry += " where ActivityDate =('" + afromDate + "')  and  ";
-        //strQry += " mst5village.ClusterCode   = '" + Session["Cluseter"].ToString() + "' )    ";
-
-
-        //    conditions = "UserLevel=24 and VillageCode  in( select ClusterCode from mstCluster where ClusterName ='" + ClusterName + "') ";
-        //if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "153" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "153")
-        //{
-        //    conditions = conditions + " and DistrictCode='" + Session["DistrictCode"].ToString() + "' ";
-        //}
-
-        //if (Session["user_level"].ToString() == "19" )
-        //{
-        //    conditions = conditions + " and BlockCode='" + Session["BlockCode"].ToString() + "' ";
-        //}
-        //if (Session["user_level"].ToString() == "24" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "153" || Session["user_level"].ToString() == "61" || Session["user_level"].ToString() == "59")
-        //{
-        //    conditions = conditions + " and UserName='as' ";
-        //}
+        strQry += " Select  distinct UserName as UserId,[FristName]+' ('+ UserName +')' as [UserName]  from MstUser  where UserLevel=24 and UserName in(" + UserName + ")";
         DataTable dtUser = objMain.LoadData(strQry);
         objComman.BindDLLMasterTable("MstUser", "UserName as UserId,[FristName]+' ('+ UserName +')' as [UserName] ", dtUser, conditions, "", "", ddlUser, "UserName", "UserId", "Select");
 
@@ -1504,7 +1485,7 @@ new SqlParameter("@Flag", flag)
         rbloption2.Checked = false;
         foreach (ListItem item in chkSchoolCOntact.Items) { item.Selected = false; }
     }
-        protected void btnBalSab_Click(object sender, EventArgs e)
+    protected void btnBalSab_Click(object sender, EventArgs e)
     {
 
         SqlParameter[] parm5 = new SqlParameter[]
@@ -1731,7 +1712,7 @@ new SqlParameter("@Flag", flag)
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select School')</script>", false);
                 return false;
             }
-            if (txtOther.Text!="")
+            if (txtOther.Text != "")
             {
                 if (rblothertb.Checked == true || rblotherfc.Checked == true)
                 {
@@ -1828,12 +1809,12 @@ new SqlParameter("@Flag", flag)
                 }
                 if (rdTeamY.Checked == false && rdTeamN.Checked == false && rblSMCFC.Checked == true)
                 {
-                    
-                        ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Is Team Baika available in meeting')</script>", false);
-                        return false;
-                    
+
+                    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Is Team Baika available in meeting')</script>", false);
+                    return false;
+
                 }
-                if (rdTeamY.Checked == true && rblSMCTB.Checked == false )
+                if (rdTeamY.Checked == true && rblSMCTB.Checked == false)
                 {
                     if (ddlMMTb.SelectedIndex <= 0)
                     {
@@ -2000,7 +1981,7 @@ new SqlParameter("@Flag", flag)
                     return false;
                 }
 
-                if (Convert.ToString( Session["SchoolLevel"]) == "1" && Convert.ToInt32(Ipre) > 18)
+                if (Convert.ToString(Session["SchoolLevel"]) == "1" && Convert.ToInt32(Ipre) > 18)
                 {
                     ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Entry allowed less then or equal to 18 for PS ')</script>", false);
                     this.txtTotalMember.Focus();
@@ -2337,13 +2318,10 @@ new SqlParameter("@Flag", flag)
             if (rblSacFB.Checked == true)
             {
                 SACFC = 1;
-            }
+           }
 
             int SAC_No_Of_Attended = 0;
-          
-
-
-            string Dateof = txtDate.Text;
+			string Dateof = txtDate.Text;
             string[] b = Dateof.Split('/');
 
             string FcDate = b[2] + '-' + b[1] + '-' + b[0];
@@ -2354,7 +2332,7 @@ new SqlParameter("@Flag", flag)
                 month = Convert.ToInt32(b[1]);
             }
 
-            if (month == 7 )
+            if (month == 7)
             {
                 if (chkSACUpdate.Checked == true)
                 {
@@ -3116,7 +3094,7 @@ new SqlParameter("@Flag", flag)
                 }
             }
 
-            if (SAC_No_Of_Attended> 0 && pnlSACUpdate.Enabled == true)
+            if (SAC_No_Of_Attended > 0 && pnlSACUpdate.Enabled == true)
             {
                 if (chkSACUpdate.Checked == false)
                 {
@@ -3138,7 +3116,6 @@ new SqlParameter("@Flag", flag)
 
             if (chkSACUpdate.Checked == true)
             {
-               
                 if (SACTB == 0 && SACFC == 0)
                 {
                     ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select FC OR TB SAC')</script>", false);
@@ -3811,19 +3788,19 @@ new SqlParameter("@Flag", flag)
             if (chkPhysical.Checked == true)
             {
                 if (Session["StateCode"].ToString() == "9A" || Session["StateCode"].ToString() == "9B" || Session["StateCode"].ToString() == "9C")
-                
+
                 {
 
                     if (Classrooms > 0 && DrinkingWater > 0 && GirlsToilet > 0 && Electricity > 0 && Playground > 0 && BoundaryWall > 0 && Kitchen > 0 && CLT_Kit > 0 && bookAvl > 0 && BoysToilet > 0 && WaterSupply > 0 && TilingToilet > 0 && HandicappedAccessibleToilet > 0 && MultipleHandwashingUnit > 0 && TilingClassroomFloor > 0 && Blackboards > 0 && ProperPainting > 0 && DisabledAccessibleRamp > 0 && AppropriateElectricalWiring > 0 && BoysUrinal > 0 && GirlsUrinal > 0 && Furniture > 0 && TapWaterFacility > 0)
-                         {
-                         }
-                        else
-                        {
-                            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select All Colour')</script>", false);
+                    {
+                    }
+                    else
+                    {
+                        ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select All Colour')</script>", false);
                         return false;
                     }
                 }
-                else if (Classrooms > 0 && DrinkingWater > 0 && GirlsToilet > 0 && Electricity > 0 && Playground > 0 && Slide > 0 && BoundaryWall > 0 && Kitchen > 0 && CLT_Kit > 0 && bookAvl > 0 )
+                else if (Classrooms > 0 && DrinkingWater > 0 && GirlsToilet > 0 && Electricity > 0 && Playground > 0 && Slide > 0 && BoundaryWall > 0 && Kitchen > 0 && CLT_Kit > 0 && bookAvl > 0)
                 {
 
 
@@ -3866,7 +3843,6 @@ new SqlParameter("@Flag", flag)
                     this.txtSMCPre.Focus();
                     return false;
                 }
-                
                 Int32 Teac = 0;
                 if (txtFemaleTeacher.Text.Trim() != "")
                 {
@@ -3926,7 +3902,6 @@ new SqlParameter("@Flag", flag)
 
             #region SchoolConact
             string SchoolConact = "";
-        
 
             foreach (ListItem item in chkSchoolCOntact.Items)
             {
@@ -3970,20 +3945,13 @@ new SqlParameter("@Flag", flag)
             //        this.rblConTB.Focus();
             //        return false;
             //    }
-               
-
-              
-
-
-
-               
             //}
 
 
             #endregion
             //if (GvReg.Rows.Count > 0)
             //{
-                
+
             //    for (int i = 0; i < GvReg.Rows.Count; i++)
             //    {
             //        DropDownList Attendance = (DropDownList)GvReg.Rows[i].FindControl("ddlAttendance");
@@ -4003,8 +3971,7 @@ new SqlParameter("@Flag", flag)
 
             if (GvReg.Rows.Count > 6)
             {
-                
-                if (ddlsession.SelectedIndex > 0)
+               if (ddlsession.SelectedIndex > 0)
                 {
                     if (rblLifeFC.Checked == false && rblLifeTB.Checked == false)
                     {
@@ -4014,27 +3981,27 @@ new SqlParameter("@Flag", flag)
                     }
                     if (chklife.Checked == false)
                     {
-                        
-                         ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Select   Life Skill')</script>", false);
-                         this.chkSMC.Focus();
-                         return false;
-                      
-                    }
-             
-                if (rblLifeTB.Checked == true)
-                {
-                    if (ddlliffTb.SelectedIndex <= 0)
-                    {
-                        ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select TB Name LiffSkill')</script>", false);
 
-
-
+                        ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Select   Life Skill')</script>", false);
                         this.chkSMC.Focus();
                         return false;
-                    }
-                }
 
-                for (int i = 0; i < GvReg.Rows.Count; i++)
+                    }
+
+                    if (rblLifeTB.Checked == true)
+					{
+						if (ddlliffTb.SelectedIndex <= 0)
+                        {
+                            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select TB Name LiffSkill')</script>", false);
+
+
+
+                            this.chkSMC.Focus();
+                            return false;
+                        }
+                    }
+
+                    for (int i = 0; i < GvReg.Rows.Count; i++)
                     {
                         DropDownList Attendance = (DropDownList)GvReg.Rows[i].FindControl("ddlAttendance");
 
@@ -4047,16 +4014,14 @@ new SqlParameter("@Flag", flag)
 
                     }
                 }
-        
-                
-                }
+            }
 
                 
             
             return true;
 
         }
-        catch (Exception ex)
+        catch
         {
 
             return false;
@@ -4115,7 +4080,7 @@ new SqlParameter("@Flag", flag)
         Int32 SMCF5 = 0;
         Int32 SMCIsMember = 0;
         if (rblSMCTB.Checked == true)
-         { 
+        {
             if (ddlGssTbname.SelectedIndex > 0)
             {
 
@@ -4138,15 +4103,14 @@ new SqlParameter("@Flag", flag)
         {
             ISTeamBalik = 2;
         }
-        if (ddlrec.SelectedIndex >0)
+        if (ddlrec.SelectedIndex > 0)
         {
 
             SMCregisterismeeting = Convert.ToInt32(ddlrec.SelectedValue);
         }
-        if (ddlDatemeeting.SelectedIndex> 0)
+        if (ddlDatemeeting.SelectedIndex > 0)
         {
-            SMCmeetingregister =Convert.ToInt32(ddlDatemeeting.SelectedValue);
-           
+            SMCmeetingregister = Convert.ToInt32(ddlDatemeeting.SelectedValue);
         }
         if (ddlWrite.SelectedIndex > 0)
         {
@@ -4820,9 +4784,9 @@ new SqlParameter("@Flag", flag)
         {
             month = Convert.ToInt32(b[1]);
         }
-        if (month == 7 )
+        if (month == 7)
         {
-            if (txtSMCMeeting.Text.Trim() != "" && pnlSACUpdate.Enabled==true)
+            if (txtSMCMeeting.Text.Trim() != "" && pnlSACUpdate.Enabled == true)
             {
                 SAC_No_Of_Attended = Convert.ToInt32(txtSMCMeeting.Text);
             }
@@ -4994,7 +4958,7 @@ new SqlParameter("@Flag", flag)
                 SAC_Girls_Left = Convert.ToInt32(txtMarleftGirl.Text);
             }
 
-            if (txtMarleftBoy.Text.Trim() != "" && pnlSACUpdate.Enabled == true) 
+            if (txtMarleftBoy.Text.Trim() != "" && pnlSACUpdate.Enabled == true)
             {
                 SAC_Boys_Left = Convert.ToInt32(txtMarleftBoy.Text);
             }
@@ -5187,10 +5151,6 @@ new SqlParameter("@Flag", flag)
 
             BoundaryWall = 4;
         }
-
-
-      
-
         if (lblKitchen.Text == "1")
         {
             Kitchen = 1;
@@ -5618,10 +5578,8 @@ new SqlParameter("@Flag", flag)
         {
             if (gvSmc.Rows.Count > 0)
             {
-                
                 for (int i = 0; i < gvSmc.Rows.Count; i++)
                 {
-                 
                     CheckBox Attendance = (CheckBox)gvSmc.Rows[i].FindControl("ddlAttendanceSmc");
                     int Ps = 0;
                     Label lblCUniqueChildCode = (Label)gvSmc.Rows[i].FindControl("lblCUniqueChildCode");
@@ -5631,12 +5589,12 @@ new SqlParameter("@Flag", flag)
                     Label lblName = (Label)gvSmc.Rows[i].FindControl("lblName");
                     Label lblSession = (Label)gvSmc.Rows[i].FindControl("lblSession");
                     Label lblIsPrevEntry = (Label)gvSmc.Rows[i].FindControl("lblIsPrevEntry");
-                   if (Attendance.Checked==true)
+                    if (Attendance.Checked == true)
                     {
-                         Ps = 1;
+                        Ps = 1;
                         TotalSC = TotalSC + 1;
                     }
-                   if (lblGender.Text=="2")
+                    if (lblGender.Text == "2")
                     {
                         TotalFSC = TotalFSC + 1;
                     }
@@ -5672,71 +5630,8 @@ new SqlParameter("@Flag", flag)
 
                 }
 
-              
-                    TotalMember = Convert.ToInt32(TotalSC);
+                TotalMember = Convert.ToInt32(TotalSC);
                 TotalFemaSmcFemal = Convert.ToInt32(TotalFSC);
-                //if (txtTotalFmember.Text != "")
-                //{
-                //    TotalFemaSmcFemal = Convert.ToInt32(txtTotalFmember.Text);
-                //}
-                //if (ddlsession.SelectedIndex <= 0)
-                //{
-                //    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Session')</script>", false);
-                //    return;
-                //}
-                //if (rblLifeFC.Checked == false && rblLifeTB.Checked == false)
-                //{
-                //    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select T.B or F.C. for Life Skill Education.')</script>", false);
-                //    return;
-                //}
-
-
-
-                //for (int i = 0; i < GvReg.Rows.Count; i++)
-                //{
-                //    DropDownList Attendance = (DropDownList)GvReg.Rows[i].FindControl("ddlAttendance");
-
-                //    int Attendancedata = Convert.ToInt32(Attendance.SelectedValue);
-                //    if (Attendancedata <= 0)
-                //    {
-                //        ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Attendance Row ')</script>", false);
-                //        return;
-                //    }
-
-                //}
-                Int32 Result = 0;
-                //for (int i = 0; i < GvReg.Rows.Count; i++)
-                //{
-                //    DropDownList ddlAttendance1 = (DropDownList)GvReg.Rows[i].FindControl("ddlAttendance");
-                //    Label villcode = (Label)GvReg.Rows[i].FindControl("lblVillageCd");
-                //    Label lblUniqueChildRCode = (Label)GvReg.Rows[i].FindControl("lblUniqueChildRCode");
-                //    Label UniqueChildCode = (Label)GvReg.Rows[i].FindControl("lblUniqueChildCode");
-                //    Label School = (Label)GvReg.Rows[i].FindControl("lblschoolcode");
-                //    int childattendace = Convert.ToInt32(ddlAttendance1.SelectedValue);
-                //    VillageCode = Convert.ToString(villcode.Text);
-                //    UniqueChildRCode = Convert.ToString(lblUniqueChildRCode.Text);
-                //    Schoolcode = Convert.ToString(School.Text);
-
-
-                //    UniqueCodeNew = objMain.Generate_RandomString(8);
-
-
-                //    sessiondata = Convert.ToInt32(ddlsession.SelectedValue);
-
-
-                //    UniqueCode = UniqueCodeNew;
-
-                //    if (Convert.ToString(Session["username"]) != "" && Convert.ToString(Session["username"]) != null)
-                //    {
-                //        CreatedBy = Convert.ToString(Session["username"]);
-                //    }
-
-                //    if (childattendace > 0)
-                //    {
-                //        result = InsertUpdateAttendace(UniqueCode, UniqueChildRCode, VillageCode, childattendace, sessiondata, Schoolcode, flag, CreatedBy);
-
-                //   }
-                //}
 
             }
 
@@ -5754,8 +5649,6 @@ new SqlParameter("@Flag", flag)
         {
             SchoolConactOption = 1;
         }
-
-      
 
 
         foreach (ListItem item in chkSchoolCOntact.Items)
@@ -5786,35 +5679,32 @@ new SqlParameter("@Flag", flag)
             if (Session["user_level"].ToString() == "19")
             {
                 userid = "2";
-                  
-                MainResult = InsertUpdateActivitySchool(ViewState["GUID_School"].ToString(), ddlVilage.SelectedValue, ddlUser.SelectedValue.ToString(), ddlSchool.SelectedValue.ToString(), Convert.ToDateTime(FcDate), TBHolding.ToString(), SMC.ToString(), SMCTB.ToString(), SMCFC.ToString(), OtherSIPprepared.ToString(), OtherSIPcompleted.ToString(), commmeeting, SMCOrient.ToString(), SMCOrientTB.ToString(), SMCOrientFC.ToString(), TotalMember.ToString(), TotalFemaSmcFemal.ToString(), CLT.ToString(), CLT_TB.ToString(), CLT_FC.ToString(), CLTHindi, CltEnglish, CltMath, CLT_Pretest_FC.ToString(), CLT_Pretest_TB.ToString(), CTL_Midtest_FC.ToString(), CTL_Midtest_TB.ToString(), CLT_Posttest_FC.ToString(), CLT_Posttest_TB.ToString(), Clt_Pre_PC.ToString(), Clt_Mid_PC.ToString(), Clt_Post_PC.ToString(), Bal.ToString(), BalsabaTB.ToString(), BalsabFC.ToString(), BalSabha_Formation.ToString(), BalSabha_Orientation.ToString(), BalSabha_Chart.ToString(), BalSabha_Kit.ToString(), Game.ToString(), Game_TB.ToString(), Game_FC.ToString(), SACTB.ToString(), SACFC.ToString(), SAC.ToString(), SAC_Periodic_Checkup.ToString(), SAC_Listing_Name_Of_Girls.ToString(), SAC_Listing_Name_Of_Boys.ToString(), SAC_Girls_Left.ToString(), SAC_Boys_Left.ToString(), SAC_Girls_Not_Joined_School.ToString(), SAC_Boys_Not_Joined_School.ToString(), SAC_No_Of_Attended.ToString(), Classrooms, DrinkingWater, GirlsToilet, Electricity, Playground, Slide, BoundaryWall, Kitchen, Teachers_Male, Teachers_Female, CLT_Kit, bookAvl, Infrastructure, Infrastructure_FC, Infrastructure_TB, SIP_Annual_FC, SIP_Annual_TB, Retention_Annual_FC, Retention_Annual_TB, AnnualData, SIP_Annual, Retention_Annual, SIP_PC, Retention_PC, txtOther.Text, GameEntry, userid, "U", "FC", CLT_Pretest, CLT_Midtest, CLT_Posttes, ddlRemark.SelectedValue, Session["username"].ToString(), BalType.ToString(), BalResone.ToString(), SMCDirector, SMCRegister, commmeeting1, TxtSmcOther.Text, SchoolConactTBFC, SchoolConactOption,SchoolConact, TBCode, ISTeamBalik, SMCregisterismeeting, SMCmeetingregister, SMCWrite, SMCF5, SMCIsMember,  BoysToilet,  WaterSupply,  TilingToilet,  HandicappedAccessibleToilet,  MultipleHandwashingUnit,  TilingClassroomFloor,  Blackboards,  ProperPainting,  DisabledAccessibleRamp,  AppropriateElectricalWiring,  BoysUrinal,  GirlsUrinal,  Furniture,  TapWaterFacility);
+
+                MainResult = InsertUpdateActivitySchool(ViewState["GUID_School"].ToString(), ddlVilage.SelectedValue, ddlUser.SelectedValue.ToString(), ddlSchool.SelectedValue.ToString(), Convert.ToDateTime(FcDate), TBHolding.ToString(), SMC.ToString(), SMCTB.ToString(), SMCFC.ToString(), OtherSIPprepared.ToString(), OtherSIPcompleted.ToString(), commmeeting, SMCOrient.ToString(), SMCOrientTB.ToString(), SMCOrientFC.ToString(), TotalMember.ToString(), TotalFemaSmcFemal.ToString(), CLT.ToString(), CLT_TB.ToString(), CLT_FC.ToString(), CLTHindi, CltEnglish, CltMath, CLT_Pretest_FC.ToString(), CLT_Pretest_TB.ToString(), CTL_Midtest_FC.ToString(), CTL_Midtest_TB.ToString(), CLT_Posttest_FC.ToString(), CLT_Posttest_TB.ToString(), Clt_Pre_PC.ToString(), Clt_Mid_PC.ToString(), Clt_Post_PC.ToString(), Bal.ToString(), BalsabaTB.ToString(), BalsabFC.ToString(), BalSabha_Formation.ToString(), BalSabha_Orientation.ToString(), BalSabha_Chart.ToString(), BalSabha_Kit.ToString(), Game.ToString(), Game_TB.ToString(), Game_FC.ToString(), SACTB.ToString(), SACFC.ToString(), SAC.ToString(), SAC_Periodic_Checkup.ToString(), SAC_Listing_Name_Of_Girls.ToString(), SAC_Listing_Name_Of_Boys.ToString(), SAC_Girls_Left.ToString(), SAC_Boys_Left.ToString(), SAC_Girls_Not_Joined_School.ToString(), SAC_Boys_Not_Joined_School.ToString(), SAC_No_Of_Attended.ToString(), Classrooms, DrinkingWater, GirlsToilet, Electricity, Playground, Slide, BoundaryWall, Kitchen, Teachers_Male, Teachers_Female, CLT_Kit, bookAvl, Infrastructure, Infrastructure_FC, Infrastructure_TB, SIP_Annual_FC, SIP_Annual_TB, Retention_Annual_FC, Retention_Annual_TB, AnnualData, SIP_Annual, Retention_Annual, SIP_PC, Retention_PC, txtOther.Text, GameEntry, userid, "U", "FC", CLT_Pretest, CLT_Midtest, CLT_Posttes, ddlRemark.SelectedValue, Session["username"].ToString(), BalType.ToString(), BalResone.ToString(), SMCDirector, SMCRegister, commmeeting1, TxtSmcOther.Text, SchoolConactTBFC, SchoolConactOption, SchoolConact, TBCode, ISTeamBalik, SMCregisterismeeting, SMCmeetingregister, SMCWrite, SMCF5, SMCIsMember, BoysToilet, WaterSupply, TilingToilet, HandicappedAccessibleToilet, MultipleHandwashingUnit, TilingClassroomFloor, Blackboards, ProperPainting, DisabledAccessibleRamp, AppropriateElectricalWiring, BoysUrinal, GirlsUrinal, Furniture, TapWaterFacility);
 
                 //MainResult = objMain.ActivitySchool(ViewState["GUID_School"].ToString(), ddlVilage.SelectedValue, ddlUser.SelectedValue.ToString(), ddlSchool.SelectedValue.ToString(), Convert.ToDateTime(FcDate), TBHolding.ToString(), SMC.ToString(), SMC_TB.ToString(), SMC_FC.ToString(), totalMemberTrain.ToString(), MemberTrain.ToString(), SMCMeeting.ToString(), OtherSP.ToString(), commmeeting.ToString(), CLT.ToString(), CLT_TB.ToString(), CLT_FC.ToString(), Bal.ToString(), BalsabaTB.ToString(), BalsabFC.ToString(), BalSabha_Formation.ToString(), BalSabha_Orientation.ToString(), BalSabha_Chart.ToString(), BalSabha_Kit.ToString(), "U", Game.ToString(), Game_TB.ToString(), Game_FC.ToString(), SACTB.ToString(), SACFC.ToString(), SAC.ToString(), SAC_Periodic_Checkup.ToString(), SAC_Listing_Name_Of_Girls.ToString(), SAC_Listing_Name_Of_Boys.ToString(), SAC_Girls_Left.ToString(), SAC_Boys_Left.ToString(), SAC_Girls_Not_Joined_School.ToString(), SAC_Boys_Not_Joined_School.ToString(), SAC_No_Of_Attended.ToString(), userid, CLTHindi, CltEnglish, CltMath, GameEntry, Convert.ToInt32(Session["user_level"].ToString()), Classrooms, DrinkingWater, GirlsToilet, Electricity, Playground, Slide, BoundaryWall, Kitchen, Teachers_Male, Teachers_Female, CLT_Kit, bookAvl, SIP_Annual_FC, SIP_Annual_TB, Retention_Annual_FC, Retention_Annual_TB, AnnualData, SIP_Annual, Retention_Annual, Infrastructure_FC, Infrastructure_TB, Other_TB, Other_FC, CLT_Pretest_FC.ToString(), CLT_Pretest_TB.ToString(), CTL_Midtest_FC.ToString(), CTL_Midtest_TB.ToString(), CLT_Posttest_FC.ToString(), CLT_Posttest_TB.ToString(), Clt_Pre_PC.ToString(), Infrastructure, Clt_Mid_PC.ToString(), Clt_Post_PC.ToString(), SIP_PC, Retention_PC);
                 userid = "3";
-                MainResult = InsertUpdateActivitySchool(ViewState["GUID_School"].ToString(), ddlVilage.SelectedValue, ddlUser.SelectedValue.ToString(), ddlSchool.SelectedValue.ToString(), Convert.ToDateTime(FcDate), TBHolding.ToString(), SMC.ToString(), SMCTB.ToString(), SMCFC.ToString(), OtherSIPprepared.ToString(), OtherSIPcompleted.ToString(), commmeeting, SMCOrient.ToString(), SMCOrientTB.ToString(), SMCOrientFC.ToString(), TotalMember.ToString(), TotalFemaSmcFemal.ToString(), CLT.ToString(), CLT_TB.ToString(), CLT_FC.ToString(), CLTHindi, CltEnglish, CltMath, CLT_Pretest_FC.ToString(), CLT_Pretest_TB.ToString(), CTL_Midtest_FC.ToString(), CTL_Midtest_TB.ToString(), CLT_Posttest_FC.ToString(), CLT_Posttest_TB.ToString(), Clt_Pre_PC.ToString(), Clt_Mid_PC.ToString(), Clt_Post_PC.ToString(), Bal.ToString(), BalsabaTB.ToString(), BalsabFC.ToString(), BalSabha_Formation.ToString(), BalSabha_Orientation.ToString(), BalSabha_Chart.ToString(), BalSabha_Kit.ToString(), Game.ToString(), Game_TB.ToString(), Game_FC.ToString(), SACTB.ToString(), SACFC.ToString(), SAC.ToString(), SAC_Periodic_Checkup.ToString(), SAC_Listing_Name_Of_Girls.ToString(), SAC_Listing_Name_Of_Boys.ToString(), SAC_Girls_Left.ToString(), SAC_Boys_Left.ToString(), SAC_Girls_Not_Joined_School.ToString(), SAC_Boys_Not_Joined_School.ToString(), SAC_No_Of_Attended.ToString(), Classrooms, DrinkingWater, GirlsToilet, Electricity, Playground, Slide, BoundaryWall, Kitchen, Teachers_Male, Teachers_Female, CLT_Kit, bookAvl, Infrastructure, Infrastructure_FC, Infrastructure_TB, SIP_Annual_FC, SIP_Annual_TB, Retention_Annual_FC, Retention_Annual_TB, AnnualData, SIP_Annual, Retention_Annual, SIP_PC, Retention_PC, txtOther.Text, GameEntry, userid, "U", "FC", CLT_Pretest, CLT_Midtest, CLT_Posttes, ddlRemark.SelectedValue, Session["username"].ToString(), BalType.ToString(), BalResone.ToString(), SMCDirector, SMCRegister, commmeeting1, TxtSmcOther.Text, SchoolConactTBFC, SchoolConactOption, SchoolConact, TBCode, ISTeamBalik, SMCregisterismeeting, SMCmeetingregister, SMCWrite, SMCF5, SMCIsMember ,BoysToilet, WaterSupply, TilingToilet, HandicappedAccessibleToilet, MultipleHandwashingUnit, TilingClassroomFloor, Blackboards, ProperPainting, DisabledAccessibleRamp, AppropriateElectricalWiring, BoysUrinal, GirlsUrinal, Furniture, TapWaterFacility);
+                MainResult = InsertUpdateActivitySchool(ViewState["GUID_School"].ToString(), ddlVilage.SelectedValue, ddlUser.SelectedValue.ToString(), ddlSchool.SelectedValue.ToString(), Convert.ToDateTime(FcDate), TBHolding.ToString(), SMC.ToString(), SMCTB.ToString(), SMCFC.ToString(), OtherSIPprepared.ToString(), OtherSIPcompleted.ToString(), commmeeting, SMCOrient.ToString(), SMCOrientTB.ToString(), SMCOrientFC.ToString(), TotalMember.ToString(), TotalFemaSmcFemal.ToString(), CLT.ToString(), CLT_TB.ToString(), CLT_FC.ToString(), CLTHindi, CltEnglish, CltMath, CLT_Pretest_FC.ToString(), CLT_Pretest_TB.ToString(), CTL_Midtest_FC.ToString(), CTL_Midtest_TB.ToString(), CLT_Posttest_FC.ToString(), CLT_Posttest_TB.ToString(), Clt_Pre_PC.ToString(), Clt_Mid_PC.ToString(), Clt_Post_PC.ToString(), Bal.ToString(), BalsabaTB.ToString(), BalsabFC.ToString(), BalSabha_Formation.ToString(), BalSabha_Orientation.ToString(), BalSabha_Chart.ToString(), BalSabha_Kit.ToString(), Game.ToString(), Game_TB.ToString(), Game_FC.ToString(), SACTB.ToString(), SACFC.ToString(), SAC.ToString(), SAC_Periodic_Checkup.ToString(), SAC_Listing_Name_Of_Girls.ToString(), SAC_Listing_Name_Of_Boys.ToString(), SAC_Girls_Left.ToString(), SAC_Boys_Left.ToString(), SAC_Girls_Not_Joined_School.ToString(), SAC_Boys_Not_Joined_School.ToString(), SAC_No_Of_Attended.ToString(), Classrooms, DrinkingWater, GirlsToilet, Electricity, Playground, Slide, BoundaryWall, Kitchen, Teachers_Male, Teachers_Female, CLT_Kit, bookAvl, Infrastructure, Infrastructure_FC, Infrastructure_TB, SIP_Annual_FC, SIP_Annual_TB, Retention_Annual_FC, Retention_Annual_TB, AnnualData, SIP_Annual, Retention_Annual, SIP_PC, Retention_PC, txtOther.Text, GameEntry, userid, "U", "FC", CLT_Pretest, CLT_Midtest, CLT_Posttes, ddlRemark.SelectedValue, Session["username"].ToString(), BalType.ToString(), BalResone.ToString(), SMCDirector, SMCRegister, commmeeting1, TxtSmcOther.Text, SchoolConactTBFC, SchoolConactOption, SchoolConact, TBCode, ISTeamBalik, SMCregisterismeeting, SMCmeetingregister, SMCWrite, SMCF5, SMCIsMember, BoysToilet, WaterSupply, TilingToilet, HandicappedAccessibleToilet, MultipleHandwashingUnit, TilingClassroomFloor, Blackboards, ProperPainting, DisabledAccessibleRamp, AppropriateElectricalWiring, BoysUrinal, GirlsUrinal, Furniture, TapWaterFacility);
 
 
             }
-            if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30"  || Session["user_level"].ToString() == "145")
+            if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "145")
             {
 
-                MainResult = InsertUpdateActivitySchool(ViewState["GUID_School"].ToString(), ddlVilage.SelectedValue, ddlUser.SelectedValue.ToString(), ddlSchool.SelectedValue.ToString(), Convert.ToDateTime(FcDate), TBHolding.ToString(), SMC.ToString(), SMCTB.ToString(), SMCFC.ToString(), OtherSIPprepared.ToString(), OtherSIPcompleted.ToString(), commmeeting, SMCOrient.ToString(), SMCOrientTB.ToString(), SMCOrientFC.ToString(), TotalMember.ToString(), TotalFemaSmcFemal.ToString(), CLT.ToString(), CLT_TB.ToString(), CLT_FC.ToString(), CLTHindi, CltEnglish, CltMath, CLT_Pretest_FC.ToString(), CLT_Pretest_TB.ToString(), CTL_Midtest_FC.ToString(), CTL_Midtest_TB.ToString(), CLT_Posttest_FC.ToString(), CLT_Posttest_TB.ToString(), Clt_Pre_PC.ToString(), Clt_Mid_PC.ToString(), Clt_Post_PC.ToString(), Bal.ToString(), BalsabaTB.ToString(), BalsabFC.ToString(), BalSabha_Formation.ToString(), BalSabha_Orientation.ToString(), BalSabha_Chart.ToString(), BalSabha_Kit.ToString(), Game.ToString(), Game_TB.ToString(), Game_FC.ToString(), SACTB.ToString(), SACFC.ToString(), SAC.ToString(), SAC_Periodic_Checkup.ToString(), SAC_Listing_Name_Of_Girls.ToString(), SAC_Listing_Name_Of_Boys.ToString(), SAC_Girls_Left.ToString(), SAC_Boys_Left.ToString(), SAC_Girls_Not_Joined_School.ToString(), SAC_Boys_Not_Joined_School.ToString(), SAC_No_Of_Attended.ToString(), Classrooms, DrinkingWater, GirlsToilet, Electricity, Playground, Slide, BoundaryWall, Kitchen, Teachers_Male, Teachers_Female, CLT_Kit, bookAvl, Infrastructure, Infrastructure_FC, Infrastructure_TB, SIP_Annual_FC, SIP_Annual_TB, Retention_Annual_FC, Retention_Annual_TB, AnnualData, SIP_Annual, Retention_Annual, SIP_PC, Retention_PC, txtOther.Text, GameEntry, "3", "U", "B", CLT_Pretest, CLT_Midtest, CLT_Posttes, ddlRemark.SelectedValue, Session["username"].ToString(), BalType.ToString(), BalResone.ToString(), SMCDirector, SMCRegister, commmeeting1, TxtSmcOther.Text, SchoolConactTBFC, SchoolConactOption, SchoolConact, TBCode, ISTeamBalik, SMCregisterismeeting, SMCmeetingregister, SMCWrite, SMCF5, SMCIsMember, BoysToilet, WaterSupply, TilingToilet, HandicappedAccessibleToilet, MultipleHandwashingUnit, TilingClassroomFloor, Blackboards, ProperPainting, DisabledAccessibleRamp, AppropriateElectricalWiring, BoysUrinal, GirlsUrinal, Furniture, TapWaterFacility);
+                 MainResult = InsertUpdateActivitySchool(ViewState["GUID_School"].ToString(), ddlVilage.SelectedValue, ddlUser.SelectedValue.ToString(), ddlSchool.SelectedValue.ToString(), Convert.ToDateTime(FcDate), TBHolding.ToString(), SMC.ToString(), SMCTB.ToString(), SMCFC.ToString(), OtherSIPprepared.ToString(), OtherSIPcompleted.ToString(), commmeeting, SMCOrient.ToString(), SMCOrientTB.ToString(), SMCOrientFC.ToString(), TotalMember.ToString(), TotalFemaSmcFemal.ToString(), CLT.ToString(), CLT_TB.ToString(), CLT_FC.ToString(), CLTHindi, CltEnglish, CltMath, CLT_Pretest_FC.ToString(), CLT_Pretest_TB.ToString(), CTL_Midtest_FC.ToString(), CTL_Midtest_TB.ToString(), CLT_Posttest_FC.ToString(), CLT_Posttest_TB.ToString(), Clt_Pre_PC.ToString(), Clt_Mid_PC.ToString(), Clt_Post_PC.ToString(), Bal.ToString(), BalsabaTB.ToString(), BalsabFC.ToString(), BalSabha_Formation.ToString(), BalSabha_Orientation.ToString(), BalSabha_Chart.ToString(), BalSabha_Kit.ToString(), Game.ToString(), Game_TB.ToString(), Game_FC.ToString(), SACTB.ToString(), SACFC.ToString(), SAC.ToString(), SAC_Periodic_Checkup.ToString(), SAC_Listing_Name_Of_Girls.ToString(), SAC_Listing_Name_Of_Boys.ToString(), SAC_Girls_Left.ToString(), SAC_Boys_Left.ToString(), SAC_Girls_Not_Joined_School.ToString(), SAC_Boys_Not_Joined_School.ToString(), SAC_No_Of_Attended.ToString(), Classrooms, DrinkingWater, GirlsToilet, Electricity, Playground, Slide, BoundaryWall, Kitchen, Teachers_Male, Teachers_Female, CLT_Kit, bookAvl, Infrastructure, Infrastructure_FC, Infrastructure_TB, SIP_Annual_FC, SIP_Annual_TB, Retention_Annual_FC, Retention_Annual_TB, AnnualData, SIP_Annual, Retention_Annual, SIP_PC, Retention_PC, txtOther.Text, GameEntry, "3", "U", "B", CLT_Pretest, CLT_Midtest, CLT_Posttes, ddlRemark.SelectedValue, Session["username"].ToString(), BalType.ToString(), BalResone.ToString(), SMCDirector, SMCRegister, commmeeting1, TxtSmcOther.Text, SchoolConactTBFC, SchoolConactOption, SchoolConact, TBCode, ISTeamBalik, SMCregisterismeeting, SMCmeetingregister, SMCWrite, SMCF5, SMCIsMember, BoysToilet, WaterSupply, TilingToilet, HandicappedAccessibleToilet, MultipleHandwashingUnit, TilingClassroomFloor, Blackboards, ProperPainting, DisabledAccessibleRamp, AppropriateElectricalWiring, BoysUrinal, GirlsUrinal, Furniture, TapWaterFacility);
 
             }
         }
         else
         {
 
-            //string StudentTSInsertQuery = " INSERT INTO tblActivityUpdate_School([GUID_School],[VillageCode] ,[UserID] ,[SchoolCode],[ActivityDate] ,[TB_Handholding], [SMC]  ,[SMC_TB] ,[SMC_FC]                                                        ,[SMC_TotTrained] ,[SMC_FemaleTrained] ,      [SMC_Mtg] ,[SMC_OtherSIP] ,[SMC_OtherDiscussions],  [CLT],[CLT_TB] ,[CLT_FC] , [CLT_Pretest] ,[CLT_Posttest] ,[CTL_Midtest],[BalSabha] ,[BalSabha_TB]  ,[BalSabha_FC] ,[BalSabha_Formation] ,[BalSabha_Orientation]      ,[BalSabha_Chart]   ,[BalSabha_Kit]) ";
-            //StudentTSInsertQuery += " Values('" + UNICOde + "','" + ddlVilage.SelectedValue + "','" + ddlUser.SelectedValue + "','" + ddlSchool.SelectedValue + "','" + Convert.ToDateTime(FcDate).ToString("yyyy-MM-dd") + "','" + TBHolding + "','" + 1 + "','" + SMC_TB + "','" + SMC_FC + "','" + totalMemberTrain + "'," + MemberTrain + "," + SMCMeeting + "," + OtherSP + ",'" + commmeeting + "','1','" + CLT_TB + "','" + CLT_FC + "','" + CLT_PreTest + "','" + CLT_PostTest + "','" + CLT_MidTest + "','" + 1 + "','" + BalsabaTB + "','" + BalsabFC + "','" + BalSabha_Formation + "','" + BalSabha_Orientation + "','" + BalSabha_Chart + "','" + BalSabha_Kit + "')";
-            // InsertTS = objMain.AddUpdate(StudentTSInsertQuery);
             if (Session["user_level"].ToString() == "19")
             {
                 MainResult = InsertUpdateActivitySchool(UNICOde, ddlVilage.SelectedValue, ddlUser.SelectedValue.ToString(), ddlSchool.SelectedValue.ToString(), Convert.ToDateTime(FcDate), TBHolding.ToString(), SMC.ToString(), SMCTB.ToString(), SMCFC.ToString(), OtherSIPprepared.ToString(), OtherSIPcompleted.ToString(), commmeeting, SMCOrient.ToString(), SMCOrientTB.ToString(), SMCOrientFC.ToString(), TotalMember.ToString(), TotalFemaSmcFemal.ToString(), CLT.ToString(), CLT_TB.ToString(), CLT_FC.ToString(), CLTHindi, CltEnglish, CltMath, CLT_Pretest_FC.ToString(), CLT_Pretest_TB.ToString(), CTL_Midtest_FC.ToString(), CTL_Midtest_TB.ToString(), CLT_Posttest_FC.ToString(), CLT_Posttest_TB.ToString(), Clt_Pre_PC.ToString(), Clt_Mid_PC.ToString(), Clt_Post_PC.ToString(), Bal.ToString(), BalsabaTB.ToString(), BalsabFC.ToString(), BalSabha_Formation.ToString(), BalSabha_Orientation.ToString(), BalSabha_Chart.ToString(), BalSabha_Kit.ToString(), Game.ToString(), Game_TB.ToString(), Game_FC.ToString(), SACTB.ToString(), SACFC.ToString(), SAC.ToString(), SAC_Periodic_Checkup.ToString(), SAC_Listing_Name_Of_Girls.ToString(), SAC_Listing_Name_Of_Boys.ToString(), SAC_Girls_Left.ToString(), SAC_Boys_Left.ToString(), SAC_Girls_Not_Joined_School.ToString(), SAC_Boys_Not_Joined_School.ToString(), SAC_No_Of_Attended.ToString(), Classrooms, DrinkingWater, GirlsToilet, Electricity, Playground, Slide, BoundaryWall, Kitchen, Teachers_Male, Teachers_Female, CLT_Kit, bookAvl, Infrastructure, Infrastructure_FC, Infrastructure_TB, SIP_Annual_FC, SIP_Annual_TB, Retention_Annual_FC, Retention_Annual_TB, AnnualData, SIP_Annual, Retention_Annual, SIP_PC, Retention_PC, txtOther.Text, GameEntry, "2", "I", "FC", CLT_Pretest, CLT_Midtest, CLT_Posttes, ddlRemark.SelectedValue, Session["username"].ToString(), BalType.ToString(), BalResone.ToString(), SMCDirector, SMCRegister, commmeeting1, TxtSmcOther.Text, SchoolConactTBFC, SchoolConactOption, SchoolConact, TBCode, ISTeamBalik, SMCregisterismeeting, SMCmeetingregister, SMCWrite, SMCF5, SMCIsMember, BoysToilet, WaterSupply, TilingToilet, HandicappedAccessibleToilet, MultipleHandwashingUnit, TilingClassroomFloor, Blackboards, ProperPainting, DisabledAccessibleRamp, AppropriateElectricalWiring, BoysUrinal, GirlsUrinal, Furniture, TapWaterFacility);
                 MainResult = InsertUpdateActivitySchool(UNICOde, ddlVilage.SelectedValue, ddlUser.SelectedValue.ToString(), ddlSchool.SelectedValue.ToString(), Convert.ToDateTime(FcDate), TBHolding.ToString(), SMC.ToString(), SMCTB.ToString(), SMCFC.ToString(), OtherSIPprepared.ToString(), OtherSIPcompleted.ToString(), commmeeting, SMCOrient.ToString(), SMCOrientTB.ToString(), SMCOrientFC.ToString(), TotalMember.ToString(), TotalFemaSmcFemal.ToString(), CLT.ToString(), CLT_TB.ToString(), CLT_FC.ToString(), CLTHindi, CltEnglish, CltMath, CLT_Pretest_FC.ToString(), CLT_Pretest_TB.ToString(), CTL_Midtest_FC.ToString(), CTL_Midtest_TB.ToString(), CLT_Posttest_FC.ToString(), CLT_Posttest_TB.ToString(), Clt_Pre_PC.ToString(), Clt_Mid_PC.ToString(), Clt_Post_PC.ToString(), Bal.ToString(), BalsabaTB.ToString(), BalsabFC.ToString(), BalSabha_Formation.ToString(), BalSabha_Orientation.ToString(), BalSabha_Chart.ToString(), BalSabha_Kit.ToString(), Game.ToString(), Game_TB.ToString(), Game_FC.ToString(), SACTB.ToString(), SACFC.ToString(), SAC.ToString(), SAC_Periodic_Checkup.ToString(), SAC_Listing_Name_Of_Girls.ToString(), SAC_Listing_Name_Of_Boys.ToString(), SAC_Girls_Left.ToString(), SAC_Boys_Left.ToString(), SAC_Girls_Not_Joined_School.ToString(), SAC_Boys_Not_Joined_School.ToString(), SAC_No_Of_Attended.ToString(), Classrooms, DrinkingWater, GirlsToilet, Electricity, Playground, Slide, BoundaryWall, Kitchen, Teachers_Male, Teachers_Female, CLT_Kit, bookAvl, Infrastructure, Infrastructure_FC, Infrastructure_TB, SIP_Annual_FC, SIP_Annual_TB, Retention_Annual_FC, Retention_Annual_TB, AnnualData, SIP_Annual, Retention_Annual, SIP_PC, Retention_PC, txtOther.Text, GameEntry, "3", "I", "FC", CLT_Pretest, CLT_Midtest, CLT_Posttes, ddlRemark.SelectedValue, Session["username"].ToString(), BalType.ToString(), BalResone.ToString(), SMCDirector, SMCRegister, commmeeting1, TxtSmcOther.Text, SchoolConactTBFC, SchoolConactOption, SchoolConact, TBCode, ISTeamBalik, SMCregisterismeeting, SMCmeetingregister, SMCWrite, SMCF5, SMCIsMember, BoysToilet, WaterSupply, TilingToilet, HandicappedAccessibleToilet, MultipleHandwashingUnit, TilingClassroomFloor, Blackboards, ProperPainting, DisabledAccessibleRamp, AppropriateElectricalWiring, BoysUrinal, GirlsUrinal, Furniture, TapWaterFacility);
             }
 
-            if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30"  || Session["user_level"].ToString() == "145")
+            if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "145")
             {
 
                 MainResult = InsertUpdateActivitySchool(UNICOde, ddlVilage.SelectedValue, ddlUser.SelectedValue.ToString(), ddlSchool.SelectedValue.ToString(), Convert.ToDateTime(FcDate), TBHolding.ToString(), SMC.ToString(), SMCTB.ToString(), SMCFC.ToString(), OtherSIPprepared.ToString(), OtherSIPcompleted.ToString(), commmeeting, SMCOrient.ToString(), SMCOrientTB.ToString(), SMCOrientFC.ToString(), TotalMember.ToString(), TotalFemaSmcFemal.ToString(), CLT.ToString(), CLT_TB.ToString(), CLT_FC.ToString(), CLTHindi, CltEnglish, CltMath, CLT_Pretest_FC.ToString(), CLT_Pretest_TB.ToString(), CTL_Midtest_FC.ToString(), CTL_Midtest_TB.ToString(), CLT_Posttest_FC.ToString(), CLT_Posttest_TB.ToString(), Clt_Pre_PC.ToString(), Clt_Mid_PC.ToString(), Clt_Post_PC.ToString(), Bal.ToString(), BalsabaTB.ToString(), BalsabFC.ToString(), BalSabha_Formation.ToString(), BalSabha_Orientation.ToString(), BalSabha_Chart.ToString(), BalSabha_Kit.ToString(), Game.ToString(), Game_TB.ToString(), Game_FC.ToString(), SACTB.ToString(), SACFC.ToString(), SAC.ToString(), SAC_Periodic_Checkup.ToString(), SAC_Listing_Name_Of_Girls.ToString(), SAC_Listing_Name_Of_Boys.ToString(), SAC_Girls_Left.ToString(), SAC_Boys_Left.ToString(), SAC_Girls_Not_Joined_School.ToString(), SAC_Boys_Not_Joined_School.ToString(), SAC_No_Of_Attended.ToString(), Classrooms, DrinkingWater, GirlsToilet, Electricity, Playground, Slide, BoundaryWall, Kitchen, Teachers_Male, Teachers_Female, CLT_Kit, bookAvl, Infrastructure, Infrastructure_FC, Infrastructure_TB, SIP_Annual_FC, SIP_Annual_TB, Retention_Annual_FC, Retention_Annual_TB, AnnualData, SIP_Annual, Retention_Annual, SIP_PC, Retention_PC, txtOther.Text, GameEntry, "3", "I", "B", CLT_Pretest, CLT_Midtest, CLT_Posttes, ddlRemark.SelectedValue, Session["username"].ToString(), BalType.ToString(), BalResone.ToString(), SMCDirector, SMCRegister, commmeeting1, TxtSmcOther.Text, SchoolConactTBFC, SchoolConactOption, SchoolConact, TBCode, ISTeamBalik, SMCregisterismeeting, SMCmeetingregister, SMCWrite, SMCF5, SMCIsMember, BoysToilet, WaterSupply, TilingToilet, HandicappedAccessibleToilet, MultipleHandwashingUnit, TilingClassroomFloor, Blackboards, ProperPainting, DisabledAccessibleRamp, AppropriateElectricalWiring, BoysUrinal, GirlsUrinal, Furniture, TapWaterFacility);
@@ -5828,36 +5718,11 @@ new SqlParameter("@Flag", flag)
             ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved sucessfully')</script>", false);
             ViewState["GUID_School"] = UNICOde;
         }
-
-        //if (dtSubject.Rows.Count > 0)
-        //{
-        //    string SchoolDelete = " delete from tblActivityUpdate_CTLImplementation where  [GUID_School] ='" + dtSubject.Rows[0]["GUID_School"] + "' ";
-        //    bool DeleteSubject = objMain.AddUpdate(SchoolDelete);
-        //    foreach (DataRow drItem in dtSubject.Rows)
-        //    {
-
-        //        int Result = objMain.CTLImplementation(drItem["GUID_School"].ToString(), drItem["VillageCode"].ToString(), drItem["SchoolCode"].ToString(), Convert.ToDateTime(drItem["ActivityDate"]), Convert.ToInt32(drItem["Subject"]), drItem["CLTGroup"].ToString());
-        //        //SchoolSubject += " insert into tblActivityUpdate_CTLImplementation( [GUID_School]   ,[VillageCode]    ,[SchoolCode] ,[ActivityDate]  ,[Subject]    ,[CLTGroup])  Values('" + drItem["GUID_School"] + "','" + drItem["VillageCode"] + "','" + drItem["SchoolCode"] + "','" + drItem["ActivityDate"] + "','" + drItem["Subject"] + "','" + drItem["CLTGroup"] + "') ";
-        //        //bool InsertD2d = objMain.AddUpdate(SchoolSubject);
-        //    }
-        //}
-        //if (dtGame.Rows.Count > 0)
-        //{
-        //    string SchoolDelete = " delete from tblActivityUpdate_LifeskillGames where  [GUID_School]='" + dtSubject.Rows[0]["GUID_School"] + "' ";
-        //    bool DeleteSubject = objMain.AddUpdate(SchoolDelete);
-        //    foreach (DataRow drItem in dtGame.Rows)
-        //    {
-        //        int Result = objMain.LifeskillGames(drItem["GUID_School"].ToString(), drItem["VillageCode"].ToString(), drItem["SchoolCode"].ToString(), Convert.ToDateTime(drItem["ActivityDate"]), Convert.ToInt32(drItem["GameNo"]));
-
-
-        //    }
-        //}
-
-
         #endregion
     }
 
-    public int InsertUpdateActivitySchool(string GUID_School, string VillageCode, string UserID, string SchoolCode, DateTime ActivityDate, string TB_Handholding, string SMC, string SMC_TB, string SMC_FC, string SMC_Mtg, string SMC_OtherSIP, string SMC_OtherDiscussions, string SMCOr, string SMCOr_TB, string SMCOr_FC, string SMC_TotTrained, string SMC_FemaleTrained, string CLT, string CLTTB, string CLTFC, string CLTHindi, string CLTEnglish, string CLTMath, string CLT_Pretest_FC, string CLT_Pretest_TB, string CTL_Midtest_FC, string CTL_Midtest_TB, string CLT_Posttest_FC, string CLT_Posttest_TB, string Clt_Pre_PC, string Clt_Mid_PC, string Clt_Post_PC, string BalSabha, string BalSabha_TB, string BalSabha_FC, string BalSabha_Formation, string BalSabha_Orientation, string BalSabha_Chart, string BalSabha_Kit, string Lifeskill_Games, string Lifeskill_Games_TB, string Lifeskill_Games_FC, string SACUpdate_TB, string SACUpdate_FC, string SACUpdate, string SAC_Periodic_Checkup, string SAC_Listing_Name_Of_Girls, string SAC_Listing_Name_Of_Boys, string SAC_Girls_Left, string SAC_Boys_Left, string SAC_Girs_Not_Joined_School, string SAC_Boys_Not_Joined_School, string SAC_No_Of_Attended, int Classrooms, int DrinkingWater, int GirlsToilet, int Electricity, int Playground, int Slide, int BoundaryWall, int Kitchen, int Teachers_Male, int Teachers_Female, int CLT_Kit, int bookAvl, int Infrastructure, int Infrastructure_FC, int Infrastructure_TB, int SIP_Annual_FC, int SIP_Annual_TB, int Retention_Annual_FC, int Retention_Annual_TB, int AnnualData, int SIP_Annual, int Retention_Annual, string SIP_PC, string Retention_PC, string Others_Description, string LifeSkillGameEntry, string UserEntry, string Flag, string ApproveBy, int CLT_Pretest, int CLT_Midtest, int CLT_Posttes, string Remark, string CreateBy, string BalsabaType, string Balsabareason, int SMCDirector, int SMCRegister, string SMC_Purpose, string SMC_OtherDiscussions_Oth, int ContactFCTB , int ContactOption,string SchoolContactOption, string TBCode , int ISTeamBalik , int SMCregisterismeeting , int SMCmeetingregister , int SMCWrite , int SMCF5 , int SMCIsMember, int BoysToilet, int WaterSupply, int TilingToilet, int HandicappedAccessibleToilet, int MultipleHandwashingUnit, int TilingClassroomFloor, int Blackboards, int ProperPainting, int DisabledAccessibleRamp, int AppropriateElectricalWiring, int BoysUrinal, int GirlsUrinal, int Furniture, int TapWaterFacility)
+  
+    public int InsertUpdateActivitySchool(string GUID_School, string VillageCode, string UserID, string SchoolCode, DateTime ActivityDate, string TB_Handholding, string SMC, string SMC_TB, string SMC_FC, string SMC_Mtg, string SMC_OtherSIP, string SMC_OtherDiscussions, string SMCOr, string SMCOr_TB, string SMCOr_FC, string SMC_TotTrained, string SMC_FemaleTrained, string CLT, string CLTTB, string CLTFC, string CLTHindi, string CLTEnglish, string CLTMath, string CLT_Pretest_FC, string CLT_Pretest_TB, string CTL_Midtest_FC, string CTL_Midtest_TB, string CLT_Posttest_FC, string CLT_Posttest_TB, string Clt_Pre_PC, string Clt_Mid_PC, string Clt_Post_PC, string BalSabha, string BalSabha_TB, string BalSabha_FC, string BalSabha_Formation, string BalSabha_Orientation, string BalSabha_Chart, string BalSabha_Kit, string Lifeskill_Games, string Lifeskill_Games_TB, string Lifeskill_Games_FC, string SACUpdate_TB, string SACUpdate_FC, string SACUpdate, string SAC_Periodic_Checkup, string SAC_Listing_Name_Of_Girls, string SAC_Listing_Name_Of_Boys, string SAC_Girls_Left, string SAC_Boys_Left, string SAC_Girs_Not_Joined_School, string SAC_Boys_Not_Joined_School, string SAC_No_Of_Attended, int Classrooms, int DrinkingWater, int GirlsToilet, int Electricity, int Playground, int Slide, int BoundaryWall, int Kitchen, int Teachers_Male, int Teachers_Female, int CLT_Kit, int bookAvl, int Infrastructure, int Infrastructure_FC, int Infrastructure_TB, int SIP_Annual_FC, int SIP_Annual_TB, int Retention_Annual_FC, int Retention_Annual_TB, int AnnualData, int SIP_Annual, int Retention_Annual, string SIP_PC, string Retention_PC, string Others_Description, string LifeSkillGameEntry, string UserEntry, string Flag, string ApproveBy, int CLT_Pretest, int CLT_Midtest, int CLT_Posttes, string Remark, string CreateBy, string BalsabaType, string Balsabareason, int SMCDirector, int SMCRegister, string SMC_Purpose, string SMC_OtherDiscussions_Oth, int ContactFCTB, int ContactOption, string SchoolContactOption, string TBCode, int ISTeamBalik, int SMCregisterismeeting, int SMCmeetingregister, int SMCWrite, int SMCF5, int SMCIsMember, int BoysToilet, int WaterSupply, int TilingToilet, int HandicappedAccessibleToilet, int MultipleHandwashingUnit, int TilingClassroomFloor, int Blackboards, int ProperPainting, int DisabledAccessibleRamp, int AppropriateElectricalWiring, int BoysUrinal, int GirlsUrinal, int Furniture, int TapWaterFacility)
     {
         string BalSabaTBCode = "";
         if (rblBalsabaTB.Checked == true)
@@ -5869,7 +5734,7 @@ new SqlParameter("@Flag", flag)
         if (rblothertb.Checked == true)
         {
             tbcoth = 1;
-       }
+        }
         if (rblotherfc.Checked == true)
         {
             FCcoth = 1;
@@ -5984,8 +5849,7 @@ new SqlParameter("@Flag", flag)
                                   new SqlParameter("@SMCF5",SMCF5),
                                      new SqlParameter("@SMCIsMember",SMCIsMember),
                                       new SqlParameter("@BalSabaTBCode",BalSabaTBCode),
-                                        
-                                           new SqlParameter("@Other_TB",tbcoth),
+                                         new SqlParameter("@Other_TB",tbcoth),
                                             new SqlParameter("@Other_FC",FCcoth),
 
                                      new SqlParameter("@BoysToilet",BoysToilet),
@@ -6006,10 +5870,61 @@ new SqlParameter("@Flag", flag)
         };
         return SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[InsertUpdateActivity_School2025]", cmdParameters);
     }
+    public bool InterventionSql_Injection(string RVal)
+    {
+        SqlInjection objAudit = new SqlInjection();
+        bool injection = false;
+
+
+        injection = objAudit.CheckInputBool(RVal);
+
+        return injection;
+
+    }
+    public static List<Control> GetAllControls(List<Control> controls, Type t, Control parent /* can be Page */)
+    {
+        foreach (Control c in parent.Controls)
+        {
+            if (c.GetType() == t)
+                controls.Add(c);
+            if (c.HasControls())
+                controls = GetAllControls(controls, t, c);
+        }
+        return controls;
+    }
+    public string SetTextBoxFocusSelect(Page page)
+    {
+        string ALlTestBoxValue = "";
+        List<Control> list = new List<Control>();
+        list = GetAllControls(list, typeof(TextBox), page);
+        foreach (Control ctl in list)
+        {
+            if (ctl.GetType() == typeof(TextBox))
+            {
+                ((TextBox)ctl).Attributes.Add("onfocus", "this.select()");
+                string TempVari = ((TextBox)ctl).Text;
+                if (TempVari.Length > 0)
+                {
+                    ALlTestBoxValue += TempVari + "  ";
+                }
+            }
+        }
+        return ALlTestBoxValue;
+    }
 
     protected void btnSave_Click(object sender, EventArgs e)
     {
-        if (!Validation())
+		string RVal = SetTextBoxFocusSelect(this.Page);
+        if (!InterventionSql_Injection(RVal))
+        {
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Spurious input detected. Data rejected')</script>", false);
+
+            return;
+        }
+	    if (!Validation())
             return;
         Save();
         LoadDataschool();
@@ -6018,8 +5933,8 @@ new SqlParameter("@Flag", flag)
     public int InsertUpdateAttendace(string UniqueCode, string UniqueChildRCode, string VillageCode, int childattendace, int sessiondata, string Schoolcode, string flag, string CreatedBy)
     {
         string LiffSkillTBcode = "";
-         int TBFC = 0;
-        if (rblLifeTB.Checked==true)
+        int TBFC = 0;
+        if (rblLifeTB.Checked == true)
         {
             LiffSkillTBcode = ddlliffTb.SelectedValue;
         }
@@ -6030,7 +5945,7 @@ new SqlParameter("@Flag", flag)
         }
         if (rblLifeFC.Checked == true)
         {
-            TBFC=2;
+            TBFC = 2;
         }
         SqlParameter[] cmdParameters = new SqlParameter[]
         {
@@ -6153,7 +6068,7 @@ new SqlParameter("@Flag", flag)
             new SqlParameter("@UniqueChildCode ", UniqueChildCode),
 
         };
-        DataTable dt= SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "BalsabaActivitySchool", cmdParameters);
+        DataTable dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "BalsabaActivitySchool", cmdParameters);
         return dt;
     }
     protected void btnDelete_Click(object sender, EventArgs e)
@@ -6179,15 +6094,7 @@ new SqlParameter("@Flag", flag)
 
                     if (chkSMC.Checked == true)
                     {
-                        string Dateof = txtDate.Text;
-
-                        string[] b = Dateof.Split('/');
-
-                        string FcDate = b[2] + '-' + b[1] + '-' + b[0];
-                        string query = "  Update tblSMCAttendanceChild set DeleteFlag=2  where SchoolCode='" + this.ddlSchool.SelectedValue + "' and DeleteFlag=1 and tblSMCAttendanceNew.ActivityDate =('" + FcDate + "')  ";
-                        DataTable dataTable2 = this.objMain.LoadData(query);
-
-
+                       
                     }
                     if (res1 > 0)
                     {
@@ -6668,150 +6575,150 @@ new SqlParameter("@Flag", flag)
         }
 
 
-            if (Convert.ToInt32(txt18.Text) != 0)
+        if (Convert.ToInt32(txt18.Text) != 0)
+        {
+            if (Convert.ToInt32(txt18.Text) == 4)
             {
-                if (Convert.ToInt32(txt18.Text) == 4)
-                {
-                    txtDisabledaccessible.BackColor = Color.Blue;
-                    lblDisabledAccessibleRamp.Text = "4";
-                }
-                if (Convert.ToInt32(txt18.Text) == 1)
-                {
-                    txtDisabledaccessible.BackColor = Color.Green;
-                    lblDisabledAccessibleRamp.Text = "1";
-                }
-                if (Convert.ToInt32(txt18.Text) == 2)
-                {
-                    txtDisabledaccessible.BackColor = Color.Orange;
-                    lblDisabledAccessibleRamp.Text = "2";
-                }
-                if (Convert.ToInt32(txt18.Text) == 3)
-                {
-                    txtDisabledaccessible.BackColor = Color.Red;
-                    lblDisabledAccessibleRamp.Text = "3";
-                }
-            }
-
-            if (Convert.ToInt32(txt19.Text) != 0)
+                txtDisabledaccessible.BackColor = Color.Blue;
+                lblDisabledAccessibleRamp.Text = "4";
+		    }
+            if (Convert.ToInt32(txt18.Text) == 1)
             {
-                if (Convert.ToInt32(txt19.Text) == 4)
-                {
-                    txtAppropriateelectrical.BackColor = Color.Blue;
-                    lblAppropriateElectricalWiring.Text = "4";
-                }
-                if (Convert.ToInt32(txt19.Text) == 1)
-                {
-                    txtAppropriateelectrical.BackColor = Color.Green;
-                    lblAppropriateElectricalWiring.Text = "1";
-                }
-                if (Convert.ToInt32(txt19.Text) == 2)
-                {
-                    txtAppropriateelectrical.BackColor = Color.Orange;
-                    lblAppropriateElectricalWiring.Text = "2";
-                }
-                if (Convert.ToInt32(txt19.Text) == 3)
-                {
-                    txtAppropriateelectrical.BackColor = Color.Red;
-                    lblAppropriateElectricalWiring.Text = "3";
-                }
+                txtDisabledaccessible.BackColor = Color.Green;
+                lblDisabledAccessibleRamp.Text = "1";
             }
-
-
-            if (Convert.ToInt32(txt20.Text) != 0)
+            if (Convert.ToInt32(txt18.Text) == 2)
             {
-                if (Convert.ToInt32(txt20.Text) == 4)
-                {
-                    txtBoysUrinal.BackColor = Color.Blue;
-                    lblBoysUrinal.Text = "4";
-                }
-                if (Convert.ToInt32(txt20.Text) == 1)
-                {
-                    txtBoysUrinal.BackColor = Color.Green;
-                    lblBoysUrinal.Text = "1";
-                }
-                if (Convert.ToInt32(txt20.Text) == 2)
-                {
-                    txtBoysUrinal.BackColor = Color.Orange;
-                    lblBoysUrinal.Text = "2";
-                }
-                if (Convert.ToInt32(txt20.Text) == 3)
-                {
-                    txtBoysUrinal.BackColor = Color.Red;
-                    lblBoysUrinal.Text = "3";
-                }
+                txtDisabledaccessible.BackColor = Color.Orange;
+                lblDisabledAccessibleRamp.Text = "2";
             }
-
-            if (Convert.ToInt32(txt21.Text) != 0)
+            if (Convert.ToInt32(txt18.Text) == 3)
             {
-                if (Convert.ToInt32(txt21.Text) == 4)
-                {
-                    txtGirlsUrinal.BackColor = Color.Blue;
-                    lblGirlsUrinal.Text = "4";
-                }
-                if (Convert.ToInt32(txt21.Text) == 1)
-                {
-                    txtGirlsUrinal.BackColor = Color.Green;
-                    lblGirlsUrinal.Text = "1";
-                }
-                if (Convert.ToInt32(txt21.Text) == 2)
-                {
-                    txtGirlsUrinal.BackColor = Color.Orange;
-                    lblGirlsUrinal.Text = "2";
-                }
-                if (Convert.ToInt32(txt21.Text) == 3)
-                {
-                    txtGirlsUrinal.BackColor = Color.Red;
-                    lblGirlsUrinal.Text = "3";
-                }
+                txtDisabledaccessible.BackColor = Color.Red;
+                lblDisabledAccessibleRamp.Text = "3";
             }
+        }
 
-            if (Convert.ToInt32(txt22.Text) != 0)
+        if (Convert.ToInt32(txt19.Text) != 0)
+        {
+            if (Convert.ToInt32(txt19.Text) == 4)
             {
-                if (Convert.ToInt32(txt22.Text) == 4)
-                {
-                    txtFurniture.BackColor = Color.Blue;
-                    lblFurniture.Text = "4";
-                }
-                if (Convert.ToInt32(txt22.Text) == 1)
-                {
-                    txtFurniture.BackColor = Color.Green;
-                    lblFurniture.Text = "1";
-                }
-                if (Convert.ToInt32(txt22.Text) == 2)
-                {
-                    txtFurniture.BackColor = Color.Orange;
-                    lblFurniture.Text = "2";
-                }
-                if (Convert.ToInt32(txt22.Text) == 3)
-                {
-                    txtFurniture.BackColor = Color.Red;
-                    lblFurniture.Text = "3";
-                }
+                txtAppropriateelectrical.BackColor = Color.Blue;
+                lblAppropriateElectricalWiring.Text = "4";
+			}
+            if (Convert.ToInt32(txt19.Text) == 1)
+            {
+                txtAppropriateelectrical.BackColor = Color.Green;
+                lblAppropriateElectricalWiring.Text = "1";
             }
+            if (Convert.ToInt32(txt19.Text) == 2)
+            {
+                txtAppropriateelectrical.BackColor = Color.Orange;
+                lblAppropriateElectricalWiring.Text = "2";
+            }
+            if (Convert.ToInt32(txt19.Text) == 3)
+            {
+                txtAppropriateelectrical.BackColor = Color.Red;
+                lblAppropriateElectricalWiring.Text = "3";
+            }
+        }
 
-            if (Convert.ToInt32(txt23.Text) != 0)
+
+        if (Convert.ToInt32(txt20.Text) != 0)
+        {
+            if (Convert.ToInt32(txt20.Text) == 4)
             {
-                if (Convert.ToInt32(txt23.Text) == 4)
-                {
-                    txtWaterStorage.BackColor = Color.Blue;
-                    lblTapWaterFacility.Text = "4";
-                }
-                if (Convert.ToInt32(txt23.Text) == 1)
-                {
-                    txtWaterStorage.BackColor = Color.Green;
-                    lblTapWaterFacility.Text = "1";
-                }
-                if (Convert.ToInt32(txt23.Text) == 2)
-                {
-                    txtWaterStorage.BackColor = Color.Orange;
-                    lblTapWaterFacility.Text = "2";
-                }
-                if (Convert.ToInt32(txt23.Text) == 3)
-                {
-                    txtWaterStorage.BackColor = Color.Red;
-                    lblTapWaterFacility.Text = "3";
-                }
+                txtBoysUrinal.BackColor = Color.Blue;
+                lblBoysUrinal.Text = "4";
+		 }
+            if (Convert.ToInt32(txt20.Text) == 1)
+            {
+                txtBoysUrinal.BackColor = Color.Green;
+                lblBoysUrinal.Text = "1";
             }
+            if (Convert.ToInt32(txt20.Text) == 2)
+            {
+                txtBoysUrinal.BackColor = Color.Orange;
+                lblBoysUrinal.Text = "2";
+            }
+            if (Convert.ToInt32(txt20.Text) == 3)
+            {
+                txtBoysUrinal.BackColor = Color.Red;
+                lblBoysUrinal.Text = "3";
+            }
+        }
+
+        if (Convert.ToInt32(txt21.Text) != 0)
+        {
+            if (Convert.ToInt32(txt21.Text) == 4)
+            {
+                txtGirlsUrinal.BackColor = Color.Blue;
+                lblGirlsUrinal.Text = "4";
+            }
+		    if (Convert.ToInt32(txt21.Text) == 1)
+            {
+                txtGirlsUrinal.BackColor = Color.Green;
+                lblGirlsUrinal.Text = "1";
+            }
+            if (Convert.ToInt32(txt21.Text) == 2)
+            {
+                txtGirlsUrinal.BackColor = Color.Orange;
+                lblGirlsUrinal.Text = "2";
+            }
+            if (Convert.ToInt32(txt21.Text) == 3)
+            {
+                txtGirlsUrinal.BackColor = Color.Red;
+                lblGirlsUrinal.Text = "3";
+		    }
+        }
+
+        if (Convert.ToInt32(txt22.Text) != 0)
+        {
+            if (Convert.ToInt32(txt22.Text) == 4)
+            {
+                txtFurniture.BackColor = Color.Blue;
+                lblFurniture.Text = "4";
+            }
+			if (Convert.ToInt32(txt22.Text) == 1)
+            {
+                txtFurniture.BackColor = Color.Green;
+                lblFurniture.Text = "1";
+		    }
+            if (Convert.ToInt32(txt22.Text) == 2)
+            {
+                txtFurniture.BackColor = Color.Orange;
+                lblFurniture.Text = "2";
+            }
+            if (Convert.ToInt32(txt22.Text) == 3)
+            {
+                txtFurniture.BackColor = Color.Red;
+                lblFurniture.Text = "3";
+            }
+        }
+
+        if (Convert.ToInt32(txt23.Text) != 0)
+        {
+            if (Convert.ToInt32(txt23.Text) == 4)
+            {
+                txtWaterStorage.BackColor = Color.Blue;
+                lblTapWaterFacility.Text = "4";
+            }
+            if (Convert.ToInt32(txt23.Text) == 1)
+            {
+                txtWaterStorage.BackColor = Color.Green;
+                lblTapWaterFacility.Text = "1";
+            }
+            if (Convert.ToInt32(txt23.Text) == 2)
+            {
+                txtWaterStorage.BackColor = Color.Orange;
+                lblTapWaterFacility.Text = "2";
+            }
+            if (Convert.ToInt32(txt23.Text) == 3)
+            {
+                txtWaterStorage.BackColor = Color.Red;
+                lblTapWaterFacility.Text = "3";
+            }
+        }
 
         txtMaleTeacher.Text = txtMaleTeacher1.Text;
         txtFemaleTeacher.Text = txtFemaleTeacher1.Text;
@@ -7433,21 +7340,18 @@ new SqlParameter("@Flag", flag)
     protected void btnSerach_Click(object sender, EventArgs e)
     {
         string query = "   select isnull(SchoolLevel,0) as SchoolLevel,WorkingStatus ,ManagementType,isnull(LSG,0) as LSG from mstSchool   where SchoolCode='" + this.ddlSchool.SelectedValue + "' ";
-
-       
         DataTable dataTable2 = this.objMain.LoadData(query);
         if (dataTable2.Rows.Count > 0)
         {
             Session["SchoolLevel"] = dataTable2.Rows[0]["SchoolLevel"].ToString();
             Session["LSG"] = dataTable2.Rows[0]["SchoolLevel"].ToString();
-          
+
         }
         LoadData();
 
         LoadSMC();
 
     }
-
 
     protected void rblTbr_Click(object sender, EventArgs e)
     {
@@ -7456,9 +7360,9 @@ new SqlParameter("@Flag", flag)
         string[] b = Dateof.Split('/');
 
         string FcDate = b[2] + '-' + b[1] + '-' + b[0];
-           string query = "   select *from tblSMCAttendanceChild   where SchoolCode='" + this.ddlSchool.SelectedValue + "' and DeleteFlag=1 and tblSMCAttendanceChild.ActivityDate =('" + FcDate + "')  ";
-                DataTable dataTable2 = this.objMain.LoadData(query);
-        if (dataTable2.Rows.Count>0)
+        string query = "   select *from tblSMCAttendanceChild   where SchoolCode='" + this.ddlSchool.SelectedValue + "' and DeleteFlag=1 and tblSMCAttendanceChild.ActivityDate =('" + FcDate + "')  ";
+        DataTable dataTable2 = this.objMain.LoadData(query);
+        if (dataTable2.Rows.Count > 0)
         {
 
         }
@@ -7504,7 +7408,7 @@ new SqlParameter("@Flag", flag)
     public DataTable LoadSMCDeatilsnew(string WhereQuery, string Flag)
     {
         SqlParameter[] cmdParameters = new SqlParameter[]
-        { 
+        {
             new SqlParameter("@Schoolcode", ddlSchool.SelectedValue)    ,
             new SqlParameter("@con", WhereQuery)    ,
                 new SqlParameter("@Flag", Flag)    ,
@@ -7573,7 +7477,7 @@ new SqlParameter("@Flag", flag)
         {
             userid = "2";
         }
-        if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "153")
+        if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30")
         {
             userid = "3";
         }
@@ -8251,23 +8155,18 @@ new SqlParameter("@Flag", flag)
                 {
                     //txtdrinking.BackColor = Color.Green;
                     txtdrinking2.BackColor = Color.Blue;
-
-                  
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["DrinkingWater"].ToString()) == 1)
                 {
                     txtdrinking2.BackColor = Color.Green;
-                    
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["DrinkingWater"].ToString()) == 2)
                 {
                     txtdrinking2.BackColor = Color.Orange;
-                   
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["DrinkingWater"].ToString()) == 3)
                 {
                     txtdrinking2.BackColor = Color.Red;
-                   
                 }
             }
 
@@ -8276,23 +8175,18 @@ new SqlParameter("@Flag", flag)
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["GirlsToilet"].ToString()) == 4)
                 {
                     txtToilet2.BackColor = Color.Blue;
-                  
-
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["GirlsToilet"].ToString()) == 1)
                 {
                     txtToilet2.BackColor = Color.Green;
-                   
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["GirlsToilet"].ToString()) == 2)
                 {
                     txtToilet2.BackColor = Color.Orange;
-               
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["GirlsToilet"].ToString()) == 3)
                 {
                     txtToilet2.BackColor = Color.Red;
-                
                 }
             }
 
@@ -8301,22 +8195,18 @@ new SqlParameter("@Flag", flag)
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["Electricity"].ToString()) == 4)
                 {
                     txtElectricity2.BackColor = Color.Blue;
-           
-                }
+               }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["Electricity"].ToString()) == 1)
                 {
                     txtElectricity2.BackColor = Color.Green;
-        
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["Electricity"].ToString()) == 2)
                 {
                     txtElectricity2.BackColor = Color.Orange;
-                  
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["Electricity"].ToString()) == 3)
                 {
                     txtElectricity2.BackColor = Color.Red;
-              
                 }
             }
 
@@ -8326,22 +8216,18 @@ new SqlParameter("@Flag", flag)
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["Playground"].ToString()) == 4)
                 {
                     txtPlay2.BackColor = Color.Blue;
-              
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["Playground"].ToString()) == 1)
                 {
                     txtPlay2.BackColor = Color.Green;
-                 
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["Playground"].ToString()) == 2)
                 {
                     txtPlay2.BackColor = Color.Orange;
-                  
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["Playground"].ToString()) == 3)
                 {
                     txtPlay2.BackColor = Color.Red;
-                    
                 }
             }
 
@@ -8351,23 +8237,18 @@ new SqlParameter("@Flag", flag)
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["Slide"].ToString()) == 4)
                 {
                     txtSlides2.BackColor = Color.Blue;
-                  
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["Slide"].ToString()) == 1)
                 {
                     txtSlides2.BackColor = Color.Green;
-                  
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["Slide"].ToString()) == 2)
                 {
                     txtSlides2.BackColor = Color.Orange;
-                   
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["Slide"].ToString()) == 3)
                 {
                     txtSlides2.BackColor = Color.Red;
-
-                   
                 }
             }
 
@@ -8376,23 +8257,18 @@ new SqlParameter("@Flag", flag)
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["BoundaryWall"].ToString()) == 4)
                 {
                     txtBoundaryWall2.BackColor = Color.Blue;
-                   
-
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["BoundaryWall"].ToString()) == 1)
                 {
                     txtBoundaryWall2.BackColor = Color.Green;
-                 
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["BoundaryWall"].ToString()) == 2)
                 {
                     txtBoundaryWall2.BackColor = Color.Orange;
-                  
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["BoundaryWall"].ToString()) == 3)
                 {
                     txtBoundaryWall2.BackColor = Color.Red;
-                   
                 }
             }
 
@@ -8408,18 +8284,14 @@ new SqlParameter("@Flag", flag)
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["Kitchen"].ToString()) == 1)
                 {
                     txtKitchen2.BackColor = Color.Green;
-                  
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["Kitchen"].ToString()) == 2)
                 {
                     txtKitchen2.BackColor = Color.Orange;
-                  
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["Kitchen"].ToString()) == 3)
                 {
                     txtKitchen2.BackColor = Color.Red;
-
-                   
                 }
             }
 
@@ -8428,22 +8300,18 @@ new SqlParameter("@Flag", flag)
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["CLT_Kit"].ToString()) == 4)
                 {
                     txtCltKit2.BackColor = Color.Blue;
-                   
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["CLT_Kit"].ToString()) == 1)
                 {
                     txtCltKit2.BackColor = Color.Green;
-                  
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["CLT_Kit"].ToString()) == 2)
                 {
                     txtCltKit2.BackColor = Color.Orange;
-                   
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["CLT_Kit"].ToString()) == 3)
                 {
                     txtCltKit2.BackColor = Color.Red;
-                 
                 }
             }
 
@@ -8452,22 +8320,18 @@ new SqlParameter("@Flag", flag)
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["Books"].ToString()) == 4)
                 {
                     txtbook2.BackColor = Color.Blue;
-                  
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["Books"].ToString()) == 1)
                 {
                     txtbook2.BackColor = Color.Green;
-                    
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["Books"].ToString()) == 2)
                 {
                     txtbook2.BackColor = Color.Orange;
-                  
                 }
                 if (Convert.ToInt32(dtStartVillage.Rows[0]["Books"].ToString()) == 3)
                 {
                     txtbook2.BackColor = Color.Red;
-                    
                 }
             }
 
@@ -9049,45 +8913,45 @@ new SqlParameter("@Flag", flag)
 
               };
         DataSet dtSACUpdateAll = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptCheckSACUpdateBackData]", parm5);
-        if (dtSACUpdateAll.Tables[0].Rows.Count>0)
+        if (dtSACUpdateAll.Tables[0].Rows.Count > 0)
         {
             #region SAC
 
             //if (Convert.ToInt32(dtSACUpdateAll.Tables[0].Rows[0]["SAC_Periodic_Checkup"].ToString()) != 0)
             //{
-                txtPrvHealth.Text = dtSACUpdateAll.Tables[0].Rows[0]["SAC_Periodic_Checkup"].ToString();
+            txtPrvHealth.Text = dtSACUpdateAll.Tables[0].Rows[0]["SAC_Periodic_Checkup"].ToString();
 
             //}
             //if (Convert.ToInt32(dtSACUpdateAll.Tables[0].Rows[0]["SAC_No_Of_Attended"].ToString()) != 0)
             //{
-                txtPreSMCMeeting.Text = dtSACUpdateAll.Tables[0].Rows[0]["SAC_No_Of_Attended"].ToString();
+            txtPreSMCMeeting.Text = dtSACUpdateAll.Tables[0].Rows[0]["SAC_No_Of_Attended"].ToString();
 
-           // }
+            // }
             //if (Convert.ToInt32(dtSACUpdateAll.Tables[0].Rows[0]["SAC_Listing_Name_Of_Girls"].ToString()) != 0)
             //{
-                txtPreAdgirls.Text = dtSACUpdateAll.Tables[0].Rows[0]["SAC_Listing_Name_Of_Girls"].ToString();
+            txtPreAdgirls.Text = dtSACUpdateAll.Tables[0].Rows[0]["SAC_Listing_Name_Of_Girls"].ToString();
             //}
             //if (Convert.ToInt32(dtSACUpdateAll.Tables[0].Rows[0]["SAC_Listing_Name_Of_Boys"].ToString()) != 0)
             //{
-                txtPrvAdBoy.Text = dtSACUpdateAll.Tables[0].Rows[0]["SAC_Listing_Name_Of_Boys"].ToString();
+            txtPrvAdBoy.Text = dtSACUpdateAll.Tables[0].Rows[0]["SAC_Listing_Name_Of_Boys"].ToString();
             //}
             //if (Convert.ToInt32(dtSACUpdateAll.Tables[0].Rows[0]["SAC_Girls_Left"].ToString()) != 0)
             //{
-                txtPrvleftGirl.Text = dtSACUpdateAll.Tables[0].Rows[0]["SAC_Girls_Left"].ToString();
-           // }
+            txtPrvleftGirl.Text = dtSACUpdateAll.Tables[0].Rows[0]["SAC_Girls_Left"].ToString();
+            // }
             //if (Convert.ToInt32(dtSACUpdateAll.Tables[0].Rows[0]["SAC_Boys_Left"].ToString()) != 0)
             //{
-                txtPrevleftBoy.Text = dtSACUpdateAll.Tables[0].Rows[0]["SAC_Boys_Left"].ToString();
+            txtPrevleftBoy.Text = dtSACUpdateAll.Tables[0].Rows[0]["SAC_Boys_Left"].ToString();
             //}
             //if (Convert.ToInt32(dtSACUpdateAll.Tables[0].Rows[0]["SAC_Girls_Not_Joined_School"].ToString()) != 0)
             //{
-                txtPrvGirlNot.Text = dtSACUpdateAll.Tables[0].Rows[0]["SAC_Girls_Not_Joined_School"].ToString();
-           // }
+            txtPrvGirlNot.Text = dtSACUpdateAll.Tables[0].Rows[0]["SAC_Girls_Not_Joined_School"].ToString();
+            // }
             //if (Convert.ToInt32(dtSACUpdateAll.Tables[0].Rows[0]["SAC_Girls_Not_Joined_School"].ToString()) != 0)
             //{
-                txtprvBoyNot.Text = dtSACUpdateAll.Tables[0].Rows[0]["SAC_Boys_Not_Joined_School"].ToString();
+            txtprvBoyNot.Text = dtSACUpdateAll.Tables[0].Rows[0]["SAC_Boys_Not_Joined_School"].ToString();
             //}
-           
+
             //divSafe.Style(
             //  divSafe.Attributes.Add.Style("background-color: #090;");
             // divSafe.Attributes.Add('style','color:green');
@@ -9100,10 +8964,7 @@ new SqlParameter("@Flag", flag)
             #endregion
         }
 
-      
-
-
-        if ( month == 7   || month == 10 || month == 11  || month == 1 || month == 3)
+        if (month == 7 || month == 10 || month == 11 || month == 1 || month == 3)
         {
             SqlParameter[] parm4 = new SqlParameter[]
              {
@@ -9132,7 +8993,7 @@ new SqlParameter("@Flag", flag)
             }
 
             txtSMCMeeting.Enabled = false;
-          txtSepSMCMeeting.Enabled = false;
+            txtSepSMCMeeting.Enabled = false;
             txtDescSMCMeeting.Enabled = false;
             txtMarSMCMeeting.Enabled = false;
             txtHealth.Enabled = false;
@@ -9167,7 +9028,7 @@ new SqlParameter("@Flag", flag)
             txtSepBoyNot.Enabled = false;
             txtDecBoyNot.Enabled = false;
             txtMarBoyNot.Enabled = false;
-            if (month == 7 )
+            if (month == 7)
             {
                 txtSMCMeeting.Enabled = true;
                 txtAdgirls.Enabled = true;
@@ -9193,7 +9054,7 @@ new SqlParameter("@Flag", flag)
             if (month == 1)
             {
                 txtDescSMCMeeting.Enabled = true;
-                 txtDescAdgirls.Enabled = true;
+                txtDescAdgirls.Enabled = true;
                 txtDescHealth.Enabled = true;
                 txtDescAdBoy.Enabled = true;
                 txtDescleftGirl.Enabled = true;
@@ -9242,7 +9103,7 @@ new SqlParameter("@Flag", flag)
                 txtGirlNot.Text = dtSACUpdateAll.Tables[1].Rows[0]["SAC_Girls_Not_Joined_School"].ToString();
 
                 txtBoyNot.Text = dtSACUpdateAll.Tables[1].Rows[0]["SAC_Boys_Not_Joined_School"].ToString();
-                if ( month == 7  )
+                if (month == 7)
                 {
                     pnlSACUpdate.Enabled = false;
                 }
@@ -9289,32 +9150,30 @@ new SqlParameter("@Flag", flag)
             #region SAC
             if (Convert.ToDateTime(FcDate) != Convert.ToDateTime(dtSACUpdateAll.Tables[3].Rows[0]["ActivityDate"]))
             {
+                txtDescHealth.Text = dtSACUpdateAll.Tables[3].Rows[0]["SAC_Periodic_Checkup"].ToString();
 
-                
-                    txtDescHealth.Text = dtSACUpdateAll.Tables[3].Rows[0]["SAC_Periodic_Checkup"].ToString();
 
-              
-                    txtDescSMCMeeting.Text = dtSACUpdateAll.Tables[3].Rows[0]["SAC_No_Of_Attended"].ToString();
+                txtDescSMCMeeting.Text = dtSACUpdateAll.Tables[3].Rows[0]["SAC_No_Of_Attended"].ToString();
 
-               
-                    txtDescAdgirls.Text = dtSACUpdateAll.Tables[3].Rows[0]["SAC_Listing_Name_Of_Girls"].ToString();
-               
-                    txtDescAdBoy.Text = dtSACUpdateAll.Tables[3].Rows[0]["SAC_Listing_Name_Of_Boys"].ToString();
-               
-                    txtDescleftGirl.Text = dtSACUpdateAll.Tables[3].Rows[0]["SAC_Girls_Left"].ToString();
-              
-                    txtdescleftBoy.Text = dtSACUpdateAll.Tables[3].Rows[0]["SAC_Boys_Left"].ToString();
-               
-                    txtDescGirlNot.Text = dtSACUpdateAll.Tables[3].Rows[0]["SAC_Girls_Not_Joined_School"].ToString();
-               
-                    txtDecBoyNot.Text = dtSACUpdateAll.Tables[3].Rows[0]["SAC_Boys_Not_Joined_School"].ToString();
-               
+
+                txtDescAdgirls.Text = dtSACUpdateAll.Tables[3].Rows[0]["SAC_Listing_Name_Of_Girls"].ToString();
+
+                txtDescAdBoy.Text = dtSACUpdateAll.Tables[3].Rows[0]["SAC_Listing_Name_Of_Boys"].ToString();
+
+                txtDescleftGirl.Text = dtSACUpdateAll.Tables[3].Rows[0]["SAC_Girls_Left"].ToString();
+
+                txtdescleftBoy.Text = dtSACUpdateAll.Tables[3].Rows[0]["SAC_Boys_Left"].ToString();
+
+                txtDescGirlNot.Text = dtSACUpdateAll.Tables[3].Rows[0]["SAC_Girls_Not_Joined_School"].ToString();
+
+                txtDecBoyNot.Text = dtSACUpdateAll.Tables[3].Rows[0]["SAC_Boys_Not_Joined_School"].ToString();
+
                 if (month == 1)
                 {
                     pnlSACUpdate.Enabled = false;
                 }
             }
-          
+
 
             #endregion
         }
@@ -9325,25 +9184,24 @@ new SqlParameter("@Flag", flag)
             if (Convert.ToDateTime(FcDate) != Convert.ToDateTime(dtSACUpdateAll.Tables[4].Rows[0]["ActivityDate"]))
             {
 
-               
-                    txtMarHealth.Text = dtSACUpdateAll.Tables[4].Rows[0]["SAC_Periodic_Checkup"].ToString();
+                txtMarHealth.Text = dtSACUpdateAll.Tables[4].Rows[0]["SAC_Periodic_Checkup"].ToString();
 
-                
-                    txtMarSMCMeeting.Text = dtSACUpdateAll.Tables[4].Rows[0]["SAC_No_Of_Attended"].ToString();
 
-                
-                    txtMarAdgirls.Text = dtSACUpdateAll.Tables[4].Rows[0]["SAC_Listing_Name_Of_Girls"].ToString();
-               
-                    txtMarAdBoy.Text = dtSACUpdateAll.Tables[4].Rows[0]["SAC_Listing_Name_Of_Boys"].ToString();
-                
-                    txtMarleftGirl.Text = dtSACUpdateAll.Tables[4].Rows[0]["SAC_Girls_Left"].ToString();
-                
-                    txtMarleftBoy.Text = dtSACUpdateAll.Tables[4].Rows[0]["SAC_Boys_Left"].ToString();
-               
-                    txtMarGirlNot.Text = dtSACUpdateAll.Tables[4].Rows[0]["SAC_Girls_Not_Joined_School"].ToString();
-                
-                    txtMarBoyNot.Text = dtSACUpdateAll.Tables[4].Rows[0]["SAC_Boys_Not_Joined_School"].ToString();
-               
+                txtMarSMCMeeting.Text = dtSACUpdateAll.Tables[4].Rows[0]["SAC_No_Of_Attended"].ToString();
+
+
+                txtMarAdgirls.Text = dtSACUpdateAll.Tables[4].Rows[0]["SAC_Listing_Name_Of_Girls"].ToString();
+
+                txtMarAdBoy.Text = dtSACUpdateAll.Tables[4].Rows[0]["SAC_Listing_Name_Of_Boys"].ToString();
+
+                txtMarleftGirl.Text = dtSACUpdateAll.Tables[4].Rows[0]["SAC_Girls_Left"].ToString();
+
+                txtMarleftBoy.Text = dtSACUpdateAll.Tables[4].Rows[0]["SAC_Boys_Left"].ToString();
+
+                txtMarGirlNot.Text = dtSACUpdateAll.Tables[4].Rows[0]["SAC_Girls_Not_Joined_School"].ToString();
+
+                txtMarBoyNot.Text = dtSACUpdateAll.Tables[4].Rows[0]["SAC_Boys_Not_Joined_School"].ToString();
+
                 if (month == 3)
                 {
                     pnlSACUpdate.Enabled = false;
@@ -9376,7 +9234,7 @@ new SqlParameter("@Flag", flag)
         {
             userid = "FC";
         }
-        if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30"  || Session["user_level"].ToString() == "145")
+        if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "145")
         {
             userid = "B";
         }
@@ -9509,7 +9367,7 @@ new SqlParameter("@Flag", flag)
                 conq = "ActivityDate =('" + FcDate + "')    and Schoolcode='" + ddlSchool.SelectedValue + "' and ApproveStatus='FC' ";
 
             }
-            if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30"  || Session["user_level"].ToString() == "145")
+            if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "145")
             {
                 userid = "3";
                 conq = "ActivityDate =('" + FcDate + "')    and Schoolcode='" + ddlSchool.SelectedValue + "' and ApproveStatus='B' ";
@@ -9534,7 +9392,7 @@ new SqlParameter("@Flag", flag)
 
         #region check session value
 
-        string wherecon = "", wherecon1 = ""; 
+        string wherecon = "", wherecon1 = "";
         string wherecon3 = "";
         wherecon = " where villagecode= '" + ddlVilage.SelectedValue + "' and schoolcode = '" + ddlSchool.SelectedValue + "'  and userentry=" + userid + " and  BalSabha_Orientation>0   and ( BalSabha_Orientation>0 or BalSabha_Chart>0)";
 
@@ -9553,8 +9411,6 @@ new SqlParameter("@Flag", flag)
 
 
         #endregion
-
-       
 
         //   strQry = "   select * from tblActivityUpdate_School where VillageCode='" + ddlVilage.SelectedValue + "' and SchoolCode='" + ddlSchool.SelectedValue + "' and ActivityDate= '" + Convert.ToDateTime(FcDate).ToString("yyyy-MM-dd") + "'  ";
         // DataTable dtUserVillage = objMain.LoadData(strQry);
@@ -9619,7 +9475,6 @@ new SqlParameter("@Flag", flag)
                 lblCom22.Text = dtUserVillage.Rows[0]["MtgPhoto"].ToString();
             }
 
-            
             if (Convert.ToString(dtUserVillage.Rows[0]["SMCPresident"]) != "")
             {
                 txtSMCPre.Text = dtUserVillage.Rows[0]["SMCPresident"].ToString();
@@ -9644,7 +9499,7 @@ new SqlParameter("@Flag", flag)
                 rblisTb_Click(rblApprove, null);
                 ddlMMTb.SelectedValue = dtUserVillage.Rows[0]["TBCodesmc"].ToString();
             }
-            if (Convert.ToInt32(dtUserVillage.Rows[0]["TBMeet"].ToString()) ==2)
+            if (Convert.ToInt32(dtUserVillage.Rows[0]["TBMeet"].ToString()) == 2)
             {
                 rdTeamN.Checked = true;
             }
@@ -9673,14 +9528,7 @@ new SqlParameter("@Flag", flag)
 
                 rblotherfc.Checked = true;
             }
-            
-
-                txtOther.Text= dtUserVillage.Rows[0]["Others_Description"].ToString();
-           
-
-
-       
-
+    	    txtOther.Text = dtUserVillage.Rows[0]["Others_Description"].ToString();
 
             string cmeeting = dtUserVillage.Rows[0]["SMC_Purpose"].ToString();
 
@@ -9918,7 +9766,6 @@ new SqlParameter("@Flag", flag)
             string SchoolContactOption = dtUserVillage.Rows[0]["SchoolContactOption"].ToString();
 
             string[] SchoolContactOption1 = SchoolContactOption.Split(',');
-          
             foreach (string s in SchoolContactOption1)
             {
                 foreach (ListItem item in chkSchoolCOntact.Items)
@@ -9926,7 +9773,6 @@ new SqlParameter("@Flag", flag)
                     if (item.Value == s)
                     {
                         item.Selected = true;
-                      
                     }
                 }
             }
@@ -10117,7 +9963,7 @@ new SqlParameter("@Flag", flag)
             {
                 month = Convert.ToInt32(b[1]);
             }
-            if (month == 7 )
+            if (month == 7)
             {
                 txtHealth.Text = dtUserVillage.Rows[0]["SAC_Periodic_Checkup"].ToString();
 
@@ -10180,28 +10026,23 @@ new SqlParameter("@Flag", flag)
                 txtSepBoyNot.Text = dtUserVillage.Rows[0]["SAC_Boys_Not_Joined_School"].ToString();
 
             }
-            if (month == 1) 
+            if (month == 1)
             {
-                
-                    txtDescHealth.Text = dtUserVillage.Rows[0]["SAC_Periodic_Checkup"].ToString();
+			    txtDescHealth.Text = dtUserVillage.Rows[0]["SAC_Periodic_Checkup"].ToString();
 
-                
-               
-                    txtDescSMCMeeting.Text = dtUserVillage.Rows[0]["SAC_No_Of_Attended"].ToString();
+                txtDescSMCMeeting.Text = dtUserVillage.Rows[0]["SAC_No_Of_Attended"].ToString();
+                txtDescAdgirls.Text = dtUserVillage.Rows[0]["SAC_Listing_Name_Of_Girls"].ToString();
 
-               
-                    txtDescAdgirls.Text = dtUserVillage.Rows[0]["SAC_Listing_Name_Of_Girls"].ToString();
-              
-                    txtDescAdBoy.Text = dtUserVillage.Rows[0]["SAC_Listing_Name_Of_Boys"].ToString();
-              
-                    txtDescleftGirl.Text = dtUserVillage.Rows[0]["SAC_Girls_Left"].ToString();
-             
-                    txtdescleftBoy.Text = dtUserVillage.Rows[0]["SAC_Boys_Left"].ToString();
-             
-                    txtDescGirlNot.Text = dtUserVillage.Rows[0]["SAC_Girls_Not_Joined_School"].ToString();
-            
-                    txtDecBoyNot.Text = dtUserVillage.Rows[0]["SAC_Boys_Not_Joined_School"].ToString();
-                
+                txtDescAdBoy.Text = dtUserVillage.Rows[0]["SAC_Listing_Name_Of_Boys"].ToString();
+
+                txtDescleftGirl.Text = dtUserVillage.Rows[0]["SAC_Girls_Left"].ToString();
+
+                txtdescleftBoy.Text = dtUserVillage.Rows[0]["SAC_Boys_Left"].ToString();
+
+                txtDescGirlNot.Text = dtUserVillage.Rows[0]["SAC_Girls_Not_Joined_School"].ToString();
+
+                txtDecBoyNot.Text = dtUserVillage.Rows[0]["SAC_Boys_Not_Joined_School"].ToString();
+
             }
 
             if (month == 3)
@@ -10735,170 +10576,170 @@ new SqlParameter("@Flag", flag)
                 }
             }
 
-                if (Convert.ToInt32(dtUserVillage.Rows[0]["ProperPaintingSchool"].ToString()) != 0)
+            if (Convert.ToInt32(dtUserVillage.Rows[0]["ProperPaintingSchool"].ToString()) != 0)
+            {
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["ProperPaintingSchool"].ToString()) == 4)
                 {
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["ProperPaintingSchool"].ToString()) == 4)
-                    {
-                        txtProperpainting.BackColor = Color.Blue;
-                        lblProperPainting.Text = "4";
-                    }
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["ProperPaintingSchool"].ToString()) == 1)
-                    {
-                        txtProperpainting.BackColor = Color.Green;
-                        lblProperPainting.Text = "1";
-                    }
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["ProperPaintingSchool"].ToString()) == 2)
-                    {
-                        txtProperpainting.BackColor = Color.Orange;
-                        lblProperPainting.Text = "2";
-                    }
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["ProperPaintingSchool"].ToString()) == 3)
-                    {
-                        txtProperpainting.BackColor = Color.Red;
-                        lblProperPainting.Text = "3";
-                    }
+                    txtProperpainting.BackColor = Color.Blue;
+                    lblProperPainting.Text = "4";
                 }
-                if (Convert.ToInt32(dtUserVillage.Rows[0]["DisabledAccessibleRamp"].ToString()) != 0)
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["ProperPaintingSchool"].ToString()) == 1)
                 {
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["DisabledAccessibleRamp"].ToString()) == 4)
-                    {
-                        txtDisabledaccessible.BackColor = Color.Blue;
-                        lblDisabledAccessibleRamp.Text = "4";
-                    }
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["DisabledAccessibleRamp"].ToString()) == 1)
-                    {
-                        txtDisabledaccessible.BackColor = Color.Green;
-                        lblDisabledAccessibleRamp.Text = "1";
-                    }
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["DisabledAccessibleRamp"].ToString()) == 2)
-                    {
-                        txtDisabledaccessible.BackColor = Color.Orange;
-                        lblDisabledAccessibleRamp.Text = "2";
-                    }
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["DisabledAccessibleRamp"].ToString()) == 3)
-                    {
-                        txtDisabledaccessible.BackColor = Color.Red;
-                        lblDisabledAccessibleRamp.Text = "3";
-                    }
+                    txtProperpainting.BackColor = Color.Green;  
+                    lblProperPainting.Text = "1";
                 }
-                if (Convert.ToInt32(dtUserVillage.Rows[0]["AppropriateElectricalWiring"].ToString()) != 0)
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["ProperPaintingSchool"].ToString()) == 2)
                 {
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["AppropriateElectricalWiring"].ToString()) == 4)
-                    {
-                        txtAppropriateelectrical.BackColor = Color.Blue;
-                        lblAppropriateElectricalWiring.Text = "4";
-                    }
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["AppropriateElectricalWiring"].ToString()) == 1)
-                    {
-                        txtAppropriateelectrical.BackColor = Color.Green;
-                        lblAppropriateElectricalWiring.Text = "1";
-                    }
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["AppropriateElectricalWiring"].ToString()) == 2)
-                    {
-                        txtAppropriateelectrical.BackColor = Color.Orange;
-                        lblAppropriateElectricalWiring.Text = "2";
-                    }
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["AppropriateElectricalWiring"].ToString()) == 3)
-                    {
-                        txtAppropriateelectrical.BackColor = Color.Red;
-                        lblAppropriateElectricalWiring.Text = "3";
-                    }
+                    txtProperpainting.BackColor = Color.Orange;
+                    lblProperPainting.Text = "2";
                 }
-                if (Convert.ToInt32(dtUserVillage.Rows[0]["BoysUrinal"].ToString()) != 0)
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["ProperPaintingSchool"].ToString()) == 3)
+                { 
+                    txtProperpainting.BackColor = Color.Red;
+                    lblProperPainting.Text = "3";
+                }
+            }
+            if (Convert.ToInt32(dtUserVillage.Rows[0]["DisabledAccessibleRamp"].ToString()) != 0)
+            {
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["DisabledAccessibleRamp"].ToString()) == 4)
                 {
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["BoysUrinal"].ToString()) == 4)
-                    {
-                        txtBoysUrinal.BackColor = Color.Blue;
-                        lblBoysUrinal.Text = "4";
-                    }
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["BoysUrinal"].ToString()) == 1)
-                    {
-                        txtBoysUrinal.BackColor = Color.Green;
-                        lblBoysUrinal.Text = "1";
-                    }
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["BoysUrinal"].ToString()) == 2)
-                    {
-                        txtBoysUrinal.BackColor = Color.Orange;
-                        lblBoysUrinal.Text = "2";
-                    }
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["BoysUrinal"].ToString()) == 3)
-                    {
-                        txtBoysUrinal.BackColor = Color.Red;
-                        lblBoysUrinal.Text = "3";
-                    }
+                    txtDisabledaccessible.BackColor = Color.Blue;
+                    lblDisabledAccessibleRamp.Text = "4";
                 }
-                if (Convert.ToInt32(dtUserVillage.Rows[0]["GirlsUrinal"].ToString()) != 0)
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["DisabledAccessibleRamp"].ToString()) == 1)
                 {
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["GirlsUrinal"].ToString()) == 4)
-                    {
-                        txtGirlsUrinal.BackColor = Color.Blue;
-                        lblGirlsUrinal.Text = "4";
-                    }
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["GirlsUrinal"].ToString()) == 1)
-                    {
-                        txtGirlsUrinal.BackColor = Color.Green;
-                        lblGirlsUrinal.Text = "1";
-                    }
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["GirlsUrinal"].ToString()) == 2)
-                    {
-                        txtGirlsUrinal.BackColor = Color.Orange;
-                        lblGirlsUrinal.Text = "2";
-                    }
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["GirlsUrinal"].ToString()) == 3)
-                    {
-                        txtGirlsUrinal.BackColor = Color.Red;
-                        lblGirlsUrinal.Text = "3";
-                    }
+                    txtDisabledaccessible.BackColor = Color.Green;
+                    lblDisabledAccessibleRamp.Text = "1";
                 }
-                if (Convert.ToInt32(dtUserVillage.Rows[0]["Furniture"].ToString()) != 0)
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["DisabledAccessibleRamp"].ToString()) == 2)
                 {
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["Furniture"].ToString()) == 4)
-                    {
-                        txtFurniture.BackColor = Color.Blue;
-                        lblFurniture.Text = "4";
-                    }
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["Furniture"].ToString()) == 1)
-                    {
-                        txtFurniture.BackColor = Color.Green;
-                        lblFurniture.Text = "1";
-                    }
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["Furniture"].ToString()) == 2)
-                    {
-                        txtFurniture.BackColor = Color.Orange;
-                        lblFurniture.Text = "2";
-                    }
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["Furniture"].ToString()) == 3)
-                    {
-                        txtFurniture.BackColor = Color.Red;
-                        lblFurniture.Text = "3";
-                    }
+                    txtDisabledaccessible.BackColor = Color.Orange;
+                    lblDisabledAccessibleRamp.Text = "2";
                 }
-                if (Convert.ToInt32(dtUserVillage.Rows[0]["TapWaterFacility"].ToString()) != 0)
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["DisabledAccessibleRamp"].ToString()) == 3)
                 {
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["TapWaterFacility"].ToString()) == 4)
-                    {
-                        txtWaterStorage.BackColor = Color.Blue;
-                        lblTapWaterFacility.Text = "4";
-                    }
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["TapWaterFacility"].ToString()) == 1)
-                    {
-                        txtWaterStorage.BackColor = Color.Green;
-                        lblTapWaterFacility.Text = "1";
-                    }
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["TapWaterFacility"].ToString()) == 2)
-                    {
-                        txtWaterStorage.BackColor = Color.Orange;
-                        lblTapWaterFacility.Text = "2";
-                    }
-                    if (Convert.ToInt32(dtUserVillage.Rows[0]["TapWaterFacility"].ToString()) == 3)
-                    {
-                        txtWaterStorage.BackColor = Color.Red;
-                        lblTapWaterFacility.Text = "3";
-                    }
+                    txtDisabledaccessible.BackColor = Color.Red;
+                    lblDisabledAccessibleRamp.Text = "3";
                 }
+            }
+            if (Convert.ToInt32(dtUserVillage.Rows[0]["AppropriateElectricalWiring"].ToString()) != 0)
+            {
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["AppropriateElectricalWiring"].ToString()) == 4)
+                {
+                    txtAppropriateelectrical.BackColor = Color.Blue;
+                    lblAppropriateElectricalWiring.Text = "4";
+                }
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["AppropriateElectricalWiring"].ToString()) == 1)
+                {
+                    txtAppropriateelectrical.BackColor = Color.Green;
+                    lblAppropriateElectricalWiring.Text = "1";
+                }
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["AppropriateElectricalWiring"].ToString()) == 2)
+                {
+                    txtAppropriateelectrical.BackColor = Color.Orange;
+                    lblAppropriateElectricalWiring.Text = "2";
+                }
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["AppropriateElectricalWiring"].ToString()) == 3)
+                {
+                    txtAppropriateelectrical.BackColor = Color.Red;
+                    lblAppropriateElectricalWiring.Text = "3";
+                }
+            }
+            if (Convert.ToInt32(dtUserVillage.Rows[0]["BoysUrinal"].ToString()) != 0)
+            {
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["BoysUrinal"].ToString()) == 4)
+                {
+                    txtBoysUrinal.BackColor = Color.Blue;
+                    lblBoysUrinal.Text = "4";
+                }
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["BoysUrinal"].ToString()) == 1)
+                {
+                    txtBoysUrinal.BackColor = Color.Green;
+                    lblBoysUrinal.Text = "1";
+                }
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["BoysUrinal"].ToString()) == 2)
+                {
+                    txtBoysUrinal.BackColor = Color.Orange;
+                    lblBoysUrinal.Text = "2";
+                }
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["BoysUrinal"].ToString()) == 3)
+                {
+                    txtBoysUrinal.BackColor = Color.Red;
+                    lblBoysUrinal.Text = "3";
+                }
+            }
+            if (Convert.ToInt32(dtUserVillage.Rows[0]["GirlsUrinal"].ToString()) != 0)
+            {
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["GirlsUrinal"].ToString()) == 4)
+                {
+                    txtGirlsUrinal.BackColor = Color.Blue;
+                    lblGirlsUrinal.Text = "4";
+                }
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["GirlsUrinal"].ToString()) == 1)
+                {
+                    txtGirlsUrinal.BackColor = Color.Green;
+                    lblGirlsUrinal.Text = "1";
+                }
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["GirlsUrinal"].ToString()) == 2)
+                {
+                    txtGirlsUrinal.BackColor = Color.Orange;
+                    lblGirlsUrinal.Text = "2";
+                }
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["GirlsUrinal"].ToString()) == 3)
+                {
+                    txtGirlsUrinal.BackColor = Color.Red;
+                    lblGirlsUrinal.Text = "3";
+                }
+            }
+            if (Convert.ToInt32(dtUserVillage.Rows[0]["Furniture"].ToString()) != 0)
+            {
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["Furniture"].ToString()) == 4)
+                {
+                    txtFurniture.BackColor = Color.Blue;
+                    lblFurniture.Text = "4";
+                }
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["Furniture"].ToString()) == 1)
+                {
+                    txtFurniture.BackColor = Color.Green;
+                    lblFurniture.Text = "1";
+                }
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["Furniture"].ToString()) == 2)
+                {
+                    txtFurniture.BackColor = Color.Orange;
+                    lblFurniture.Text = "2";
+                }
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["Furniture"].ToString()) == 3)
+                {
+                    txtFurniture.BackColor = Color.Red;
+                    lblFurniture.Text = "3";
+                }
+            }
+            if (Convert.ToInt32(dtUserVillage.Rows[0]["TapWaterFacility"].ToString()) != 0)
+            {
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["TapWaterFacility"].ToString()) == 4)
+                {
+                    txtWaterStorage.BackColor = Color.Blue;
+                    lblTapWaterFacility.Text = "4";
+                }
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["TapWaterFacility"].ToString()) == 1)
+                {
+                    txtWaterStorage.BackColor = Color.Green;
+                    lblTapWaterFacility.Text = "1";
+                }
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["TapWaterFacility"].ToString()) == 2)
+                {
+                    txtWaterStorage.BackColor = Color.Orange;
+                    lblTapWaterFacility.Text = "2";
+                }
+                if (Convert.ToInt32(dtUserVillage.Rows[0]["TapWaterFacility"].ToString()) == 3)
+                {
+                    txtWaterStorage.BackColor = Color.Red;
+                    lblTapWaterFacility.Text = "3";
+			    }
+            }
 
 
-                if (Convert.ToInt32(dtUserVillage.Rows[0]["Teachers_Male"].ToString()) != 0)
+            if (Convert.ToInt32(dtUserVillage.Rows[0]["Teachers_Male"].ToString()) != 0)
             {
                 txtMaleTeacher.Text = dtUserVillage.Rows[0]["Teachers_Male"].ToString();
             }
@@ -10907,7 +10748,6 @@ new SqlParameter("@Flag", flag)
                 txtFemaleTeacher.Text = dtUserVillage.Rows[0]["Teachers_Female"].ToString();
             }
             #endregion
-
 
             #region SAC Update
             if (Convert.ToInt32(dtUserVillage.Rows[0]["SACUpdate"].ToString()) == 1)
@@ -11059,14 +10899,14 @@ new SqlParameter("@Flag", flag)
 
                 };
 
-           int hh= SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[LoadActivityUpdateDataNew1]", parm10);
+            int hh = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[LoadActivityUpdateDataNew1]", parm10);
 
 
             ClearData();
-                    btnsave.Visible = true;
+            btnsave.Visible = true;
             ViewState["GUID_School"] = "";
         }
-        hdnsession2.Value="";
+        hdnsession2.Value = "";
         pnlLife.Enabled = false;
         #region balshabha 15122021
         if (DtUserdata.Tables[0].Rows.Count > 0)
@@ -11101,8 +10941,6 @@ new SqlParameter("@Flag", flag)
                 }
             }
         }
-      
-
         string session1 = "", session2 = "", Cdate = "";
         if (DtUserdata.Tables.Count > 0)
         {
@@ -11119,9 +10957,7 @@ new SqlParameter("@Flag", flag)
 
                     session1 = dt.ToString("dd/M/yyyy", CultureInfo.InvariantCulture);
                     hdnsession1.Value = Convert.ToString(DtUserdata.Tables[0].Rows[0]["Session1"]);
-                   
-
-                    if (session1.Length>0)
+                    if (session1.Length > 0)
                     {
                         if (this.ddlRemark.SelectedIndex > 0)
                         {
@@ -11147,16 +10983,14 @@ new SqlParameter("@Flag", flag)
                     }
                     if (Convert.ToDateTime(Cdate) < Convert.ToDateTime(session1))
                     {
-                       
-                        
-                        hdnsession1.Value = "";
+						hdnsession1.Value = "";
                         ddlsession.SelectedIndex = 0;
                         GvReg.DataSource = null;
                         GvReg.DataBind();
                     }
                     else
                     {
-                       GVregdatabind();
+                        GVregdatabind();
                     }
 
 
@@ -11182,9 +11016,6 @@ new SqlParameter("@Flag", flag)
                     }
                 }
             }
-           
-
-
             if (session1 != "")
             {
 
@@ -11192,8 +11023,7 @@ new SqlParameter("@Flag", flag)
                 {
                     if (session2 != "")
                     {
-                       
-                        DataTable dtLiff = DatabindRegNew2021("", 2);
+                       DataTable dtLiff = DatabindRegNew2021("", 2);
                         if (GvReg.Rows.Count > 12)
                         {
                             Imgaddclass.Enabled = false;
@@ -11221,7 +11051,6 @@ new SqlParameter("@Flag", flag)
                                 chkSession2.Enabled = false;
                                 if (GvReg.Rows.Count > 6)
                                 {
-                                    
                                     pnlLife.Enabled = true;
                                     rblBalsabaTB.Enabled = false;
                                     rblBalsabaFC.Enabled = false;
@@ -11238,7 +11067,6 @@ new SqlParameter("@Flag", flag)
                                     pnlLife.Enabled = false;
                                     rblLifeTB.Checked = false;
                                     rblLifeFC.Checked = false;
-                                  
                                 }
                             }
                         }
@@ -11275,7 +11103,6 @@ new SqlParameter("@Flag", flag)
                     chkSession1.Checked = false;
 
                 }
-               
                 chkSession2.Enabled = false;
                 chkSession2.Checked = false;
 
@@ -11655,8 +11482,7 @@ new SqlParameter("@Flag", flag)
         lblCom22.Text = "";
         lblTottal.Text = "";
         lblFemale.Text = "";
-        lblmale.Text = "";
-       
+        lblmale.Text = "";       
         Session["dtmc"] = null;
         gvSmc.DataSource = null;
         gvSmc.DataBind();
@@ -11803,7 +11629,7 @@ new SqlParameter("@Flag", flag)
     public void UserData()
     {
         conditions = "UserLevel=24";
-        if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "153")
+        if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "30")
         {
             conditions = conditions + " and DistrictCode='" + Session["DistrictCode"].ToString() + "' ";
         }
@@ -11812,7 +11638,7 @@ new SqlParameter("@Flag", flag)
         {
             conditions = conditions + " and BlockCode='" + Session["BlockCode"].ToString() + "' ";
         }
-        if (Session["user_level"].ToString() == "24" || Session["user_level"].ToString() == "30"  || Session["user_level"].ToString() == "61" || Session["user_level"].ToString() == "59")
+        if (Session["user_level"].ToString() == "24" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "61" || Session["user_level"].ToString() == "59")
         {
             conditions = conditions + " and UserName='assa' ";
         }
@@ -12089,9 +11915,7 @@ new SqlParameter("@Flag", flag)
     {
         if (rblSMCTB.Checked == true)
         {
-           
-                tre1.Visible = false;
-           
+            tre1.Visible = false;
             k1.Visible = false;
             k2.Visible = false;
             trGssId.Visible = true;
@@ -12105,20 +11929,17 @@ new SqlParameter("@Flag", flag)
             {
                 tre1.Visible = true;
             }
-               else
+            else
             {
                 tre1.Visible = false;
             }
-          
             k1.Visible = true;
             k2.Visible = true;
-          
             trGssId.Visible = false;
         }
     }
     protected void rblisTb_Click(object sender, EventArgs e)
     {
-     
         if (rdTeamY.Checked == true)
         {
             tre1.Visible = true;
@@ -12162,9 +11983,9 @@ new SqlParameter("@Flag", flag)
 
         DataTable dataTable2 = this.objMain.LoadData(query);
         Session["SchoolLevel"] = dataTable2.Rows[0]["SchoolLevel"].ToString();
-        Session["LSG"]=dataTable2.Rows[0]["SchoolLevel"].ToString();
-        Session["BAlVal"] =dataTable2.Rows[0]["BAlVal"].ToString();
-        if (dataTable2.Rows[0]["SchoolLevel"].ToString()=="1")
+        Session["LSG"] = dataTable2.Rows[0]["SchoolLevel"].ToString();
+        Session["BAlVal"] = dataTable2.Rows[0]["BAlVal"].ToString();
+        if (dataTable2.Rows[0]["SchoolLevel"].ToString() == "1")
         {
             lblend.Enabled = false;
             ddlMarge.Enabled = false;
@@ -12182,18 +12003,18 @@ new SqlParameter("@Flag", flag)
     }
     protected void ddlMarge_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (Convert.ToString(Session["SchoolLevel"])=="2")
+        if (Convert.ToString(Session["SchoolLevel"]) == "2")
         {
-            if (Convert.ToInt32(ddlMarge.SelectedValue)==2)
+            if (Convert.ToInt32(ddlMarge.SelectedValue) == 2)
             {
                 ddlMarge.SelectedIndex = 0;
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select only PS School')</script>", false);
                 return;
             }
         }
-        btnSerach_Click(btnSerach,null);
+        btnSerach_Click(btnSerach, null);
     }
-        protected void btnClose_Click(object sender, EventArgs e)
+    protected void btnClose_Click(object sender, EventArgs e)
     {
         bool InsertD2d = false;
         for (int i = 0; i < Gv_Display.Rows.Count; i++)
@@ -12211,12 +12032,7 @@ new SqlParameter("@Flag", flag)
 
             if (lblStatus.Text == "2")
             {
-
-                string StudentTSInsertQueryD2d = "";
-                StudentTSInsertQueryD2d += " Update tblActivityDTD set FollowUpCount=" + Followupcount + ",  TBorFC=" + rblTBFC.SelectedValue + ", ActivityStatus =" + ddlStatus.SelectedValue + ",UserType='P' , ActivityDate ='" + DateTime.Now.ToString("yyyy-MM-dd") + "' where UniqueCode ='" + lbUniqueCode.Text + "' ";
-                InsertD2d = objMain.AddUpdate(StudentTSInsertQueryD2d);
-
-                // SqlParameter[] cmdParameters = new SqlParameter[]
+				// SqlParameter[] cmdParameters = new SqlParameter[]
                 //{
                 //    new SqlParameter("@UniqueCode", lbUniqueCode.Text),
                 //    new SqlParameter("@ActivityStatus", ddlStatus.SelectedValue),
@@ -12474,7 +12290,6 @@ new SqlParameter("@Flag", flag)
         txtMemberSC.Text = lblsubjectid;
         txtmobile.Text = lblSession;
         ddlSgender.SelectedValue = lblLevelID;
-       
         MpexdrDistrict9.Show();
         //Label lblStatus = (Label)gvr.FindControl("lblStatus");
         //Session["UnquieId"] = UniqueChildCode;
@@ -12511,7 +12326,7 @@ new SqlParameter("@Flag", flag)
         {
             ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select SMC ')</script>", false);
             this.chkSMC.Focus();
-            return ;
+            return;
         }
         lblSCGuId.Text = "";
         txtMemberSC.Text = "";
@@ -12530,9 +12345,8 @@ new SqlParameter("@Flag", flag)
         {
             int dtcount = 0;
             CheckBox ddlAttendance = (CheckBox)e.Row.FindControl("ddlAttendanceSmc");
-            Label lblStatus = (Label)e.Row.FindControl("lblStatus");
-           
-            if (lblStatus.Text == "1" )
+            Label lblStatus = (Label)e.Row.FindControl("lblStatus");           
+            if (lblStatus.Text == "1")
             {
                 ddlAttendance.Checked = true;
             }
@@ -12548,7 +12362,7 @@ new SqlParameter("@Flag", flag)
         DataTable dtmc = ((DataTable)Session["dtmc"]);
         for (int i = 0; i < gvSmc.Rows.Count; i++)
         {
-            CheckBox  Attendance = (CheckBox)gvSmc.Rows[i].FindControl("ddlAttendanceSmc");
+            CheckBox Attendance = (CheckBox)gvSmc.Rows[i].FindControl("ddlAttendanceSmc");
 
             Label lblCUniqueChildCode = (Label)gvSmc.Rows[i].FindControl("lblCUniqueChildCode");
 
@@ -12558,7 +12372,7 @@ new SqlParameter("@Flag", flag)
 
                 if (Attendance.Checked == true)
                 {
-                    drmain[0]["Present"] =1;
+                    drmain[0]["Present"] = 1;
                 }
 
 
@@ -12572,52 +12386,35 @@ new SqlParameter("@Flag", flag)
         {
             string[] arr;
             string Assessment = string.Empty;
+            DropDownList ddl = (DropDownList)sender;
+            GridViewRow row = (GridViewRow)ddl.NamingContainer;
+            int rowIndex = row.RowIndex;
 
-
-         
-                DropDownList ddl = (DropDownList)sender;
-                GridViewRow row = (GridViewRow)ddl.NamingContainer;
-                int rowIndex = row.RowIndex;
-
-                Label lblUniqueCode = (Label)gvSmc.Rows[rowIndex].FindControl("lblCUniqueChildCode");
+            Label lblUniqueCode = (Label)gvSmc.Rows[rowIndex].FindControl("lblCUniqueChildCode");
             DropDownList ddlact = (DropDownList)gvSmc.Rows[rowIndex].FindControl("ddlAttendanceSmc");
-            DataTable dtmc=((DataTable) Session["dtmc"]);
-           
-           
-           
-                DataRow[] drmain = dtmc.Select("UniqueCode='" + lblUniqueCode.Text + "'");
-                if (drmain.Length > 0)
-                {
+            DataTable dtmc = ((DataTable)Session["dtmc"]);
 
-
-
-                    drmain[0]["Present"] = ddlact.SelectedValue;
-              
-                 
-                }
+            DataRow[] drmain = dtmc.Select("UniqueCode='" + lblUniqueCode.Text + "'");
+            if (drmain.Length > 0)
+            {
+                drmain[0]["Present"] = ddlact.SelectedValue;
+            }
             Session["dtmc"] = dtmc;
 
-
-
         }
-        catch (Exception ex)
+        catch
         {
         }
     }
-
     protected void SMCDelete_OnClick(object sender, EventArgs e)
     {
         UpdataSmcData();
         LinkButton Edit_Question = sender as LinkButton;
         GridViewRow row = Edit_Question.NamingContainer as GridViewRow;
         int index = row.RowIndex;
-
-
         string UniqueChildCode = (gvSmc.DataKeys[index].Values["UniqueCode"].ToString());
 
-
-
-     DataTable dtmc = ((DataTable)Session["dtmc"]);
+        DataTable dtmc = ((DataTable)Session["dtmc"]);
         dtmc.Rows.Remove(dtmc.Rows[index]);
 
         SqlParameter[] parm = new SqlParameter[]
@@ -12670,7 +12467,7 @@ new SqlParameter("@Flag", flag)
             gvSmc.DataBind();
             txtTotalMember.Text = "";
             txtTotalFmember.Text = "";
-            lblTottal.Text = ""; 
+            lblTottal.Text = "";
             lblFemale.Text = "";
             lblmale.Text = "";
             ScriptManager.RegisterStartupScript(this, GetType(), "importingdone", "alert('Record Deleted');", true);
@@ -12747,8 +12544,7 @@ new SqlParameter("@Flag", flag)
         dtSubject.Columns.Add(new DataColumn("Mobile", System.Type.GetType("System.String")));
         dtSubject.Columns.Add(new DataColumn("Present", System.Type.GetType("System.String")));
         dtSubject.Columns.Add(new DataColumn("IsPrevEntry", System.Type.GetType("System.String")));
-        dtSubject.Columns.Add(new DataColumn("UniqueMemberCode", System.Type.GetType("System.String")));
-        
+        dtSubject.Columns.Add(new DataColumn("UniqueMemberCode", System.Type.GetType("System.String")));        
         Session["dtSmc"] = dtSubject;
         return dtSubject;
     }
@@ -12764,12 +12560,11 @@ new SqlParameter("@Flag", flag)
                 new SqlParameter("@lookupCode", lookupCode),
                 new SqlParameter("@PVal", PVal),
                 new SqlParameter("@CVal", CVal),
-                new SqlParameter("@UpdatedBy", UpdatedBy),
-     
+                new SqlParameter("@UpdatedBy", UpdatedBy),     
             };
             Icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUpdateENrolmentHistorySmc", cmdParameters);
         }
-        catch (Exception ex)
+        catch 
         {
 
         }
@@ -12787,7 +12582,7 @@ new SqlParameter("@Flag", flag)
         DataTable dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "LoadAlltypeofPageQuerySmc", cmdParameters);
         return dt;
     }
-        public void SaveDataSMC()
+    public void SaveDataSMC()
     {
         DataTable dtmc = null;
         string con = "";
@@ -12865,11 +12660,8 @@ new SqlParameter("@Flag", flag)
             dr["Gender"] = ddlSgender.SelectedValue;
             dr["TBFC"] = ddlSgender.SelectedItem.Text;
             dr["Mobile"] = txtmobile.Text;
-            dr["IsPrevEntry"] ="1";
-            
+            dr["IsPrevEntry"] = "1";
             dtmc.Rows.Add(dr);
-
-           
             SqlParameter[] parm = new SqlParameter[]
             {
 
@@ -12896,7 +12688,6 @@ new SqlParameter("@Flag", flag)
         int MCount = 0;
         if (dtmc.Rows.Count > 0)
         {
-          
             Session["dtmc"] = dtmc;
             gvSmc.DataSource = dtmc;
             gvSmc.DataBind();
@@ -12918,8 +12709,6 @@ new SqlParameter("@Flag", flag)
                     MCount = MCount + 1;
                 }
             }
-          
-
             string kk = dtmc.Rows.Count.ToString();
             txtTotalMember.Text = kk;
             txtTotalFmember.Text = GCount.ToString();
@@ -12962,7 +12751,7 @@ new SqlParameter("@Flag", flag)
         //{
         //    Approve = "FC";
         //}
-        //if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "153" || Session["user_level"].ToString() == "145")
+        //if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "145")
         //{
         //    Approve = "B";
         //}
@@ -13015,12 +12804,12 @@ new SqlParameter("@Flag", flag)
         //    //{
 
         //    //    conq = "ActivityDate =('" + FcDate + "')    and Schoolcode='" + ddlSchool.SelectedValue + "' and ApproveStatus='FC' ";
-
         //    //}
-        //    //if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "
-        //
-        //
-        //    ")
+        //    //}
+        //    //if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30")
+		  
+		  
+				
         //    //{
 
         //    //    conq = "ActivityDate =('" + FcDate + "')    and Schoolcode='" + ddlSchool.SelectedValue + "' and ApproveStatus='B' ";
@@ -13066,7 +12855,7 @@ new SqlParameter("@Flag", flag)
 
         //}
     }
-    public DataTable LoadSMCDeatils(string WhereQuery,string Flag)
+    public DataTable LoadSMCDeatils(string WhereQuery, string Flag)
     {
         SqlParameter[] cmdParameters = new SqlParameter[]
         {
@@ -13251,7 +13040,7 @@ new SqlParameter("@Flag", flag)
         {
             Approve = "FC";
         }
-        if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30"  || Session["user_level"].ToString() == "145")
+        if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "145")
         {
             Approve = "B";
         }
@@ -13301,12 +13090,12 @@ new SqlParameter("@Flag", flag)
         if (result > 0)
         {
             string conq = "";
-           
-                conq = "ActivityDate =('" + FcDate + "')    and Schoolcode='" + ddlSchool.SelectedValue + "' ";
+
+            conq = "ActivityDate =('" + FcDate + "')    and Schoolcode='" + ddlSchool.SelectedValue + "' ";
 
 
 
-  
+
             DataTable dtGKP = objMain.LoadGKPDeatils(conq);
             if (dtGKP.Rows.Count > 0)
             {
@@ -13341,11 +13130,11 @@ new SqlParameter("@Flag", flag)
     {
         try
         {
-            string[] arr ;
+            string[] arr;
             string Assessment = string.Empty;
 
 
-            if ((ddlsession.SelectedItem.Text == "Session-1") || (ddlsession.SelectedItem.Text == "Session-10") && Convert.ToString(Session["LSG"])=="1")
+            if ((ddlsession.SelectedItem.Text == "Session-1") || (ddlsession.SelectedItem.Text == "Session-10") && Convert.ToString(Session["LSG"]) == "1")
             {
                 DropDownList ddl = (DropDownList)sender;
                 GridViewRow row = (GridViewRow)ddl.NamingContainer;
@@ -13366,7 +13155,7 @@ new SqlParameter("@Flag", flag)
                     if (dt.Rows.Count > 0)
                     {
                         Assessment = dt.Rows[0]["Assessment"].ToString();
-                        if(Assessment!="")
+                        if (Assessment != "")
                         {
                             arr = Assessment.ToString().Split(',');
                             for (int i = 0; i < 56; i++)
@@ -13529,11 +13318,12 @@ new SqlParameter("@Flag", flag)
                         for (int i = 0; i < 56; i++)
                         {
                             (pnl_Addclass1.FindControl("rdbQ" + (i + 1) + '_' + 5) as RadioButton).Checked = false;
-                            (pnl_Addclass1.FindControl("rdbQ" + (i + 1) + '_' +4 ) as RadioButton).Checked = false;
+                            (pnl_Addclass1.FindControl("rdbQ" + (i + 1) + '_' + 4) as RadioButton).Checked = false;
                             (pnl_Addclass1.FindControl("rdbQ" + (i + 1) + '_' + 3) as RadioButton).Checked = false;
-                            (pnl_Addclass1.FindControl("rdbQ" + (i + 1) + '_' +2) as RadioButton).Checked = false;
-                            (pnl_Addclass1.FindControl("rdbQ" + (i + 1) + '_' +1) as RadioButton).Checked = false;
+                            (pnl_Addclass1.FindControl("rdbQ" + (i + 1) + '_' + 2) as RadioButton).Checked = false;
+                            (pnl_Addclass1.FindControl("rdbQ" + (i + 1) + '_' + 1) as RadioButton).Checked = false;
                         }
+
 
                         #endregion
                     }
@@ -13565,18 +13355,15 @@ new SqlParameter("@Flag", flag)
                 LinkButton LinkButton = (LinkButton)GvReg.Rows[rowIndex].FindControl("lbtn1");
                 DropDownList Attendance = (DropDownList)GvReg.Rows[rowIndex].FindControl("ddlAttendance");
                 LinkButton.Visible = false;
-                if (ddlsession.SelectedIndex<=0)
+                if (ddlsession.SelectedIndex <= 0)
                 {
                     Attendance.SelectedIndex = 0;
                     ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Select Session')</script>", false);
-
-
-                   
                     return;
                 }
             }
         }
-        catch (Exception ex)
+        catch
         {
         }
     }
@@ -14902,8 +14689,6 @@ new SqlParameter("@Flag", flag)
             Assessment = Assessment + "," + rdbQ55_1.Text;
         }
         #endregion
-
-        
         if (rdbQ56_5.Checked)
         {
             Assessment = Assessment + "," + rdbQ56_5.Text;
@@ -14941,21 +14726,19 @@ new SqlParameter("@Flag", flag)
 
     }
 
- 
     public int InsertChildAssessment(string UniqueChildRCode, string Assessment, int sessiondata)
     {
-       
-            SqlParameter[] cmdParameters = new SqlParameter[]
-            {
+
+        SqlParameter[] cmdParameters = new SqlParameter[]
+        {
                 new SqlParameter("@UniqueChildRCode", UniqueChildRCode),
                   new SqlParameter("@Assessment", Assessment),
                  new SqlParameter("@sessiondata", sessiondata)
-            };
+        };
 
-            return SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[InsertChildAssessment]", cmdParameters);
-       
+        return SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[InsertChildAssessment]", cmdParameters);
+
     }
-
 
     public DataTable ALLQueryinPage(string Filter, string Filter1, string Filter2, string Filter3, string Filter4, string Flag)
     {
@@ -14992,103 +14775,103 @@ new SqlParameter("@Flag", flag)
     {
         try
         {
-                   
-                    if (s == "trQ2")
-                    {
-                        trQ2.Visible = true;
-                    }
-                    else if (s == "trQ3")
-                    {
-                        trQ3.Visible = true;
-                    }
-                    else if (s == "trQ4")
-                    {
-                        trQ4.Visible = true;
-                    }
-                    else if (s == "trQ5")
-                    {
-                        trQ5.Visible = true;
-                    }
-                    else if (s == "trQ5")
-                    {
-                        trQ5.Visible = true;
-                    }
-                    else if (s == "trQ6")
-                    {
-                        trQ6.Visible = true;
-                    }
-                    else if (s == "trQ7")
-                    {
-                        trQ7.Visible = true;
-                    }
-                    else if (s == "trQ8")
-                    {
-                        trQ8.Visible = true;
-                    }
-                    else if (s == "trQ9")
-                    {
-                        trQ9.Visible = true;
-                    }
-                    else if (s == "trQ10")
-                    {
-                        trQ10.Visible = true;
-                    }
-                    else if (s == "trQ11")
-                    {
-                        trQ11.Visible = true;
-                    }
-                    else if (s == "trQ12")
-                    {
-                        trQ12.Visible = true;
-                    }
-                    else if (s == "trQ12")
-                    {
-                        trQ12.Visible = true;
-                    }
-                    else if (s== "trQ13")
-                    {
-                        trQ13.Visible = true;
-                    }
-                    else if (s == "trQ14")
-                    {
-                        trQ14.Visible = true;
-                    }
-                    else if (s == "trQ15")
-                    {
-                        trQ15.Visible = true;
-                    }
-                    else if (s == "trQ16")
-                    {
-                        trQ16.Visible = true;
-                    }
-                    else if (s == "trQ17")
-                    {
-                       trQ17.Visible = true;
-                    }
-                    else if (s == "trQ18")
-                    {
-                       trQ18.Visible = true;
-                    }
-                    else if (s == "trQ19")
-                    {
-                      trQ19.Visible = true;
-                    }
-                    else if (s == "trQ20")
-                    {
-                      trQ20.Visible = true;
-                    }
-                    else if (s == "trQ21")
-                    {
-                       trQ21.Visible = true;
-                    }
-                    else if (s == "trQ22")
-                    {
-                        trQ22.Visible = true;
-                    }
-                    else if (s == "trQ23")
-                    {
-                      trQ23.Visible = true;
-                    }
+
+            if (s == "trQ2")
+            {
+                trQ2.Visible = true;
+            }
+            else if (s == "trQ3")
+            {
+                trQ3.Visible = true;
+            }
+            else if (s == "trQ4")
+            {
+                trQ4.Visible = true;
+            }
+            else if (s == "trQ5")
+            {
+                trQ5.Visible = true;
+            }
+            else if (s == "trQ5")
+            {
+                trQ5.Visible = true;
+            }
+            else if (s == "trQ6")
+            {
+                trQ6.Visible = true;
+            }
+            else if (s == "trQ7")
+            {
+                trQ7.Visible = true;
+            }
+            else if (s == "trQ8")
+            {
+                trQ8.Visible = true;
+            }
+            else if (s == "trQ9")
+            {
+                trQ9.Visible = true;
+            }
+            else if (s == "trQ10")
+            {
+                trQ10.Visible = true;
+            }
+            else if (s == "trQ11")
+            {
+                trQ11.Visible = true;
+            }
+            else if (s == "trQ12")
+            {
+                trQ12.Visible = true;
+            }
+            else if (s == "trQ12")
+            {
+                trQ12.Visible = true;
+            }
+            else if (s == "trQ13")
+            {
+                trQ13.Visible = true;
+            }
+            else if (s == "trQ14")
+            {
+                trQ14.Visible = true;
+            }
+            else if (s == "trQ15")
+            {
+                trQ15.Visible = true;
+            }
+            else if (s == "trQ16")
+            {
+                trQ16.Visible = true;
+            }
+            else if (s == "trQ17")
+            {
+                trQ17.Visible = true;
+            }
+            else if (s == "trQ18")
+            {
+                trQ18.Visible = true;
+            }
+            else if (s == "trQ19")
+            {
+                trQ19.Visible = true;
+            }
+            else if (s == "trQ20")
+            {
+                trQ20.Visible = true;
+            }
+            else if (s == "trQ21")
+            {
+                trQ21.Visible = true;
+            }
+            else if (s == "trQ22")
+            {
+                trQ22.Visible = true;
+            }
+            else if (s == "trQ23")
+            {
+                trQ23.Visible = true;
+            }
             else if (s == "trQ24")
             {
                 trQ24.Visible = true;
@@ -15222,14 +15005,15 @@ new SqlParameter("@Flag", flag)
                 trQ56.Visible = true;
             }
         }
-        catch (Exception ex)
+        catch
         {
         }
     }
 
     protected void LnkBtnView_ffOnClick(object sender, EventArgs e)
     {
-        try {
+        try
+        {
             LinkButton bt = (LinkButton)sender;
             GridViewRow gvr = (GridViewRow)bt.NamingContainer;
             int rowIndex = gvr.RowIndex;
@@ -15341,12 +15125,10 @@ new SqlParameter("@Flag", flag)
                         }
 
                     }
-                   
-                } 
-            }   
-           
+                }
+            }
         }
-        catch (Exception ex)
+        catch
         {
         }
     }

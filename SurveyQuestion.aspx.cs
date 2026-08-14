@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Data.SqlClient;
 using System.Data;
-using System.Data.SqlTypes;
-using System.Collections;
-using System.Configuration;
+using System.Data.SqlClient;
 using System.IO;
 using System.Text;
-
+using System.Web.UI;
+using System.Web.UI.WebControls;
 public partial class SurveyQuestion : System.Web.UI.Page
 {
     SqlConnection mycon = new SqlConnection(SqlHelper.mainConnectionString);
@@ -110,8 +104,6 @@ public partial class SurveyQuestion : System.Web.UI.Page
                         EssionFormID = 0;
                     }
                 }
-
-              
             }
         }
         else
@@ -435,15 +427,65 @@ public partial class SurveyQuestion : System.Web.UI.Page
         {
             dbSqlCommand.ExecuteNonQuery();
         }
-        catch (Exception ex)
+        catch
         {
             return -1;
         }
         return Convert.ToInt32(pRowsAffected.Value);
     }
+    public bool InterventionSql_Injection(string RVal)
+    {
+        SqlInjection objAudit = new SqlInjection();
+        bool injection = false;
 
+
+        injection = objAudit.CheckInputBool(RVal);
+
+        return injection;
+
+    }
+    public static List<Control> GetAllControls(List<Control> controls, Type t, Control parent /* can be Page */)
+    {
+        foreach (Control c in parent.Controls)
+        {
+            if (c.GetType() == t)
+                controls.Add(c);
+            if (c.HasControls())
+                controls = GetAllControls(controls, t, c);
+        }
+        return controls;
+    }
+    public string SetTextBoxFocusSelect(Page page)
+    {
+        string ALlTestBoxValue = "";
+        List<Control> list = new List<Control>();
+        list = GetAllControls(list, typeof(TextBox), page);
+        foreach (Control ctl in list)
+        {
+            if (ctl.GetType() == typeof(TextBox))
+            {
+                ((TextBox)ctl).Attributes.Add("onfocus", "this.select()");
+                string TempVari = ((TextBox)ctl).Text;
+                if (TempVari.Length > 0)
+                {
+                    ALlTestBoxValue += TempVari + "  ";
+                }
+            }
+        }
+        return ALlTestBoxValue;
+    }
     protected void btnSave_Click(object sender, EventArgs e)
     {
+        string RVal = SetTextBoxFocusSelect(this.Page);
+        if (!InterventionSql_Injection(RVal))
+        {
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Spurious input detected. Data rejected')</script>", false);
+
+            return;
+        }
         int FormID, QuestionID = 0, QestionTypeID, Sequence, Flag, maskvalidation = 0, GroupID = 0, QType = 0;
         string QuestionNo, Question, QuestionImage = "";
         int? maxlength = null;
@@ -731,7 +773,6 @@ public partial class SurveyQuestion : System.Web.UI.Page
         {
             Q1.Visible = true;
             Q2.Visible = false;
-            
         }
         if (Convert.ToInt32(ddlQuestionType.SelectedValue) == 2)
         {
@@ -909,8 +950,6 @@ public partial class SurveyQuestion : System.Web.UI.Page
         BindGvQuestion(FormID);
         LinkButton1.TabIndex = 4;
         LinkButton1.Focus();
-      
-
     }
 
     private void showMessages(string messages)
@@ -1268,7 +1307,7 @@ public partial class SurveyQuestion : System.Web.UI.Page
         {
             dbSqlCommand.ExecuteNonQuery();
         }
-        catch (Exception ex)
+        catch
         {
             return -1;
         }
@@ -1314,7 +1353,7 @@ public partial class SurveyQuestion : System.Web.UI.Page
         {
             dbSqlCommand.ExecuteNonQuery();
         }
-        catch (Exception ex)
+        catch
         {
             return -1;
         }
@@ -1653,7 +1692,7 @@ public partial class SurveyQuestion : System.Web.UI.Page
             DataSet ds = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Get_Select_AllTableData", paramvT);
             dtcombo = ds.Tables[0] as DataTable;
         }
-        catch (Exception ex)
+        catch
         {
             //string mmsg = ex.Message; showMessages(mmsg);
             //showMessages("(SelectAllData)  " + mmsg);
@@ -1979,7 +2018,7 @@ public partial class SurveyQuestion : System.Web.UI.Page
             Fullfilename = "" + TBCode + "_" + DateTime.Now.ToString("ddMMyyyy_hhmmss") + exten;
         }
 
-        string sFileDir = Server.MapPath("~/Survey/");
+        string sFileDir = Server.MapPath(Comman.GetImagePath("SurveyPath") + "/");
 
         if (FileuploadAttach.PostedFile != null && FileuploadAttach.PostedFile.FileName != "")
         {
@@ -1996,10 +2035,8 @@ public partial class SurveyQuestion : System.Web.UI.Page
             if (System.IO.File.Exists(sFileDir + "\\" + Fullfilename))
             {
                 try { System.IO.File.Delete(sFileDir + "\\" + Fullfilename); }
-                catch (Exception ex)
+                catch
                 {
-
-
                 }
             }
             FileuploadAttach.PostedFile.SaveAs(sFileDir + Fullfilename);
@@ -2009,7 +2046,7 @@ public partial class SurveyQuestion : System.Web.UI.Page
         Session["Fullfilename"] = Fullfilename;
         if (Convert.ToString(Session["Fullfilename"]) != "")
         {
-            //string sFileDir = Server.MapPath("~/images/" + dtmstM.Rows[0]["ImagePath"].ToString().Trim() + "");
+            //string sFileDir = Server.MapPath(Comman.GetImagePath("ImgPage") + dtmstM.Rows[0]["ImagePath"].ToString().Trim() + "");
             //string sFileDir = Request.PhysicalApplicationPath + "images\\";
             string imagename = Convert.ToString(Session["Fullfilename"]);
 
@@ -2352,7 +2389,7 @@ public partial class SurveyQuestion : System.Web.UI.Page
             GVOptions.EditIndex = -1;
             BindOptionData();
         }
-        catch (Exception ex)
+        catch
         { }
     }
     protected void GVOptions_RowUpdating(object sender, GridViewUpdateEventArgs e)
@@ -2416,7 +2453,7 @@ public partial class SurveyQuestion : System.Web.UI.Page
             BindOptionData();
             Popup(true);
         }
-        catch (Exception ex)
+        catch
         { }
     }
     public int MasterOptionValueInsert(int UID, string OptionValue, int flag, int formid, string sTran_Type, int Score)
@@ -2443,7 +2480,7 @@ public partial class SurveyQuestion : System.Web.UI.Page
         {
             dbSqlCommand.ExecuteNonQuery();
         }
-        catch (Exception ex)
+        catch
         {
             return -1;
         }
@@ -2464,7 +2501,6 @@ public partial class SurveyQuestion : System.Web.UI.Page
             {
                 tablename = "MSTCommon2025";
             }
-          
             if (ddlYear.SelectedItem.Text == "2024-2025")
             {
                 tablename = "MSTCommon2024";
@@ -2485,7 +2521,7 @@ public partial class SurveyQuestion : System.Web.UI.Page
             GVOptions.DataBind();
 
         }
-        catch (Exception ex)
+        catch
         {
 
         }
@@ -2500,7 +2536,7 @@ public partial class SurveyQuestion : System.Web.UI.Page
             GVOptions.EditIndex = e.NewEditIndex;
             BindOptionData();
         }
-        catch (Exception ex)
+        catch
         { }
     }
     protected void btnParticipate_Click(object sender, EventArgs e)
@@ -2524,10 +2560,27 @@ public partial class SurveyQuestion : System.Web.UI.Page
         if (FInalValues.Length > 0)
         {
             FInalValues = FInalValues.Substring(0, FInalValues.LastIndexOf(","));
-            string TSDInsertQuery1 = " update  MSTFormQuestion set [QuestionAns]='" + FInalValues + "' where QuestionID=" + QuestionID + " ";
-            bool InsertTSD11 = objMain.AddUpdate(TSDInsertQuery1);
-            if (InsertTSD11 == true)
+            SqlParameter[] cmdParameters = new SqlParameter[]
             {
+    new SqlParameter(
+        "@QuestionAns",
+        FInalValues
+    ),
+
+    new SqlParameter(
+        "@QuestionID",
+        Convert.ToInt32(QuestionID)
+    )
+            };
+
+            int icount = SqlHelper.ExecuteNonQuery(
+                       SqlHelper.mainConnectionString,
+                       CommandType.StoredProcedure,
+                       "USP_Update_MSTFormQuestion",
+                       cmdParameters
+                   );
+
+            if (icount > 0)            {
                 showMessages("Save successfully");
 
             }
@@ -2621,7 +2674,7 @@ public partial class SurveyQuestion : System.Web.UI.Page
             DataTable ds = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Get_Form_Table_Category", paramvT);
             dtBSL = ds;
         }
-        catch (Exception ex)
+        catch
         { DataTable ds = new DataTable(); ds = null; return ds; }
         return dtBSL;
     }
@@ -2706,7 +2759,7 @@ public partial class SurveyQuestion : System.Web.UI.Page
     protected void lnkbtn1_Click(object sender, EventArgs e)
     {
        
-        if (ddlForm.SelectedIndex>0)
+        if (ddlForm.SelectedIndex > 0)
         {
             MPEFormNameQ.Show();
             DataTable dt = new DataTable();
@@ -2721,7 +2774,7 @@ public partial class SurveyQuestion : System.Web.UI.Page
         GridViewRow row = EditOptionValue.NamingContainer as GridViewRow;
         int index = row.RowIndex;
 
-      string v = GVANs.DataKeys[index].Values["UID"].ToString();
+        string v = GVANs.DataKeys[index].Values["UID"].ToString();
         ddlFlag.SelectedValue = v.ToString();
 
     }

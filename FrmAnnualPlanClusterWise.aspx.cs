@@ -1,16 +1,14 @@
-﻿using System;
+﻿using ClosedXML.Excel;
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.OleDb;
+using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using ClosedXML.Excel;
-using System.IO;
-using System.Data.SqlClient;
-using System.Data.OleDb;
-using System.Configuration;
 public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
 {
     clsMain objMain = new clsMain();
@@ -44,7 +42,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                 if (Convert.ToString(Session["user_level"]) == "39" || Convert.ToString(Session["user_level"]) == "145")
                 {
                     btnSubmitted.Attributes.Add("onclick", "javascript:return " + "confirm('Are you sure you want to submit the data to DOL? After Submitted, data will not be edited!!')");
-                  
+
                 }
                 if (Convert.ToString(Session["user_level"]) == "91")
 
@@ -56,7 +54,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                     btnSubmitted.Attributes.Add("onclick", "javascript:return " + "confirm('Are you sure you want to submit the data to SOL ?')");
 
                     ImageButton1.Attributes.Add("onclick", "javascript:return " + "confirm('Are you sure you want to reject annual plan?')");
-                    
+
                 }
                 if (Convert.ToString(Session["user_level"]) == "92")
                 {
@@ -64,12 +62,12 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                     FileUpload1.Visible = false;
                     btnsave.Visible = false;
                     btnDelete.Visible = false;
-                  
+
                     btnSubmitted.Attributes.Add("onclick", "javascript:return " + "confirm('Are you sure you want to Approve Data? ')");
                     ImageButton1.Attributes.Add("onclick", "javascript:return " + "confirm('Are you sure you want to reject annual plan?')");
 
                 }
-                  
+
             }
             else
             {
@@ -89,9 +87,9 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
         if (ddlYear.SelectedIndex > 0)
         {
 
-           // btnDelete.Enabled = true;
-           // btnsave.Enabled = true;
-           
+            // btnDelete.Enabled = true;
+            // btnsave.Enabled = true;
+
             string strQry;
             if (Convert.ToInt32(ddlType.SelectedValue) == 1)
             {
@@ -359,7 +357,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
 
     }
 
-   
+
     public void LoadUserLeavel()
     {
         AlllStateCode();
@@ -657,7 +655,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
         conditions = "";
         conditions = "mstCluster.DistrictCode ='" + ddlDistrict.SelectedValue + "'  and mstCluster.BlockCode ='" + ddlBlock.SelectedValue + "' and  VillageGeographyOperational=1";
         objComman.BindDLL("mstCluster inner join mst5Village on mst5Village.ClusterCode=mstCluster.ClusterCode", "mstCluster.ClusterCode,dbo.TitleCase(upper(mstCluster.ClusterName)) as ClusterName", conditions, "ClusterName", "asc", ddlPanchayat, "ClusterName", "ClusterCode", "--Select--");
-     
+
     }
     public void FillCVillage()
     {
@@ -1522,7 +1520,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
 
 
             }
-          else  if (Convert.ToInt32(ddlYear.SelectedValue) == 2025)
+            else if (Convert.ToInt32(ddlYear.SelectedValue) == 2025)
             {
                 SqlParameter[] cmdParameters = new SqlParameter[]
             {
@@ -1536,7 +1534,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
 
 
             }
-          else  if (Convert.ToInt32(ddlYear.SelectedValue) == 2024)
+            else if (Convert.ToInt32(ddlYear.SelectedValue) == 2024)
             {
                 SqlParameter[] cmdParameters = new SqlParameter[]
             {
@@ -1746,7 +1744,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                 }
 
             }
-            else  if (Convert.ToInt32(ddlYear.SelectedValue) == 2025)
+            else if (Convert.ToInt32(ddlYear.SelectedValue) == 2025)
             {
                 SqlParameter[] cmdParameters = new SqlParameter[]
             {
@@ -1802,8 +1800,8 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                     string Q3MM = Convert.ToString(dtCluster.Rows[0]["Q3MM"]); string Q4MM = Convert.ToString(dtCluster.Rows[0]["Q4MM"]); string Balsaba = Convert.ToString(dtCluster.Rows[0]["Balsaba"]);
                     string GkpSchool = Convert.ToString(dtCluster.Rows[0]["GkpSchool"]); string Gkp = Convert.ToString(dtCluster.Rows[0]["Gkp"]); string Sac1 = Convert.ToString(dtCluster.Rows[0]["Sac1"]);
                     string Sac2 = Convert.ToString(dtCluster.Rows[0]["Sac2"]); string Sac3 = Convert.ToString(dtCluster.Rows[0]["Sac3"]); string Sac4 = Convert.ToString(dtCluster.Rows[0]["Sac4"]);
-                    string AGPCampQ1 = Convert.ToString(dtCluster.Rows[0]["PanchayatMeetingQ1"]); string AGPCampQ2 = Convert.ToString(dtCluster.Rows[0]["PanchayatMeetingQ2"]); 
-                     string AGPBeneficiariesQ1 = Convert.ToString(dtCluster.Rows[0]["RatriChaupalQ1"]);
+                    string AGPCampQ1 = Convert.ToString(dtCluster.Rows[0]["PanchayatMeetingQ1"]); string AGPCampQ2 = Convert.ToString(dtCluster.Rows[0]["PanchayatMeetingQ2"]);
+                    string AGPBeneficiariesQ1 = Convert.ToString(dtCluster.Rows[0]["RatriChaupalQ1"]);
                     string AGPBeneficiariesQ2 = Convert.ToString(dtCluster.Rows[0]["RatriChaupalQ2"]); string AGPBeneficiariesQ3 = Convert.ToString(dtCluster.Rows[0]["RatriChaupalQ3"]);
                     string NamankanRailyQ1 = Convert.ToString(dtCluster.Rows[0]["NamankanRailyQ1"]);
                     string GKPPlus = Convert.ToString(dtCluster.Rows[0]["#GKP Plus Schools"]);
@@ -1815,7 +1813,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                             dt.Rows[i]["Q2"] = FiveYearsOOSG;
                             dt.Rows[i]["Q3"] = SixYearsOOSG;
                         }
-                       
+
                         //if (i == 4)
                         //{
                         //    dt.Rows[i]["Q1"] = SeventofourteenOOSB;
@@ -1845,12 +1843,12 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                             dt.Rows[i]["Q1"] = AGPBeneficiariesQ1;
                             dt.Rows[i]["Q2"] = AGPBeneficiariesQ2;
                             dt.Rows[i]["Q3"] = AGPBeneficiariesQ3;
-                           
+
                         }
                         if (i == 5)
                         {
                             dt.Rows[i]["Q1"] = NamankanRailyQ1;
-                           
+
 
                         }
                         if (i == 6)
@@ -1885,7 +1883,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                             dt.Rows[i]["Q3"] = Sac3;
                             dt.Rows[i]["Q4"] = Sac4;
                         }
-                       
+
 
 
                     }
@@ -2264,7 +2262,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
             DataRow[] dr = dt.Select("Activity='" + Convert.ToString(LblDesc.Text) + "'");
             if (dr.Length > 0)
             {
-                if (TxtTrainingLevel.Text !="")
+                if (TxtTrainingLevel.Text != "")
                 {
                     dr[0]["TrainingLevel"] = TxtTrainingLevel.Text;
                 }
@@ -2377,7 +2375,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
             {
                 PanchayatMeeting1 = TxtApr.Text;
                 PanchayatMeeting2 = TxtMay.Text;
-               
+
 
             }
             if (i == 4)
@@ -2385,13 +2383,13 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                 RatriChaupal1 = TxtApr.Text;
                 RatriChaupal2 = TxtMay.Text;
                 RatriChaupal3 = TxtJun.Text;
-            
+
 
             }
             if (i == 5)
             {
                 NamankanRaily = TxtApr.Text;
-                
+
 
 
             }
@@ -2420,7 +2418,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                 GKPLben = TxtApr.Text;
 
             }
-            
+
             if (i == 11)
             {
                 Sac1 = TxtApr.Text;
@@ -2429,7 +2427,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                 Sac4 = TxtJul.Text;
 
             }
-           
+
 
             #endregion
         }
@@ -2484,9 +2482,59 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
 
         }
     }
+    public bool InterventionSql_Injection(string RVal)
+    {
+        SqlInjection objAudit = new SqlInjection();
+        bool injection = false;
 
+
+        injection = objAudit.CheckInputBool(RVal);
+
+        return injection;
+
+    }
+    public static List<Control> GetAllControls(List<Control> controls, Type t, Control parent /* can be Page */)
+    {
+        foreach (Control c in parent.Controls)
+        {
+            if (c.GetType() == t)
+                controls.Add(c);
+            if (c.HasControls())
+                controls = GetAllControls(controls, t, c);
+        }
+        return controls;
+    }
+    public string SetTextBoxFocusSelect(Page page)
+    {
+        string ALlTestBoxValue = "";
+        List<Control> list = new List<Control>();
+        list = GetAllControls(list, typeof(TextBox), page);
+        foreach (Control ctl in list)
+        {
+            if (ctl.GetType() == typeof(TextBox))
+            {
+                ((TextBox)ctl).Attributes.Add("onfocus", "this.select()");
+                string TempVari = ((TextBox)ctl).Text;
+                if (TempVari.Length > 0)
+                {
+                    ALlTestBoxValue += TempVari + "  ";
+                }
+            }
+        }
+        return ALlTestBoxValue;
+    }
     protected void btnsave_Click(object sender, EventArgs e)
     {
+        string RVal = SetTextBoxFocusSelect(this.Page);
+        if (!InterventionSql_Injection(RVal))
+        {
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Spurious input detected. Data rejected')</script>", false);
+
+            return;
+        }
         if (Convert.ToInt32(ddlType.SelectedValue) == 1)
         {
             // SIPDATA();
@@ -2511,35 +2559,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
     }
     protected void btnAdd_Click(object sender, EventArgs e)
     {
-        //string condition = "";
-        //SqlParameter[] para = new SqlParameter[] { 
 
-        //    new SqlParameter("@Villagecode","88770EE01C254309904B12A72"),
-
-        //    };
-
-
-        //string sReturn = string.Empty;
-        ////try
-        ////{
-        //DataSet dttabletdata = new DataSet();
-
-        //dttabletdata = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "GetAnualData", para);
-        //DataTable dtState = dttabletdata.Tables[0].Copy();
-        //if (dtState.Rows.Count > 0)
-        //{
-
-        //    foreach (DataRow dr in dtState.Rows)
-        //    {
-
-        //        string str = "insert into tblSummarySchoolAnualData (Villagecode,Name,[DISECode] ,[CRITICALSIP], [OTHERSIP], [TOTALSIP],[SixOOSG] ,[SevenOOSG],[TotalOOSG] ,[SevenOOSB],SchoolCode,SchooLevel,SACQ1,SACQ2,SACQ3,SACQ4,RowNo) values('" + dr["Villagecode"] + "','" + dr["Name"] + "','" + dr["DISECode"] + "'," + dr["CRITICALSIP"] + "," + dr["OTHERSIP"] + "," + dr["TOTALSIP"] + "," + dr["SixOOSG"] + "," + dr["SevenOOSG"] + "," + dr["TotalOOSG"] + "," + dr["SevenOOSB"] + ",'" + dr["SchoolCode"] + "','" + dr["SchooLevel"] + "'," + dr["SACQ1"] + "," + dr["SACQ2"] + "," + dr["SACQ3"] + "," + dr["SACQ4"] + "," + dr["RowNo"] + ") ";
-
-
-        //        bool res = objMain.AddUpdate(str);
-
-
-        //    }
-        //}
     }
     protected void btnDelete_Click(object sender, EventArgs e)
     {
@@ -2560,11 +2580,6 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                 return;
 
             }
-            //if (Convert.ToInt32(ddlType.SelectedValue) == 3)
-            //{
-            //    string StudentTSInsertQuery1 = " delete from  tblAnualPlanDataDetail where schoolCode ='" + SchoolId + "' and Plantype=3";
-            //    InsertTS = objMain.AddUpdate(StudentTSInsertQuery1);
-            //}
             if (Convert.ToInt32(ddlType.SelectedValue) == 2)
             {
                 if (ddlPanchayat.SelectedIndex <= 0)
@@ -2575,13 +2590,30 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
 
                 }
 
-                string StudentTSInsertQuery1 = " delete from  tblAnualPlanClusterWiseDetail where clustercode ='" + ddlPanchayat.SelectedValue + "'  ";
-                InsertTS = objMain.AddUpdate(StudentTSInsertQuery1);
+                SqlParameter[] cmdParameters = new SqlParameter[]
+                          {
+                        new SqlParameter("@clustercode", ddlPanchayat.SelectedValue),
+                        new SqlParameter("@Flag", "1"),
+
+                          };
+
+
+                int Icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "DeletetblAnualPlanClusterWiseDetail", cmdParameters);
+
+
             }
             if (Convert.ToInt32(ddlType.SelectedValue) == 1)
             {
-                string StudentTSInsertQuery1 = " delete from  tblAnualPlanTraingWiseDetail where DistrictCode ='" + ddlDistrict.SelectedValue + "' ";
-                InsertTS = objMain.AddUpdate(StudentTSInsertQuery1);
+                SqlParameter[] cmdParameters = new SqlParameter[]
+                            {
+                        new SqlParameter("@clustercode", ddlPanchayat.SelectedValue),
+                        new SqlParameter("@Flag", "1"),
+
+                            };
+
+
+                int Icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "DeletetblAnualPlanClusterWiseDetail", cmdParameters);
+
             }
             if (InsertTS == true)
             {
@@ -2680,7 +2712,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
             {
                 if (lb.Text == "Staff Training on Enrolment and SMC")
                 {
-                    LoadDataEnableTest(TxtApr, TxtMay, TxtJun, TxtJul,0, Convert.ToInt32(lblEndMonth.Text));
+                    LoadDataEnableTest(TxtApr, TxtMay, TxtJun, TxtJul, 0, Convert.ToInt32(lblEndMonth.Text));
                 }
                 else
                 {
@@ -3075,7 +3107,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
             Response.Redirect("Login.aspx", false);
         }
         FillCBBock();
-      
+
         GVMain.DataSource = null;
         GVMain.DataBind();
         GV_AnnualPlan.DataSource = null;
@@ -3112,9 +3144,9 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
             {
                 if (Convert.ToInt32(dtTraing.Rows[0]["ApproveStatus"]) == 0)
                 {
-                   // btnSubmitted.Text = "Submitted to DOL";
+                    // btnSubmitted.Text = "Submitted to DOL";
                     btnSubmitted.Enabled = true;
-                  
+
                     LinkButton1.Visible = true;
                     FileUpload1.Visible = true;
                     btnsave.Visible = true;
@@ -3123,7 +3155,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                 else if (Convert.ToInt32(dtTraing.Rows[0]["ApproveStatus"]) > 0)
                 {
                     btnSubmitted.Enabled = false;
-                 
+
                     LinkButton1.Visible = false;
                     FileUpload1.Visible = false;
                     btnsave.Visible = false;
@@ -3132,10 +3164,10 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
 
                 if (Convert.ToInt32(dtTraing.Rows[0]["ApproveStatus"]) == 1)
                 {
-                 
+
                     btnSubmitted.Text = " Submitted to DOL";
 
-                
+
                 }
                 if (Convert.ToInt32(dtTraing.Rows[0]["ApproveStatus"]) == 2)
                 {
@@ -3198,7 +3230,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                 {
                     btnSubmitted.Text = "Approve";
                 }
-                if(Convert.ToInt32(dtTraing.Rows[0]["ApproveStatus"]) == 3)
+                if (Convert.ToInt32(dtTraing.Rows[0]["ApproveStatus"]) == 3)
                 {
                     btnSubmitted.Text = "Approved";
                 }
@@ -3207,12 +3239,12 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
             {
                 btnsave.Visible = false;
                 btnDelete.Visible = false;
-               
+
                 LinkButton1.Visible = false;
                 FileUpload1.Visible = false;
             }
 
-           
+
         }
         //if (ddlType.SelectedValue == "1")
         //{
@@ -3673,11 +3705,11 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
             Response.Redirect("Login.aspx", false);
         }
         ViewState["1"] = 710;
-        if (Convert.ToInt32(ddlYear.SelectedValue)>=2024)
+        if (Convert.ToInt32(ddlYear.SelectedValue) >= 2024)
         {
             LoadAnnualDataDeatilsHotSpot2024(1);
         }
-      else
+        else
         {
             LoadAnnualDataDeatilsHotSpot(1);
         }
@@ -3735,15 +3767,15 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
         DataSet dt = null;
         if (Convert.ToInt32(ddlYear.SelectedValue) >= 2026)
         {
-             dt = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptAnnaualPlanDataSummry20252026Deatail]", cmdParameters);
+            dt = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptAnnaualPlanDataSummry20252026Deatail]", cmdParameters);
         }
-      else  if (Convert.ToInt32(ddlYear.SelectedValue) == 2025)
+        else if (Convert.ToInt32(ddlYear.SelectedValue) == 2025)
         {
             dt = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptAnnaualPlanDataSummry2025Deatail]", cmdParameters);
         }
         else
         {
-             dt = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptAnnaualPlanDataSummry20242025]", cmdParameters);
+            dt = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptAnnaualPlanDataSummry20242025]", cmdParameters);
 
 
         }
@@ -3814,7 +3846,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
 
 
         };
-        
+
         DataSet dt = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptAnnaualPlanDataSummryDownload]", cmdParameters);
         // DataTable dt = objMain.LoadAnnaulPlanRowData(conditions, Flag);
 
@@ -4066,10 +4098,10 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                             {
                                 I7TO14 = Convert.ToInt32(dr[0]["i14"]);
                             }
-             
+
                         }
 
-           
+
 
                         string icoff = Convert.ToString(dt.Rows[r][i]);
                         //if (i == 15 || i == 16)
@@ -4105,7 +4137,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
 
                         //}
 
-                        if (i == 16 || i == 17 || i == 18 || i == 19 || i == 20 || i == 49 || i == 21 || i == 22 || i == 23 || i == 24 || i == 25 || i == 26 || i == 27 || i == 28 || i == 29 || i == 30 || i == 31 || i == 45 || i == 46 || i == 47 || i == 48 || i == 52 || i == 53 || i == 54 || i == 55 || i == 56 || i == 57 )
+                        if (i == 16 || i == 17 || i == 18 || i == 19 || i == 20 || i == 49 || i == 21 || i == 22 || i == 23 || i == 24 || i == 25 || i == 26 || i == 27 || i == 28 || i == 29 || i == 30 || i == 31 || i == 45 || i == 46 || i == 47 || i == 48 || i == 52 || i == 53 || i == 54 || i == 55 || i == 56 || i == 57)
                         {
                             string stValue = Convert.ToString(dt.Rows[r][i]);
                             #region All Cluster
@@ -4150,10 +4182,10 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                                 }
                             }
 
-                         
+
 
                             ///Target
-                            if (i == 16 || i == 17 )
+                            if (i == 16 || i == 17)
 
                             {
                                 if (st.Length > 0)
@@ -4205,7 +4237,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
 
 
                             //GKP
-                            if (i == 45 || i == 46  )
+                            if (i == 45 || i == 46)
                             {
                                 if (st.Length > 0)
                                 {
@@ -4215,7 +4247,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                                     }
                                 }
                             }
-                            if ( i == 47)
+                            if (i == 47)
                             {
                                 if (st.Length > 0)
                                 {
@@ -4230,11 +4262,11 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                             {
                                 if (st.Length > 0)
                                 {
-                                    if (Convert.ToInt32( st) > 6)
+                                    if (Convert.ToInt32(st) > 6)
                                     {
                                         ws.Cell(r + 5, i + 1).Style.Fill.BackgroundColor = XLColor.Red;
                                     }
-                                } 
+                                }
                             }
 
                             if (i == 49)
@@ -4243,14 +4275,14 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                                 {
                                     if (GPB.Length > 0)
                                     {
-                                        int gk = Convert.ToInt32(GPB) *100;
+                                        int gk = Convert.ToInt32(GPB) * 100;
                                         if (gk <= Convert.ToInt32(st))
                                         {
                                             ws.Cell(r + 5, i + 1).Style.Fill.BackgroundColor = XLColor.Red;
                                         }
                                         else
                                         {
-                                           
+
                                         }
                                     }
                                     else
@@ -4339,7 +4371,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                                 ws1.Cell(r + 5, i + 1).Style.Fill.BackgroundColor = XLColor.Red;
                             }
                         }
-                        if (Activity == "Staff Training on Enrolment and SMC" && ( i == 5 || i == 6))
+                        if (Activity == "Staff Training on Enrolment and SMC" && (i == 5 || i == 6))
                         {
                             if (st.Length > 0 && st != "0")
                             {
@@ -4367,7 +4399,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                                 ws1.Cell(r + 5, i + 1).Style.Fill.BackgroundColor = XLColor.Red;
                             }
                         }
-                        if (( Activity == "Staff Training on CV and SC" || Activity == "Staff Training on PMS" || Activity == "Staff Training on Learning Baseline" || Activity == "Staff Training on GKP-L0/L1" || Activity == "Staff Training on GKP-L1/L2" || Activity == "Staff Training on GKP-L2/L3" || Activity == "Staff Training on Bal Sabha and LSE" || Activity == "Staff Training on SMC Meeting" || Activity == "Staff training on D2D refresher" || Activity == "TB Alumni one day orientation" || Activity == "CG/MT Training on Enrollment & SMC" || Activity == "CG/Master Trainers Training on L0/L1" || Activity == "CG/Master Trainers Training on L1/L2" || Activity == "CG/Master Trainers Training on L2/L3" || Activity == "CG/MT Training on Bal Sabha & LSE" ) && (i == 4 || i == 5 || i == 6 || i == 7))
+                        if ((Activity == "Staff Training on CV and SC" || Activity == "Staff Training on PMS" || Activity == "Staff Training on Learning Baseline" || Activity == "Staff Training on GKP-L0/L1" || Activity == "Staff Training on GKP-L1/L2" || Activity == "Staff Training on GKP-L2/L3" || Activity == "Staff Training on Bal Sabha and LSE" || Activity == "Staff Training on SMC Meeting" || Activity == "Staff training on D2D refresher" || Activity == "TB Alumni one day orientation" || Activity == "CG/MT Training on Enrollment & SMC" || Activity == "CG/Master Trainers Training on L0/L1" || Activity == "CG/Master Trainers Training on L1/L2" || Activity == "CG/Master Trainers Training on L2/L3" || Activity == "CG/MT Training on Bal Sabha & LSE") && (i == 4 || i == 5 || i == 6 || i == 7))
                         {
                             if (st.Length > 3)
                             {
@@ -4395,7 +4427,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                         //        ws1.Cell(r + 5, i + 1).Style.Fill.BackgroundColor = XLColor.Red;
                         //    }
                         //}
-                        if (Activity == "Staff Training on Bal Sabha and LSE" && (i == 7 ))
+                        if (Activity == "Staff Training on Bal Sabha and LSE" && (i == 7))
                         {
                             if (st.Length > 0 && st != "0")
                             {
@@ -4642,12 +4674,12 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                 System.IO.File.Delete(filepath);
             }
         }
-        catch(Exception ex)
+        catch
         {
-           
+            throw;
         }
         // need to catch possible exceptions
-       
+
     }
     private void GenerateExcelData2024()
     {
@@ -4719,7 +4751,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                 oleda1.Fill(dtTraing);
 
             }
-            catch (Exception ex)
+            catch
             {
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Invaild Format')</script>", false);
 
@@ -4917,8 +4949,8 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                                 }
                             }
                         }
-                   
-                        if (i == 16 || i == 17  )
+
+                        if (i == 16 || i == 17)
                         {
                             if (st.Length > 0)
                             {
@@ -4933,7 +4965,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                         }
                         ///GSS
                         if (i == 18 || i == 19 || i == 20 || i == 21)
-                       
+
                         {
                             if (st.Length > 0)
                             {
@@ -4984,7 +5016,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
 
 
                         //GKP
-                        if (i == 45 || i == 46 )
+                        if (i == 45 || i == 46)
                         {
                             if (st.Length > 0)
                             {
@@ -5021,19 +5053,19 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                         }
                         if (i == 49)
                         {
-                            if (st.Length > 0 )
+                            if (st.Length > 0)
                             {
                                 if (GPB.Length > 0)
                                 {
-                                    int gk =  Convert.ToInt32(GPB) * 100;
-                                    if(gk< Convert.ToInt32(st))
+                                    int gk = Convert.ToInt32(GPB) * 100;
+                                    if (gk < Convert.ToInt32(st))
                                     {
                                         TempFlag = true;
                                         TempFlagC = true;
                                     }
                                     else
                                     {
-                                       
+
                                     }
                                 }
                                 else
@@ -5122,7 +5154,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                             TempFlagT = true;
                         }
                     }
-                    if (Activity == "Staff Training on Enrolment and SMC" && ( i == 5 || i == 6))
+                    if (Activity == "Staff Training on Enrolment and SMC" && (i == 5 || i == 6))
                     {
                         if (st.Length > 0 && st != "0")
                         {
@@ -5154,7 +5186,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                             TempFlagT = true;
                         }
                     }
-                    if( ( Activity == "Staff Training on CV and SC" || Activity == "Staff Training on PMS" || Activity == "Staff Training on Learning Baseline" || Activity == "Staff Training on GKP-L0/L1" || Activity == "Staff Training on GKP-L1/L2" || Activity == "Staff Training on GKP-L2/L3" || Activity == "Staff Training on Bal Sabha and LSE" || Activity == "Staff Training on SMC Meeting" || Activity == "Staff training on D2D refresher" || Activity == "TB Alumni one day orientation" || Activity == "CG/MT Training on Enrollment & SMC" || Activity == "CG/Master Trainers Training on L0/L1" || Activity == "CG/Master Trainers Training on L1/L2" || Activity == "CG/Master Trainers Training on L2/L3" || Activity == "CG/MT Training on Bal Sabha & LSE" ) && (i == 4 || i == 5 || i == 6 || i == 7))
+                    if ((Activity == "Staff Training on CV and SC" || Activity == "Staff Training on PMS" || Activity == "Staff Training on Learning Baseline" || Activity == "Staff Training on GKP-L0/L1" || Activity == "Staff Training on GKP-L1/L2" || Activity == "Staff Training on GKP-L2/L3" || Activity == "Staff Training on Bal Sabha and LSE" || Activity == "Staff Training on SMC Meeting" || Activity == "Staff training on D2D refresher" || Activity == "TB Alumni one day orientation" || Activity == "CG/MT Training on Enrollment & SMC" || Activity == "CG/Master Trainers Training on L0/L1" || Activity == "CG/Master Trainers Training on L1/L2" || Activity == "CG/Master Trainers Training on L2/L3" || Activity == "CG/MT Training on Bal Sabha & LSE") && (i == 4 || i == 5 || i == 6 || i == 7))
                     {
                         if (st.Length > 3)
                         {
@@ -5306,7 +5338,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                 dtTraing.Columns.Remove("TempID");
                 if (dtCluster.Rows.Count > 0 || dtTraing.Rows.Count > 0)
                 {
-                     SavaDataCluster24(dtCluster, dtTraing);
+                    SavaDataCluster24(dtCluster, dtTraing);
                 }
                 else
                 {
@@ -5319,7 +5351,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
         }
 
         // need to catch possible exceptions
-        catch (Exception ex)
+        catch
         {
 
 
@@ -5399,7 +5431,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                 oleda1.Fill(dtTraing);
 
             }
-            catch (Exception ex)
+            catch
             {
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Invaild Format')</script>", false);
 
@@ -5410,10 +5442,10 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
             {
 
               new SqlParameter("@DistrictCode", ddlDistrict.SelectedValue),
-          
+
 
             };
-         DataTable   dtSchool = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[LoadDIstrinctAnnaulPlanClusterWise]", cmdParameters);
+            DataTable dtSchool = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[LoadDIstrinctAnnaulPlanClusterWise]", cmdParameters);
 
             Session["CheckTarget"] = dtSchool;
 
@@ -5498,7 +5530,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                 return;
 
             }
-        
+
             //DataTable dt = ds.Tables[0];
             bool TempFlag = false;
             bool TempFlagC = false;
@@ -5506,13 +5538,13 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
             dtCluster.Columns.Add("TempID", System.Type.GetType("System.String"));
             dtTraing.Columns.Add("TempID", System.Type.GetType("System.String"));
 
-            if (Convert.ToString(dtTraing.Rows[0][0]).Trim().ToLower()!=ddlDistrict.SelectedItem.Text.Trim().ToLower())
+            if (Convert.ToString(dtTraing.Rows[0][0]).Trim().ToLower() != ddlDistrict.SelectedItem.Text.Trim().ToLower())
             {
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select vaild District ')</script>", false);
 
                 return;
             }
-            
+
             for (int r = 0; r < dtCluster.Rows.Count; r++)
             {
                 TempFlagC = false;
@@ -5520,15 +5552,15 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                 int I7 = 0;
                 int IB6 = 0;
                 int IB18 = 0;
-                string  clusterCode = Convert.ToString(dtCluster.Rows[r][7]);
+                string clusterCode = Convert.ToString(dtCluster.Rows[r][7]);
 
                 DataRow[] dr = dtSchool.Select("EGClusterCode='" + clusterCode + "'");
-                if(dr.Length>0)
+                if (dr.Length > 0)
                 {
-                    I6 =Convert.ToInt32(dr[0]["i6"]);
+                    I6 = Convert.ToInt32(dr[0]["i6"]);
                     I7 = Convert.ToInt32(dr[0]["i14"]);
                     IB6 = Convert.ToInt32(dr[0]["iB6"]);
-                    IB18 =Convert.ToInt32(dr[0]["iB18"]);
+                    IB18 = Convert.ToInt32(dr[0]["iB18"]);
                 }
                 for (int i = 15; i < dtCluster.Columns.Count; i++)
                 {
@@ -5583,7 +5615,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                         }
                         if (i == 23)
                         {
-                            if (st !="")
+                            if (st != "")
                             {
                                 if (st.All(char.IsDigit))
                                 {
@@ -5736,7 +5768,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
             for (int r = 0; r < dtTraing.Rows.Count; r++)
             {
                 TempFlagT = false;
-                string Activity =Convert.ToString( dtTraing.Rows[r][2]);
+                string Activity = Convert.ToString(dtTraing.Rows[r][2]);
                 for (int i = 3; i < dtTraing.Columns.Count; i++)
                 {
                     string stValue = Convert.ToString(dtTraing.Rows[r][i]);
@@ -5753,7 +5785,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                             TempFlagT = true;
                         }
                     }
-                    if (i==3)
+                    if (i == 3)
                     {
                         if (st == "1" || st == "2" || st == "3" || st == "" || st == "0")
                         {
@@ -5813,7 +5845,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                             TempFlagT = true;
                         }
                     }
-                    if (Activity == "Staff Training on Learning Baseline"  && (i == 4 || i == 5))
+                    if (Activity == "Staff Training on Learning Baseline" && (i == 4 || i == 5))
                     {
                         if (st.Length > 3)
                         {
@@ -5845,7 +5877,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                             TempFlagT = true;
                         }
                     }
-                    if ((Activity == "TB Training on Enrolment & SMC" || Activity == "TB PRI Training" || Activity == "TB Training on GKP-L1/L2" || Activity == "TB Training on GKP-L2/L3" || Activity == "TB Training on GKP-L0/L1" || Activity == "TB Skills training orientation" || Activity == "TB One Day Orientation" ) && (i == 4 || i == 5 || i == 6 || i == 7))
+                    if ((Activity == "TB Training on Enrolment & SMC" || Activity == "TB PRI Training" || Activity == "TB Training on GKP-L1/L2" || Activity == "TB Training on GKP-L2/L3" || Activity == "TB Training on GKP-L0/L1" || Activity == "TB Skills training orientation" || Activity == "TB One Day Orientation") && (i == 4 || i == 5 || i == 6 || i == 7))
                     {
                         if (st.Length > 4)
                         {
@@ -5937,7 +5969,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                 //}
 
                 //dtTraing.AcceptChanges();
-              
+
                 dtCluster.Columns.Remove("TempID");
                 dtTraing.Columns.Remove("TempID");
                 MultipuExeclTrackError(dtCluster, dtTraing);
@@ -5962,10 +5994,10 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
         }
 
         // need to catch possible exceptions
-        catch (Exception ex)
+        catch
         {
 
-          
+
         }
         finally
         {
@@ -6071,7 +6103,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                     {
                         dtmain.Rows[r]["Q4MM"] = stValue;
                     }
-                   
+
 
                     if (i == 45)
                     {
@@ -6234,10 +6266,9 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
 
             }
         }
-        catch (Exception ex)
+        catch
         {
-
-
+            throw;
         }
     }
     public void SavaDataCluster(DataTable dtCluster, DataTable dtTraing)
@@ -6459,14 +6490,14 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
 
             }
             DataRow[] dr = dtmainMainTraing.Select("Activity='Staff Training on Learning Endline'");
-            if (dr.Length>0)
+            if (dr.Length > 0)
             {
                 dr[0]["Q1"] = "0";
                 dr[0]["Q2"] = "0";
                 dr[0]["Q3"] = "0";
                 dr[0]["Q4"] = "0";
             }
-            
+
             DataSet dsResult = Insert_Update_tblAnualPlanClusterWiseDetail(dtmain, dtmainMainTraing);
             if (dsResult.Tables[0].Rows.Count > 0)
             {
@@ -6475,10 +6506,9 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
 
             }
         }
-        catch (Exception ex)
+        catch
         {
-
-
+            throw;
         }
     }
     public DataTable CreateDataTableTraining()
@@ -6590,7 +6620,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
             da.Fill(dbSqlDataSet);
             return dbSqlDataSet;
         }
-        catch (SqlException e)
+        catch
         {
             if (!(sqlConnection.State == ConnectionState.Closed))
             {
@@ -6598,7 +6628,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6634,7 +6664,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
             da.Fill(dbSqlDataSet);
             return dbSqlDataSet;
         }
-        catch (SqlException e)
+        catch
         {
             if (!(sqlConnection.State == ConnectionState.Closed))
             {
@@ -6642,7 +6672,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -6671,7 +6701,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
 
         }
         int approveStataus = 0;
-        if (Convert.ToString(Session["user_level"]) == "39" ||Convert.ToString(Session["user_level"]) == "145")
+        if (Convert.ToString(Session["user_level"]) == "39" || Convert.ToString(Session["user_level"]) == "145")
         {
             approveStataus = 1;
         }
@@ -6695,7 +6725,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
 
 
        };
-         icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUpdateAnualPlanFinalApprove", cmdParameters);
+        icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUpdateAnualPlanFinalApprove", cmdParameters);
 
 
         //int ff = DateTime.Today.Month;
@@ -6709,7 +6739,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
         //     new SqlParameter("@UserName", Convert.ToString(Session["username"])),
         //       new SqlParameter("@Flag", "1"),
         //         new SqlParameter("@Q1", "2"),
-               
+
         //                   };
         //     icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUpdateAnualPlanFinalApproveQ", cmdParameters1);
 
@@ -6751,7 +6781,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
             if (Convert.ToString(Session["user_level"]) == "39" || Convert.ToString(Session["user_level"]) == "145")
             {
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Data Successfully Submitted to DOL!!')</script>", false);
-               
+
             }
             if (Convert.ToString(Session["user_level"]) == "91")
             {
@@ -6762,7 +6792,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
             {
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Congratulations your Annual Plan has been successfully approved!')</script>", false);
             }
-           
+
             ddlDistrict_SelectedIndexChanged(ddlDistrict, null);
 
         }
@@ -6776,7 +6806,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
     }
     protected void btnUnlock_Click(object sender, EventArgs e)
     {
-        
+
         SqlParameter[] parm = new SqlParameter[]
             {
 
@@ -6802,7 +6832,7 @@ public partial class FrmAnnualPlanClusterWise : System.Web.UI.Page
 
         }
         int approveStataus = 0;
-        
+
         if (Convert.ToString(Session["user_level"]) == "91")
         {
             approveStataus = 4;

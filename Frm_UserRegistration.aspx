@@ -498,29 +498,11 @@
                                         <label class="control-label col-sm-4" for="Name" id="Label4" runat="server">District  <span class="req">*</span> </label>
 
                                         <div class="col-sm-8">
-                                            <asp:ListBox ID="lstDistrict" OnSelectedIndexChanged="lstDist_selectindexchnaged"  AutoPostBack="true" SelectionMode="Multiple" CssClass="form-control" runat="server"></asp:ListBox>
-
-
-
+                                            <asp:ListBox ID="lstDistrict" AutoPostBack="true" SelectionMode="Multiple" CssClass="form-control" runat="server"></asp:ListBox>
                                         </div>
                                     </div>
 
                                 </div>
-
-                                <div class="row" id="M3" runat="server">
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-4" for="Name" id="Label6" runat="server">Block  <span class="req">*</span> </label>
-
-                                        <div class="col-sm-8">
-                                            <asp:ListBox ID="lblBlockMul" AutoPostBack="true" SelectionMode="Multiple" CssClass="form-control" runat="server"></asp:ListBox>
-
-
-
-                                        </div>
-                                    </div>
-
-                                </div>
-
                                 <div id="d" runat="server" class="row">
                                     <div class="form-group">
                                         <label class="control-label col-sm-4" for="Name" id="lblblock" runat="server">Block  <span class="req">*</span> </label>

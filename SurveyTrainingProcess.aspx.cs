@@ -1,18 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Data;
-using System.Data.SqlClient;
-using System.Globalization;
-using System.Drawing;
-using System.IO;
-using System.Collections;
-using System.Data.SqlTypes;
-using System.Configuration;
-using System.Text;
+						   
+				  
 
 public partial class SurveyTrainingProcess : System.Web.UI.Page
 {
@@ -36,7 +32,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                 FillDropdown();
                 LoadYear();
                 LoadUserLeavel();
-             //   GVMainBind();
+                //   GVMainBind();
                 ViewState["Tarining_ID"] = "";
                 ViewState["dtselect"] = null;
                 ViewState["dtselected"] = null;
@@ -49,8 +45,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                 linkSurvey.Visible = false;
                 lblUni.Text = "";
                 txtLink.Text = "";
-           
-                GvEntry.DataSource = null;
+				GvEntry.DataSource = null;
                 GvEntry.DataBind();
                 LinkButton1.Visible = false;
                 txtLink.Visible = false;
@@ -178,9 +173,8 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
 
             ddlState.SelectedIndex = 1;
             ddlState.Enabled = false;
-            ddlDistrictSearch.Enabled = false;
-          
-        }
+	     	ddlDistrictSearch.Enabled = false;
+		}
 
 
         if (Session["user_level_Role"].ToString() == "1")
@@ -309,7 +303,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
             DataSet ds = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Get_Select_AllTableData", paramv);
             dtcombo = ds.Tables[0] as DataTable;
         }
-        catch (Exception ex)
+        catch
         {
             //string mmsg = ex.Message; showMessages(mmsg);
             //showMessages("(SelectAllData)  " + mmsg);
@@ -407,7 +401,6 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         Session["dtEntryDoneBY"] = null;
         gvRightSearch.DataSource = null;
         gvRightSearch.DataBind();
-
         GvEntry.DataSource = null;
         GvEntry.DataBind();
         GvQuestion.DataSource = null;
@@ -418,7 +411,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         LnkEntry.Visible = false;
         LinkButton1.Visible = false;
     }
-        protected void Unlock_Click(object sender, EventArgs e)
+    protected void Unlock_Click(object sender, EventArgs e)
     {
         MPECopyEndline1.Show();
     }
@@ -426,11 +419,6 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
     protected void LockSave(object sender, EventArgs e)
     {
         DateTime FromDate = Convert.ToDateTime(txtLockDate.Text);
-
-        string TSDInsertQuery1 = " Update  tbl_training_question set Lockdate='"+ FromDate.ToString("yyyy-MM-dd") + "' where Tarining_ID ="+ ViewState["Tarining_ID"] + " ";
-
-        bool InsertTSD11 = objMain.AddUpdate(TSDInsertQuery1);
-        ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved sucessfully')</script>", false);
     }
 
     public string SetTextBoxFocusSelect(Page page)
@@ -476,7 +464,6 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
     }
     protected void btnsave_Click(object sender, EventArgs e)
     {
-      
         //string RVal = SetTextBoxFocusSelect(this.Page);
         //if (!InterventionSql_Injection(RVal))
         //{
@@ -543,7 +530,14 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
             }
         }
 
-        if (Convert.ToInt32(ddlLevel.SelectedValue) == 1 || Convert.ToInt32(ddlLevel.SelectedValue) == 2)
+        if (ddlMainID.SelectedValue == "")
+        {
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Main Training or Reorientation')</script>", false);
+
+            return;
+        }
+
+        if ((Convert.ToInt32(ddlLevel.SelectedValue) == 1 || Convert.ToInt32(ddlLevel.SelectedValue) == 2) && Convert.ToInt32(ddlMainID.SelectedValue) == 2)
         {
             if (txtFromDate.Text == "" || txtToDate.Text == "")
             {
@@ -563,7 +557,6 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
             DateTime d2 = Convert.ToDateTime(Todate);
             int month = Convert.ToInt32(T[1]) - Convert.ToInt32(b[1]);
             TimeSpan t = d2 - d1;
-          
             double Days = Convert.ToDouble(t.TotalDays);
             if (Days < 0)
             {
@@ -575,65 +568,104 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Date Max 7 Day')</script>", false);
                 return;
             }
-            if (Math.Round(Days + 1) > 7)
+            if (Math.Round(Days + 1) > 1)
             {
-                ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Date Max 7 Day')</script>", false);
+                ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Date Max 1 Day')</script>", false);
                 return;
             }
-            if (ddlDistrictSearch.SelectedValue != null && ddlDistrictSearch.SelectedIndex > 0)
-            {
-                str = "where  DistCode='" + ddlDistrictSearch.SelectedValue.ToString() + "'";
-            }
+		}
+        else
+        {
 
+            if (Convert.ToInt32(ddlLevel.SelectedValue) == 1 || Convert.ToInt32(ddlLevel.SelectedValue) == 2)
+            {
+                if (txtFromDate.Text == "" || txtToDate.Text == "")
+                {
+                    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Training Date')</script>", false);
+                    return;
+                }
+                string str = "";
+                string fdate = txtFromDate.Text;
+                string[] b = fdate.Split('/');
+                string FromDate1 = b[2] + '-' + b[1] + '-' + b[0];
 
-            if (txtFromDate.Text != "" && txtToDate.Text != "")
-            {
-                str = str + "and FromDate= '" + FromDate1 + "' and ToDate='" + Todate + "'";
-            }
-            if (ddlLearning.SelectedIndex > 0)
-            {
-                str = str + "and Learningtype='" + this.ddlTraingOutcome.SelectedValue.ToString() + "'";
-            }
-            DataTable dtPhase = null;
-            if (Convert.ToInt32(ddlLevel.SelectedValue) == 2)
-            {
-                dtPhase = objComman.LoadData("select  isnull(N_P1_Y1,0) as [NoOfDays]  from  Tbl_TB_Training Where  TrainingType='T' and LearningID='" + ddlTraingOutcome.SelectedValue + "' and StateCode='" + ddlState.SelectedValue + "' and DistrictCode='" + ddlDistrictSearch.SelectedValue + "'");
+                string Tdate = txtToDate.Text;
+                string[] T = Tdate.Split('/');
+                string Todate = T[2] + '-' + T[1] + '-' + T[0];
 
-            }
-            else
-            {
-                ///    DataTable dtPhase = objComman.LoadData("select  Case when Phase=1 and  Program_Year=1 THEN N_P1_Y1 WHEN Phase=1 and Program_Year=2 THEN N_P1_Y2 WHEN Phase=1 and Program_Year>=3 THEN  N_P1_Y3 WHEN Phase=2 and  Program_Year<=4 THEN N_P2_Y1 WHEN Phase=2 and Program_Year>=5 THEN N_P2_Y2  WHEN Phase=3 and  Program_Year<=6 THEN N_P3_Y1 WHEN Phase=3 and Program_Year>=7 THEN N_P3_Y2 WHEN Phase=4 and  Program_Year=8 THEN N_P4_Y2 WHEN Phase=4 and Program_Year=9 THEN N_P4_Y3 END as [NoOfDays]  from Tbl_PhaseMapping  p inner join (select * from Tbl_TB_Training Where  TrainingType='T') TS on TS.FYear=p.Financial_Year Where TS.LearningID='" + ddlLearning.SelectedValue + "' and p.StateCode='" + ddlState.SelectedValue + "' and p.DistrictCode='" + ddlDist.SelectedValue + "'");
-                dtPhase = objComman.LoadData("select  isnull(N_P1_Y1,0) as [NoOfDays]  from Tbl_TB_Training Where  TrainingType='S' and OutComeID='" + ddlLearning.SelectedValue + "' and SoutComeID='" + ddlTraingOutcome.SelectedValue + "' and StateCode='" + ddlState.SelectedValue + "' and DistrictCode='" + ddlDistrictSearch.SelectedValue + "'");
-            }
+                DateTime d1 = Convert.ToDateTime(FromDate1);
+                DateTime d2 = Convert.ToDateTime(Todate);
+                int month = Convert.ToInt32(T[1]) - Convert.ToInt32(b[1]);
+                TimeSpan t = d2 - d1;
 
-            if (dtPhase.Rows.Count > 0)
-            {
+                double Days = Convert.ToDouble(t.TotalDays);
+                if (Days < 0)
+                {
+                    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Valid  Data')</script>", false);
+                    return;
+                }
+                if (Math.Sign(Days + 1) < 0)
+                {
+                    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Date Max 7 Day')</script>", false);
+                    return;
+                }
+                if (Math.Round(Days + 1) > 7)
+                {
+                    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Date Max 7 Day')</script>", false);
+                    return;
+                }
+                if (ddlDistrictSearch.SelectedValue != null && ddlDistrictSearch.SelectedIndex > 0)
+                {
+                    str = "where  DistCode='" + ddlDistrictSearch.SelectedValue.ToString() + "'";
+                }
+                if (txtFromDate.Text != "" && txtToDate.Text != "")
+                {
+                    str = str + "and FromDate= '" + FromDate1 + "' and ToDate='" + Todate + "'";
+                }
+                if (ddlLearning.SelectedIndex > 0)
+                {
+                    str = str + "and Learningtype='" + this.ddlTraingOutcome.SelectedValue.ToString() + "'";
+                }
+                DataTable dtPhase = null;
                 if (Convert.ToInt32(ddlLevel.SelectedValue) == 2)
                 {
-                    if (Convert.ToInt32(dtPhase.Rows[0]["NoOfDays"]) == 0)
-                    {
-                    }
-                    else if (Math.Round(Days + 1) == Convert.ToInt32(dtPhase.Rows[0]["NoOfDays"]))
-                    {
-                    }
-                    else
-                    {
-                        ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Staff Training: Selected Training Days are either less than or greater than " + dtPhase.Rows[0]["NoOfDays"] + " Days')</script>", false);
-                        return;
-                    }
-                }
-                if (Convert.ToInt32(ddlLevel.SelectedValue) == 1 && Convert.ToInt32(ddlassement.SelectedValue) == 1)
+                    dtPhase = objComman.LoadData("select  isnull(N_P1_Y1,0) as [NoOfDays]  from  Tbl_TB_Training Where  TrainingType='T' and LearningID='" + ddlTraingOutcome.SelectedValue + "' and StateCode='" + ddlState.SelectedValue + "' and DistrictCode='" + ddlDistrictSearch.SelectedValue + "'");
+	            }
+                else
                 {
-                    if (Convert.ToInt32(dtPhase.Rows[0]["NoOfDays"]) == 0)
+                    ///    DataTable dtPhase = objComman.LoadData("select  Case when Phase=1 and  Program_Year=1 THEN N_P1_Y1 WHEN Phase=1 and Program_Year=2 THEN N_P1_Y2 WHEN Phase=1 and Program_Year>=3 THEN  N_P1_Y3 WHEN Phase=2 and  Program_Year<=4 THEN N_P2_Y1 WHEN Phase=2 and Program_Year>=5 THEN N_P2_Y2  WHEN Phase=3 and  Program_Year<=6 THEN N_P3_Y1 WHEN Phase=3 and Program_Year>=7 THEN N_P3_Y2 WHEN Phase=4 and  Program_Year=8 THEN N_P4_Y2 WHEN Phase=4 and Program_Year=9 THEN N_P4_Y3 END as [NoOfDays]  from Tbl_PhaseMapping  p inner join (select * from Tbl_TB_Training Where  TrainingType='T') TS on TS.FYear=p.Financial_Year Where TS.LearningID='" + ddlLearning.SelectedValue + "' and p.StateCode='" + ddlState.SelectedValue + "' and p.DistrictCode='" + ddlDist.SelectedValue + "'");
+                    dtPhase = objComman.LoadData("select  isnull(N_P1_Y1,0) as [NoOfDays]  from Tbl_TB_Training Where  TrainingType='S' and OutComeID='" + ddlLearning.SelectedValue + "' and SoutComeID='" + ddlTraingOutcome.SelectedValue + "' and StateCode='" + ddlState.SelectedValue + "' and DistrictCode='" + ddlDistrictSearch.SelectedValue + "'");
+                }
+
+                if (dtPhase.Rows.Count > 0)
+                {
+                    if (Convert.ToInt32(ddlLevel.SelectedValue) == 2)
                     {
+                        if (Convert.ToInt32(dtPhase.Rows[0]["NoOfDays"]) == 0)
+                        {
+                        }
+                        else if (Math.Round(Days + 1) == Convert.ToInt32(dtPhase.Rows[0]["NoOfDays"]))
+                        {
+                        }
+                        else
+                        {
+                            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Staff Training: Selected Training Days are either less than or greater than " + dtPhase.Rows[0]["NoOfDays"] + " Days')</script>", false);
+                            return;
+                        }
                     }
-                    else if (Math.Round(Days + 1) == Convert.ToInt32(dtPhase.Rows[0]["NoOfDays"]))
+                    if (Convert.ToInt32(ddlLevel.SelectedValue) == 1 && Convert.ToInt32(ddlassement.SelectedValue) == 1)
                     {
-                    }
-                    else
-                    {
-                        ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Staff Training: Selected Training Days are either less than or greater than " + dtPhase.Rows[0]["NoOfDays"] + " Days')</script>", false);
-                        return;
+                        if (Convert.ToInt32(dtPhase.Rows[0]["NoOfDays"]) == 0)
+                        {
+                        }
+                        else if (Math.Round(Days + 1) == Convert.ToInt32(dtPhase.Rows[0]["NoOfDays"]))
+                        {
+                        }
+                        else
+                        {
+                            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Staff Training: Selected Training Days are either less than or greater than " + dtPhase.Rows[0]["NoOfDays"] + " Days')</script>", false);
+                            return;
+                        }
                     }
                 }
             }
@@ -653,20 +685,19 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
 
             return;
         }
-      
-            if (txtTotalQuestions.Text.Trim() == "")
-            {
-                ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please enter Total No. of Questions')</script>", false);
 
-                return;
-            }
-            if (Convert.ToInt32(gvRightSearch.Rows.Count) < Convert.ToInt32(txtTotalQuestions.Text.Trim()))
-            {
-                ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please  Assessment Question greater than the Total no.of Questions selected ')</script>", false);
+        if (txtTotalQuestions.Text.Trim() == "")
+        {
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please enter Total No. of Questions')</script>", false);
 
-                return;
-            }
-        
+            return;
+        }
+        if (Convert.ToInt32(gvRightSearch.Rows.Count) < Convert.ToInt32(txtTotalQuestions.Text.Trim()))
+        {
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please  Assessment Question greater than the Total no.of Questions selected ')</script>", false);
+
+            return;
+        }
         if (Session["dtParticiparticipate"] != null)
         {
             DataTable dt = Session["dtParticiparticipate"] as DataTable;
@@ -686,7 +717,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
 
             return;
         }
-        if (Convert.ToInt32(AssessmentFor) == 1)
+        if (Convert.ToInt32(AssessmentFor) == 1 || Convert.ToInt32(AssessmentFor) == 2)
         {
             if (Session["dtEntryDoneBY"] != null)
             {
@@ -710,8 +741,8 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                 return;
             }
         }
-        DataTable dtdin= ViewState["dtselected"] as DataTable;
-       // DataTable distinctValues = dtdin.DefaultView.ToTable(true, "CategoryName");
+		 DataTable dtdin = ViewState["dtselected"] as DataTable;
+        // DataTable distinctValues = dtdin.DefaultView.ToTable(true, "CategoryName");
         string CategoryName = "";
         string CategoryNameID = "";
         DataTable dtCategoryName = null;
@@ -722,7 +753,6 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         //    CategoryNameID += "" + CategoryName + "" + ",";
         //}
 
-    
         //if (CategoryNameID.Length > 0)
         //{
         //    CategoryNameID = CategoryNameID.Substring(0, CategoryNameID.LastIndexOf(","));
@@ -766,10 +796,10 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         if (Convert.ToString(ViewState["Tarining_ID"]) == "")
         {
             int totalQ = 0;
-            
-                totalQ = Convert.ToInt32(txtTotalQuestions.Text);
-            
-                Tarining_ID = TrainingQuestionInsertUpdate(Tarining_ID, AssessmentFor, TrainingOutCome, SpecificTraining, AssessmentType, Trainingtype, other, Location, FromDate, ToDate, EntryBy, State, Dist, ddlTraingMode.SelectedValue,ddlTraining.SelectedValue, totalQ);
+
+            totalQ = Convert.ToInt32(txtTotalQuestions.Text);
+
+            Tarining_ID = TrainingQuestionInsertUpdate(Tarining_ID, AssessmentFor, TrainingOutCome, SpecificTraining, AssessmentType, Trainingtype, other, Location, FromDate, ToDate, EntryBy, State, Dist, ddlTraingMode.SelectedValue, ddlTraining.SelectedValue, totalQ);
             if (Tarining_ID > 0)
             {
                 lblUni.Text = "";
@@ -791,7 +821,6 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                         Sequence = Convert.ToInt32(gvRightSearch.DataKeys[row.RowIndex]["Sequence"].ToString());
                         //dtQuestion.Rows.Add(Assessment, QuestionCategory, QuestionID, Tarining_ID, Sequence);
                         //icount = icount + 1;
-                       
                         int icount4 = objMain.InsertUpdateAssment(ddlassement.SelectedValue, QuestionID.ToString(), Tarining_ID.ToString(), Sequence.ToString());
                     }
                     //DataTable dtFinal = dtQuestion;
@@ -807,7 +836,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                         {
                             dt.Rows[i]["FormID"] = Tarining_ID;
                         }
-                        int Parti_Success = objMain.Insert_participate(Tarining_ID, dtparti);
+                        int Parti_Success = Insert_USP_Participarticipate20252026(Tarining_ID, dtparti);
                     }
 
 
@@ -824,6 +853,17 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                         string UserName = "";
                         if (dtentry != null)
                         {
+
+                            DataTable dtS = Session["dtParticiparticipate"] as DataTable;
+                            dtS.Columns.Add("ParticipantType", typeof(Int32));
+                            if (dtS.Rows.Count > 0)
+                            {
+                                for (int i = 0; i < dtS.Rows.Count; i++)
+                                {
+                                    dt.Rows[i]["ParticipantType"] = "1";
+                                }
+
+                            }
                             if (dtentry.Rows.Count > 0)
                             {
                                 for (int i = 0; i < dtentry.Rows.Count; i++)
@@ -832,10 +872,28 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                                     UserID += "'" + dtentry.Rows[i]["ParticiparticipateName"] + "'" + ",";
                                     string jjj = dtentry.Rows[i]["ParticiparticipateName"] + "(" + dtentry.Rows[i]["EntryDoneByName"] + ")";
                                     UserName += "'" + jjj + "'" + ",";
+                                    DataRow dr;
+                                    DataRow[] drmain = dtS.Select("ParticiparticipateName='" + dtentry.Rows[i]["ParticiparticipateName"] + "'");
+                                    if (drmain.Length > 0)
+                                    {
+                                        drmain[0]["ParticipantType"] = "1";
+
+                                    }
+                                    else
+                                    {
+                                        dr = dtS.NewRow();
+                                        dr["ParticiparticipateName"] = dtentry.Rows[i]["ParticiparticipateName"];
+
+                                        dr["Name"] = dtentry.Rows[i]["EntryDoneByName"];
+                                        dr["ParticipantType"] = "2";
+                                        dr["UserType"] = "1";
+                                        dtS.Rows.Add(dr);
+                                    }
                                 }
                                 int Entry_Success = objMain.Insert_EntryDone(Tarining_ID, dtentry);
-                            }
 
+
+                            }
                             if (UserID.Length > 0)
                             {
                                 UserID = UserID.Substring(0, UserID.LastIndexOf(","));
@@ -848,6 +906,87 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                             #endregion
                             #region StaffSchedul
                             int StaffSchedul_ID = InsertUpdateStaffScheduling2023(0, AssessmentFor, TrainingOutCome, SpecificTraining, Convert.ToInt32(ddlTraingMode.SelectedValue), Convert.ToInt32(ddlTraining.SelectedValue), other, Location, FromDate, ToDate, EntryBy, State, Dist, Block, UserID, UserName, Tarining_ID.ToString());
+							if (dtS.Rows.Count > 0)
+                            {
+                                for (int i = 0; i < dtS.Rows.Count; i++)
+                                {
+                                    dt.Rows[i]["FormID"] = StaffSchedul_ID;
+                                }
+                                int Parti_Success = objMain.Insert_participateSh(StaffSchedul_ID, dtS);
+                            }
+
+                            #endregion
+                        }
+
+                    }
+                    if (Convert.ToInt32(ddlLevel.SelectedValue) == 2)
+                    {
+                        DataTable dtentry = Session["dtEntryDoneBY"] as DataTable;
+                        string UserID = "";
+                        string UserName = "";
+                        if (dtentry != null)
+                        {
+                            DataTable dtS = Session["dtParticiparticipate"] as DataTable;
+                            dtS.Columns.Add("ParticipantType", typeof(Int32));
+                            if (dtS.Rows.Count > 0)
+                            {
+                                for (int i = 0; i < dtS.Rows.Count; i++)
+                                {
+                                    dt.Rows[i]["ParticipantType"] = "1";
+                                }
+
+                            }
+
+                            if (dtentry.Rows.Count > 0)
+                            {
+                                for (int i = 0; i < dtentry.Rows.Count; i++)
+                                {
+                                    dtentry.Rows[i]["FormID"] = Tarining_ID;
+                                    UserID += "'" + dtentry.Rows[i]["ParticiparticipateName"] + "'" + ",";
+                                    string jjj = dtentry.Rows[i]["ParticiparticipateName"] + "(" + dtentry.Rows[i]["EntryDoneByName"] + ")";
+                                    UserName += "'" + jjj + "'" + ",";
+
+                                    DataRow dr;
+                                    DataRow[] drmain = dtS.Select("ParticiparticipateName='" + dtentry.Rows[i]["ParticiparticipateName"] + "'");
+                                    if (drmain.Length > 0)
+                                    {
+                                        drmain[0]["ParticipantType"] = "1";
+                                    }
+                                    else
+                                    {
+                                        dr = dtS.NewRow();
+                                        dr["ParticiparticipateName"] = dtentry.Rows[i]["ParticiparticipateName"];
+
+                                        dr["Name"] = dtentry.Rows[i]["EntryDoneByName"];
+                                        dr["ParticipantType"] = "2";
+                                        dr["UserType"] = "1";
+                                        dtS.Rows.Add(dr);
+                                    }
+                                }
+                                int Entry_Success = objMain.Insert_EntryDone(Tarining_ID, dtentry);
+
+                            }
+
+                            if (UserID.Length > 0)
+                            {
+                                UserID = UserID.Substring(0, UserID.LastIndexOf(","));
+                            }
+                            if (UserName.Length > 0)
+                            {
+                                UserName = UserName.Substring(0, UserName.LastIndexOf(","));
+                            }
+
+                            #region StaffSchedul
+                            int StaffSchedul_ID = InsertUpdateStaffScheduling2026(0, AssessmentFor, TrainingOutCome, SpecificTraining, Convert.ToInt32(ddlTraingMode.SelectedValue), Convert.ToInt32(ddlTraining.SelectedValue), other, Location, FromDate, ToDate, EntryBy, State, Dist, Block, UserID, UserName, Tarining_ID.ToString());
+                            if (dtS.Rows.Count > 0)
+                            {
+                                for (int i = 0; i < dtS.Rows.Count; i++)
+                                {
+                                    dt.Rows[i]["FormID"] = StaffSchedul_ID;
+                                }
+                                int Parti_Success = objMain.Insert_participateSh(StaffSchedul_ID, dtS);
+                            }
+
                             #endregion
                         }
 
@@ -916,11 +1055,11 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         else
         {
             int totalQ = 0;
-            
-                totalQ = Convert.ToInt32(txtTotalQuestions.Text);
-            
+
+            totalQ = Convert.ToInt32(txtTotalQuestions.Text);
+
             Tarining_ID = Convert.ToInt32(ViewState["Tarining_ID"].ToString());
-            int Tarining_IDNew = TrainingQuestionInsertUpdate(Tarining_ID, AssessmentFor, TrainingOutCome, SpecificTraining, AssessmentType, Trainingtype, other, Location, FromDate, ToDate, EntryBy, State, Dist, Block,ddlTraining.SelectedValue, totalQ);
+            int Tarining_IDNew = TrainingQuestionInsertUpdate(Tarining_ID, AssessmentFor, TrainingOutCome, SpecificTraining, AssessmentType, Trainingtype, other, Location, FromDate, ToDate, EntryBy, State, Dist, Block, ddlTraining.SelectedValue, totalQ);
 
 
             if (Tarining_ID > 0)
@@ -932,9 +1071,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                 {
                     int icount = 0, FormID = 0, QuestionID = 0, Assessment = 0, Sequence = 0;
                     string GUID = "Testxyz";
-                 
                     int icount44 = objMain.DeleteAssment(Tarining_ID);
-
 
                     DataTable dtQuestion = NewgeneratedDT();
                     foreach (GridViewRow row in gvRightSearch.Rows)
@@ -945,13 +1082,10 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                         QuestionCategory = Convert.ToInt32(ddlCategory.SelectedValue);
                         Sequence = Convert.ToInt32(gvRightSearch.DataKeys[row.RowIndex]["Sequence"].ToString());
                         // dtQuestion.Rows.Add(Assessment, QuestionCategory, QuestionID, Tarining_ID, Sequence);
-                        
                         int icount4 = objMain.InsertUpdateAssment(ddlassement.SelectedValue, QuestionID.ToString(), Tarining_ID.ToString(), Sequence.ToString());
 
                     }
                     /// DataTable dtFinal = dtQuestion;
-                    
-
                     DataTable dt = Session["dtParticiparticipate"] as DataTable;
 
                     DataTable dtparti = Session["dtParticiparticipate"] as DataTable;
@@ -961,41 +1095,140 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                         {
                             dt.Rows[i]["FormID"] = Tarining_ID;
                         }
-                        int Parti_Success = Insert_participate(Tarining_ID, dtparti);
+                        int Parti_Success = Insert_USP_Participarticipate20252026(Tarining_ID, dtparti);
                     }
 
+                    DataTable dtS = Session["dtParticiparticipate"] as DataTable;
+                    dtS.Columns.Add("ParticipantType", typeof(Int32));
+                    if (dtS.Rows.Count > 0)
+                    {
+                        for (int i = 0; i < dtS.Rows.Count; i++)
+                        {
+                            dt.Rows[i]["ParticipantType"] = "1";
+                        }
 
+                    }
 
                     DataTable dtentry = Session["dtEntryDoneBY"] as DataTable;
                     string UserID = "";
                     string UserName = "";
-                    if (dtentry != null)
+                    if (Convert.ToInt32(ddlLevel.SelectedValue) == 1)
                     {
-                        if (dtentry.Rows.Count > 0)
+                        if (dtentry != null)
                         {
-                            for (int i = 0; i < dtentry.Rows.Count; i++)
+                            if (dtentry.Rows.Count > 0)
                             {
-                                dtentry.Rows[i]["FormID"] = Tarining_ID;
-                                UserID += "'" + dtentry.Rows[i]["ParticiparticipateName"] + "'" + ",";
-                                string jjj = dtentry.Rows[i]["ParticiparticipateName"] + "(" + dtentry.Rows[i]["EntryDoneByName"] + ")";
-                                UserName += "'" + jjj + "'" + ",";
+                                for (int i = 0; i < dtentry.Rows.Count; i++)
+                                {
+                                    dtentry.Rows[i]["FormID"] = Tarining_ID;
+                                    UserID += "'" + dtentry.Rows[i]["ParticiparticipateName"] + "'" + ",";
+                                    string jjj = dtentry.Rows[i]["ParticiparticipateName"] + "(" + dtentry.Rows[i]["EntryDoneByName"] + ")";
+                                    UserName += "'" + jjj + "'" + ",";
+
+                                    DataRow dr;
+                                    DataRow[] drmain = dtS.Select("ParticiparticipateName='" + dtentry.Rows[i]["ParticiparticipateName"] + "'");
+                                    if (drmain.Length > 0)
+                                    {
+                                        drmain[0]["ParticipantType"] = "1";
+                                    }
+                                    else
+                                    {
+                                        dr = dtS.NewRow();
+                                        dr["ParticiparticipateName"] = dtentry.Rows[i]["ParticiparticipateName"];
+
+                                        dr["Name"] = dtentry.Rows[i]["EntryDoneByName"];
+                                        dr["ParticipantType"] = "2";
+                                        dr["UserType"] = "1";
+                                        dtS.Rows.Add(dr);
+                                    }
+                                }
+                                int Entry_Success = objMain.Insert_EntryDone(Tarining_ID, dtentry);
                             }
-                            int Entry_Success = objMain.Insert_EntryDone(Tarining_ID, dtentry);
-                        }
-                        if (UserID.Length > 0)
-                        {
-                            UserID = UserID.Substring(0, UserID.LastIndexOf(","));
-                        }
-                        if (UserName.Length > 0)
-                        {
-                            UserName = UserName.Substring(0, UserName.LastIndexOf(","));
-                        }
+                            if (UserID.Length > 0)
+                            {
+                                UserID = UserID.Substring(0, UserID.LastIndexOf(","));
+                            }
+                            if (UserName.Length > 0)
+                            {
+                                UserName = UserName.Substring(0, UserName.LastIndexOf(","));
+                            }
 
 
-                        #endregion
-                        #region StaffSchedul
-                        int StaffSchedul_ID = InsertUpdateStaffScheduling2023(555, AssessmentFor, TrainingOutCome, SpecificTraining, AssessmentType, Trainingtype, other, Location, FromDate, ToDate, EntryBy, State, Dist, Block, UserID, UserName, Tarining_ID.ToString());
-                        #endregion
+                            #endregion
+                            #region StaffSchedul
+                            int StaffSchedul_ID = InsertUpdateStaffScheduling2023(555, AssessmentFor, TrainingOutCome, SpecificTraining, AssessmentType, Trainingtype, other, Location, FromDate, ToDate, EntryBy, State, Dist, Block, UserID, UserName, Tarining_ID.ToString());
+                            if (dtS.Rows.Count > 0)
+                            {
+                                for (int i = 0; i < dtS.Rows.Count; i++)
+                                {
+                                    dt.Rows[i]["FormID"] = StaffSchedul_ID;
+                                }
+                                int Parti_Success = objMain.Insert_participateSh(StaffSchedul_ID, dtS);
+                            }
+
+
+                            #endregion
+                        }
+                    }
+
+                    if (Convert.ToInt32(ddlLevel.SelectedValue) == 2)
+                    {
+                        if (dtentry != null)
+                        {
+                            if (dtentry.Rows.Count > 0)
+                            {
+
+
+                                for (int i = 0; i < dtentry.Rows.Count; i++)
+                                {
+                                    dtentry.Rows[i]["FormID"] = Tarining_ID;
+                                    UserID += "'" + dtentry.Rows[i]["ParticiparticipateName"] + "'" + ",";
+                                    string jjj = dtentry.Rows[i]["ParticiparticipateName"] + "(" + dtentry.Rows[i]["EntryDoneByName"] + ")";
+                                    UserName += "'" + jjj + "'" + ",";
+
+                                    DataRow dr;
+                                    DataRow[] drmain = dtS.Select("ParticiparticipateName='" + dtentry.Rows[i]["ParticiparticipateName"] + "'");
+                                    if (drmain.Length > 0)
+                                    {
+                                        drmain[0]["ParticipantType"] = "1";
+                                    }
+                                    else
+                                    {
+                                        dr = dtS.NewRow();
+                                        dr["ParticiparticipateName"] = dtentry.Rows[i]["ParticiparticipateName"];
+
+                                        dr["Name"] = dtentry.Rows[i]["EntryDoneByName"];
+                                        dr["ParticipantType"] = "2";
+                                        dr["UserType"] = "1";
+                                        dtS.Rows.Add(dr);
+                                    }
+                                }
+                                int Entry_Success = objMain.Insert_EntryDone(Tarining_ID, dtentry);
+                            }
+                            if (UserID.Length > 0)
+                            {
+                                UserID = UserID.Substring(0, UserID.LastIndexOf(","));
+                            }
+                            if (UserName.Length > 0)
+                            {
+                                UserName = UserName.Substring(0, UserName.LastIndexOf(","));
+                            }
+
+
+                            #region StaffSchedul
+                            int StaffSchedul_ID = InsertUpdateStaffScheduling2026(555, AssessmentFor, TrainingOutCome, SpecificTraining, AssessmentType, Trainingtype, other, Location, FromDate, ToDate, EntryBy, State, Dist, Block, UserID, UserName, Tarining_ID.ToString());
+                            if (dtS.Rows.Count > 0)
+                            {
+                                for (int i = 0; i < dtS.Rows.Count; i++)
+                                {
+                                    dt.Rows[i]["FormID"] = StaffSchedul_ID;
+                                }
+                                int Parti_Success = objMain.Insert_participateSh(StaffSchedul_ID, dtS);
+                            }
+
+
+                            #endregion
+                        }
                     }
                 }
 
@@ -1025,7 +1258,18 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         return SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[USP_Participarticipate2023]", cmdParameters);
 
     }
+    public int Insert_USP_Participarticipate20252026(int FormID, DataTable tbl_Tarining_Participarticipate)
+    {
+        DataTable dtcombo = new DataTable();
 
+        SqlParameter[] cmdParameters = new SqlParameter[]
+    {
+            new SqlParameter("@FormID", FormID),
+            new SqlParameter("@tbl_Tarining_Participarticipate", tbl_Tarining_Participarticipate)
+    };
+        return SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[USP_Participarticipate20252026]", cmdParameters);
+
+    }
 
     public int InsertUpdateStaffScheduling2023(int Tarining_ID, int AssessmentFor, int TrainingOutCome, int SpecificTraining, int AssessmentType, int Trainingtype, string other, string Location, DateTime FromDate, DateTime ToDate, string EntryBy, string State, string Dist, string Block, string UserID, string Username, string SurveyLink)
     {
@@ -1035,7 +1279,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         if (mycon.State == ConnectionState.Closed)
             mycon.Open();
         dbSqlCommand.CommandType = CommandType.StoredProcedure;
-        dbSqlCommand.CommandText = "InsertUpdateStaffScheduling2023";
+        dbSqlCommand.CommandText = "InsertUpdateStaffScheduling20262027";
         dbSqlCommand.Parameters.Add("@Tarining_ID", SqlDbType.Int).Value = Tarining_ID;
         dbSqlCommand.Parameters.Add("@AssessmentFor", SqlDbType.Int).Value = AssessmentFor;
         dbSqlCommand.Parameters.Add("@TrainingOutCome", SqlDbType.Int).Value = TrainingOutCome;
@@ -1053,6 +1297,9 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         dbSqlCommand.Parameters.Add("@UserID", SqlDbType.VarChar).Value = UserID;
         dbSqlCommand.Parameters.Add("@UserName", SqlDbType.VarChar).Value = Username;
         dbSqlCommand.Parameters.Add("@SurveyLink", SqlDbType.VarChar).Value = SurveyLink;
+        dbSqlCommand.Parameters.Add("@Createby", SqlDbType.VarChar).Value = Convert.ToString(Session["username"]);
+
+
         System.Data.SqlClient.SqlParameter pRowsAffected = new SqlParameter("@output", System.Data.SqlDbType.Int);
         pRowsAffected.Direction = System.Data.ParameterDirection.Output;
         dbSqlCommand.Parameters.Add(pRowsAffected);
@@ -1060,14 +1307,13 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         {
             dbSqlCommand.ExecuteNonQuery();
         }
-        catch (Exception ex)
+        catch
         {
             return -1;
         }
         return Convert.ToInt32(pRowsAffected.Value);
     }
-
-    public int TrainingQuestionInsertUpdate(int Tarining_ID, int AssessmentFor, int TrainingOutCome, int SpecificTraining, int AssessmentType, int Trainingtype, string other, string Location, DateTime FromDate, DateTime ToDate, string EntryBy, string State, string Dist, string Block,string TrainingTypeID,int TotalTraningQuestion)
+    public int InsertUpdateStaffScheduling2026(int Tarining_ID, int AssessmentFor, int TrainingOutCome, int SpecificTraining, int AssessmentType, int Trainingtype, string other, string Location, DateTime FromDate, DateTime ToDate, string EntryBy, string State, string Dist, string Block, string UserID, string Username, string SurveyLink)
     {
         SqlCommand dbSqlCommand;
         using (dbSqlCommand = new SqlCommand())
@@ -1075,7 +1321,48 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         if (mycon.State == ConnectionState.Closed)
             mycon.Open();
         dbSqlCommand.CommandType = CommandType.StoredProcedure;
-        dbSqlCommand.CommandText = "USP_Training_QuestionInsert2024";
+        dbSqlCommand.CommandText = "InsertUpdateStaffScheduling2026";
+        dbSqlCommand.Parameters.Add("@Tarining_ID", SqlDbType.Int).Value = Tarining_ID;
+        dbSqlCommand.Parameters.Add("@AssessmentFor", SqlDbType.Int).Value = AssessmentFor;
+        dbSqlCommand.Parameters.Add("@TrainingOutCome", SqlDbType.Int).Value = TrainingOutCome;
+        dbSqlCommand.Parameters.Add("@SpecificTraining", SqlDbType.VarChar).Value = SpecificTraining;
+        dbSqlCommand.Parameters.Add("@AssessmentType", SqlDbType.Int).Value = AssessmentType;
+        dbSqlCommand.Parameters.Add("@Trainingtype", SqlDbType.Int).Value = Trainingtype;
+        dbSqlCommand.Parameters.Add("@Other", SqlDbType.VarChar).Value = other;
+        dbSqlCommand.Parameters.Add("@Location", SqlDbType.VarChar).Value = Location;
+        dbSqlCommand.Parameters.Add("@FromDate", SqlDbType.DateTime).Value = FromDate;
+        dbSqlCommand.Parameters.Add("@ToDate", SqlDbType.DateTime).Value = ToDate;
+        dbSqlCommand.Parameters.Add("@EntryBy", SqlDbType.VarChar).Value = EntryBy;
+        dbSqlCommand.Parameters.Add("@State", SqlDbType.VarChar).Value = State;
+        dbSqlCommand.Parameters.Add("@Dist", SqlDbType.VarChar).Value = Dist;
+        dbSqlCommand.Parameters.Add("@Block", SqlDbType.VarChar).Value = Block;
+        dbSqlCommand.Parameters.Add("@UserID", SqlDbType.VarChar).Value = UserID;
+        dbSqlCommand.Parameters.Add("@UserName", SqlDbType.VarChar).Value = Username;
+        dbSqlCommand.Parameters.Add("@SurveyLink", SqlDbType.VarChar).Value = SurveyLink;
+        dbSqlCommand.Parameters.Add("@Createby", SqlDbType.VarChar).Value = Convert.ToString(Session["username"]);
+        System.Data.SqlClient.SqlParameter pRowsAffected = new SqlParameter("@output", System.Data.SqlDbType.Int);
+        pRowsAffected.Direction = System.Data.ParameterDirection.Output;
+        dbSqlCommand.Parameters.Add(pRowsAffected);
+        try
+        {
+            dbSqlCommand.ExecuteNonQuery();
+        }
+        catch
+        {
+            return -1;
+        }
+        return Convert.ToInt32(pRowsAffected.Value);
+    }
+  
+    public int TrainingQuestionInsertUpdate(int Tarining_ID, int AssessmentFor, int TrainingOutCome, int SpecificTraining, int AssessmentType, int Trainingtype, string other, string Location, DateTime FromDate, DateTime ToDate, string EntryBy, string State, string Dist, string Block, string TrainingTypeID, int TotalTraningQuestion)
+    {
+        SqlCommand dbSqlCommand;
+        using (dbSqlCommand = new SqlCommand())
+            dbSqlCommand.Connection = mycon;
+        if (mycon.State == ConnectionState.Closed)
+            mycon.Open();
+        dbSqlCommand.CommandType = CommandType.StoredProcedure;
+        dbSqlCommand.CommandText = "USP_Training_QuestionInsert2025";
         dbSqlCommand.Parameters.Add("@Tarining_ID", SqlDbType.Int).Value = Tarining_ID;
         dbSqlCommand.Parameters.Add("@AssessmentFor", SqlDbType.Int).Value = AssessmentFor;
         dbSqlCommand.Parameters.Add("@TrainingOutCome", SqlDbType.Int).Value = TrainingOutCome;
@@ -1092,6 +1379,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         dbSqlCommand.Parameters.Add("@Block", SqlDbType.VarChar).Value = Block;
         dbSqlCommand.Parameters.Add("@TrainingTypeID", SqlDbType.VarChar).Value = TrainingTypeID;
         dbSqlCommand.Parameters.Add("@TotalTraningQuestion", SqlDbType.Int).Value = TotalTraningQuestion;
+		dbSqlCommand.Parameters.Add("@MainId", SqlDbType.Int).Value = ddlMainID.SelectedValue;
         System.Data.SqlClient.SqlParameter pRowsAffected = new SqlParameter("@output", System.Data.SqlDbType.Int);
         pRowsAffected.Direction = System.Data.ParameterDirection.Output;
         dbSqlCommand.Parameters.Add(pRowsAffected);
@@ -1099,14 +1387,14 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         {
             dbSqlCommand.ExecuteNonQuery();
         }
-        catch (Exception ex)
+        catch
         {
             return -1;
         }
         return Convert.ToInt32(pRowsAffected.Value);
     }
 
-    public int TrainingQuestionInsertCopy(int Tarining_ID, int AssessmentFor, int TrainingOutCome, int SpecificTraining, int AssessmentType, int Trainingtype, string other, string Location, DateTime FromDate, DateTime ToDate, string EntryBy, string State, string Dist, string Block,string TrainingTypeID)
+    public int TrainingQuestionInsertCopy(int Tarining_ID, int AssessmentFor, int TrainingOutCome, int SpecificTraining, int AssessmentType, int Trainingtype, string other, string Location, DateTime FromDate, DateTime ToDate, string EntryBy, string State, string Dist, string Block, string TrainingTypeID, int MainID)
     {
         SqlCommand dbSqlCommand;
         using (dbSqlCommand = new SqlCommand())
@@ -1114,7 +1402,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         if (mycon.State == ConnectionState.Closed)
             mycon.Open();
         dbSqlCommand.CommandType = CommandType.StoredProcedure;
-        dbSqlCommand.CommandText = "USP_Training_QuestionCopy2024";
+        dbSqlCommand.CommandText = "USP_Training_QuestionCopy2025";
         dbSqlCommand.Parameters.Add("@Tarining_ID", SqlDbType.Int).Value = Tarining_ID;
         dbSqlCommand.Parameters.Add("@AssessmentFor", SqlDbType.Int).Value = AssessmentFor;
         dbSqlCommand.Parameters.Add("@TrainingOutCome", SqlDbType.Int).Value = TrainingOutCome;
@@ -1131,6 +1419,8 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         dbSqlCommand.Parameters.Add("@Block", SqlDbType.VarChar).Value = Block;
         dbSqlCommand.Parameters.Add("@TotalTraningQuestion", SqlDbType.Int).Value = txtTotalQuestions.Text;
         dbSqlCommand.Parameters.Add("@TrainingTypeID", SqlDbType.VarChar).Value = TrainingTypeID;
+        dbSqlCommand.Parameters.Add("@MainID", SqlDbType.Int).Value = MainID;
+
 
         System.Data.SqlClient.SqlParameter pRowsAffected = new SqlParameter("@output", System.Data.SqlDbType.Int);
         pRowsAffected.Direction = System.Data.ParameterDirection.Output;
@@ -1139,7 +1429,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         {
             dbSqlCommand.ExecuteNonQuery();
         }
-        catch (Exception ex)
+        catch
         {
             return -1;
         }
@@ -1153,7 +1443,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
 
         string text = "";
         //"where AssessmentFor='" + this.ddlLevel.SelectedValue + "'";
-        if (ddlDistrictSearch.SelectedIndex>0)
+        if (ddlDistrictSearch.SelectedIndex > 0)
         {
             text = " where DistCode ='" + ddlDistrictSearch.SelectedValue + "'";
         }
@@ -1162,16 +1452,13 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
           {
 
                 new SqlParameter("@Dist",ddlDistrictSearch.SelectedValue),
-            
-
-
           };
 
 
 
         DataTable dtTb = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptTrainngAssement]", cmdParameters);
 
-       // DataTable dtTb = objMain.LoadData("SELECT Tarining_ID,case when [AssessmentType]= 1 then 'B' + CONVERT(varchar, Tarining_ID ) when [AssessmentType]= 2 then 'E' + CONVERT(varchar, Tarining_ID ) else ''   end[BatchID], GUIDTraining,(case when [AssessmentFor]= 1 then  mstOutcomeSpecific.sOutcomeName when [AssessmentFor]= 2 then mstlearning.learningName   when [AssessmentFor]= 3 then Other 		when [AssessmentFor]= 4 then Other else '' end)   AssessmentFor, convert(varchar(10),[FromDate], 121) as [FromDate], convert(varchar(10), todate, 121) as Todate,'https://testpms.educategirls.ngo/SurveyAns.aspx?ID='+GUIDTraining as Plink  FROM tbl_training_question left join(select LookupCode id, Description Value  From mstLookup where LookupFlag = 'Sur') a on a.id = tbl_training_question.AssessmentFor left join mstOutcomeSpecific on mstOutcomeSpecific.sOutcomeID=[SpecificTraining]   left join mstlearning on mstlearning.learningID=TrainingOutcome " + text + " and  convert(int, isnull(TdeleteFlag,0))<>2 order by Createdate desc ");
+        // DataTable dtTb = objMain.LoadData("SELECT Tarining_ID,case when [AssessmentType]= 1 then 'B' + CONVERT(varchar, Tarining_ID ) when [AssessmentType]= 2 then 'E' + CONVERT(varchar, Tarining_ID ) else ''   end[BatchID], GUIDTraining,(case when [AssessmentFor]= 1 then  mstOutcomeSpecific.sOutcomeName when [AssessmentFor]= 2 then mstlearning.learningName   when [AssessmentFor]= 3 then Other 		when [AssessmentFor]= 4 then Other else '' end)   AssessmentFor, convert(varchar(10),[FromDate], 121) as [FromDate], convert(varchar(10), todate, 121) as Todate,'https://testpms.educategirls.ngo/SurveyAns.aspx?ID='+GUIDTraining as Plink  FROM tbl_training_question left join(select LookupCode id, Description Value  From mstLookup where LookupFlag = 'Sur') a on a.id = tbl_training_question.AssessmentFor left join mstOutcomeSpecific on mstOutcomeSpecific.sOutcomeID=[SpecificTraining]   left join mstlearning on mstlearning.learningID=TrainingOutcome " + text + " and  convert(int, isnull(TdeleteFlag,0))<>2 order by Createdate desc ");
 
         if (dtTb.Rows.Count > 0)
         {
@@ -1289,7 +1576,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
 
 
         }
-        catch (Exception ex)
+        catch
         {
 
 
@@ -1329,14 +1616,14 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                         {
                             //if (Convert.ToInt32(ddlCategory.SelectedValue) == Convert.ToInt32(gvRightSearch.DataKeys[row.RowIndex]["FormID"].ToString()))
                             //{
-                                dr = dtselect.NewRow();
-                                dr["QuestionNo"] = gvRightSearch.DataKeys[row.RowIndex]["QuestionNo"].ToString();
-                                dr["QuestionID"] = gvRightSearch.DataKeys[row.RowIndex]["QuestionID"].ToString();
-                                dr["Sequence"] = gvRightSearch.DataKeys[row.RowIndex]["Sequence"].ToString();
-                                dr["Question"] = gvRightSearch.DataKeys[row.RowIndex]["Question"].ToString();
-                                dr["FormID"] = gvRightSearch.DataKeys[row.RowIndex]["FormID"].ToString();
-                                dr["CategoryName"] = gvRightSearch.DataKeys[row.RowIndex]["CategoryName"].ToString();
-                                dtselect.Rows.Add(dr);
+                            dr = dtselect.NewRow();
+                            dr["QuestionNo"] = gvRightSearch.DataKeys[row.RowIndex]["QuestionNo"].ToString();
+                            dr["QuestionID"] = gvRightSearch.DataKeys[row.RowIndex]["QuestionID"].ToString();
+                            dr["Sequence"] = gvRightSearch.DataKeys[row.RowIndex]["Sequence"].ToString();
+                            dr["Question"] = gvRightSearch.DataKeys[row.RowIndex]["Question"].ToString();
+                            dr["FormID"] = gvRightSearch.DataKeys[row.RowIndex]["FormID"].ToString();
+                            dr["CategoryName"] = gvRightSearch.DataKeys[row.RowIndex]["CategoryName"].ToString();
+                            dtselect.Rows.Add(dr);
                             //}
                         }
 
@@ -1353,8 +1640,6 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                         dr["CategoryName"] = gvRightSearch.DataKeys[row.RowIndex]["CategoryName"].ToString();
                         dtselect.Rows.Add(dr);
                     }
-             
-
                     dtselected.Rows.RemoveAt(ind - tmp);
                     //QuestionID = Convert.ToInt32(GvQuestion.DataKeys[row.RowIndex]["QuestionID"].ToString());
 
@@ -1383,7 +1668,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
 
 
 
-        catch (Exception ex)
+        catch
         {
 
         }
@@ -1414,7 +1699,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         d2.Visible = false;
         LnkEntry.Visible = false;
         divother.Visible = true;
-       divother.Attributes.Remove("style");
+        divother.Attributes.Remove("style");
         if (FormLevel == 1)
         {
             divother.Attributes.Add("style", "margin-left: -280px;margin-top:11px;");
@@ -1430,7 +1715,6 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
             Filllearning();
             LoadOutComeSpicify();
             LnkEntry.Visible = true;
-          
         }
         if (FormLevel == 2)
         {
@@ -1592,7 +1876,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
             DataTable ds = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Get_Form_Table_Deatils", paramvT);
             dtBSL = ds;
         }
-        catch (Exception ex)
+        catch
         { DataTable ds = new DataTable(); ds = null; return ds; }
         return dtBSL;
     }
@@ -1729,7 +2013,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                 row.BackColor = Color.LightYellow;
             }
         }
-        catch (Exception ex)
+        catch
         {
 
         }
@@ -1764,7 +2048,16 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
             txtLink.Text = Convert.ToString(dtQuestion.Rows[0]["Plink"]);
             txtTotalQuestions.Text = Convert.ToString(dtQuestion.Rows[0]["TotalTraningQuestion"]);
             ddlLevel.SelectedValue = Convert.ToString(dtQuestion.Rows[0]["AssessmentFor"]);
+
             ddlLevel_SelectedIndexChanged(ddlLevel, null);
+            if (Convert.ToString(dtQuestion.Rows[0]["MainId"]) != "0")
+            {
+                ddlMainID.SelectedValue = Convert.ToString(dtQuestion.Rows[0]["MainId"]);
+            }
+            else
+            {
+                ddlMainID.ClearSelection();
+            }
             if (Convert.ToString(dtQuestion.Rows[0]["AssessmentFor"]) == "1")
             {
                 if (Convert.ToString(Session["username"]) == "PMSAdmin" || Convert.ToString(Session["username"]) == "SuperAdmin")
@@ -1784,7 +2077,6 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                 if (Convert.ToString(dtQuestion.Rows[0]["AssessmentType"]) == "1")
                 {
                     string strQry1 = "Select isnull(RefTarining_ID,0) RefTarining_ID from [tbl_training_question]  where RefTarining_ID=" + Tarining_ID + "   ";
-                   
                     DataTable dtRole1 = obm.LoadData(strQry1);
                     if (dtRole1.Rows.Count > 0)
                     {
@@ -1805,7 +2097,6 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                 else
                 {
                     lnkCopy.Visible = false;
-                   
                 }
 
 
@@ -1813,7 +2104,6 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
             else if (Convert.ToString(dtQuestion.Rows[0]["AssessmentFor"]) == "2")
             {
                 lnkCopy.Visible = false;
-              
                 d1.Visible = false;
                 d2.Visible = true;
                 lblother.Visible = false;
@@ -1831,7 +2121,6 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                 d2.Visible = false;
                 divassemnt.Visible = false;
                 lnkCopy.Visible = false;
-               
             }
             else if (Convert.ToString(dtQuestion.Rows[0]["AssessmentFor"]) == "4")
             {
@@ -1839,7 +2128,6 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                 txtOthersName.Visible = true;
                 divassemnt.Visible = false;
                 lnkCopy.Visible = false;
-               
             }
 
             if (dtQuestion.Rows[0]["Year"].ToString() != "")
@@ -1929,7 +2217,6 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                 gvRightSearch.DataBind();
                 lblTotal.Text = dtQuestion2.Rows.Count.ToString();
                 ViewState["dtselected"] = dtQuestion2;
- 
             }
             else
             {
@@ -1940,32 +2227,30 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
             if (Convert.ToInt32(ddlLevel.SelectedValue) == 1)
             {
                 
-                    if (Convert.ToInt32(ddlassement.SelectedValue) == 1)
+                if (Convert.ToInt32(ddlassement.SelectedValue) == 1)
+                {
+
+                    txtLink.Visible = true;
+
+                }
+                if (Convert.ToInt32(ddlassement.SelectedValue) == 2)
+                {
+                    if (Convert.ToDateTime(Modate) > DateTime.Now)
                     {
-                       
-                            txtLink.Visible = true;
-                      
+                        txtLink.Visible = false;
                     }
-                    if (Convert.ToInt32(ddlassement.SelectedValue) == 2)
+                    else
                     {
-                        if (Convert.ToDateTime(Modate) > DateTime.Now)
-                        {
-                            txtLink.Visible = false;
-                        }
-                        else
-                        {
-                            txtLink.Visible = true;
-                        }
+                        txtLink.Visible = true;
                     }
-              
+                }
+
             }
             else
             {
-                
-               
             }
             DataTable Participarticipate = new DataTable();
-            Participarticipate = Get_DataFor1Filter("USP_Tarining_Participarticipate", Tarining_ID.ToString());
+            Participarticipate = Get_DataFor1Filter("USP_Tarining_Participarticipate2026", Tarining_ID.ToString());
 
             if (Participarticipate.Rows.Count > 0)
             {
@@ -1989,7 +2274,6 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                 Session["dtEntryDoneBY"] = null;
 
             }
-            
         }
 
     }
@@ -2298,7 +2582,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                     else
                     {
                         DataTable dtP1 = new DataTable();
-                        dtP1 = Get_DataFor1Filter1("LoadParticiparticipate", ddlLevel.SelectedValue, word.Trim());
+                        dtP1 = Get_DataFor1Filter1("LoadStaffParticiparticipate", ddlLevel.SelectedValue, word.Trim());
                         if (dtP1.Rows.Count > 0)
                         {
                             DataRow dr;
@@ -2313,7 +2597,8 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                             {
                                 dr["Name"] = string.Empty;
                             }
-
+                            dr["UserType"] = dtP1.Rows[0]["UserType"].ToString();
+                            dr["TeamBalikaUniqueCode"] = dtP1.Rows[0]["UniqueCode"].ToString();
                             dtParticiparticipate.Rows.Add(dr);
                         }
                     }
@@ -2330,12 +2615,9 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         {
         }
         else
-          {
+        {
 
             int Tarining_ID = Convert.ToInt32(ViewState["Tarining_ID"].ToString());
-
-       
-
             DataTable dt = Session["dtParticiparticipate"] as DataTable;
 
             DataTable dtparti = Session["dtParticiparticipate"] as DataTable;
@@ -2345,7 +2627,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                 {
                     dt.Rows[i]["FormID"] = Tarining_ID;
                 }
-                int Parti_Success = Insert_participate(Tarining_ID, dtparti);
+                int Parti_Success = Insert_USP_Participarticipate20252026(Tarining_ID, dtparti);
             }
         }
         if (dtParticiparticipate.Rows.Count > 0)
@@ -2374,7 +2656,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         {
             int Tarining_ID = Convert.ToInt32(ViewState["Tarining_ID"].ToString());
 
-               int deleteTSD1 = objMain.DeleteAssmentQuestion(Tarining_ID.ToString(), QuestionID.Trim());
+            int deleteTSD1 = objMain.DeleteAssmentQuestion(Tarining_ID.ToString(), QuestionID.Trim());
 
         }
         dtParticiparticipate = ((DataTable)Session["dtParticiparticipate"]);
@@ -2418,7 +2700,6 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         MPE_Entry.Show();
     }
 
-    
     public DataTable CreateDataDate()
     {
 
@@ -2428,6 +2709,10 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         dtParticiparticipate.Columns.Add(new DataColumn("FormID", System.Type.GetType("System.String")));
         dtParticiparticipate.Columns.Add(new DataColumn("ParticiparticipateName", System.Type.GetType("System.String")));
         dtParticiparticipate.Columns.Add(new DataColumn("Name", System.Type.GetType("System.String")));
+	    dtParticiparticipate.Columns.Add(new DataColumn("TeamBalikaUniqueCode", System.Type.GetType("System.String")));
+		dtParticiparticipate.Columns.Add(new DataColumn("UserType", System.Type.GetType("System.String")));
+
+																							   
         Session["dtParticiparticipate"] = dtParticiparticipate;
         return dtParticiparticipate;
     }
@@ -2576,9 +2861,6 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
             CalendarExtender3.StartDate = DateTime.Now.AddDays(0);
             CalendarExtender4.StartDate = DateTime.Now.AddDays(0);
         }
-     
-      
-        
     }
     protected void btnCopy_Click(object sender, EventArgs e)
     {
@@ -2588,8 +2870,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         //}
         //else
         //{
-        //    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Spurious input detected. Data rejected')</script>", false);
-           
+        //    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Spurious input detected. Data rejected')</script>", false);           
         //    return;
         //}
         int Tarining_ID = 0, AssessmentFor = 0, TrainingOutCome = 0, SpecificTraining = 0, AssessmentType = 0, Trainingtype = 0, QuestionCategory = 0;
@@ -2739,8 +3020,12 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         else
         {
             Tarining_ID = Convert.ToInt32(ViewState["Tarining_ID"].ToString());
-            int Tarining_IDNew = TrainingQuestionInsertCopy(Tarining_ID, AssessmentFor, TrainingOutCome, SpecificTraining, 2, Trainingtype, other, Location, FromDate, ToDate, EntryBy, State, Dist, ddlTraingMode.SelectedValue,ddlTraining.SelectedValue);
-
+		    int MainID = 0;
+            if (ddlMainID.SelectedValue != "")
+            {
+                MainID = Convert.ToInt32(ddlMainID.SelectedValue);
+            }
+            int Tarining_IDNew = TrainingQuestionInsertCopy(Tarining_ID, AssessmentFor, TrainingOutCome, SpecificTraining, 2, Trainingtype, other, Location, FromDate, ToDate, EntryBy, State, Dist, ddlTraingMode.SelectedValue, ddlTraining.SelectedValue, MainID);
 
             if (Tarining_IDNew > 0)
             {
@@ -2775,7 +3060,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                         {
                             dt.Rows[i]["FormID"] = Tarining_IDNew;
                         }
-                        int Parti_Success = Insert_participate(Tarining_IDNew, dtparti);
+                        int Parti_Success = Insert_USP_Participarticipate20252026(Tarining_IDNew, dtparti);
                     }
 
                     DataTable dtentry = Session["dtEntryDoneBY"] as DataTable;
@@ -2804,7 +3089,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                         }
 
                         #region StaffSchedul
-                     //   int StaffSchedul_ID = InsertUpdateStaffScheduling2023(0, AssessmentFor, TrainingOutCome, SpecificTraining, Convert.ToInt32(ddlTraingMode.SelectedValue), Convert.ToInt32(ddlTraining.SelectedValue), other, Location, FromDate, ToDate, EntryBy, State, Dist, Block, UserID, UserName, Tarining_IDNew.ToString());
+                        //   int StaffSchedul_ID = InsertUpdateStaffScheduling2023(0, AssessmentFor, TrainingOutCome, SpecificTraining, Convert.ToInt32(ddlTraingMode.SelectedValue), Convert.ToInt32(ddlTraining.SelectedValue), other, Location, FromDate, ToDate, EntryBy, State, Dist, Block, UserID, UserName, Tarining_IDNew.ToString());
                         #endregion
                     }
                 }
@@ -2891,7 +3176,7 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                     else
                     {
                         DataTable dtP1 = new DataTable();
-                        dtP1 = Get_DataFor1Filter1("LoadParticiparticipate", ddlLevel.SelectedValue, word.Trim());
+                        dtP1 = Get_DataFor1Filter1("LoadParticiparticipate", "0", word.Trim());
                         if (dtP1.Rows.Count > 0)
                         {
                             DataRow dr;
@@ -2993,14 +3278,14 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
                 HttpContext.Current.Response.End();
             }
         }
-        catch (Exception ex)
+        catch
         {
 
             throw;
         }
 
     }
-    public DataTable LoadEmployeeTB( string DistCode)
+    public DataTable LoadEmployeeTB2025(string DistCode)
     {
         DataTable dt = null;
         try
@@ -3008,14 +3293,33 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
 
             SqlParameter[] parm = new SqlParameter[]
                {
-           
                 new SqlParameter("@DistCode",  DistCode),
-    
+               };
+            dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "LoadEmployeeTB2025", parm);
+
+        }
+        catch
+        {
+
+        }
+        return dt;
+   }
+   public DataTable LoadEmployeeTB(string DistCode)
+   {
+        DataTable dt = null;
+        try
+        {
+
+            SqlParameter[] parm = new SqlParameter[]
+               {
+
+                new SqlParameter("@DistCode",  DistCode),
+
                };
             dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "LoadEmployeeTB", parm);
 
         }
-        catch (Exception ex)
+        catch
         {
 
         }
@@ -3030,7 +3334,24 @@ public partial class SurveyTrainingProcess : System.Web.UI.Page
         }
         if (Convert.ToInt32(ddlLevel.SelectedValue) == 2)
         {
-            DataTable dt = LoadEmployeeTB( ddlDistrictSearch.SelectedValue);
+            string Con = "";
+            DataTable dt = null;
+            if (ddlState.SelectedIndex > 0)
+            {
+                Con = " and V.StateCode='" + ddlState.SelectedValue + "'";
+            }
+            if (ddlDistrictSearch.SelectedIndex > 0)
+            {
+                Con += " and V.DistrictCode='" + ddlDistrictSearch.SelectedValue + "'";
+            }
+            if (Session["user_level_Role"].ToString() == "1")
+            {
+                dt = LoadEmployeeTB2025(Con);
+            }
+            else
+            {
+                dt = LoadEmployeeTB(ddlDistrictSearch.SelectedValue);
+            }
             if (dt != null)
             {
                 if (dt.Rows.Count > 0)

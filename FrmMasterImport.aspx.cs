@@ -1,5 +1,7 @@
-﻿using System;
+﻿					  
+using System;
 using System.Collections.Generic;
+							
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -25,7 +27,6 @@ public partial class FrmMasterImport : System.Web.UI.Page
         {
             LoadYear();
             FillCBState();
-           
         }
     }
     public void FillCBState()
@@ -35,9 +36,7 @@ public partial class FrmMasterImport : System.Web.UI.Page
 
         ddlState.SelectedIndex = 2;
         ddlState_SelectedIndexChanged(ddlState, null);
-
-    }
-  
+    }  
     protected void ddlYear_SelectedIndexChanged(object sender, EventArgs e)
     {
         ddlState_SelectedIndexChanged(ddlDistrict, null);
@@ -52,7 +51,7 @@ public partial class FrmMasterImport : System.Web.UI.Page
         conditions = "";
 
 
-        conditions = "StateCode ='" + ddlState.SelectedValue + "' and mst2District.FYear ='"+ddlYear.SelectedItem.Text +"'";
+        conditions = "StateCode ='" + ddlState.SelectedValue + "' and mst2District.FYear ='" + ddlYear.SelectedItem.Text + "'";
         if (Convert.ToInt32(ddlYear.SelectedValue) >= 2026)
         {
             objComman.BindDLL("mst2District", "DistrictCode,dbo.TitleCase(upper(DistrictName)) as DistrictName ", conditions, "DistrictName", "asc", ddlDistrict, "DistrictName", "DistrictCode", "Select");
@@ -69,7 +68,7 @@ public partial class FrmMasterImport : System.Web.UI.Page
 
     protected void btnImport_Click(object sender, EventArgs e)
     {
-        GenerateExcelData();
+       // GenerateExcelData();
     }
     protected void btnCSV_Click(object sender, EventArgs e)
     {
@@ -89,7 +88,7 @@ public partial class FrmMasterImport : System.Web.UI.Page
             bulkCopy.WriteToServer(dt);
             return true;
         }
-        catch (Exception ex)
+        catch
         {
             return false;
         }
@@ -1170,14 +1169,11 @@ public partial class FrmMasterImport : System.Web.UI.Page
             oledbConn.Close();
         }
     }
-
-    public Boolean BulkCopySchoolVillage(DataTable dt)
+	public Boolean BulkCopySchoolVillage(DataTable dt)
     {
         try
         {
-           
-
-            SqlBulkCopyColumnMapping mapping01 = new SqlBulkCopyColumnMapping("StateCode", "StateCode");
+     		SqlBulkCopyColumnMapping mapping01 = new SqlBulkCopyColumnMapping("StateCode", "StateCode");
             SqlBulkCopyColumnMapping mapping02 = new SqlBulkCopyColumnMapping("DistrictCode", "DistrictCode");
             SqlBulkCopyColumnMapping mapping03 = new SqlBulkCopyColumnMapping("EGBlockCode", "BlockCode");
             SqlBulkCopyColumnMapping mapping04 = new SqlBulkCopyColumnMapping("BlockCode", "MainBlockCode");
@@ -1192,7 +1188,6 @@ public partial class FrmMasterImport : System.Web.UI.Page
             SqlBulkCopyColumnMapping mapping14 = new SqlBulkCopyColumnMapping("MergeVillageCOde", "MergeVillageCOde");
             SqlBulkCopyColumnMapping mapping15 = new SqlBulkCopyColumnMapping("Admin State Name", "EG State Name");
             SqlBulkCopyColumnMapping mapping16 = new SqlBulkCopyColumnMapping("Admin State Code", "EGState Code");
-  
             SqlBulkCopy bulkCopy = new SqlBulkCopy(SqlHelper.mainConnectionString);
             bulkCopy.BatchSize = 20000;
             bulkCopy.BulkCopyTimeout = 0;
@@ -1216,7 +1211,7 @@ public partial class FrmMasterImport : System.Web.UI.Page
             bulkCopy.WriteToServer(dt);
             return true;
         }
-        catch (Exception ex)
+        catch
         {
             return false;
         }
@@ -1224,16 +1219,15 @@ public partial class FrmMasterImport : System.Web.UI.Page
     }
     public Boolean BulkCopySchoolPanchat(DataTable dt)
     {
-         try
+        try
         {
-                       //      
+            //
             SqlBulkCopyColumnMapping mapping01 = new SqlBulkCopyColumnMapping("StateCode", "StateCode");
             SqlBulkCopyColumnMapping mapping02 = new SqlBulkCopyColumnMapping("DistrictCode", "DistrictCode");
             SqlBulkCopyColumnMapping mapping03 = new SqlBulkCopyColumnMapping("EGBlockCode", "BlockCode");
             SqlBulkCopyColumnMapping mapping04 = new SqlBulkCopyColumnMapping("GP_CODE", "PanchayatCode");
             SqlBulkCopyColumnMapping mapping05 = new SqlBulkCopyColumnMapping("GramPanchyat", "PanchayatName");
             SqlBulkCopyColumnMapping mapping06 = new SqlBulkCopyColumnMapping("GP_CODE", "EGPanchayatCode");
-           
             SqlBulkCopy bulkCopy = new SqlBulkCopy(SqlHelper.mainConnectionString);
             bulkCopy.BatchSize = 5000;
             bulkCopy.BulkCopyTimeout = 0;
@@ -1243,13 +1237,12 @@ public partial class FrmMasterImport : System.Web.UI.Page
             bulkCopy.ColumnMappings.Add(mapping04);
             bulkCopy.ColumnMappings.Add(mapping05);
             bulkCopy.ColumnMappings.Add(mapping06);
-          
             bulkCopy.DestinationTableName = "T_mstPanchayat";
             bulkCopy.NotifyAfter = 200;
             bulkCopy.WriteToServer(dt);
             return true;
         }
-        catch (Exception ex)
+        catch
         {
             return false;
         }
@@ -1259,7 +1252,6 @@ public partial class FrmMasterImport : System.Web.UI.Page
     {
         try
         {
-      
             SqlBulkCopyColumnMapping mapping01 = new SqlBulkCopyColumnMapping("VillageCode", "VillageCode");
             SqlBulkCopyColumnMapping mapping02 = new SqlBulkCopyColumnMapping("DISECODE", "SchoolCode");
             SqlBulkCopyColumnMapping mapping03 = new SqlBulkCopyColumnMapping("DISECODE", "DISECode");
@@ -1282,7 +1274,7 @@ public partial class FrmMasterImport : System.Web.UI.Page
             bulkCopy.ColumnMappings.Add(mapping06);
             bulkCopy.ColumnMappings.Add(mapping07);
             bulkCopy.ColumnMappings.Add(mapping08);
-           bulkCopy.ColumnMappings.Add(mapping09);
+            bulkCopy.ColumnMappings.Add(mapping09);
             bulkCopy.ColumnMappings.Add(mapping10);
             bulkCopy.ColumnMappings.Add(mapping11);
 
@@ -1291,7 +1283,7 @@ public partial class FrmMasterImport : System.Web.UI.Page
             bulkCopy.WriteToServer(dt);
             return true;
         }
-        catch (Exception ex)
+        catch
         {
             return false;
         }
@@ -1337,7 +1329,7 @@ public partial class FrmMasterImport : System.Web.UI.Page
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1378,7 +1370,7 @@ public partial class FrmMasterImport : System.Web.UI.Page
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1419,7 +1411,7 @@ public partial class FrmMasterImport : System.Web.UI.Page
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1541,16 +1533,12 @@ public partial class FrmMasterImport : System.Web.UI.Page
         objComman.BindDLLMasterTable("mstSchool", "Type,ID", dtYear, conditions, "Type", "asc", ddlYear, "Type", "ID", "Select");
 
         ddlYear.SelectedIndex = 1;
-        
-
     }
     public int rptUinqueGenerateSave()
-    { 
+    {
         SqlParameter[] cmdParameters = new SqlParameter[]
             {
-    
-            new SqlParameter("@Fyear", "2026-2027"),
-            
+              new SqlParameter("@Fyear", "2026-2027"),
         };
     int icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "rptUinqueGenerate", cmdParameters);
 
@@ -1559,15 +1547,11 @@ public partial class FrmMasterImport : System.Web.UI.Page
 
     public void MultipuExeclProcess(DataTable table)
     {
-       
         string StartupPath = Server.MapPath("~/Mou");
         string filepath = "";
         XLWorkbook wb = new XLWorkbook();
         wb = new XLWorkbook(StartupPath + "\\ErrorFile.xlsx");
         var ws = wb.Worksheet(1);
-   
-
-   
         //DataTable dt1 = dtMain1.Tables[1];
 
         //dt1.Columns.Remove("RowNo");
@@ -1579,12 +1563,6 @@ public partial class FrmMasterImport : System.Web.UI.Page
 
         ws.Range(str).Style.Border.SetLeftBorder(XLBorderStyleValues.Thin);
         ws.Range(str).Style.Border.SetRightBorder(XLBorderStyleValues.Thin);
-
-
-     
-
-
-
         filepath = StartupPath + "\\ErrorFile " + "_" + System.DateTime.Now.ToString("hhssmmfff") + ".xlsx";
         wb.SaveAs(filepath);
         Response.ContentType = ContentType;
@@ -1730,13 +1708,11 @@ public partial class FrmMasterImport : System.Web.UI.Page
         }
         if (ddlState.SelectedIndex > 0)
         {
-            conditions += " and  v.StateCode = '" + ddlState.SelectedValue + "' ";
-           
+            conditions += " and  v.StateCode = '" + ddlState.SelectedValue + "' ";           
         }
         if (ddlDistrict.SelectedIndex > 0)
         {
-            conditions += " and v.DistrictCode = '" + ddlDistrict.SelectedValue + "' ";
-      
+            conditions += " and v.DistrictCode = '" + ddlDistrict.SelectedValue + "' ";      
         }
         DataTable dt = Objcls.LoadMasterImport(conditions);
 
@@ -1754,8 +1730,7 @@ public partial class FrmMasterImport : System.Web.UI.Page
         int icount = SaveDataInsertUpdate();
         if (icount > 0)
         {
-            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Delete Successfully')</script>", false);
-            
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Delete Successfully')</script>", false);            
         }
     }
     public int SaveDataInsertUpdate()
@@ -1766,13 +1741,12 @@ public partial class FrmMasterImport : System.Web.UI.Page
 
             SqlParameter[] cmdParameters = new SqlParameter[]
             {
-            new SqlParameter("@Dist", ddlDistrict.SelectedValue),
-           
+            new SqlParameter("@Dist", ddlDistrict.SelectedValue),          
 
             };
             Icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "DeleteMainmaster", cmdParameters);
         }
-        catch (Exception ex)
+        catch
         {
 
         }
@@ -1781,13 +1755,11 @@ public partial class FrmMasterImport : System.Web.UI.Page
 
     public void MultipuExeclTrack(DataTable dt)
     {
-     
         string StartupPath = Server.MapPath("~/Export");
         string filepath = "";
         XLWorkbook wb = new XLWorkbook();
         wb = new XLWorkbook(StartupPath + "\\DistUpload.xlsx");
         var ws = wb.Worksheet(1);
-       
         //var ws1 = wb.Worksheet(2);
         //var ws3 = wb.Worksheet(3);
 
@@ -1795,7 +1767,6 @@ public partial class FrmMasterImport : System.Web.UI.Page
         //DataTable dt1 = dtMain1.Tables[1];
 
         //dt1.Columns.Remove("rownNO");
-     
         ws.Cell(2, 1).InsertData(dt.Rows);
         Int32 ii = Convert.ToInt32(dt.Rows.Count) + 1;
         string str = "A2:Y" + ii;
@@ -1854,9 +1825,7 @@ public partial class FrmMasterImport : System.Web.UI.Page
             strtemptblmstGroup += " where VillageCode is null ";
             // ConStr = new SqlConnection("Data Source=EducateGirls.db.3975866.hostedresource.com;Initial Catalog=EducateGirls;User Id=educategirls;Password=mw2Master1EG0!");
 
-        }
-
-      
+        }      
         getresult = objComman.INSERT_ImportDataSingleSP(dt, strSP_Name, strParentTable_Name, strtemptblmstGroupChk, strtemptblmstGroup, Flag, ConStr);
         return getresult;
     }

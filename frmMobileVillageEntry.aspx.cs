@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Data;
+using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Data;
-using System.Globalization;
-using System.Drawing;
-using System.Data.SqlClient;
 
 
 public partial class frmMobileVillageEntry : System.Web.UI.Page
@@ -46,7 +42,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 //    }
 
                 //}
-                //if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "153")
+                //if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30")
                 //{
                 //    string Strhh =Convert.ToString(Session["BlockCodeAct"]);
                 //    DataTable dt = objMain.GetActivityUserWiseMaxDateNewIO(ddlUser.SelectedValue, Strhh);
@@ -310,7 +306,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
 
 
         //    conditions = "UserLevel=24 and VillageCode  in( select ClusterCode from mstCluster where ClusterName ='" + ClusterName + "') ";
-        //if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "153" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "153")
+        //if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "30")
         //{
         //    conditions = conditions + " and DistrictCode='" + Session["DistrictCode"].ToString() + "' ";
         //}
@@ -319,7 +315,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
         //{
         //    conditions = conditions + " and BlockCode='" + Session["BlockCode"].ToString() + "' ";
         //}
-        //if (Session["user_level"].ToString() == "24" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "153" || Session["user_level"].ToString() == "61" || Session["user_level"].ToString() == "59")
+        //if (Session["user_level"].ToString() == "24" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "61" || Session["user_level"].ToString() == "59")
         //{
         //    conditions = conditions + " and UserName='as' ";
         //}
@@ -421,7 +417,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
         chk_othercom.DataValueField = "TopicDIscussID";
         chk_othercom.DataBind();
 
-    string      strQry1 = " select *  from [MSTtopicDiscuss]   where Flag=108 and [Language]=0 and TopicDIscussID not in(100, 101) ";
+        string strQry1 = " select *  from [MSTtopicDiscuss]   where Flag=108 and [Language]=0 and TopicDIscussID not in(100, 101) ";
 
         DataTable dtNew = objMain.LoadData(strQry1);
         chk_othercom_New.DataSource = dtNew;
@@ -431,7 +427,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
 
         strQry = " select *  from [MSTtopicDiscuss]   where Flag=109 and [Language]=0 and TopicDIscussID not in(109, 110)  ";
         DataTable dtNew1 = objMain.LoadData(strQry);
- 
+
 
         chk_othercom_New1.DataSource = dtNew1;
         chk_othercom_New1.DataTextField = "TopicDiscussName";
@@ -474,8 +470,9 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             chk_othercom_New1.DataBind();
         }
 
-        if (rpSocialMapping.Checked == true )
+        if (rpSocialMapping.Checked == true)
         {
+	
             string strQry;
             strQry = " select *  from [MSTtopicDiscuss]   where Flag=107 and [Language]=0  and  TopicDIscussID  in(1, 3, 9, 10) ";
 
@@ -588,7 +585,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
         //chk_othercom_New1.DataBind();
 
 
-      string  strQry44 = " select *  from [mstLookup]   where [LookupFlag]='Doc' ";
+        string strQry44 = " select *  from [mstLookup]   where [LookupFlag]='Doc' ";
         DataTable dtNew132 = objMain.LoadData(strQry44);
         chktBanding.DataSource = dtNew132;
         chktBanding.DataTextField = "Description";
@@ -702,7 +699,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
         {
             conditions = conditions + " and BlockCode='" + Session["BlockCode"].ToString() + "' ";
         }
-        if (Session["user_level"].ToString() == "24" || Session["user_level"].ToString() == "30"  || Session["user_level"].ToString() == "61" || Session["user_level"].ToString() == "59")
+        if (Session["user_level"].ToString() == "24" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "61" || Session["user_level"].ToString() == "59")
         {
             conditions = conditions + " and UserName='assa' ";
         }
@@ -796,13 +793,13 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
         }
         rblsupportfc.Checked = false;
         txtOtherSupport.Text = "";
-       
+
     }
     protected void btnOt44hesrss1_Click(object sender, EventArgs e)
     {
 
 
-      
+
         rblothertb.Checked = false;
         rblotherfc.Checked = false;
         txtmainother.Text = "";
@@ -1126,7 +1123,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 {
                     btnsave.Visible = false;
                 }
-                if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30"  || Session["user_level"].ToString() == "145")
+                if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "145")
                 {
                     if (dtVillageActivtiy.Rows[0]["ApproveStatus"].ToString() == "B")
                     {
@@ -1183,7 +1180,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             if (ddlRemark.SelectedIndex > 0)
             {
                 pnlMain.Enabled = true;
-               
+
                 pnlMain11.Enabled = true;
                 Panel1.Enabled = true;
             }
@@ -1195,7 +1192,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             ViewState["GUID"] = dtVillageActivtiy.Rows[0]["GUID_Village"].ToString();
 
 
-            if (dtVillageActivtiy.Rows[0]["TBCode"].ToString().Length>0)
+            if (dtVillageActivtiy.Rows[0]["TBCode"].ToString().Length > 0)
             {
                 ddlGssTbname.SelectedValue = dtVillageActivtiy.Rows[0]["TBCode"].ToString();
                 trGssId.Visible = true;
@@ -1214,7 +1211,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 tr2.Visible = true;
             }
 
-            if ( dtVillageActivtiy.Rows[0]["TBCodemm"].ToString().Length>0)
+            if (dtVillageActivtiy.Rows[0]["TBCodemm"].ToString().Length > 0)
             {
                 ddlMMTb.SelectedValue = dtVillageActivtiy.Rows[0]["TBCodemm"].ToString();
                 trmmId.Visible = true;
@@ -1223,7 +1220,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             if (dtVillageActivtiy.Rows[0]["Muhalla"].ToString() != "")
             {
                 txtMumaullGss.Text = dtVillageActivtiy.Rows[0]["Muhalla"].ToString();
-               
+
             }
             if (dtVillageActivtiy.Rows[0]["Muhallamm"].ToString() != "")
             {
@@ -1273,9 +1270,9 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             {
                 rpSocialMapping.Checked = true;
                 rblothem_Click(rdRetantion2, null);
-               
+
             }
-            
+
 
             string cmeeting = dtVillageActivtiy.Rows[0]["GSS_Agenda"].ToString();
 
@@ -1529,7 +1526,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 txtmOther1.Enabled = false;
 
             }
-            
+
 
             string Com_Agenda = dtVillageActivtiy.Rows[0]["Com_Agenda"].ToString();
 
@@ -1603,9 +1600,9 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 rblothercommfc.Checked = true;
             }
             if (Com_Agendamm.Length > 0)
-            
+
             {
-                txtvillager3.Text = dtVillageActivtiy.Rows[0]["Com_Attended"].ToString(); 
+                txtvillager3.Text = dtVillageActivtiy.Rows[0]["Com_Attended"].ToString();
             }
             else
             {
@@ -1669,7 +1666,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             if (Com_Agendamm2.Length > 0)
             {
                 txtAtt1.Text = dtVillageActivtiy.Rows[0]["Com_Attended2"].ToString();
-              
+
             }
             else
             {
@@ -1851,12 +1848,63 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             txtmOther.Enabled = false;
             txt_bookformatOther.Enabled = false;
             txtOtherSupport.Enabled = false;
-         
+
             ViewState["GUID"] = "";
         }
     }
+    public bool InterventionSql_Injection(string RVal)
+    {
+        SqlInjection objAudit = new SqlInjection();
+        bool injection = false;
+
+
+        injection = objAudit.CheckInputBool(RVal);
+
+        return injection;
+
+    }
+    public static List<Control> GetAllControls(List<Control> controls, Type t, Control parent /* can be Page */)
+    {
+        foreach (Control c in parent.Controls)
+        {
+            if (c.GetType() == t)
+                controls.Add(c);
+            if (c.HasControls())
+                controls = GetAllControls(controls, t, c);
+        }
+        return controls;
+    }
+    public string SetTextBoxFocusSelect(Page page)
+    {
+        string ALlTestBoxValue = "";
+        List<Control> list = new List<Control>();
+        list = GetAllControls(list, typeof(TextBox), page);
+        foreach (Control ctl in list)
+        {
+            if (ctl.GetType() == typeof(TextBox))
+            {
+                ((TextBox)ctl).Attributes.Add("onfocus", "this.select()");
+                string TempVari = ((TextBox)ctl).Text;
+                if (TempVari.Length > 0)
+                {
+                    ALlTestBoxValue += TempVari + "  ";
+                }
+            }
+        }
+        return ALlTestBoxValue;
+    }
     protected void btnSave_Click(object sender, EventArgs e)
     {
+        string RVal = SetTextBoxFocusSelect(this.Page);
+        if (!InterventionSql_Injection(RVal))
+        {
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Spurious input detected. Data rejected')</script>", false);
+
+            return;
+        }
         SaveData();
     }
     protected void ddlVilage_SelectedIndexChanged(object sender, EventArgs e)
@@ -1893,11 +1941,11 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
         }
         LoadTB();
         btnSerach_Click(btnSerach, null);
-    
+
     }
     protected void rblTb_Click(object sender, EventArgs e)
     {
-        if (chkcommmetingTB.Checked==true)
+        if (chkcommmetingTB.Checked == true)
         {
             trGssId.Visible = true;
         }
@@ -1906,7 +1954,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             trGssId.Visible = false;
         }
     }
-  
+
     protected void rblTbmm_Click(object sender, EventArgs e)
     {
         if (rblmuhulaTb.Checked == true)
@@ -1945,21 +1993,20 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
         string strQry = "";
         strQry = "      select TBCode,TBname from mstTeamBalika mst  with(nolock) left join mst5Village V on V.VillageCode=mst.VillageCode   	or  V.refVillage16=mst.VillageCode	or V.refVillage17=mst.VillageCode	or  V.refVillage18=mst.VillageCode or  V.refVillage19=mst.VillageCode or  V.refVillage20=mst.VillageCode or  V.refVillage21=mst.VillageCode  or  V.refVillage22=mst.VillageCode  or  V.refVillage23=mst.VillageCode or  V.refVillage24=mst.VillageCode or  V.refVillage24=mst.VillageCode  where  V.VillageCode='" + ddlVilage.SelectedValue + "'  ";
         DataTable dtVillageActivtiy = objMain.LoadData(strQry);
-                Session["TBView"] = dtVillageActivtiy;
+        Session["TBView"] = dtVillageActivtiy;
 
         DataTable dt = dtVillageActivtiy.Copy();
         DataTable dtC = dtVillageActivtiy.Copy();
         DataTable dtC1 = dtVillageActivtiy.Copy();
         objComman.BindDLLDatatable("mstSchool", dtVillageActivtiy, "TBCode,TBname", conditions, "TBname", "asc", ddlGssTbname, "TBname", "TBCode", "Select");
         objComman.BindDLLDatatable("mstSchool", dt, "TBCode,TBname", conditions, "TBname", "asc", ddlMMTb, "TBname", "TBCode", "Select");
-      
 
         objComman.BindDLLDatatable("mstSchool", dtC, "TBCode,TBname", conditions, "TBname", "asc", ddltbCom1, "TBname", "TBCode", "Select");
         objComman.BindDLLDatatable("mstSchool", dtC1, "TBCode,TBname", conditions, "TBname", "asc", ddltbCom2, "TBname", "TBCode", "Select");
 
 
     }
-     public bool BindDLLDatatable(string dtname, DataTable dt, string fieldname, string Condition, string orberbyfield, string orderby, DropDownList ddl, string textData, string valData, string ZeroIndex)
+    public bool BindDLLDatatable(string dtname, DataTable dt, string fieldname, string Condition, string orberbyfield, string orderby, DropDownList ddl, string textData, string valData, string ZeroIndex)
     {
         bool status = false;
         string conditions = Condition == "" ? "" : " where " + Condition;
@@ -2042,12 +2089,12 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             if (lblTBFC.Text == "1")
             {
                 rblTBFC.SelectedValue = "1";
-            
+
                 ddlContactTb.Enabled = true;
                 if (dtEditTB.Rows.Count > 0)
                 {
                     DataRow[] dr = dtEditTB.Select("UniqueCode='" + lbUniqueCode.Text + "'");
-                    if (dr.Length>0)
+                    if (dr.Length > 0)
                     {
                         ddlContactTb.SelectedValue = dr[0]["TBCode"].ToString();
                     }
@@ -2064,7 +2111,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             {
                 ddlStatus.Enabled = false;
                 btnEditEnroll.Visible = true;
-                
+
             }
             else
             {
@@ -2096,7 +2143,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
     {
         ModalPopupExtender.Show();
 
-        if (Convert.ToInt16(ddlDocAva.SelectedValue)==2)
+        if (Convert.ToInt16(ddlDocAva.SelectedValue) == 2)
         {
             Div333.Visible = true;
         }
@@ -2106,7 +2153,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
         }
         MpexdrFollowup.Show();
     }
-        protected void ddlFo_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlFo_SelectedIndexChanged(object sender, EventArgs e)
     {
         ModalPopupExtender.Show();
         if (ddlFo.SelectedIndex > 0)
@@ -2142,8 +2189,8 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             if (Convert.ToInt32(ddlFo.SelectedValue) == 2)
             {
                 div24.Visible = true;
-            
-            
+
+
             }
             else if (Convert.ToInt32(ddlFo.SelectedValue) == 4)
             {
@@ -2158,7 +2205,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 ddlOtherVillage.SelectedIndex = 0;
 
             }
-          
+
             MpexdrFollowup.Show();
         }
         else
@@ -2642,13 +2689,14 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             txtOtherVillage.Text = "";
             txtOtherSchool.Text = "";
             ddlOtherVillage.SelectedIndex = 0;
-          //  div25.Visible = true;
+            //  div25.Visible = true;
             div21.Visible = true;
             div22.Visible = true;
             dfiv22.Visible = true;
             div24.Visible = false;
 
-         
+   
+
 
             Label lblDtdUniqid = (Label)row1.FindControl("lblDtdUniqid");
 
@@ -2668,7 +2716,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 }
                 else
                 {
-                 //   txtSamgraID.Text = dtIne.Rows[0]["SamgraID"].ToString();
+                    //   txtSamgraID.Text = dtIne.Rows[0]["SamgraID"].ToString();
                 }
                 if (dtIne.Rows[0]["FollowUPID"].ToString() == "1" || dtIne.Rows[0]["FollowUPID"].ToString() == "2")
                 {
@@ -2689,7 +2737,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             div26.Visible = true;
 
             Div27.Visible = true;
-           // disv23.Visible = true;
+            // disv23.Visible = true;
             ddlIReasons.SelectedIndex = 0;
             ddlMigration.SelectedIndex = 0;
             txtBDate.Text = "";
@@ -2733,7 +2781,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             DivE12.Visible = false;
             DivE13.Visible = false;
 
-          //  Div31.Visible = true;
+            //  Div31.Visible = true;
             div28.Visible = true;
             div29.Visible = true;
             Div30.Visible = true;
@@ -2767,11 +2815,11 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 {
                     Sbdf = true;
                     txtAwarenessFo.Text = "";
-                    
+
                 }
-                
+
             }
-            
+
         }
         if (Sbdf == true)
         {
@@ -2900,15 +2948,16 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             divResonFo.Visible = true;
             divMobile.Visible = false;
         }
-      
+
         MpexdrFollowup.Show();
     }
-    public void LoadPreviousData(Int32 Staus,string Uniq)
+    public void LoadPreviousData(Int32 Staus, string Uniq)
     {
-        
+		
 
-     
-   
+
+
+
         ModalPopupExtender.Show();
         dvIngilible.Visible = false;
         dvidFollowp.Visible = false;
@@ -2982,8 +3031,8 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 txtMobileFO.Text = Convert.ToString(dtIne.Rows[0]["Mobile"]);
                 txtGovtID.Text = Convert.ToString(dtIne.Rows[0]["GovtID"]);
                 txtSamgraID.Text = Convert.ToString(dtIne.Rows[0]["SamgraID "]);
-              
-               
+
+
             }
 
         }
@@ -3035,19 +3084,20 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 txtMobileIO.Text = Convert.ToString(dtIne.Rows[0]["Mobile"]);
                 txtIGovtID.Text = Convert.ToString(dtIne.Rows[0]["GovtID"]);
                 txtSamgra.Text = Convert.ToString(dtIne.Rows[0]["SamgraID "]);
-              
-               
+
+
                 txtOther.Text = Convert.ToString(dtIne.Rows[0]["Other"]);
-                if (Convert.ToString(dtIne.Rows[0]["SamgraID "]).Length>0)
+                if (Convert.ToString(dtIne.Rows[0]["SamgraID "]).Length > 0)
                 {
                 }
-           
+		   
+
 
                 txtIoAlternateMobile.Text = Convert.ToString(dtIne.Rows[0]["AlternateMobileNumber "]);
                 txtatalterIO_mobile(txtIORelation, null);
                 txtIoAlternateMobile.Text = Convert.ToString(dtIne.Rows[0]["AlternatemobileOwneName "]);
                 txtIoAlternateMobile.Text = Convert.ToString(dtIne.Rows[0]["RelationChild "]);
-                
+
             }
 
         }
@@ -3083,10 +3133,10 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             if (dtIne.Rows.Count > 0)
             {
 
-               
-               
-           
-              
+
+
+
+
                 if (Convert.ToString(dtIne.Rows[0]["Availability"]) != "")
                 {
                     ddlAvilEO.SelectedValue = Convert.ToString(dtIne.Rows[0]["Availability"]);
@@ -3146,7 +3196,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             }
           
         }
-        else  if (Convert.ToInt32(ddlAvaiFO.SelectedValue) == 2)
+        else if (Convert.ToInt32(ddlAvaiFO.SelectedValue) == 2)
         {
             if (Session["StateCode"].ToString() == "8")
             {
@@ -3156,7 +3206,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             divF2.Visible = false;
         }
 
-        else 
+        else
         {
             if (Session["StateCode"].ToString() == "8")
             {
@@ -3290,7 +3340,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
         GridViewRow row1 = (GridViewRow)ddlLabTest1.NamingContainer;
         DropDownList ddlContactTb = (DropDownList)row1.FindControl("ddlContactTb");
         RadioButtonList rblTBFC = (RadioButtonList)row1.FindControl("rblTBFC");
-        if (Convert.ToInt32(rblTBFC.SelectedValue)==1)
+        if (Convert.ToInt32(rblTBFC.SelectedValue) == 1)
         {
             ddlContactTb.Enabled = true;
             ddlContactTb.SelectedIndex = 0;
@@ -3301,7 +3351,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
         }
         ModalPopupExtender.Show();
     }
-        protected void btnEditEnroll_Click(object sender, EventArgs e)
+    protected void btnEditEnroll_Click(object sender, EventArgs e)
     {
        
         ImageButton ddlLabTest1 = (ImageButton)sender;
@@ -3312,8 +3362,10 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
         DropDownList ddlContactTb = (DropDownList)row1.FindControl("ddlContactTb");
         Label lbUniqueCode = (Label)row1.FindControl("lbUniqueCode");
         Label lblDtdUniqid = (Label)row1.FindControl("lblDtdUniqid");
-       
-            lblEditRow.Text = "1";
+	   
+								  
+
+        lblEditRow.Text = "1";
 
         Label lbStatus = (Label)row1.FindControl("lbStatus");
         lblEnrollId.Text = ddlStatus.SelectedValue;
@@ -3419,7 +3471,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 txtOtherResone.Text = Convert.ToString(dtIne.Rows[0]["FollowUpReason"]);
                 ddlDOproof.SelectedValue = Convert.ToString(dtIne.Rows[0]["DOBproof"]);
                 ddlMigration.SelectedValue = Convert.ToString(dtIne.Rows[0]["Migrationplace"]);
-                if (Convert.ToString(dtIne.Rows[0]["Availability"])!="")
+                if (Convert.ToString(dtIne.Rows[0]["Availability"]) != "")
                 {
                     ddlAvilIO.SelectedValue = Convert.ToString(dtIne.Rows[0]["Availability"]);
                 }
@@ -3476,15 +3528,15 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 txtMobileIO.Text = Convert.ToString(dtIne.Rows[0]["Mobile"]);
                 txtIGovtID.Text = Convert.ToString(dtIne.Rows[0]["GovtID"]);
                 txtSamgra.Text = Convert.ToString(dtIne.Rows[0]["SamgraID "]);
-                if (dtIne.Rows[0]["DOB"].ToString()!="")
+                if (dtIne.Rows[0]["DOB"].ToString() != "")
                 {
-                if (Convert.ToDateTime(dtIne.Rows[0]["DOB"]).ToString("dd-MM-yyyy") != "01-01-0001")
-                {
-                    txtBDate.Text = Convert.ToDateTime(dtIne.Rows[0]["DOB"]).ToString("dd/MM/yyyy");
-                    //txtBDate_TextChanged(txtBDate, null);
-                    DivI5.Visible = true;
+                    if (Convert.ToDateTime(dtIne.Rows[0]["DOB"]).ToString("dd-MM-yyyy") != "01-01-0001")
+                    {
+                        txtBDate.Text = Convert.ToDateTime(dtIne.Rows[0]["DOB"]).ToString("dd/MM/yyyy");
+                        //txtBDate_TextChanged(txtBDate, null);
+                        DivI5.Visible = true;
 
-                }
+                    }
                 }
                 if (Convert.ToInt32(ddlDOproof.SelectedValue) == 6)
                 {
@@ -3759,8 +3811,8 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 }
 
             }
-            
-          
+
+
             if (ddlAvialMobile.SelectedIndex <= 0)
             {
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Availability of Mobile No')</script>", false);
@@ -3771,7 +3823,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
 
             }
 
-           
+
             if (Convert.ToInt32(ddlAvialMobile.SelectedValue) == 1)
             {
                 if (txtMobileFO.Text == "")
@@ -3788,12 +3840,12 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 }
                 else
                 {
-                      ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please enter Correct Mobile No..')</script>", false);
+                    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please enter Correct Mobile No..')</script>", false);
                     ModalPopupExtender.Show();
                     MpexdrFollowup.Show();
                     return;
                 }
-                if (txtCMobileFO.Text=="")
+                if (txtCMobileFO.Text == "")
                 {
                     ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Confirm Mobile No. .')</script>", false);
                     ModalPopupExtender.Show();
@@ -3986,8 +4038,8 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                     }
                 }
             }
-                SqlParameter[] cmdParameters = new SqlParameter[]
-                    {
+            SqlParameter[] cmdParameters = new SqlParameter[]
+                {
                         new SqlParameter("@UniqueCode", lblD2dUniqeCode.Text ),
                         new SqlParameter("@ActivityStatus", lblEnrollId.Text),
                         new SqlParameter("@TBorFC", lblRtbFc.Text  ),
@@ -3995,16 +4047,16 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                         new SqlParameter("@GovtID", GovtID),
                         new SqlParameter("@SamgraID", SamgraID),
                         new SqlParameter("@SchoolCode", ddlSchool.SelectedValue ),
-                  
+
                         new SqlParameter("@SchoolOrVillageName", txtOtherVillage.Text),
                         new SqlParameter("@FollowUPID", ddlFo.SelectedValue),
                         new SqlParameter("@IneligibleID", "0" ),
-                
+
                          new SqlParameter("@Months","0"),
                         new SqlParameter("@DOB", DBNull.Value),
                                 new SqlParameter("@DOBproof", "0"),
                         new SqlParameter("@Other","" ),
-                
+
 
                           new SqlParameter("@FromPanding6","0"),
                         new SqlParameter("@EnrollmentCategory","0"),
@@ -4044,8 +4096,8 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                                    new SqlParameter("@DocAvail",ddlDocAva.SelectedValue ),
                                      new SqlParameter("@DocPending",abg ),
 
-                             
-                    };
+
+                };
             Int32 icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUpdateDTDMobileActivityNew", cmdParameters);
             #endregion
         }
@@ -4204,7 +4256,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
 
                 }
             }
-        
+
             if (ddlImplementerIo.SelectedIndex <= 0)
             {
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select implementer ')</script>", false);
@@ -4278,8 +4330,8 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
 
                 }
             }
-           
-            if (Convert.ToInt32(ddlIReasons.SelectedValue) == 2 || Convert.ToInt32(ddlIReasons.SelectedValue) ==3)
+
+            if (Convert.ToInt32(ddlIReasons.SelectedValue) == 2 || Convert.ToInt32(ddlIReasons.SelectedValue) == 3)
             {
                 if (txtBDate.Text == "")
                 {
@@ -4298,7 +4350,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 string[] c = txtBDate.Text.Split('/');
                 string ChildDOB = c[2] + '-' + c[1] + '-' + c[0];
 
-                Int32 Age = DateTime.Today.Year-  Convert.ToInt32(c[2]) ;
+                Int32 Age = DateTime.Today.Year - Convert.ToInt32(c[2]);
                 if (Convert.ToInt32(ddlIReasons.SelectedValue) == 2)
                 {
                     if (Age > 14)
@@ -4311,7 +4363,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
 
                 if (Convert.ToInt32(ddlIReasons.SelectedValue) == 3)
                 {
-                    if (Age >5)
+                    if (Age > 5)
                     {
                         ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Age must be less than 5 years.')</script>", false);
                         ModalPopupExtender.Show();
@@ -4345,7 +4397,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 SamgraID = Convert.ToString(txtSamgra.Text);
             }
 
-            DateTime dob =DateTime.MinValue;
+            DateTime dob = DateTime.MinValue;
             if (txtBDate.Text != "")
             {
                 dob = Convert.ToDateTime(txtBDate.Text.ToString());
@@ -4368,16 +4420,16 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                         new SqlParameter("@GovtID", GovtID),
                         new SqlParameter("@SamgraID", SamgraID),
                         new SqlParameter("@SchoolCode",  "" ),
-                  
+
                         new SqlParameter("@SchoolOrVillageName",  ""),
                         new SqlParameter("@FollowUPID", "0"),
                         new SqlParameter("@IneligibleID",ddlIReasons.SelectedValue  ),
-                
+
                          new SqlParameter("@Months",ddlMonth.SelectedValue),
                         new SqlParameter("@DOB",dob.ToString("yyyy-MM-dd")),
                                 new SqlParameter("@DOBproof", ddlDOproof.SelectedValue),
                         new SqlParameter("@Other",txtOther.Text ),
-                
+
 
                           new SqlParameter("@FromPanding6","0"),
                         new SqlParameter("@EnrollmentCategory","0"),
@@ -4570,7 +4622,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                     return;
 
                 }
-            } 
+            }
 
             if (ddlImplementerEo.SelectedIndex <= 0)
             {
@@ -4650,7 +4702,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             DateTime dob = DateTime.MinValue;
             if (txtErollmentDate.Text != "")
             {
-                dob =Convert.ToDateTime( txtErollmentDate.Text);
+                dob = Convert.ToDateTime(txtErollmentDate.Text);
             }
             if (lblEditRow.Text == "0")
             {
@@ -4678,16 +4730,17 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                         new SqlParameter("@GovtID",GovtID),
                         new SqlParameter("@SamgraID",SamgraID),
                         new SqlParameter("@SchoolCode", ddlESchool.SelectedValue ),
-                  
+
                         new SqlParameter("@SchoolOrVillageName",  txtEvillage.Text),
                         new SqlParameter("@FollowUPID", "0"),
                         new SqlParameter("@IneligibleID", "0"  ),
-                
+
                          new SqlParameter("@Months", "0"),
                         new SqlParameter("@DOB", DBNull.Value),
                                 new SqlParameter("@DOBproof", ddlDOproof.SelectedValue),
                         new SqlParameter("@Other","" ),
-                
+				
+
 
                           new SqlParameter("@FromPanding6",ddlFromStatus.SelectedValue),
                         new SqlParameter("@EnrollmentCategory",ddlCategory.SelectedValue),
@@ -4729,10 +4782,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             #endregion
         }
 
-        string StudentTSInsertQueryD2d = "";
-        StudentTSInsertQueryD2d += " Update tblActivityDTD set  GUIDDTDActivityID='" + UNICOde + "', TBorFC=" + lblRtbFc.Text + ",ActivityStatus =" + lblEnrollId.Text + ",UserType='P' , ActivityDate ='" + DateTime.Now.ToString("yyyy-MM-dd") + "',UploadedDate= GETDATE() where UniqueCode ='" + lblD2dUniqeCode.Text + "' ";
-        InsertD2d = objMain.AddUpdate(StudentTSInsertQueryD2d);
-
+      
         if (InsertD2d == true)
         {
             ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved sucessfully')</script>", false);
@@ -4824,12 +4874,12 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
 
             }
         }
-        if(commmeeting.Length>0){commmeeting = commmeeting.Substring(0, commmeeting.LastIndexOf(","));}
+        if (commmeeting.Length > 0) { commmeeting = commmeeting.Substring(0, commmeeting.LastIndexOf(",")); }
         if (commmeeting1.Length > 0) { commmeeting1 = commmeeting1.Substring(0, commmeeting1.LastIndexOf(",")); }
         if (commmeeting2.Length > 0) { commmeeting2 = commmeeting2.Substring(0, commmeeting2.LastIndexOf(",")); }
         if (commmeeting.Length > 0 || commmeeting1.Length > 0 || commmeeting2.Length > 0 || TxtGSS_Male.Text != "" || chkcommmetingTB.Checked == true || chkcommmetingFC.Checked == true || TxtGSS_FeMale.Text != "" || rdEnrollMent.Checked == true || rdRetention.Checked == true || txtV1illager.Text != "")
         {
-           
+
             if (chkcommmetingTB.Checked == true || chkcommmetingFC.Checked == true)
             {
 
@@ -4844,7 +4894,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             }
             if (chkcommmetingTB.Checked == true)
             {
-                if (ddlGssTbname.SelectedIndex<=0)
+                if (ddlGssTbname.SelectedIndex <= 0)
                 {
                     ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select GSS TB Name')</script>", false);
 
@@ -4858,7 +4908,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
 
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select GSS Enrollment or GSS Retantion')</script>", false);
                 return;
-            }   
+            }
             if (commmeeting.Length > 0)
             {
 
@@ -4880,7 +4930,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                     txt_bookformatOther.Enabled = true;
                     return;
                 }
-               
+
 
             }
             else
@@ -4909,7 +4959,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                     txt_bookformatOther1.Enabled = true;
                     return;
                 }
-              
+
 
             }
             else
@@ -4951,7 +5001,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             }
             if (Convert.ToInt32(TxtGSS_Male.Text) > 0)
             {
-               
+
             }
             else
             {
@@ -4959,9 +5009,9 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 this.TxtGSS_Male.Focus();
                 return;
             }
-           
-          
-           
+
+
+
             if (txtV1illager.Text == "")
             {
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please ensure People Present OOSC/No. of parents of irregular childeren is more than or equal to zero')</script>", false);
@@ -4992,11 +5042,11 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
         string TempMuhulaOther = "";
         string TempMuhulaOther1 = "";
         string MMTbCode = "";
-        if (ddlMMTb.SelectedIndex> 0)
+        if (ddlMMTb.SelectedIndex > 0)
         {
             MMTbCode = ddlMMTb.SelectedValue;
         }
-            foreach (ListItem item in CBL_Muhula.Items)
+        foreach (ListItem item in CBL_Muhula.Items)
         {
             if (item.Selected)
             {
@@ -5032,7 +5082,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
 
             }
         }
-        if (Muhula.Length > 0){Muhula = Muhula.Substring(0, Muhula.LastIndexOf(","));}
+        if (Muhula.Length > 0) { Muhula = Muhula.Substring(0, Muhula.LastIndexOf(",")); }
         if (Muhula1.Length > 0) { Muhula1 = Muhula1.Substring(0, Muhula1.LastIndexOf(",")); }
         if (Muhula2.Length > 0) { Muhula2 = Muhula2.Substring(0, Muhula2.LastIndexOf(",")); }
         if (Muhula.Length > 0 || Muhula1.Length > 0 || Muhula2.Length > 0 || rdEnrollment1.Checked == true || rblmuhulaTb.Checked == true || rblmuhulaFC.Checked == true || rdRetantion1.Checked == true || TxtMM_FeMale.Text != "" || TxtMM_Male.Text != "" || txtVillager2.Text != "")
@@ -5153,8 +5203,8 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             else
             {
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please ensure MM Attendance-Female or Male value more than  zero')</script>", false);
-                    this.TxtMM_FeMale.Focus();
-                    return;
+                this.TxtMM_FeMale.Focus();
+                return;
             }
 
             //if (Convert.ToInt32(TxtMM_FeMale.Text) > 0)
@@ -5245,13 +5295,11 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             }
         }
         if (othercom.Length > 0) { othercom = othercom.Substring(0, othercom.LastIndexOf(",")); }
-         if (othercom1.Length > 0) {othercom1 = othercom1.Substring(0, othercom1.LastIndexOf(","));}
-         if (othercom2.Length > 0) { othercom2 = othercom2.Substring(0, othercom2.LastIndexOf(",")); }
-         if (Tempothercom.Length > 0 || othercom1.Length > 0 || othercom2.Length > 0 || rdEnrollment2.Checked == true || rblothercommTb.Checked == true || rblothercommfc.Checked == true || rdRetantion2.Checked == true || rpSocialMapping.Checked == true  || txtvillager3.Text != "" || TxtCm1_FeMale.Text != "" && TxtCm1_Male.Text != "" || tc1.Text !="")
+        if (othercom1.Length > 0) { othercom1 = othercom1.Substring(0, othercom1.LastIndexOf(",")); }
+        if (othercom2.Length > 0) { othercom2 = othercom2.Substring(0, othercom2.LastIndexOf(",")); }
+        if (Tempothercom.Length > 0 || othercom1.Length > 0 || othercom2.Length > 0 || rdEnrollment2.Checked == true || rblothercommTb.Checked == true || rblothercommfc.Checked == true || rdRetantion2.Checked == true || rpSocialMapping.Checked == true || txtvillager3.Text != "" || TxtCm1_FeMale.Text != "" && TxtCm1_Male.Text != "" || tc1.Text != "")
         {
             //othercom = othercom.Substring(0, othercom.LastIndexOf(","));
-        
-           
             if (rblothercommTb.Checked == true || rblothercommfc.Checked == true)
             {
 
@@ -5264,7 +5312,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 this.rblothercommTb.Focus();
                 return;
             }
-            if (rdEnrollment2.Checked == false && rdRetantion2.Checked == false && rpSocialMapping.Checked == false )
+            if (rdEnrollment2.Checked == false && rdRetantion2.Checked == false && rpSocialMapping.Checked == false)
             {
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Other Community Meeting 1 Enrollment or Other Community Meeting 1 Retantion')</script>", false);
                 this.rdEnrollment2.Focus();
@@ -5420,10 +5468,10 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
         }
         #endregion
 
-         //-----COm2
+        //-----COm2
 
-         #region Comm2
-         string othercom11 = "";
+        #region Comm2
+        string othercom11 = "";
         string Tempothercom11 = "";
         foreach (ListItem item in chk_c2.Items)
         {
@@ -5440,10 +5488,10 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             }
 
         }
-         if (othercom11.Length > 0 )
-         {
-             othercom11 = othercom11.Substring(0, othercom11.LastIndexOf(","));
-         }
+        if (othercom11.Length > 0)
+        {
+            othercom11 = othercom11.Substring(0, othercom11.LastIndexOf(","));
+        }
         if (othercom11.Length > 0 || txtAtt1.Text != "" || txtoC1.Text != "" || rblc1.Checked == true || rblc2.Checked == true)
         {
         
@@ -5517,7 +5565,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
 
         }
 
-#endregion
+        #endregion
         //---
         string Ambition = "";
         string AmbitionComOther = "";
@@ -5555,14 +5603,14 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             }
 
         }
-       if (AmbitionComm.Length > 0 )
-       {
+        if (AmbitionComm.Length > 0)
+        {
             AmbitionComm = AmbitionComm.Substring(0, AmbitionComm.LastIndexOf(","));
-       }
-        if (Ambition.Length > 0 )
-       {
-           Ambition = Ambition.Substring(0, Ambition.LastIndexOf(","));
-       }
+        }
+        if (Ambition.Length > 0)
+        {
+            Ambition = Ambition.Substring(0, Ambition.LastIndexOf(","));
+        }
         if (AmbitionComm.Length > 0 || Ambition.Length > 0 || rblcommtb.Checked == true || rblCommFC.Checked == true)
         {
            
@@ -5672,7 +5720,8 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             {
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Support TB or FC')</script>", false);
 
-               
+
+
 
                 this.rblsupportfc.Focus();
                 return;
@@ -5688,7 +5737,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 this.chk_Suport.Focus();
                 return;
             }
-         
+
             if (SuportOther == "28")
             {
                 if (txtOtherSupport.Text.ToString() == "")
@@ -5700,7 +5749,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                     txtOtherSupport.Enabled = true;
                     return;
                 }
-                
+
 
             }
             else
@@ -5923,22 +5972,424 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
         {
             Comm1EnrollRetan = 3;
         }
-
+        int icount = 0;
         if (ViewState["GUID"].ToString().Length > 1)
         {
             string StudentTSInsertQuery = "";
             bool InsertTS = false;
             if (Session["user_level"].ToString() == "19")
             {
+                                                SqlParameter[] cmdParameters =
+                                {
+                                new SqlParameter("@GUID_Village", ViewState["GUID"].ToString()),
 
-                StudentTSInsertQuery = " Update tblActivityUpdate_Village set TBCodeOtherMeet='" + Com1TBCode + "', TBCodeOtherMeet2='" + Com2TBCode + "',  Com_Mtg='" + commNew + "',modifyBy='" + Session["username"].ToString() + "',modifyDate='" + DateTime.Now.ToString("yyyy-MM-dd") + "', ComContact='" + Comm + "', Support='" + SupportCC + "',[GSS_Mtg] ='" + GGS + "',Com_TB2=" + c1 + ",[MM_Mtg]= " + muhula55 + ",Com_FC2=" + c2 + ",Com_Agenda2='" + othercom11 + "',Com_AgendaOther2='" + txtoC111.Text + "',Any_Other2='" + txtoC1.Text + "',Com_Attended2=" + Att1 + ", Any_Other='" + tc1.Text.Trim() + "' ,TBHandholding='" + TBHoldIng + "',GSS_Attended='" + vill1 + "',Remarks='" + ddlRemark.SelectedValue + "',GSS_Agenda='" + commmeeting + "',GSSChat='" + commmeeting1 + "',GSSImportantperson='" + commmeeting2 + "',GSS_AgendaOther='" + txt_bookformatOther.Text + "',otherGSSChat='" + txt_bookformatOther1.Text + "' ,GSS_TB=" + commmetingTB + ",GSS_FC=" + commmetingFC + ",MM_Attended=" + vill2 + ",MM_Agenda='" + Muhula + "',MMChat='" + Muhula1 + "',MMImportantperson='" + Muhula2 + "',MM_AgendaOther='" + txtmOther.Text + "',othermmchat='" + txtmOther1.Text + "',MM_TB='" + muhulaTb + "',MM_FC='" + muhulaFC + "',Com_Attended='" + vill3 + "',Com_Agenda='" + othercom + "',OtherChat='" + othercom1 + "',OtherImportantperson='" + othercom2 + "',Com_AgendaOther='" + txtOtherComm.Text + "',OtherspecifyChat='" + txtOtherComm1.Text + "',Com_TB=" + othercommTb + ",Com_FC=" + othercommFC + ",ComContact_Op='" + AmbitionComm + "',ComContact_Op_Other='" + txt_con_other.Text + "',ComContact_TB='" + CommFCTB + "',ComContact_FC='" + CommFC + "',ComContact_Agenda='" + Ambition + "',ConContact_AgendaOther='" + txtOtherCon.Text + "',Support_Op='" + Suport + "',Support_Op_Other='" + txtOtherSupport.Text + "',Support_TB=" + Supporttb + ",Support_FC=" + SupportFC + ",Others_FC=" + lotherfc + ",Others_TB=" + lotherTB + ",Others_Desc='" + txtmainother.Text + "',GSSFemale=" + txtGSSFe + ",GSSMale=" + txtGssMa + ",MMFemale=" + txtMMFe + ",MMMale=" + txtMMMa + ",OtherFemale=" + txtComFe + ",OtherMale=" + txtComMa + ", GSSEnrollHault=" + GssEnrollRetan + ",MMEnrollHault=" + MMEnrollRetan + ",OtherEnrollHault=" + Comm1EnrollRetan + " where GUID_Village='" + ViewState["GUID"].ToString() + "' ";
-                InsertTS = objMain.AddUpdate(StudentTSInsertQuery);
+                                new SqlParameter("@TBCodeOtherMeet", Com1TBCode),
+                                new SqlParameter("@TBCodeOtherMeet2", Com2TBCode),
+
+                                new SqlParameter("@Com_Mtg", commNew),
+
+                                new SqlParameter(
+                                "@modifyBy",
+                                Session["username"].ToString()
+                                ),
+
+                                new SqlParameter(
+                                "@modifyDate",
+                                DateTime.Now
+                                ),
+
+                                new SqlParameter("@ComContact", Comm),
+
+                                new SqlParameter("@Support", SupportCC),
+
+                                new SqlParameter("@GSS_Mtg", GGS),
+
+                                new SqlParameter("@Com_TB2", c1),
+
+                                new SqlParameter("@MM_Mtg", muhula55),
+
+                                new SqlParameter("@Com_FC2", c2),
+
+                                new SqlParameter("@Com_Agenda2", othercom11),
+
+                                new SqlParameter(
+                                "@Com_AgendaOther2",
+                                txtoC111.Text
+                                ),
+
+                                new SqlParameter(
+                                "@Any_Other2",
+                                txtoC1.Text
+                                ),
+
+                                new SqlParameter("@Com_Attended2", Att1),
+
+                                new SqlParameter(
+                                "@Any_Other",
+                                tc1.Text.Trim()
+                                ),
+
+                                new SqlParameter(
+                                "@TBHandholding",
+                                TBHoldIng
+                                ),
+
+                                new SqlParameter("@GSS_Attended", vill1),
+
+                                new SqlParameter(
+                                "@Remarks",
+                                ddlRemark.SelectedValue
+                                ),
+                                                                new SqlParameter("@GSS_Agenda", commmeeting),
+                                new SqlParameter("@GSSChat", commmeeting1),
+                                new SqlParameter("@GSSImportantperson", commmeeting2),
+
+                                new SqlParameter(
+                                "@GSS_AgendaOther",
+                                txt_bookformatOther.Text
+                                ),
+
+                                new SqlParameter(
+                                "@otherGSSChat",
+                                txt_bookformatOther1.Text
+                                ),
+
+                                new SqlParameter("@GSS_TB", commmetingTB),
+                                new SqlParameter("@GSS_FC", commmetingFC),
+
+                                new SqlParameter("@MM_Attended", vill2),
+
+                                new SqlParameter("@MM_Agenda", Muhula),
+                                new SqlParameter("@MMChat", Muhula1),
+
+                                new SqlParameter(
+                                "@MMImportantperson",
+                                Muhula2
+                                ),
+
+                                new SqlParameter(
+                                "@MM_AgendaOther",
+                                txtmOther.Text
+                                ),
+
+                                new SqlParameter(
+                                "@othermmchat",
+                                txtmOther1.Text
+                                ),
+
+                                new SqlParameter("@MM_TB", muhulaTb),
+                                new SqlParameter("@MM_FC", muhulaFC),
+
+                                new SqlParameter("@Com_Attended", vill3),
+
+                                new SqlParameter("@Com_Agenda", othercom),
+
+                                new SqlParameter("@OtherChat", othercom1),
+
+                                new SqlParameter(
+                                "@OtherImportantperson",
+                                othercom2
+                                ),
+
+                                new SqlParameter(
+                                "@Com_AgendaOther",
+                                txtOtherComm.Text
+                                ),
+
+                                new SqlParameter(
+                                "@OtherspecifyChat",
+                                txtOtherComm1.Text
+                                ),
+
+                                new SqlParameter("@Com_TB", othercommTb),
+                                new SqlParameter("@Com_FC", othercommFC),
+
+                                new SqlParameter(
+                                "@ComContact_Op",
+                                AmbitionComm
+                                ),
+
+                                new SqlParameter(
+                                "@ComContact_Op_Other",
+                                txt_con_other.Text
+                                ),
+
+                                new SqlParameter(
+                                "@ComContact_TB",
+                                CommFCTB
+                                ),
+
+                                new SqlParameter(
+                                "@ComContact_FC",
+                                CommFC
+                                ),
+
+                                new SqlParameter(
+                                "@ComContact_Agenda",
+                                Ambition
+                                ),
+
+                                new SqlParameter(
+                                "@ConContact_AgendaOther",
+                                txtOtherCon.Text
+                                ),
+
+                                new SqlParameter("@Support_Op", Suport),
+
+                                new SqlParameter(
+                                "@Support_Op_Other",
+                                txtOtherSupport.Text
+                                ),
+
+                                new SqlParameter("@Support_TB", Supporttb),
+                                new SqlParameter("@Support_FC", SupportFC),
+
+                                new SqlParameter("@Others_FC", lotherfc),
+                                new SqlParameter("@Others_TB", lotherTB),
+
+                                new SqlParameter(
+                                "@Others_Desc",
+                                txtmainother.Text
+                                ),
+
+                                new SqlParameter("@GSSFemale", txtGSSFe),
+                                new SqlParameter("@GSSMale", txtGssMa),
+
+                                new SqlParameter("@MMFemale", txtMMFe),
+                                new SqlParameter("@MMMale", txtMMMa),
+
+                                new SqlParameter("@OtherFemale", txtComFe),
+                                new SqlParameter("@OtherMale", txtComMa),
+
+                                new SqlParameter(
+                                "@GSSEnrollHault",
+                                GssEnrollRetan
+                                ),
+
+                                new SqlParameter(
+                                "@MMEnrollHault",
+                                MMEnrollRetan
+                                ),
+
+                                new SqlParameter(
+                                "@OtherEnrollHault",
+                                Comm1EnrollRetan
+                                )
+
+                                };
+                // Continue remaining fields same pattern...
+           
+
+                icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Update_tblActivityUpdate_Village", cmdParameters);
+               
+               
             }
-            
-            if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30"  || Session["user_level"].ToString() == "145")
+
+            if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "145")
             {
-                StudentTSInsertQuery = " Update tblActivityUpdate_Village set Com_Mtg='" + commNew + "',TBCodeOtherMeet='" + Com1TBCode + "', TBCodeOtherMeet2='" + Com2TBCode + "',  modifyBy='" + Session["username"].ToString() + "',modifyDate='" + DateTime.Now.ToString("yyyy-MM-dd") + "',ComContact='" + Comm + "',Support='" + SupportCC + "',[GSS_Mtg] ='" + GGS + "',[MM_Mtg]= " + muhula55 + ",Com_TB2=" + c1 + ",Com_FC2=" + c2 + ",Com_Agenda2='" + othercom11 + "',Com_AgendaOther2='" + txtoC111.Text + "',Any_Other2='" + txtoC1.Text + "',Com_Attended2=" + Att1 + ", Any_Other='" + tc1.Text.Trim() + "',TBHandholding='" + TBHoldIng + "',GSS_Attended='" + vill1 + "',Remarks='" + ddlRemark.SelectedValue + "',GSS_Agenda='" + commmeeting + "',GSSChat='" + commmeeting1 + "',GSSImportantperson='" + commmeeting2 + "',GSS_AgendaOther='" + txt_bookformatOther.Text + "',otherGSSChat='" + txt_bookformatOther1.Text + "',GSS_TB=" + commmetingTB + ",GSS_FC=" + commmetingFC + ",MM_Attended=" + vill2 + ",MM_Agenda='" + Muhula + "',MMChat='" + Muhula1 + "',MMImportantperson='" + Muhula2 + "',MM_AgendaOther='" + txtmOther.Text + "',othermmchat='" + txtmOther1.Text + "',MM_TB='" + muhulaTb + "',MM_FC='" + muhulaFC + "',Com_Attended='" + vill3 + "',Com_Agenda='" + othercom + "',OtherChat='" + othercom1 + "',OtherImportantperson='" + othercom2 + "',Com_AgendaOther='" + txtOtherComm.Text + "',OtherspecifyChat='" + txtOtherComm1.Text + "',Com_TB=" + othercommTb + ",Com_FC=" + othercommFC + ",ComContact_Op='" + AmbitionComm + "',ComContact_Op_Other='" + txt_con_other.Text + "',ComContact_TB='" + CommFCTB + "',ComContact_FC='" + CommFC + "',ComContact_Agenda='" + Ambition + "',ConContact_AgendaOther='" + txtOtherCon.Text + "',Support_Op='" + Suport + "',Support_Op_Other='" + txtOtherSupport.Text + "',Support_TB=" + Supporttb + ",Support_FC=" + SupportFC + ",Others_FC=" + lotherfc + ",Others_TB=" + lotherTB + ",Others_Desc='" + txtmainother.Text + "',GSSFemale=" + txtGSSFe + ",GSSMale=" + txtGssMa + ",MMFemale=" + txtMMFe + ",MMMale=" + txtMMMa + ",OtherFemale=" + txtComFe + ",OtherMale=" + txtComMa + ", GSSEnrollHault=" + GssEnrollRetan + ",MMEnrollHault=" + MMEnrollRetan + ",OtherEnrollHault=" + Comm1EnrollRetan + " where GUID_Village='" + ViewState["GUID"].ToString() + "' ";
-                InsertTS = objMain.AddUpdate(StudentTSInsertQuery);
+                SqlParameter[] cmdParameters =
+        {
+                                new SqlParameter("@GUID_Village", ViewState["GUID"].ToString()),
+
+                                new SqlParameter("@TBCodeOtherMeet", Com1TBCode),
+                                new SqlParameter("@TBCodeOtherMeet2", Com2TBCode),
+
+                                new SqlParameter("@Com_Mtg", commNew),
+
+                                new SqlParameter(
+                                "@modifyBy",
+                                Session["username"].ToString()
+                                ),
+
+                                new SqlParameter(
+                                "@modifyDate",
+                                DateTime.Now
+                                ),
+
+                                new SqlParameter("@ComContact", Comm),
+
+                                new SqlParameter("@Support", SupportCC),
+
+                                new SqlParameter("@GSS_Mtg", GGS),
+
+                                new SqlParameter("@Com_TB2", c1),
+
+                                new SqlParameter("@MM_Mtg", muhula55),
+
+                                new SqlParameter("@Com_FC2", c2),
+
+                                new SqlParameter("@Com_Agenda2", othercom11),
+
+                                new SqlParameter(
+                                "@Com_AgendaOther2",
+                                txtoC111.Text
+                                ),
+
+                                new SqlParameter(
+                                "@Any_Other2",
+                                txtoC1.Text
+                                ),
+
+                                new SqlParameter("@Com_Attended2", Att1),
+
+                                new SqlParameter(
+                                "@Any_Other",
+                                tc1.Text.Trim()
+                                ),
+
+                                new SqlParameter(
+                                "@TBHandholding",
+                                TBHoldIng
+                                ),
+
+                                new SqlParameter("@GSS_Attended", vill1),
+
+                                new SqlParameter(
+                                "@Remarks",
+                                ddlRemark.SelectedValue
+                                ),
+                                                                new SqlParameter("@GSS_Agenda", commmeeting),
+                                new SqlParameter("@GSSChat", commmeeting1),
+                                new SqlParameter("@GSSImportantperson", commmeeting2),
+
+                                new SqlParameter(
+                                "@GSS_AgendaOther",
+                                txt_bookformatOther.Text
+                                ),
+
+                                new SqlParameter(
+                                "@otherGSSChat",
+                                txt_bookformatOther1.Text
+                                ),
+
+                                new SqlParameter("@GSS_TB", commmetingTB),
+                                new SqlParameter("@GSS_FC", commmetingFC),
+
+                                new SqlParameter("@MM_Attended", vill2),
+
+                                new SqlParameter("@MM_Agenda", Muhula),
+                                new SqlParameter("@MMChat", Muhula1),
+
+                                new SqlParameter(
+                                "@MMImportantperson",
+                                Muhula2
+                                ),
+
+                                new SqlParameter(
+                                "@MM_AgendaOther",
+                                txtmOther.Text
+                                ),
+
+                                new SqlParameter(
+                                "@othermmchat",
+                                txtmOther1.Text
+                                ),
+
+                                new SqlParameter("@MM_TB", muhulaTb),
+                                new SqlParameter("@MM_FC", muhulaFC),
+
+                                new SqlParameter("@Com_Attended", vill3),
+
+                                new SqlParameter("@Com_Agenda", othercom),
+
+                                new SqlParameter("@OtherChat", othercom1),
+
+                                new SqlParameter(
+                                "@OtherImportantperson",
+                                othercom2
+                                ),
+
+                                new SqlParameter(
+                                "@Com_AgendaOther",
+                                txtOtherComm.Text
+                                ),
+
+                                new SqlParameter(
+                                "@OtherspecifyChat",
+                                txtOtherComm1.Text
+                                ),
+
+                                new SqlParameter("@Com_TB", othercommTb),
+                                new SqlParameter("@Com_FC", othercommFC),
+
+                                new SqlParameter(
+                                "@ComContact_Op",
+                                AmbitionComm
+                                ),
+
+                                new SqlParameter(
+                                "@ComContact_Op_Other",
+                                txt_con_other.Text
+                                ),
+
+                                new SqlParameter(
+                                "@ComContact_TB",
+                                CommFCTB
+                                ),
+
+                                new SqlParameter(
+                                "@ComContact_FC",
+                                CommFC
+                                ),
+
+                                new SqlParameter(
+                                "@ComContact_Agenda",
+                                Ambition
+                                ),
+
+                                new SqlParameter(
+                                "@ConContact_AgendaOther",
+                                txtOtherCon.Text
+                                ),
+
+                                new SqlParameter("@Support_Op", Suport),
+
+                                new SqlParameter(
+                                "@Support_Op_Other",
+                                txtOtherSupport.Text
+                                ),
+
+                                new SqlParameter("@Support_TB", Supporttb),
+                                new SqlParameter("@Support_FC", SupportFC),
+
+                                new SqlParameter("@Others_FC", lotherfc),
+                                new SqlParameter("@Others_TB", lotherTB),
+
+                                new SqlParameter(
+                                "@Others_Desc",
+                                txtmainother.Text
+                                ),
+
+                                new SqlParameter("@GSSFemale", txtGSSFe),
+                                new SqlParameter("@GSSMale", txtGssMa),
+
+                                new SqlParameter("@MMFemale", txtMMFe),
+                                new SqlParameter("@MMMale", txtMMMa),
+
+                                new SqlParameter("@OtherFemale", txtComFe),
+                                new SqlParameter("@OtherMale", txtComMa),
+
+                                new SqlParameter(
+                                "@GSSEnrollHault",
+                                GssEnrollRetan
+                                ),
+
+                                new SqlParameter(
+                                "@MMEnrollHault",
+                                MMEnrollRetan
+                                ),
+
+                                new SqlParameter(
+                                "@OtherEnrollHault",
+                                Comm1EnrollRetan
+                                )
+
+                                };
+                // Continue remaining fields same pattern...
+
+
+                icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Update_tblActivityUpdate_Village", cmdParameters);
+
             }
             if (InsertTS == true)
             {
@@ -5949,19 +6400,217 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
         }
         else
         {
+            
             string UNICOde = objMain.Generate_RandomString(8);
             string StudentTSInsertQuery = "";
 
             bool InsertTS = false;
-            if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30"  || Session["user_level"].ToString() == "145")
+            if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "145")
             {
                 if (Muhula == "")
                 {
                     Muhula = "0";
                 }
-                StudentTSInsertQuery = " INSERT INTO tblActivityUpdate_Village([VillageCode],[UserID] ,[GUID_Village] ,[ActivityDate] ,[TBHandholding], [GSS_Mtg]  ,[GSS_Attended] ,[GSS_Agenda],[GSSChat],GSSImportantperson  ,[GSS_AgendaOther],[otherGSSChat] ,[GSS_TB] ,[GSS_FC] ,      [MM_Mtg] ,[MM_Attended] ,[MM_Agenda],[MMChat],[MMImportantperson],  [MM_AgendaOther],[othermmchat],[MM_TB] ,[MM_FC] , [Com_Mtg] ,[Com_Attended] ,[Com_Agenda],[OtherChat],[OtherImportantperson],[Com_AgendaOther] ,[OtherspecifyChat],[Com_TB],[Com_FC] , [ComContact] ,[ComContact_Op] ,[ComContact_Op_Other] ,[ComContact_TB],[ComContact_FC], ComContact_Agenda,ConContact_AgendaOther,    [Support]   ,[Support_Op]  ,[Support_Op_Other] ,[Support_TB],[Support_FC]  ,[Others_FC] ,[Others_TB]  ,[Others_Desc],UserEntry,ApproveStatus,Remarks,Any_Other,Com_TB2,Com_FC2,Com_Agenda2,Com_AgendaOther2,Any_Other2,Com_Attended2,CreateBy,GSSFemale,GSSMale,MMFemale,MMMale,OtherFemale,OtherMale,GSSEnrollHault,MMEnrollHault,OtherEnrollHault,TBCode,	TBCodemm,	Muhalla,	Muhallamm,	BONotice,TBCodeOtherMeet	,TBCodeOtherMeet2) ";
-                StudentTSInsertQuery += " Values('" + ddlVilage.SelectedValue + "','" + ddlUser.SelectedValue + "','" + UNICOde + "','" + Convert.ToDateTime(FcDate).ToString("yyy/MM/dd") + "','" + TBHoldIng + "','" + GGS + "','" + vill1 + "','" + commmeeting + "','" + commmeeting1 + "','" + commmeeting2 + "','" + txt_bookformatOther.Text + "','" + txt_bookformatOther1.Text + "'," + commmetingTB + "," + commmetingFC + "," + muhula55 + "," + vill2 + ",'" + Muhula + "','" + Muhula1 + "','" + Muhula2 + "','" + txtmOther.Text + "','" + txtmOther1.Text + "','" + muhulaTb + "','" + muhulaFC + "','" + commNew + "','" + vill3 + "','" + othercom + "','" + othercom1 + "','" + othercom2 + "','" + txtOtherComm.Text + "','" + txtOtherComm1.Text + "'," + othercommTb + "," + othercommFC + ",'" + Comm + "','" + AmbitionComm + "','" + txt_con_other.Text + "','" + CommFCTB + "','" + CommFC + "','" + Ambition + "','" + txtOtherCon.Text + "'," + SupportCC + ",'" + Suport + "','" + txtOtherSupport.Text + "'," + Supporttb + "," + SupportFC + "," + lotherfc + "," + lotherTB + ",'" + txtmainother.Text + "','3','B','" + ddlRemark.SelectedValue + "','" + tc1.Text.Trim() + "'," + c1 + "," + c2 + ",'" + othercom11 + "','" + txtoC111.Text + "','" + txtoC1.Text + "'," + Att1 + ",'" + Session["username"].ToString() + "','" + txtGSSFe + "'," + txtGssMa + "," + txtMMFe + "," + txtMMMa + "," + txtComFe + "," + txtComMa + "," + GssEnrollRetan + "," + MMEnrollRetan + "," + Comm1EnrollRetan + ",'" + GGTbCode + "','" + MMTbCode + "','" + txtMumaullGss.Text + "','" + txtMumaullmm.Text + "','" + ddlBo.SelectedValue + "','" + Com1TBCode + "','" + Com2TBCode + "')";
-                InsertTS = objMain.AddUpdate(StudentTSInsertQuery);
+                SqlParameter[] cmdParameters1 =
+          {
+                    new SqlParameter("@VillageCode", ddlVilage.SelectedValue),
+                    new SqlParameter("@UserID", ddlUser.SelectedValue),
+                    new SqlParameter("@GUID_Village", UNICOde),
+
+                    new SqlParameter("@ActivityDate", Convert.ToDateTime(FcDate)      ),
+
+                    new SqlParameter("@TBHandholding", TBHoldIng),
+
+                    new SqlParameter("@GSS_Mtg", GGS),
+                    new SqlParameter("@GSS_Attended", vill1),
+                    new SqlParameter("@GSS_Agenda", commmeeting),
+                    new SqlParameter("@GSSChat", commmeeting1),
+                    new SqlParameter("@GSSImportantperson", commmeeting2),
+
+                    new SqlParameter( "@GSS_AgendaOther",txt_bookformatOther.Text   ),
+
+                    new SqlParameter(   "@otherGSSChat", txt_bookformatOther1.Text   ),
+
+                    new SqlParameter("@GSS_TB", commmetingTB),
+                    new SqlParameter("@GSS_FC", commmetingFC),
+
+                    new SqlParameter("@MM_Mtg", muhula55),
+                    new SqlParameter("@MM_Attended", vill2),
+
+                    new SqlParameter("@MM_Agenda", Muhula),
+                    new SqlParameter("@MMChat", Muhula1),
+                    new SqlParameter("@MMImportantperson", Muhula2),
+
+                    new SqlParameter("@MM_AgendaOther",   txtmOther.Text   ),
+                    new SqlParameter(  "@othermmchat",   txtmOther1.Text),
+
+                    new SqlParameter("@MM_TB", muhulaTb),
+                    new SqlParameter("@MM_FC", muhulaFC),
+
+                    new SqlParameter("@Com_Mtg", commNew),
+                    new SqlParameter("@Com_Attended", vill3),
+
+                    new SqlParameter("@Com_Agenda", othercom),
+                    new SqlParameter("@OtherChat", othercom1),
+
+                    new SqlParameter(
+                    "@OtherImportantperson",
+                    othercom2
+                    ),
+
+                    new SqlParameter(
+                    "@Com_AgendaOther",
+                    txtOtherComm.Text
+                    ),
+
+                    new SqlParameter(
+                    "@OtherspecifyChat",
+                    txtOtherComm1.Text
+                    ),
+
+                    new SqlParameter("@Com_TB", othercommTb),
+                    new SqlParameter("@Com_FC", othercommFC),
+
+                    new SqlParameter("@ComContact", Comm),
+
+                    new SqlParameter(
+                    "@ComContact_Op",
+                    AmbitionComm
+                    ),
+
+                    new SqlParameter(
+                    "@ComContact_Op_Other",
+                    txt_con_other.Text
+                    ),
+
+                    new SqlParameter("@ComContact_TB", CommFCTB),
+                    new SqlParameter("@ComContact_FC", CommFC),
+
+                    new SqlParameter(
+                    "@ComContact_Agenda",
+                    Ambition
+                    ),
+
+                    new SqlParameter(
+                    "@ConContact_AgendaOther",
+                    txtOtherCon.Text
+                    ),
+
+                    new SqlParameter("@Support", SupportCC),
+
+                    new SqlParameter(
+                    "@Support_Op",
+                    Suport
+                    ),
+
+                    new SqlParameter(
+                    "@Support_Op_Other",
+                    txtOtherSupport.Text
+                    ),
+
+                    new SqlParameter("@Support_TB", Supporttb),
+                    new SqlParameter("@Support_FC", SupportFC),
+
+                    new SqlParameter("@Others_FC", lotherfc),
+                    new SqlParameter("@Others_TB", lotherTB),
+
+                    new SqlParameter(
+                    "@Others_Desc",
+                    txtmainother.Text
+                    ),
+
+                    new SqlParameter("@UserEntry", 3),
+
+                    new SqlParameter(       "@ApproveStatus",    "B"  ),
+
+                    new SqlParameter(
+                    "@Remarks",
+                    ddlRemark.SelectedValue
+                    ),
+
+                    new SqlParameter(
+                    "@Any_Other",
+                    tc1.Text.Trim()
+                    ),
+
+                    new SqlParameter("@Com_TB2", c1),
+                    new SqlParameter("@Com_FC2", c2),
+
+                    new SqlParameter(
+                    "@Com_Agenda2",
+                    othercom11
+                    ),
+
+                    new SqlParameter(
+                    "@Com_AgendaOther2",
+                    txtoC111.Text
+                    ),
+
+                    new SqlParameter(
+                    "@Any_Other2",
+                    txtoC1.Text
+                    ),
+
+                    new SqlParameter("@Com_Attended2", Att1),
+
+                    new SqlParameter("@GSSFemale", txtGSSFe),
+                    new SqlParameter("@GSSMale", txtGssMa),
+
+                    new SqlParameter("@MMFemale", txtMMFe),
+                    new SqlParameter("@MMMale", txtMMMa),
+
+                    new SqlParameter("@OtherFemale", txtComFe),
+                    new SqlParameter("@OtherMale", txtComMa),
+
+                    new SqlParameter(
+                    "@GSSEnrollHault",
+                    GssEnrollRetan
+                    ),
+
+                    new SqlParameter(
+                    "@MMEnrollHault",
+                    MMEnrollRetan
+                    ),
+
+                    new SqlParameter(
+                    "@OtherEnrollHault",
+                    Comm1EnrollRetan
+                    ),
+
+                    new SqlParameter("@TBCode", GGTbCode),
+
+                    new SqlParameter(
+                    "@TBCodemm",
+                    MMTbCode
+                    ),
+
+                    new SqlParameter(
+                    "@Muhalla",
+                    txtMumaullGss.Text
+                    ),
+
+                    new SqlParameter(
+                    "@Muhallamm",
+                    txtMumaullmm.Text
+                    ),
+
+                    new SqlParameter(
+                    "@BONotice",
+                    ddlBo.SelectedValue
+                    ),
+
+                    new SqlParameter(
+                    "@TBCodeOtherMeet",
+                    Com1TBCode
+                    ),
+
+                    new SqlParameter(
+                    "@TBCodeOtherMeet2",
+                    Com2TBCode
+                    )
+                    };
+                icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Insert_tblActivityUpdate_Village", cmdParameters1);
+
             }
 
             if (Session["user_level"].ToString() == "19")
@@ -5971,17 +6620,410 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                     Muhula = "0";
                 }
 
-                StudentTSInsertQuery = "";
-                StudentTSInsertQuery = " INSERT INTO tblActivityUpdate_Village([VillageCode],[UserID] ,[GUID_Village] ,[ActivityDate] ,[TBHandholding], [GSS_Mtg]  ,[GSS_Attended] ,[GSS_Agenda],[GSSChat],GSSImportantperson,[GSS_AgendaOther],[otherGSSChat] ,[GSS_TB] ,[GSS_FC] ,      [MM_Mtg] ,[MM_Attended] ,[MM_Agenda],[MMChat],[MMImportantperson],  [MM_AgendaOther],[othermmchat],[MM_TB] ,[MM_FC] , [Com_Mtg] ,[Com_Attended] ,[Com_Agenda],[OtherChat],[OtherImportantperson],[Com_AgendaOther], [OtherspecifyChat],[Com_TB],[Com_FC] , [ComContact] ,[ComContact_Op] ,[ComContact_Op_Other] ,[ComContact_TB],[ComContact_FC], ComContact_Agenda,ConContact_AgendaOther,    [Support]   ,[Support_Op]  ,[Support_Op_Other] ,[Support_TB],[Support_FC]  ,[Others_FC] ,[Others_TB]  ,[Others_Desc],UserEntry,ApproveStatus,Remarks,Any_Other,Com_TB2,Com_FC2,Com_Agenda2,Com_AgendaOther2,Any_Other2,Com_Attended2,CreateBy,GSSFemale,GSSMale,MMFemale,MMMale,OtherFemale,OtherMale,GSSEnrollHault,MMEnrollHault,OtherEnrollHault,TBCode,	TBCodemm,	Muhalla,	Muhallamm,	BONotice,TBCodeOtherMeet	,TBCodeOtherMeet2) ";
-                StudentTSInsertQuery += " Values('" + ddlVilage.SelectedValue + "','" + ddlUser.SelectedValue + "','" + UNICOde + "','" + Convert.ToDateTime(FcDate).ToString("yyy/MM/dd") + "','" + TBHoldIng + "','" + GGS + "','" + vill1 + "','" + commmeeting + "','" + commmeeting1 + "','" + commmeeting2 + "','" + txt_bookformatOther.Text + "','" + txt_bookformatOther1.Text + "'," + commmetingTB + "," + commmetingFC + "," + muhula55 + "," + vill2 + ",'" + Muhula + "','" + Muhula1 + "','" + Muhula2 + "','" + txtmOther.Text + "','" + txtmOther1.Text + "','" + muhulaTb + "','" + muhulaFC + "','" + commNew + "','" + vill3 + "','" + othercom + "','" + othercom1 + "','" + othercom2 + "','" + txtOtherComm.Text + "','" + txtOtherComm1.Text + "'," + othercommTb + "," + othercommFC + ",'" + Comm + "','" + AmbitionComm + "','" + txt_con_other.Text + "','" + CommFCTB + "','" + CommFC + "','" + Ambition + "','" + txtOtherCon.Text + "'," + SupportCC + ",'" + Suport + "','" + txtOtherSupport.Text + "'," + Supporttb + "," + SupportFC + "," + lotherfc + "," + lotherTB + ",'" + txtmainother.Text + "','3','FC','" + ddlRemark.SelectedValue + "','" + tc1.Text.Trim() + "'," + c1 + "," + c2 + ",'" + othercom11 + "','" + txtoC111.Text + "','" + txtoC1.Text + "'," + Att1 + ",'" + Session["username"].ToString() + "'," + txtGSSFe + "," + txtGssMa + "," + txtMMFe + "," + txtMMMa + "," + txtComFe + "," + txtComMa + "," + GssEnrollRetan + "," + MMEnrollRetan + "," + Comm1EnrollRetan + ",'" + GGTbCode + "','" + MMTbCode + "','" + txtMumaullGss.Text + "','" + txtMumaullmm.Text + "','" + ddlBo.SelectedValue + "','" + Com1TBCode + "','" + Com2TBCode + "')";
-                InsertTS = objMain.AddUpdate(StudentTSInsertQuery);
+                    SqlParameter[] cmdParameters =
+                    {
+                    new SqlParameter("@VillageCode", ddlVilage.SelectedValue),
+                    new SqlParameter("@UserID", ddlUser.SelectedValue),
+                    new SqlParameter("@GUID_Village", UNICOde),
 
-                StudentTSInsertQuery = "";
-                StudentTSInsertQuery = " INSERT INTO tblActivityUpdate_Village([VillageCode],[UserID] ,[GUID_Village] ,[ActivityDate] ,[TBHandholding], [GSS_Mtg]  ,[GSS_Attended] ,[GSS_Agenda],[GSSChat],GSSImportantperson  ,[GSS_AgendaOther],[otherGSSChat] ,[GSS_TB] ,[GSS_FC] ,      [MM_Mtg] ,[MM_Attended] ,[MM_Agenda],[MMChat],[MMImportantperson],  [MM_AgendaOther],[othermmchat],[MM_TB] ,[MM_FC] , [Com_Mtg] ,[Com_Attended] ,[Com_Agenda],[OtherChat],[OtherImportantperson],[Com_AgendaOther] ,[OtherspecifyChat],[Com_TB],[Com_FC] , [ComContact] ,[ComContact_Op] ,[ComContact_Op_Other] ,[ComContact_TB],[ComContact_FC], ComContact_Agenda,ConContact_AgendaOther,    [Support]   ,[Support_Op]  ,[Support_Op_Other] ,[Support_TB],[Support_FC]  ,[Others_FC] ,[Others_TB]  ,[Others_Desc],UserEntry,ApproveStatus,Remarks,Any_Other,Com_TB2,Com_FC2,Com_Agenda2,Com_AgendaOther2,Any_Other2,Com_Attended2,GSSFemale,GSSMale,MMFemale,MMMale,OtherFemale,OtherMale,GSSEnrollHault,MMEnrollHault,OtherEnrollHault,TBCode,	TBCodemm,	Muhalla,	Muhallamm,	BONotice,TBCodeOtherMeet	,TBCodeOtherMeet2) ";
-                StudentTSInsertQuery += " Values('" + ddlVilage.SelectedValue + "','" + ddlUser.SelectedValue + "','" + UNICOde + "','" + Convert.ToDateTime(FcDate).ToString("yyy/MM/dd") + "','" + TBHoldIng + "','" + GGS + "','" + vill1 + "','" + commmeeting + "','" + commmeeting1 + "','" + commmeeting2 + "','" + txt_bookformatOther.Text + "','" + txt_bookformatOther1.Text + "'," + commmetingTB + "," + commmetingFC + "," + muhula55 + "," + vill2 + ",'" + Muhula + "','" + Muhula1 + "','" + Muhula2 + "','" + txtmOther.Text + "','" + txtmOther1.Text + "','" + muhulaTb + "','" + muhulaFC + "','" + commNew + "','" + vill3 + "','" + othercom + "','" + othercom1 + "','" + othercom2 + "','" + txtOtherComm.Text + "','" + txtOtherComm1.Text + "'," + othercommTb + "," + othercommFC + ",'" + Comm + "','" + AmbitionComm + "','" + txt_con_other.Text + "','" + CommFCTB + "','" + CommFC + "','" + Ambition + "','" + txtOtherCon.Text + "'," + SupportCC + ",'" + Suport + "','" + txtOtherSupport.Text + "'," + Supporttb + "," + SupportFC + "," + lotherfc + "," + lotherTB + ",'" + txtmainother.Text + "','2','FC','" + ddlRemark.SelectedValue + "','" + tc1.Text.Trim() + "'," + c1 + "," + c2 + ",'" + othercom11 + "','" + txtoC111.Text + "','" + txtoC1.Text + "'," + Att1 + "," + txtGSSFe + "," + txtGssMa + "," + txtMMFe + "," + txtMMMa + "," + txtComFe + "," + txtComMa + "," + GssEnrollRetan + "," + MMEnrollRetan + "," + Comm1EnrollRetan + ",'" + GGTbCode + "','" + MMTbCode + "','" + txtMumaullGss.Text + "','" + txtMumaullmm.Text + "','" + ddlBo.SelectedValue + "','" + Com1TBCode + "','" + Com2TBCode + "')";
-                InsertTS = objMain.AddUpdate(StudentTSInsertQuery);
+                    new SqlParameter("@ActivityDate", Convert.ToDateTime(FcDate)      ),
+
+                    new SqlParameter("@TBHandholding", TBHoldIng),
+
+                    new SqlParameter("@GSS_Mtg", GGS),
+                    new SqlParameter("@GSS_Attended", vill1),
+                    new SqlParameter("@GSS_Agenda", commmeeting),
+                    new SqlParameter("@GSSChat", commmeeting1),
+                    new SqlParameter("@GSSImportantperson", commmeeting2),
+
+                    new SqlParameter( "@GSS_AgendaOther",txt_bookformatOther.Text   ),
+
+                    new SqlParameter(   "@otherGSSChat", txt_bookformatOther1.Text   ),
+
+                    new SqlParameter("@GSS_TB", commmetingTB),
+                    new SqlParameter("@GSS_FC", commmetingFC),
+
+                    new SqlParameter("@MM_Mtg", muhula55),
+                    new SqlParameter("@MM_Attended", vill2),
+
+                    new SqlParameter("@MM_Agenda", Muhula),
+                    new SqlParameter("@MMChat", Muhula1),
+                    new SqlParameter("@MMImportantperson", Muhula2),
+
+                    new SqlParameter("@MM_AgendaOther",   txtmOther.Text   ),
+                    new SqlParameter(  "@othermmchat",   txtmOther1.Text),
+
+                    new SqlParameter("@MM_TB", muhulaTb),
+                    new SqlParameter("@MM_FC", muhulaFC),
+
+                    new SqlParameter("@Com_Mtg", commNew),
+                    new SqlParameter("@Com_Attended", vill3),
+
+                    new SqlParameter("@Com_Agenda", othercom),
+                    new SqlParameter("@OtherChat", othercom1),
+
+                    new SqlParameter(
+                    "@OtherImportantperson",
+                    othercom2
+                    ),
+
+                    new SqlParameter(
+                    "@Com_AgendaOther",
+                    txtOtherComm.Text
+                    ),
+
+                    new SqlParameter(
+                    "@OtherspecifyChat",
+                    txtOtherComm1.Text
+                    ),
+
+                    new SqlParameter("@Com_TB", othercommTb),
+                    new SqlParameter("@Com_FC", othercommFC),
+
+                    new SqlParameter("@ComContact", Comm),
+
+                    new SqlParameter(
+                    "@ComContact_Op",
+                    AmbitionComm
+                    ),
+
+                    new SqlParameter(
+                    "@ComContact_Op_Other",
+                    txt_con_other.Text
+                    ),
+
+                    new SqlParameter("@ComContact_TB", CommFCTB),
+                    new SqlParameter("@ComContact_FC", CommFC),
+
+                    new SqlParameter(
+                    "@ComContact_Agenda",
+                    Ambition
+                    ),
+
+                    new SqlParameter(
+                    "@ConContact_AgendaOther",
+                    txtOtherCon.Text
+                    ),
+
+                    new SqlParameter("@Support", SupportCC),
+
+                    new SqlParameter(
+                    "@Support_Op",
+                    Suport
+                    ),
+
+                    new SqlParameter(
+                    "@Support_Op_Other",
+                    txtOtherSupport.Text
+                    ),
+
+                    new SqlParameter("@Support_TB", Supporttb),
+                    new SqlParameter("@Support_FC", SupportFC),
+
+                    new SqlParameter("@Others_FC", lotherfc),
+                    new SqlParameter("@Others_TB", lotherTB),
+
+                    new SqlParameter(
+                    "@Others_Desc",
+                    txtmainother.Text
+                    ),
+
+                    new SqlParameter("@UserEntry", 2),
+
+                    new SqlParameter(       "@ApproveStatus",    "FC"  ),
+
+                    new SqlParameter(
+                    "@Remarks",
+                    ddlRemark.SelectedValue
+                    ),
+
+                    new SqlParameter(
+                    "@Any_Other",
+                    tc1.Text.Trim()
+                    ),
+
+                    new SqlParameter("@Com_TB2", c1),
+                    new SqlParameter("@Com_FC2", c2),
+
+                    new SqlParameter(
+                    "@Com_Agenda2",
+                    othercom11
+                    ),
+
+                    new SqlParameter(
+                    "@Com_AgendaOther2",
+                    txtoC111.Text
+                    ),
+
+                    new SqlParameter(
+                    "@Any_Other2",
+                    txtoC1.Text
+                    ),
+
+                    new SqlParameter("@Com_Attended2", Att1),
+                             new SqlParameter("@CreateBy",  Convert.ToString(Session["username"])),
+                    new SqlParameter("@GSSFemale", txtGSSFe),
+                    new SqlParameter("@GSSMale", txtGssMa),
+
+                    new SqlParameter("@MMFemale", txtMMFe),
+                    new SqlParameter("@MMMale", txtMMMa),
+
+                    new SqlParameter("@OtherFemale", txtComFe),
+                    new SqlParameter("@OtherMale", txtComMa),
+
+                    new SqlParameter(
+                    "@GSSEnrollHault",
+                    GssEnrollRetan
+                    ),
+
+                    new SqlParameter(
+                    "@MMEnrollHault",
+                    MMEnrollRetan
+                    ),
+
+                    new SqlParameter(
+                    "@OtherEnrollHault",
+                    Comm1EnrollRetan
+                    ),
+
+                    new SqlParameter("@TBCode", GGTbCode),
+
+                    new SqlParameter(
+                    "@TBCodemm",
+                    MMTbCode
+                    ),
+
+                    new SqlParameter(
+                    "@Muhalla",
+                    txtMumaullGss.Text
+                    ),
+
+                    new SqlParameter(
+                    "@Muhallamm",
+                    txtMumaullmm.Text
+                    ),
+
+                    new SqlParameter(
+                    "@BONotice",
+                    ddlBo.SelectedValue
+                    ),
+
+                    new SqlParameter(
+                    "@TBCodeOtherMeet",
+                    Com1TBCode
+                    ),
+
+                    new SqlParameter(
+                    "@TBCodeOtherMeet2",
+                    Com2TBCode
+                    )
+                    };
+                icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Insert_tblActivityUpdate_Village", cmdParameters);
+
+               
+
+                SqlParameter[] cmdParameters1 =
+             {
+                    new SqlParameter("@VillageCode", ddlVilage.SelectedValue),
+                    new SqlParameter("@UserID", ddlUser.SelectedValue),
+                    new SqlParameter("@GUID_Village", UNICOde),
+
+                    new SqlParameter("@ActivityDate", Convert.ToDateTime(FcDate)      ),
+
+                    new SqlParameter("@TBHandholding", TBHoldIng),
+
+                    new SqlParameter("@GSS_Mtg", GGS),
+                    new SqlParameter("@GSS_Attended", vill1),
+                    new SqlParameter("@GSS_Agenda", commmeeting),
+                    new SqlParameter("@GSSChat", commmeeting1),
+                    new SqlParameter("@GSSImportantperson", commmeeting2),
+
+                    new SqlParameter( "@GSS_AgendaOther",txt_bookformatOther.Text   ),
+
+                    new SqlParameter(   "@otherGSSChat", txt_bookformatOther1.Text   ),
+
+                    new SqlParameter("@GSS_TB", commmetingTB),
+                    new SqlParameter("@GSS_FC", commmetingFC),
+
+                    new SqlParameter("@MM_Mtg", muhula55),
+                    new SqlParameter("@MM_Attended", vill2),
+
+                    new SqlParameter("@MM_Agenda", Muhula),
+                    new SqlParameter("@MMChat", Muhula1),
+                    new SqlParameter("@MMImportantperson", Muhula2),
+
+                    new SqlParameter("@MM_AgendaOther",   txtmOther.Text   ),
+                    new SqlParameter(  "@othermmchat",   txtmOther1.Text),
+
+                    new SqlParameter("@MM_TB", muhulaTb),
+                    new SqlParameter("@MM_FC", muhulaFC),
+
+                    new SqlParameter("@Com_Mtg", commNew),
+                    new SqlParameter("@Com_Attended", vill3),
+
+                    new SqlParameter("@Com_Agenda", othercom),
+                    new SqlParameter("@OtherChat", othercom1),
+
+                    new SqlParameter(
+                    "@OtherImportantperson",
+                    othercom2
+                    ),
+
+                    new SqlParameter(
+                    "@Com_AgendaOther",
+                    txtOtherComm.Text
+                    ),
+
+                    new SqlParameter(
+                    "@OtherspecifyChat",
+                    txtOtherComm1.Text
+                    ),
+
+                    new SqlParameter("@Com_TB", othercommTb),
+                    new SqlParameter("@Com_FC", othercommFC),
+
+                    new SqlParameter("@ComContact", Comm),
+
+                    new SqlParameter(
+                    "@ComContact_Op",
+                    AmbitionComm
+                    ),
+
+                    new SqlParameter(
+                    "@ComContact_Op_Other",
+                    txt_con_other.Text
+                    ),
+
+                    new SqlParameter("@ComContact_TB", CommFCTB),
+                    new SqlParameter("@ComContact_FC", CommFC),
+
+                    new SqlParameter(
+                    "@ComContact_Agenda",
+                    Ambition
+                    ),
+
+                    new SqlParameter(
+                    "@ConContact_AgendaOther",
+                    txtOtherCon.Text
+                    ),
+
+                    new SqlParameter("@Support", SupportCC),
+
+                    new SqlParameter(
+                    "@Support_Op",
+                    Suport
+                    ),
+
+                    new SqlParameter(
+                    "@Support_Op_Other",
+                    txtOtherSupport.Text
+                    ),
+
+                    new SqlParameter("@Support_TB", Supporttb),
+                    new SqlParameter("@Support_FC", SupportFC),
+
+                    new SqlParameter("@Others_FC", lotherfc),
+                    new SqlParameter("@Others_TB", lotherTB),
+
+                    new SqlParameter(
+                    "@Others_Desc",
+                    txtmainother.Text
+                    ),
+
+                    new SqlParameter("@UserEntry", 3),
+
+                    new SqlParameter(       "@ApproveStatus",    "FC"  ),
+
+                    new SqlParameter(
+                    "@Remarks",
+                    ddlRemark.SelectedValue
+                    ),
+
+                    new SqlParameter(
+                    "@Any_Other",
+                    tc1.Text.Trim()
+                    ),
+
+                    new SqlParameter("@Com_TB2", c1),
+                    new SqlParameter("@Com_FC2", c2),
+
+                    new SqlParameter(
+                    "@Com_Agenda2",
+                    othercom11
+                    ),
+
+                    new SqlParameter(
+                    "@Com_AgendaOther2",
+                    txtoC111.Text
+                    ),
+
+                    new SqlParameter(
+                    "@Any_Other2",
+                    txtoC1.Text
+                    ),
+
+                    new SqlParameter("@Com_Attended2", Att1),
+                                    new SqlParameter("@CreateBy",  Convert.ToString(Session["username"])),
+                    new SqlParameter("@GSSFemale", txtGSSFe),
+                    new SqlParameter("@GSSMale", txtGssMa),
+
+                    new SqlParameter("@MMFemale", txtMMFe),
+                    new SqlParameter("@MMMale", txtMMMa),
+
+                    new SqlParameter("@OtherFemale", txtComFe),
+                    new SqlParameter("@OtherMale", txtComMa),
+
+                    new SqlParameter(
+                    "@GSSEnrollHault",
+                    GssEnrollRetan
+                    ),
+
+                    new SqlParameter(
+                    "@MMEnrollHault",
+                    MMEnrollRetan
+                    ),
+
+                    new SqlParameter(
+                    "@OtherEnrollHault",
+                    Comm1EnrollRetan
+                    ),
+
+                    new SqlParameter("@TBCode", GGTbCode),
+
+                    new SqlParameter(
+                    "@TBCodemm",
+                    MMTbCode
+                    ),
+
+                    new SqlParameter(
+                    "@Muhalla",
+                    txtMumaullGss.Text
+                    ),
+
+                    new SqlParameter(
+                    "@Muhallamm",
+                    txtMumaullmm.Text
+                    ),
+
+                    new SqlParameter(
+                    "@BONotice",
+                    ddlBo.SelectedValue
+                    ),
+
+                    new SqlParameter(
+                    "@TBCodeOtherMeet",
+                    Com1TBCode
+                    ),
+
+                    new SqlParameter(
+                    "@TBCodeOtherMeet2",
+                    Com2TBCode
+                    )
+                    };
+                icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Insert_tblActivityUpdate_Village", cmdParameters1);
+
             }
-            if (InsertTS == true)
+            if (icount >0)
             {
 
 
@@ -5997,7 +7039,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
     {
 
         //  imgMKS.ImageUrl = ResolveUrl("~/TabletImage/" +  lblMM.Text);
-        //imgMKS.ImageUrl = Server.MapPath("~/TabletImage/" + lblMM.Text);
+        //imgMKS.ImageUrl = Server.MapPath(Comman.GetImagePath("TabletImagePath") + "/" + lblMM.Text);
         imgMKS.ImageUrl = "TabletImage/" + lblMM.Text;
         MpexdrDistrict.Show();
 
@@ -6006,7 +7048,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
     {
 
 
-        //  imgMKS.ImageUrl = Server.MapPath("~/TabletImage/" + lblGG.Text);
+        //  imgMKS.ImageUrl = Server.MapPath(Comman.GetImagePath("TabletImagePath") + "/"" + lblGG.Text);
         imgMKS.ImageUrl = "TabletImage/" + lblGG.Text;
 
         //     imgMKS.ImageUrl = ResolveUrl("~/TabletImage/" + lblGG.Text);
@@ -6015,14 +7057,14 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
     }
     protected void btnimgComm1_Click(object sender, EventArgs e)
     {
-        //imgMKS.ImageUrl = Server.MapPath("~/TabletImage/" + lblCom.Text);
+        //imgMKS.ImageUrl = Server.MapPath(Comman.GetImagePath("TabletImagePath") + "/"" + lblCom.Text);
         imgMKS.ImageUrl = "TabletImage/" + lblCom.Text;
         //imgMKS.ImageUrl = ResolveUrl("~/TabletImage/" + lblCom.Text);
         MpexdrDistrict.Show();
     }
     protected void btnimgComm2_Click(object sender, EventArgs e)
     {
-        // imgMKS.ImageUrl = Server.MapPath("~/TabletImage/" + lblCom1.Text);
+        // imgMKS.ImageUrl = Server.MapPath(Comman.GetImagePath("TabletImagePath") + "/"" + lblCom1.Text);
         imgMKS.ImageUrl = "TabletImage/" + lblCom1.Text;
         //imgMKS.ImageUrl = ResolveUrl("~/TabletImage/" +  lblCom1.Text);
         MpexdrDistrict.Show();
@@ -6510,10 +7552,10 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
              {
                new SqlParameter("@Villagecode",  ddlVilage.SelectedValue),
                new SqlParameter("@Fyear",  Session["FinYear"].ToString()),
-         
-      
-                 };
 
+
+                 };
+				 
         DataTable dtUserVillage = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptLoadBundal]", parm);
         Session["D2dBindChild"] = dtUserVillage;
         Gv_DisplayNew.DataSource = dtUserVillage;
@@ -6586,8 +7628,8 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                         new SqlParameter("@UniqueCode", lbUniqueCode11.Text ),
                         new SqlParameter("@ActivityStatus", lblActivityStatus1.Text),
                          new SqlParameter("@NewGuid", UNICOde),
-                     
-                       
+
+
                     };
         Int32 icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "UpdateContactChild", cmdParameters);
 
