@@ -1831,7 +1831,7 @@ public partial class frmAssmentReport : System.Web.UI.Page
             DataTable dtHeader = null;
              if (Convert.ToInt32(ddlYear.SelectedValue) >= 2026)
             {
-                dtHeader = Get_DataFor2FilterReport("rptSurver2026", ddlForm.SelectedValue.ToString(), "1");
+                dtHeader = Get_DataFor2FilterReport("rptSurver2027", ddlForm.SelectedValue.ToString(), "1");
             }
             else if(Convert.ToInt32(ddlYear.SelectedValue) == 2025)
             {
@@ -1887,7 +1887,7 @@ public partial class frmAssmentReport : System.Web.UI.Page
         int dd = 0;
         for (int j = 0; j < dtMain.Rows.Count; j++)
         {
-            for (int i = 28; i < dtMain.Columns.Count ; i++)
+            for (int i = 29; i < dtMain.Columns.Count ; i++)
             {
                 if (dtMain.Columns[i].ColumnName == "Total_Question")
                 {

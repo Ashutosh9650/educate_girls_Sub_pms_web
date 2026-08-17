@@ -676,6 +676,27 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="form-group" id="divSkill" runat="server" visible="false">
+                                                    <div class="row">
+                                                        <label class="col-sm-4">Skill training Name   <span style="color: Red">*</span></label>
+                                                        <div class="col-sm-8">
+                                                               <asp:DropDownList ID="ddlSkill" OnSelectedIndexChanged="ddlSkill_SelectedIndexChanged" AutoPostBack="true" runat="server"
+                                                           class="form-control ">
+                                                        </asp:DropDownList>
+                                                         
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                          <div class="form-group" id="div1" runat="server" visible="false">
+                                                    <div class="row">
+                                                        <label class="col-sm-4"> Other (Specify)  <span style="color: Red">*</span></label>
+                                                        <div class="col-sm-8">
+                                                           <asp:TextBox runat="server" ID="txtOtherskill" class="form-control"></asp:TextBox>
+                                              
+                                                         
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <div class="form-group" id="divOther" runat="server" visible="false">
                                                     <div class="row">
                                                         <label class="col-sm-4">Specific training <span style="color: Red">*</span></label>

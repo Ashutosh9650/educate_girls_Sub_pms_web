@@ -481,20 +481,20 @@
                         <asp:LinkButton ID="LinkButton25" runat="server" OnClick="LnkGKPSubjectLevelk" Style="color: gren; color: blue;"
                             Text="GKP Subject Level Master"></asp:LinkButton>
                     </li>
-                    <li class=" active li-width"  runat="server" visible="false">
+                    <li class=" active li-width"  runat="server" >
                         <asp:LinkButton ID="LinkButton21" runat="server" OnClick="LnkDeatildGovtLed_OnClick" Style="color: gren; color: blue;"
                             Text="GKP Child Registration Govt Led"></asp:LinkButton>
                     </li>
-                     <li class=" active li-width"  runat="server" visible="false">
+                     <li class=" active li-width"  runat="server">
                         <asp:LinkButton ID="LinkButton22" runat="server" OnClick="LnkFillingSystemGovt_OnClick" Style="color: gren; color: blue;"
                             Text="GKP Child Attendance Govt Led"></asp:LinkButton>
                     </li>
-                     <li class=" active li-width"  runat="server" visible="false">
+                     <li class=" active li-width"  runat="server" >
                         <asp:LinkButton ID="LinkButton23" runat="server" OnClick="LnkEXgovt_OnClick" Style="color: gren; color: blue;"
                             Text="GKP Assessment Govt Led"></asp:LinkButton>
                     </li>
 
-                     <li class=" active li-width"  runat="server" visible="false">
+                     <li class=" active li-width"  runat="server" >
                         <asp:LinkButton ID="LinkButton24" runat="server" OnClick="LnkFillingSystemGovtclass_OnClick" Style="color: gren; color: blue;"
                             Text="GKP Child Class Wise Attendance Govt Led"></asp:LinkButton>
                     </li>

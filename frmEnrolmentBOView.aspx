@@ -1,12 +1,120 @@
-﻿<%@ Page Title="GKP School Master Update" Language="C#" MasterPageFile="~/Site.master"
+﻿<%@ Page Title="Enrolment Mapping Approval" Language="C#" MasterPageFile="~/Site.master"
     AutoEventWireup="true" CodeFile="frmEnrolmentBOView.aspx.cs"
     Inherits="frmEnrolmentBOView" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 
 
+
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="Server">
         <style>
+
+            /* ===== FIX: Enrolment card layout at 100% browser zoom ===== */
+
+    /* left block takes remaining space, right block never shrinks */
+    .new_card_between {
+        flex-wrap: nowrap;
+        gap: 12px;
+    }
+
+    .left_side {
+        flex: 1 1 auto;
+        min-width: 0;
+        align-items: flex-start;
+    }
+
+    .right_side {
+        flex: 0 0 auto;
+    }
+
+    .flex_dir {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    /* allow the info line to break BETWEEN fields, never inside a name */
+    .new_card .disp_flex {
+        flex-wrap: wrap;
+        align-items: center;
+        row-gap: 4px;
+        column-gap: 10px;
+    }
+
+    .new_card .disp_flex > span,
+    .new_card .disp_flex > p {
+        white-space: nowrap;
+    }
+
+    /* 90%-zoom look at 100% zoom: slightly smaller type */
+    .new_card .disp_flex p {
+        font-size: 13px;
+        margin: 0;
+    }
+
+    .new_card .disp_flex .tb_id {
+        font-size: 11px;
+        padding: 1px 8px;
+    }
+
+    .new_card .disp_flex.fc {
+        font-size: 12px;
+        column-gap: 12px;
+    }
+
+    .new_card .left_side > img {
+        width: 34px;
+        height: 34px;
+    }
+
+    /* right side compact */
+    .fuzzy_box {
+        padding: 3px 10px;
+        margin-right: 6px;
+    }
+
+        .fuzzy_box b {
+            font-size: 14px;
+        }
+
+        .fuzzy_box small {
+            font-size: 9px;
+        }
+
+    .new_card .pend {
+        padding: 2px 10px;
+    }
+
+        .new_card .pend .btn {
+            font-size: 12px;
+            padding: 4px 10px;
+            white-space: nowrap;
+        }
+
+    /* smaller laptop screens (1366px etc.) - shrink a bit more */
+    @media (max-width: 1400px) {
+        .new_card .disp_flex.fc {
+            font-size: 11.5px;
+            column-gap: 10px;
+        }
+
+        .new_card .disp_flex p {
+            font-size: 12.5px;
+        }
+    }
+
+    @media (max-width: 991px) {
+        .new_card_between {
+            flex-wrap: wrap;
+        }
+
+        .right_side {
+            width: 100%;
+        }
+
+            .right_side .disp_flex {
+                justify-content: flex-end;
+            }
+    }
         .container-fluid {
             padding-right: 15px;
             padding-left: 15px;
@@ -688,6 +796,18 @@
            }
 
            function LoadCards() {
+
+
+
+               var villageCode = $("#<%=ddlVillage.ClientID%>").val();
+
+               if (villageCode != null && $.trim(villageCode).length > 10) {
+                 
+               } else {
+                   alert("Please select village");
+                   return false
+               }
+            
                debugger;
                var stateCode = $("#<%=ddlState.ClientID%>").val();
                var districtCode = $("#<%=ddlDistrict.ClientID%>").val();
@@ -1000,7 +1120,7 @@
 
                                         <div class="disp-flex">
 
-                                            <h3 class="text-danger font-weight-bold" style="margin: 0">Baseline  Approval</h3>
+                                            <h3 class="text-danger font-weight-bold" style="margin: 0"> Enrolment Mapping Approval</h3>
 
                                             
                                         </div>
@@ -1116,7 +1236,7 @@
 
                                                    
                                                     <li id="liApprovalQueue" runat="server">
-                                                        <a href="#tab3" role="tab" data-toggle="tab" >Approval Queue
+                                                        <a href="#tab3" role="tab" data-toggle="tab" style="display:none" >Approval Queue
            
                                                             <span id="ApprovalQueueCNT" class="bridge"></span>
                                                         </a>
@@ -1147,13 +1267,13 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-sm-12" style="padding-top: 25px">
+                                                            <div class="col-sm-12" >
                                                                 <div class="panel panel-default">
                                                                     <div class="panel-heading">
                                                                         <div class="disp_between" style="color: inherit; margin-bottom: 0px">
                                                                             <div class="card_title">
                                                                                 <span class="red_circle"></span>
-                                                                                <span>Personal Details</span>
+                                                                                <span>Enrolment Details</span>
                                                                             </div>
                                                                             <div>
                                                                                 <button type="button"
@@ -1269,7 +1389,4 @@
   
     </asp:UpdatePanel>
 </asp:Content>
-
-
-
 

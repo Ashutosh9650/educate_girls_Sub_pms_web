@@ -405,13 +405,13 @@ public partial class frmSearchReEnrollment : System.Web.UI.Page
                 //string strQry = " Select [UniqueCode],tblDTD.[VillageCode],Migration,SurvayDate,DoChild,AsOnDate,StrConv(Mauhalla,3) as Mauhalla,[Serial],[HHNo],[SocialCategory],[FamilyOccupation],StrConv([ChildName],3) as ChildName,StrConv([FathersName],3) as FathersName,[Gender],[DOBAvailable],[DOB],[AgeAson],[AgeProof],[EduationStatus],[School],[ReasonDO_NE],[MigrationDuration],[EnrolmentCategory], mst5Village.PanchayatCode,mst5Village.BlockCode,mst5Village.DistrictCode,mstSchool.Name,Status FROM (mst5Village INNER JOIN tblDTD ON mst5Village.VillageCode = tblDTD.VillageCode) left JOIN mstSchool ON tblDTD.School = mstSchool.SchoolCode where UniqueCode='" + ChildCode + "'  ";
                 //DataTable dt = dbt.VGridFill(strQry);
 
-                StudentTSInsertQuery = " INSERT INTO tblReEnrolment([UniqueChildCode],[VillageCode],[Serial],[Category],[Class],[Session],ChildName,FatherName,Gender,[SchoolCode],[EnrolmentDate],[DOB],AgeAson,AsOnDate,[Type],EnrollCategory,[Status],Createdate,CreateBy,HouseNo,[EnrollmentCode]) Values  ('" + UNICOde + "','" + Session["VillCode"].ToString() + "','" + strSerial + "'," + ddlScat + "," + dllClasss + "," + DateTime.Now.Year + ",'" + ChildName + "','" + FathersName + "'," + Gender + ",'" + Session["Schoolid"] + "','" + Adminision.ToString("yyyy-MM-dd") + "','" + DOB.ToString("yyyy-MM-dd") + "'," + Age + ",'" + DOB.ToString("yyyy-MM-dd") + "','" + ddlEduationStatus + "','" + ddlEnroll + "',2,'" + DateTime.Now.ToString("yyyy-MM-dd") + "','" + Session["username"].ToString() + "','" + HHNo + "','" + lblUniqueCode + "')";
-                InsertTSEnroll = objMain.AddUpdate(StudentTSInsertQuery);
+                //StudentTSInsertQuery = " INSERT INTO tblReEnrolment([UniqueChildCode],[VillageCode],[Serial],[Category],[Class],[Session],ChildName,FatherName,Gender,[SchoolCode],[EnrolmentDate],[DOB],AgeAson,AsOnDate,[Type],EnrollCategory,[Status],Createdate,CreateBy,HouseNo,[EnrollmentCode]) Values  ('" + UNICOde + "','" + Session["VillCode"].ToString() + "','" + strSerial + "'," + ddlScat + "," + dllClasss + "," + DateTime.Now.Year + ",'" + ChildName + "','" + FathersName + "'," + Gender + ",'" + Session["Schoolid"] + "','" + Adminision.ToString("yyyy-MM-dd") + "','" + DOB.ToString("yyyy-MM-dd") + "'," + Age + ",'" + DOB.ToString("yyyy-MM-dd") + "','" + ddlEduationStatus + "','" + ddlEnroll + "',2,'" + DateTime.Now.ToString("yyyy-MM-dd") + "','" + Session["username"].ToString() + "','" + HHNo + "','" + lblUniqueCode + "')";
+                //InsertTSEnroll = objMain.AddUpdate(StudentTSInsertQuery);
 
-                StudentTSInsertQuery = "";
+                //StudentTSInsertQuery = "";
 
-                StudentTSInsertQuery = "Update tblEnrolment set ReenrollStatus=1  where UniqueChildCode='" + lblUniqueCode + "' ";
-                InsertTSEnroll = objMain.AddUpdate(StudentTSInsertQuery);
+                //StudentTSInsertQuery = "Update tblEnrolment set ReenrollStatus=1  where UniqueChildCode='" + lblUniqueCode + "' ";
+                //InsertTSEnroll = objMain.AddUpdate(StudentTSInsertQuery);
 
 
             }

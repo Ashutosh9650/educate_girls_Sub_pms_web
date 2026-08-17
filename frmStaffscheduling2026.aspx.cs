@@ -23,6 +23,7 @@ public partial class frmStaffscheduling2026 : System.Web.UI.Page
         {
             LoadYear();
             LoadUserLeavel();
+            Fillskill();
             LoadOutCome();
             pnlMain.Enabled = true;
             if (Convert.ToString(Session["username"]) == "PMSAdmin" || Convert.ToString(Session["username"]) == "EGE7557" || Convert.ToString(Session["username"]) == "SuperAdmin")
@@ -983,7 +984,7 @@ public partial class frmStaffscheduling2026 : System.Web.UI.Page
     }
     protected void ddlLearning_SelectedIndexChanged(object sender, EventArgs e)
     {
-
+        divSkill.Visible = false;
         divOther.Visible = false;
         divOther1.Visible = false;
         if (Convert.ToInt32(ddlStype.SelectedValue) == 1 || Convert.ToInt32(ddlStype.SelectedValue) == 3)
@@ -1001,6 +1002,38 @@ public partial class frmStaffscheduling2026 : System.Web.UI.Page
                 //divOther1.Visible = true;
                 LoadOutComeSpicify();
             }
+        }
+        if (Convert.ToInt32(ddlStype.SelectedValue) == 2)
+        {
+            if (Convert.ToInt32(ddlLearning.SelectedValue) == 8)
+            {
+                divSkill.Visible = true;
+            }
+        }
+            MpexdrDistrict.Show();
+    }
+
+    public void Fillskill()
+    {
+
+
+      
+        conditions = "";
+        conditions = "LookupFlag ='TSL' and Active=1 ";
+        objComman.BindDLL("mstLookup", "LookupCode,Description", conditions, "LookupCode", "asc", ddlSkill, "Description", "LookupCode", "Select");
+
+
+    }
+    protected void ddlSkill_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (Convert.ToInt32(ddlSkill.SelectedValue) == 20)
+        {
+            txtOtherskill.Text = "";
+            divOther.Visible = true;
+        }
+        else
+        {
+            txtOtherskill.Visible = false;
         }
         MpexdrDistrict.Show();
     }
@@ -1205,6 +1238,29 @@ public partial class frmStaffscheduling2026 : System.Web.UI.Page
 
             MpexdrDistrict.Show();
             return;
+        }
+        Int32 Skill = 0;
+        if (Convert.ToInt32(ddlStype.SelectedValue) == 2)
+        {
+            if (Convert.ToInt32(ddlLearning.SelectedValue) == 8)
+            {
+                if (ddlSkill.SelectedIndex <= 0)
+                {
+                    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Skill Training Name')</script>", false);
+                    MpexdrDistrict.Show();
+                    return;
+                }
+                Skill = Convert.ToInt32(ddlSkill.SelectedValue);
+                if (Convert.ToInt32(ddlSkill.SelectedValue) == 20)
+                {
+                    if (txtOther.Text.Trim() == "")
+                    {
+                        ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Enter the Other Skill Training Name')</script>", false);
+                        MpexdrDistrict.Show();
+                        return;
+                    }
+                }
+            }
         }
 
         string UserID = "";
@@ -1419,11 +1475,12 @@ public partial class frmStaffscheduling2026 : System.Web.UI.Page
                       new SqlParameter("@VenueLocation", txtVenuLocation.Text),
                        new SqlParameter("@LockRecord", LockRcode),
                         new SqlParameter("@MainTrainingType", ddlMainTrainingType.SelectedValue),
+                          new SqlParameter("@Skill", Skill),
+                           new SqlParameter("@SkillOther", txtOtherskill.Text),
 
-                       
 
                               };
-                        int result = Convert.ToInt32(SqlHelper.ExecuteScaler(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUpdateStaffSchedulingSave20260710", parm));
+                        int result = Convert.ToInt32(SqlHelper.ExecuteScaler(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUpdateStaffSchedulingSave20260817", parm));
                             if (dtentry.Rows.Count > 0)
                             {
                                 for (int i = 0; i < dtentry.Rows.Count; i++)
@@ -1499,8 +1556,10 @@ public partial class frmStaffscheduling2026 : System.Web.UI.Page
                                  new SqlParameter("@VenueLocation", txtVenuLocation.Text),
                                     new SqlParameter("@LockRecord", LockRcode),
                                        new SqlParameter("@MainTrainingType", ddlMainTrainingType.SelectedValue),
+                                         new SqlParameter("@Skill", Skill),
+                           new SqlParameter("@SkillOther", txtOtherskill.Text),
                               };
-                        int result = Convert.ToInt32(SqlHelper.ExecuteScaler(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUpdateStaffSchedulingSave20260710", parm));
+                        int result = Convert.ToInt32(SqlHelper.ExecuteScaler(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUpdateStaffSchedulingSave20260817", parm));
                       if (dtentry.Rows.Count > 0)
                     {
                         for (int i = 0; i < dtentry.Rows.Count; i++)
@@ -1583,9 +1642,11 @@ public partial class frmStaffscheduling2026 : System.Web.UI.Page
                                  new SqlParameter("@VenueLocation", txtVenuLocation.Text),
                                     new SqlParameter("@LockRecord", LockRcode),
                                        new SqlParameter("@MainTrainingType", ddlMainTrainingType.SelectedValue),
+                                         new SqlParameter("@Skill", Skill),
+                           new SqlParameter("@SkillOther", txtOtherskill.Text),
 
                      };
-                    int result = Convert.ToInt32(SqlHelper.ExecuteScaler(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUpdateStaffSchedulingSave20260710", parm));
+                    int result = Convert.ToInt32(SqlHelper.ExecuteScaler(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUpdateStaffSchedulingSave20260817", parm));
                 if (dtentry.Rows.Count > 0)
                 {
                     for (int i = 0; i < dtentry.Rows.Count; i++)
@@ -1726,6 +1787,8 @@ public partial class frmStaffscheduling2026 : System.Web.UI.Page
         EV3.Visible = false;
         txtParticipate.Text = "";
         ddlTraingMode.SelectedIndex = 0;
+        ddlSkill.SelectedIndex = 0;
+        divSkill.Visible = false;
         MpexdrDistrict.Show();
     }
     protected void Button1_Click(object sender, EventArgs e)
@@ -2095,7 +2158,7 @@ public partial class frmStaffscheduling2026 : System.Web.UI.Page
 
         lblShulderID.Text = UniqueChildCode;
 
-      DataTable  dtPhase = objComman.LoadData("select * ,isnull(MainTrainingType,0) MainTrainingTypeID from [tblStaffScheduling]  Where   ScheduleID='" + lblShulderID.Text + "' ");
+      DataTable  dtPhase = objComman.LoadData("select *,isnull(Skill,0) SkillID  ,isnull(MainTrainingType,0) MainTrainingTypeID from [tblStaffScheduling]  Where   ScheduleID='" + lblShulderID.Text + "' ");
         if(dtPhase.Rows.Count>0)
         {
             DateTime StartDate = Convert.ToDateTime(dtPhase.Rows[0]["FromDate"].ToString());
@@ -2109,7 +2172,14 @@ public partial class frmStaffscheduling2026 : System.Web.UI.Page
 
             ddlLearning.SelectedValue = dtPhase.Rows[0]["Outcome"].ToString();
             ddlLearning_SelectedIndexChanged(ddlLearning, null);
-            ddlInducation.SelectedValue = dtPhase.Rows[0]["Inducation"].ToString();
+
+
+            if (Convert.ToInt32(ddlLearning.SelectedValue) == 8)
+            {
+                ddlSkill.SelectedValue = dtPhase.Rows[0]["SkillID"].ToString();
+            }
+                ddlInducation.SelectedValue = dtPhase.Rows[0]["Inducation"].ToString();
+            txtOtherskill.Text = dtPhase.Rows[0]["SkillOther"].ToString();
             txtLoaction.Text = dtPhase.Rows[0]["Location"].ToString();
             ddlTraingMode.SelectedValue = dtPhase.Rows[0]["TrainingMode"].ToString();
             ddlTraingMode_SelectedIndexChanged(ddlLearning, null);

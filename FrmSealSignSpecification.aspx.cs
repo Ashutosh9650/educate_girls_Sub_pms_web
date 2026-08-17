@@ -1195,9 +1195,10 @@ public partial class FrmSealSignSpecification : System.Web.UI.Page
             using (SqlCommand dbSqlCommand = (SqlCommand)dbSqlconnection.CreateCommand())
             {
                 dbSqlCommand.CommandType = CommandType.StoredProcedure;
-                dbSqlCommand.CommandText = "SP_Seal_Sign_Specification_Update";
+                dbSqlCommand.CommandText = "SP_Seal_Sign_Specification_Update2026";
                 dbSqlCommand.Parameters.AddWithValue("@UniqueCodeE", UniqueIDLeft);
                 dbSqlCommand.Parameters.AddWithValue("@UniqueCodeD", UniqueIDRight);
+                dbSqlCommand.Parameters.AddWithValue("@UserName", Convert.ToString(Session["username"]));
                 dbSqlCommand.Parameters.AddWithValue("@Flag", Flag);
                 SqlParameter ReturnAffectedRows = new SqlParameter("@RowAffected", System.Data.SqlDbType.Int);
                 ReturnAffectedRows.Direction = ParameterDirection.Output;

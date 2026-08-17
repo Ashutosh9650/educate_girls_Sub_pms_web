@@ -274,39 +274,39 @@ public partial class frmAddEnrollmentFrom6 : System.Web.UI.Page
             if (Session["UnquieId"].ToString().Length > 6)
             {
 
-                StudentTSInsertQuery = " Update  tblEnrolment set SamgraID ='" + txtSamgra.Text + "',[Category]=" + ddlScat.SelectedValue + ",[Class]=" + dllClass.SelectedValue + ",Serial='" + strSerial + "',ChildName='" + ChildName + "',FatherName='" + FathersName + "',Gender=" + Gender + ",[EnrolmentDate]='" + DateAdminision + "',DOBAvailable=" + DoAv + ",[DOB]='" + ChildDOB + "',AgeAson=" + Age + ",AsOnDate='" + AsDob.ToString("yyyy-MM-dd") + "',ModifyDate='" + DateTime.Now.ToString("yyyy-MM-dd") + "',ModifyBy='" + Session["username"].ToString() + "',HouseNo='" + txtHHNo.Text.Trim() + "' where UniqueChildCode ='" + Session["UnquieId"].ToString() + "'";
-                bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
+                //StudentTSInsertQuery = " Update  tblEnrolment set SamgraID ='" + txtSamgra.Text + "',[Category]=" + ddlScat.SelectedValue + ",[Class]=" + dllClass.SelectedValue + ",Serial='" + strSerial + "',ChildName='" + ChildName + "',FatherName='" + FathersName + "',Gender=" + Gender + ",[EnrolmentDate]='" + DateAdminision + "',DOBAvailable=" + DoAv + ",[DOB]='" + ChildDOB + "',AgeAson=" + Age + ",AsOnDate='" + AsDob.ToString("yyyy-MM-dd") + "',ModifyDate='" + DateTime.Now.ToString("yyyy-MM-dd") + "',ModifyBy='" + Session["username"].ToString() + "',HouseNo='" + txtHHNo.Text.Trim() + "' where UniqueChildCode ='" + Session["UnquieId"].ToString() + "'";
+                //bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
 
                 string D2StudentTSInsertQuery = "";
                 if (Convert.ToString(Session["EnStatus"]) == "1")
                 {
-                    D2StudentTSInsertQuery = " Update tblDTD set   [HHNo]='" + txtHHNo.Text.Trim() + "',SurvayDate='" + Convert.ToDateTime(DateAdminision).ToString("yyyy-MM-dd") + "',[SocialCategory]=" + ddlScat.SelectedValue + ",[ChildName]='" + ChildName + "',[FathersName]='" + FathersName + "',[Gender]=" + Gender + ",[DOB]='" + ChildDOB + "',[AsOnDate]='" + AsDob + "',[AgeAson]=" + Age + ",    DoChild=" + dllClass.SelectedValue + " ,ModifyDate='" + DateTime.Now.ToString("yyyy-MM-dd") + "',ModifyBy='" + Session["username"].ToString() + "' where UniqueCode ='" + Session["UnquieId"].ToString() + "' ";
-                    bool UpdateD2d = objMain.AddUpdate(D2StudentTSInsertQuery);
+                    //D2StudentTSInsertQuery = " Update tblDTD set   [HHNo]='" + txtHHNo.Text.Trim() + "',SurvayDate='" + Convert.ToDateTime(DateAdminision).ToString("yyyy-MM-dd") + "',[SocialCategory]=" + ddlScat.SelectedValue + ",[ChildName]='" + ChildName + "',[FathersName]='" + FathersName + "',[Gender]=" + Gender + ",[DOB]='" + ChildDOB + "',[AsOnDate]='" + AsDob + "',[AgeAson]=" + Age + ",    DoChild=" + dllClass.SelectedValue + " ,ModifyDate='" + DateTime.Now.ToString("yyyy-MM-dd") + "',ModifyBy='" + Session["username"].ToString() + "' where UniqueCode ='" + Session["UnquieId"].ToString() + "' ";
+                    //bool UpdateD2d = objMain.AddUpdate(D2StudentTSInsertQuery);
                 }
 
 
-                if (UpdateTs == true)
-                {
-                    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved sucessfully')</script>", false);
+                //if (UpdateTs == true)
+                //{
+                //    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved sucessfully')</script>", false);
                    
-                    txtChildName.Text = "";
-                    txtFatherName.Text = "";
-                    txtHHNo.Text = "";
-                    txtSrno.Text = "";
-                    txtSamgra.Text = "";
-                    txtSurveyVillage.Text = "";
+                //    txtChildName.Text = "";
+                //    txtFatherName.Text = "";
+                //    txtHHNo.Text = "";
+                //    txtSrno.Text = "";
+                //    txtSamgra.Text = "";
+                //    txtSurveyVillage.Text = "";
                    
-                    txtHHNo.Focus();
-                    txtBirth.Text = DateTime.Now.ToString("dd/MM/yyyy");
-                    ddlEduationStatus.SelectedIndex = 0;
-                  //  Response.Write("<script>window.close();</" + "script>");
+                //    txtHHNo.Focus();
+                //    txtBirth.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                //    ddlEduationStatus.SelectedIndex = 0;
+                //  //  Response.Write("<script>window.close();</" + "script>");
 
-                    //Response.End();
-                   // Response.Redirect("~/frmEnrollmentForm6.aspx?ID=1");
-                //    Page.ClientScript.RegisterClientScriptBlock(typeof(Page), "ClosePage", "window.close();", true);
+                //    //Response.End();
+                //   // Response.Redirect("~/frmEnrollmentForm6.aspx?ID=1");
+                ////    Page.ClientScript.RegisterClientScriptBlock(typeof(Page), "ClosePage", "window.close();", true);
 
                     
-                }
+                //}
             }
             else
             {

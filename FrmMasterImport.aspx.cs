@@ -94,478 +94,12 @@ public partial class FrmMasterImport : System.Web.UI.Page
         }
     }
 
-    private void GenerateExcelDataCopy()
+
+    private static object Val(object v)
     {
-        OleDbConnection oledbConn = new OleDbConnection();
-        try
-        {
-            // need to pass relative path after deploying on server
-            string path = System.IO.Path.GetFullPath(Server.MapPath(FileUpload1.FileName));
-            /* connection string  to work with excel file. HDR=Yes - indicates 
-               that the first row contains columnnames, not data. HDR=No - indicates 
-               the opposite. "IMEX=1;" tells the driver to always read "intermixed" 
-               (numbers, dates, strings etc) data columns as text. 
-            Note that this option might affect excel sheet write access negative. */
-            string sDirectory = Server.MapPath("~/Mou//");
-            int ManagementType = 0, WorkingStatus = 0;
-            bool res = false;
-            string FilePath = sDirectory + FileUpload1.FileName;
-            FileUpload1.PostedFile.SaveAs(FilePath);
-            ViewState["FileName"] = FileUpload1.FileName + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss");
-
-            // instance a memory stream and pass the
-
-            if (Path.GetExtension(path) == ".xls")
-            {
-
-                oledbConn = new OleDbConnection(@"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + FilePath + ";Extended Properties=Excel 4.0;Persist Security Info=False;");
-            }
-            else if (Path.GetExtension(path) == ".xlsx")
-            {
-
-                oledbConn = new OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + FilePath + ";Extended Properties=Excel 8.0;Persist Security Info=False;");
-            }
-            else
-            {
-
-            }
-
-            oledbConn.Open();
-            OleDbCommand cmd = new OleDbCommand(); ;
-
-            DataSet ds = new DataSet();
-
-            // string Q = "SELECT Sno,StateName,StateCode,DistrictName,DistrictCode,BlockName,BlockCode,EGBlock,EGBlockCode,GramPanchyat,GP_CODE,ClusterName,ClusterCode,VillageName,VillageCode,SchoolName,GOVTDISECODE,DISECODE,Operational_NON_Operational,Management,SchoolType  FROM [JHALAWAR DATA$]";
-            string Q = "SELECT * FROM [Sheet1$]";
-            OleDbDataAdapter oleda = new OleDbDataAdapter(Q, oledbConn);
-            oleda.Fill(ds);
-
-            DataTable dtState = new DataTable();
-            DataTable dtDistrict = new DataTable();
-            DataTable dtBlock = new DataTable();
-            DataTable dtCluster = new DataTable();
-            DataTable dtPanchayat = new DataTable();
-            DataTable dtVillage = new DataTable();
-            DataTable dtSchool = new DataTable();
-            DataTable dt4 = null;
-            dt4 = ds.Tables[0];
-            string str3 = "Truncate Table MasterDataUpload ";
-            res = Objcls.AddUpdate(str3);
-
-            Boolean Fldd = BulkCopyTempDistProfile(dt4);
-
-            int count = 0;
-            DataTable dt = LoadMaster();
-            foreach (DataColumn dc in dt.Columns)
-            {
-
-
-                if (dc.ColumnName == "StateCode")
-                {
-                    count++;
-                }
-                if (dc.ColumnName == "SchoolType")
-                {
-                    count++;
-                }
-
-            }
-            if (count == 2)
-            {
-
-                //if (dt.Rows.Count > 0)
-                //{
-                //   foreach(DataRow dr in dt.Rows)
-                //   {
-                //       if (dr["StateCode"].ToString() != "" && dr["DistrictCode"].ToString() != "")
-                //       {
-                //           if (dr["OPERATIONAL"].ToString() == "OPERATIONAL")
-                //           {
-                //               WorkingStatus = 1;
-                //           }
-                //           else if (dr["OPERATIONAL"].ToString() == "NON OPERATIONAL")
-                //           {
-                //               WorkingStatus = 2;
-                //           }
-                //           if (dr["Management"].ToString() == "GOVERNMENT")
-                //           {
-                //               ManagementType = 1;
-
-                //           }
-                //           else if (dr["Management"].ToString() == "PRIVATE")
-                //           {
-                //               ManagementType = 2;
-
-                //           }
-
-                //           string str1 = "insert into Temp_District_ImportExcel ([StateCode],[StateName],DistrictCode, DistrictName,BlockCode, BlockName, EGBlockCode, EG_Block,ClusterName,ClusterCode,GP_CODE, GramPanchayat,VillageCode, VillageName,DISECODE, SchoolName, SchoolType, Managament, [Operational], GOVTDISECODE ) values ('" + dr["StateCode"] + "','" + dr["StateName"] + "','" + dr["DistrictCode"] + "','" + dr["DistrictName"] + "','" + dr["BlockCode"] + "','" + dr["BlockName"] + "','" + dr["EGBlockCode"] + "','" + dr["EG_Block"] + "','" + dr["ClusterName"] + "','" + dr["ClusterCode"] + "','" + dr["GP_CODE"] + "','" + dr["GramPanchyat"] + "','" + dr["VillageCode"] + "','" + dr["VillageName"] + "','" + dr["DISECODE"] + "','" + dr["SchoolName"].ToString().Replace("'", "''") + "'," + dr["SchoolType"] + "," + ManagementType + "," + WorkingStatus + ",'" + dr["GOVTDISECODE"] + "' )";
-                //           res = Objcls.AddUpdate(str1);
-                //       }
-                //   }
-
-                //}
-                //if (res == true)
-                //{
-
-
-                //}
-
-                String[] arColoumn = { "StateCode", "StateName" };
-                dtState = dt.DefaultView.ToTable(true, arColoumn);
-                String[] arColoumn1 = { "StateCode", "DistrictCode", "DistrictName" };
-                dtDistrict = dt.DefaultView.ToTable(true, arColoumn1);
-                String[] arColoumn2 = { "StateCode", "DistrictCode", "EGBlockCode", "EG_Block" };
-                dtBlock = dt.DefaultView.ToTable(true, arColoumn2);
-                String[] arColoumn3 = { "StateCode", "DistrictCode", "EGBlockCode", "ClusterName", "ClusterCode" };
-                dtCluster = dt.DefaultView.ToTable(true, arColoumn3);
-                String[] arColoumn4 = { "StateCode", "DistrictCode", "EGBlockCode", "GP_CODE", "GramPanchyat" };
-                dtPanchayat = dt.DefaultView.ToTable(true, arColoumn4);
-                String[] arColoumn5 = { "StateCode", "DistrictCode", "EGBlockCode", "BlockCode", "BlockName", "ClusterCode", "GP_CODE", "GramPanchyat", "VillageCode", "VillageName", "AdminDistrictCode", "AdminDistrictName", "MergeVillageCOde", "EGState Code", "EG State Name" };
-                dtVillage = dt.DefaultView.ToTable(true, arColoumn5);
-                String[] arColoumn6 = { "VillageCode", "DISECODE", "SchoolName", "SchoolType", "Management", "Operational", "GOVTDISECODE" };
-                dtSchool = dt.DefaultView.ToTable(true, arColoumn6);
-                // ********************** Insert State
-                String[] arColoumn7 = { "DistrictCode", "EGBlockCode", "GP_CODE", "VillageCode", "DISECODE" };
-                DataTable dtTemp = dt.DefaultView.ToTable(true, arColoumn7);
-
-                string str = "";
-
-                str = "Truncate Table T_mstState ";
-                res = Objcls.AddUpdate(str);
-                str = "Truncate Table Temp_District_ImportExcel_Error ";
-                res = Objcls.AddUpdate(str);
-                if (dtState.Rows.Count > 0)
-                {
-                    //TempDistProfile
-                    //                    Truncate Table T_mstBlock
-                    //Truncate Table T_mstDistrict
-                    //Truncate Table T_mstCluster 
-                    //Truncate Table T_mstPanchayat 
-                    //Truncate Table T_mstVillage 
-                    //Truncate Table TempDistProfile
-                    str = "Truncate Table TempDistProfile ";
-                    res = Objcls.AddUpdate(str);
-                    //   objComman.BulkCopyTempDistProfile(dtTemp);
-                    foreach (DataRow dr in dtState.Rows)
-                    {
-                        DataTable DtCheckState = obj.LoadData("Select StateCode from T_mstState where StateCode='" + dr["StateCode"].ToString() + "'");
-
-                        if (dr["StateCode"].ToString() != "")
-                        {
-                            //if (DtCheckState.Rows.Count > 0)
-                            //{
-                            //    str = "update [T_mstState] set [StateName]='" + (dr["StateName"]).ToString() + "' where Statecode= '" + dr["Statecode"].ToString() + "'";
-                            //    res = Objcls.AddUpdate(str);
-                            //}
-
-                            //else
-                            //{
-                            str = "insert into [T_mstState] (  [StateCode],[StateName],[Active])  values('" + dr["StateCode"] + "','" + dr["StateName"] + "',1)";
-                            res = Objcls.AddUpdate(str);
-                            //}
-
-                        }
-                    }
-                }
-                // ********************** Insert District 
-                str = "Truncate Table T_mstDistrict ";
-                res = Objcls.AddUpdate(str);
-                if (dtDistrict.Rows.Count > 0)
-                {
-                    foreach (DataRow dr in dtDistrict.Rows)
-                    {
-                        DataTable DtCheckDistrict = obj.LoadData("Select DistrictCode from [T_mstDistrict] where DistrictCode='" + dr["DistrictCode"].ToString() + "'");
-
-                        if (dr["DistrictCode"].ToString() != "")
-                        {
-                            //if (DtCheckDistrict.Rows.Count > 0)
-                            //{
-                            //    if (dr["OldDistrictCode"].ToString().Length > 3)
-                            //    {
-                            //        str = "update  [T_mstDistrict] set  [DistrictName]='" + dr["DistrictName"] + "' and OldDistrictCode='" + dr["OldDistrictCode"] + "' where DistrictCode= '" + dr["DistrictCode"].ToString() + "'";
-                            //        res = Objcls.AddUpdate(str);
-                            //    }
-                            //}
-
-                            //else
-                            //{
-                            str = "insert into [T_mstDistrict] (  [StateCode],[DistrictCode] ,[DistrictName],EGDistrictCode   )  values('" + dr["StateCode"] + "','" + dr["DistrictCode"] + "','" + dr["DistrictName"] + "' ,'" + dr["DistrictCode"] + "')";
-                            res = Objcls.AddUpdate(str);
-                            //}
-
-                        }
-                    }
-                }
-                // ********************** Insert Block
-                str = "Truncate Table T_mstBlock ";
-                res = Objcls.AddUpdate(str);
-                if (dtBlock.Rows.Count > 0)
-                {
-
-                    foreach (DataRow dr in dtBlock.Rows)
-                    {
-                        //  DataTable DtCheckBlock = obj.LoadData("Select BlockCode from [T_mstBlock] where BlockCode='" + dr["EGBlockCode"].ToString() + "'");
-                        if (dr["EGBlockCode"].ToString() != "")
-                        {
-                            //if (DtCheckBlock.Rows.Count > 0)
-                            //{
-                            //    if (dr["OldBlockCode"].ToString().Length > 3)
-                            //    {
-                            //        str = "update  [T_mstBlock] set StateCode='" + dr["StateCode"].ToString() + "', OldBlockCode='" + dr["OldBlockCode"].ToString() + "', DistrictCode='" + dr["DistrictCode"].ToString() + "' where BlockCode= '" + dr["EGBlockCode"].ToString() + "'";
-                            //        res = Objcls.AddUpdate(str);
-                            //    }
-                            //}
-
-                            //else
-                            //{
-                            str = "insert into [T_mstBlock] ([StateCode],[DistrictCode] ,[BlockCode] ,[BlockName],EGBlockCode )  values('" + dr["StateCode"] + "','" + dr["DistrictCode"] + "','" + dr["EGBlockCode"] + "','" + dr["EG_Block"] + "','" + dr["EGBlockCode"] + "')";
-                            res = Objcls.AddUpdate(str);
-                            //}
-                        }
-
-
-                    }
-                }
-                // ********************** Insert Cluster
-                str = "Truncate Table T_mstCluster ";
-                res = Objcls.AddUpdate(str);
-                //if (dtCluster.Rows.Count > 0)
-                //{
-
-                //    foreach (DataRow dr in dtCluster.Rows)
-                //    {
-                //        // DataTable DtCheckCluster = obj.LoadData("Select ClusterCode from [T_mstCluster] where ClusterCode='" + dr["ClusterCode"].ToString() + "'");
-                //        if (dr["ClusterCode"].ToString() != "")
-                //        {
-                //            //if (DtCheckCluster.Rows.Count > 0)
-                //            //{
-                //            //    str = "update  [T_mstCluster] set  StateCode='" + dr["StateCode"].ToString() + "', DistrictCode='" + dr["DistrictCode"].ToString() + "',BlockCode='" + dr["EGBlockCode"].ToString() + "', [ClusterName]='" + dr["ClusterName"] + "' where ClusterCode= '" + dr["ClusterCode"].ToString() + "'";
-                //            //    res = Objcls.AddUpdate(str);
-                //            //}
-
-                //            //else
-                //            //{
-                //            str = "insert into [T_mstCluster] (  [StateCode],[DistrictCode] ,[BlockCode] ,[ClusterCode],[ClusterName] )  values('" + dr["StateCode"] + "','" + dr["DistrictCode"] + "','" + dr["EGBlockCode"] + "','" + dr["ClusterCode"] + "','" + dr["ClusterName"] + "' )";
-                //            res = Objcls.AddUpdate(str);
-                //            //}
-                //        }
-
-
-                //    }
-                //}
-                // ********************** Insert Panchayat
-                str = "Truncate Table T_mstPanchayat ";
-                res = Objcls.AddUpdate(str);
-                if (dtPanchayat.Rows.Count > 0)
-                {
-
-                    foreach (DataRow dr in dtPanchayat.Rows)
-                    {
-                        // string PanChahayatCode = "", PanChahayatName="";
-                        //DataTable DtCheckPanchayat = obj.LoadData("Select PanchayatCode from [T_mstPanchayat] where PanchayatCode='" + dr["GP_CODE"].ToString() + "'");
-                        //if (dr["GramPanchyat"].ToString() == dr["VillageName"].ToString())
-                        //{
-                        //    PanChahayatCode = dr["VillageCode"].ToString();
-                        //}
-                        //else
-                        //{
-                        //    PanChahayatCode = dr["GP_CODE"].ToString();
-                        //}
-                        //if (dr["GP_CODE"].ToString() == dr["VillageCode"].ToString())
-                        //{
-                        //    PanChahayatName = dr["VillageName"].ToString();
-                        //}
-                        //else
-                        //{
-                        //    PanChahayatName = dr["GramPanchyat"].ToString();
-                        //}
-                        if (dr["GP_CODE"].ToString() != "")
-                        {
-                            //if (DtCheckPanchayat.Rows.Count > 0)
-                            //{
-                            //    if (dr["OldPanchayatCode"].ToString().Length > 3)
-                            //    {
-
-
-                            //        str = "update  [T_mstPanchayat] set  StateCode='" + dr["StateCode"].ToString() + "', OldPanchayatCode='" + dr["OldPanchayatCode"].ToString() + "'  where PanchayatCode= '" + dr["GP_CODE"] + "' ";
-                            //        res = Objcls.AddUpdate(str);
-                            //    }
-                            //}
-
-                            //else
-                            //{
-                            str = "insert into [T_mstPanchayat] (  [StateCode],[DistrictCode] ,[BlockCode] ,[PanchayatCode],[PanchayatName],EGPanchayatCode )  values('" + dr["StateCode"] + "','" + dr["DistrictCode"] + "','" + dr["EGBlockCode"] + "','" + dr["GP_CODE"] + "','" + dr["GramPanchyat"] + "' ,'" + dr["GP_CODE"] + "' )";
-                            res = Objcls.AddUpdate(str);
-                            //}
-                        }
-
-
-                    }
-                }
-                // ********************** Insert Village
-                str = "Truncate Table T_mstVillage ";
-                res = Objcls.AddUpdate(str);
-                if (dtVillage.Rows.Count > 0)
-                {
-
-                    foreach (DataRow dr in dtVillage.Rows)
-                    {
-
-                        // DataTable DtCheckVillage = obj.LoadData("Select VillageCode from [T_mstVillage] where VillageCode='" + dr["VillageCode"].ToString() + "'");
-
-                        if (dr["VillageCode"].ToString() != "")
-                        {
-                            //if (DtCheckVillage.Rows.Count > 0)
-                            //{
-                            //    str = "update  [T_mstVillage] set  StateCode='" + dr["StateCode"].ToString() + "', DistrictCode='" + dr["DistrictCode"].ToString() + "',BlockCode='" + dr["EGBlockCode"].ToString() + "',[PanchayatCode]='" + dr["GP_CODE"] + "', [VillageName]='" + dr["VillageName"] + "' where VillageCode= '" + dr["VillageCode"].ToString() + "'";
-                            //    res = Objcls.AddUpdate(str);
-                            //}
-
-                            //else
-                            //{
-                            str = "insert into [T_mstVillage] (  [StateCode],[DistrictCode] ,[BlockCode] ,[MainBlockCode],[MainBlockName],[ClusterCode],[PanchayatCode],[VillageCode],[VillageName] ,AdminDistrictCode,AdminDistrictName,EGVillageCode,MergeVillageCOde,[EG State Name],[EGState Code],)  values('" + dr["StateCode"] + "','" + dr["DistrictCode"] + "','" + dr["EGBlockCode"] + "','" + dr["BlockCode"] + "','" + dr["BlockName"] + "','" + dr["ClusterCode"] + "','" + dr["GP_CODE"] + "', '" + dr["VillageCode"] + "','" + dr["VillageName"] + "' , '" + dr["AdminDistrictCode"] + "', '" + dr["AdminDistrictName"] + "', '" + dr["VillageCode"] + "', '" + dr["MergeVillageCOde"] + "', '" + dr["EG State Name"] + "', '" + dr["[EGState Code]"] + "')";
-                            res = Objcls.AddUpdate(str);
-                            // }
-                        }
-
-
-                    }
-
-                    //string  RowAffect = INSERT_ImportDataSingle(dtVillage, "[IMPORTTestVillage]", "T_mstVillage", "True");
-                }
-
-
-                // ********** Insert Scholl
-                str = "Truncate Table T_mstSchool ";
-                res = Objcls.AddUpdate(str);
-                WorkingStatus = 0;
-                if (dtSchool.Rows.Count > 0)
-                {
-                    foreach (DataRow dr in dtSchool.Rows)
-                    {
-
-                        // DataTable DtCheckschool = obj.LoadData("Select SchoolCode from [T_mstSchool] where SchoolCode='" + dr["DISECODE"].ToString() + "'");
-                        if (dr["DISECODE"].ToString() != "")
-                        {
-                            if (dr["OPERATIONAL"].ToString().Trim() == "OPERATIONAL")
-                            {
-                                dr["OPERATIONAL"] = 1;
-                                WorkingStatus = 1;
-                            }
-
-                            if (dr["OPERATIONAL"].ToString() == "Close")
-                            {
-                                dr["OPERATIONAL"] = 3;
-                                WorkingStatus = 3;
-                            }
-                            if (dr["OPERATIONAL"].ToString() == "Marge")
-                            {
-                                dr["OPERATIONAL"] = 4;
-                                WorkingStatus = 4;
-                            }
-                            if (dr["OPERATIONAL"].ToString() == "")
-                            {
-                                dr["OPERATIONAL"] = 0;
-                                WorkingStatus = 0;
-                            }
-
-                            else if (dr["OPERATIONAL"].ToString() == "NON OPERATIONAL")
-                            {
-                                dr["OPERATIONAL"] = 2;
-                                WorkingStatus = 2;
-                            }
-                            if (dr["Management"].ToString() == "GOVERNMENT")
-                            {
-                                ManagementType = 1;
-                                dr["Management"] = 1;
-                            }
-                            else if (dr["Management"].ToString() == "PRIVATE")
-                            {
-                                ManagementType = 2;
-                                dr["Management"] = 2;
-                            }
-                            else if (dr["Management"].ToString() == "")
-                            {
-                                ManagementType = 0;
-                                dr["Management"] = 0;
-                            }
-
-                            //if (DtCheckschool.Rows.Count > 0)
-                            //{
-                            //    str = "update [T_mstSchool] set  WorkingStatus=" + WorkingStatus + ",ManagementType=" + ManagementType + ", [VillageCode]='" + dr["VillageCode"] + "',[SchoolCodeID]='" + dr["DISECODE"] + "',[DISECode]='" + dr["DISECODE"] + "',[DISECode1]='" + dr["DISECODE"] + "',[DISECode2]='" + dr["DISECODE"] + "',[Name]='" + dr["SchoolName"].ToString().Replace("'", "''") + "',[Name1]='" + dr["SchoolName"].ToString().Replace("'", "''") + "',[Name2]='" + dr["SchoolName"].ToString().Replace("'", "''") + "',[SchoolLevel]='" + dr["SchoolType"] + "',[SchoolLevel1]='" + dr["SchoolType"] + "',[SchoolLevel2]='" + dr["SchoolType"] + "', [SchoolCodeTemp]='" + dr["GOVTDISECODE"] + "' where [SchoolCode]='" + dr["DISECODE"] + "'";
-                            //    res = Objcls.AddUpdate(str);
-                            //}
-                            //else
-                            //{
-                            str = "insert into [T_mstSchool] (WorkingStatus,ManagementType,[VillageCode],[SchoolCode],[SchoolCodeID],[DISECode],[DISECode1],[DISECode2],[Name],[Name1],[Name2],[SchoolLevel],[SchoolLevel1],[SchoolLevel2],[SchoolCodeTemp]) values(" + WorkingStatus + "," + ManagementType + ",'" + dr["VillageCode"] + "','" + dr["DISECODE"] + "','" + dr["DISECODE"] + "','" + dr["DISECODE"] + "','" + dr["DISECODE"] + "','" + dr["DISECODE"] + "','" + dr["SchoolName"].ToString().Replace("'", "''") + "','" + dr["SchoolName"].ToString().Replace("'", "''") + "','" + dr["SchoolName"].ToString().Replace("'", "''") + "','" + dr["SchoolType"] + "','" + dr["SchoolType"] + "','" + dr["SchoolType"] + "','" + dr["GOVTDISECODE"] + "') ";
-                            res = Objcls.AddUpdate(str);
-                            ////}
-                        }
-                    }
-                    //objComman.BulkCopySchool(dtSchool);
-                }
-
-                // string RowAffect1 = INSERT_ImportDataSingle(dtVillage, "[IMPORTTestSchool]", "T_mstSchool", "True");
-                if (res == true)
-                {
-                    string Result = "";
-                    DataSet RowAffected = new DataSet();
-                    RowAffected = SP_Check_District_Excel_Import();
-
-
-                    for (int i = 0; i < RowAffected.Tables.Count; i++)
-                    {
-                        if (RowAffected.Tables[i].Rows.Count > 0)
-                        {
-                            if (RowAffected.Tables[i].Rows[0]["RetValue"].ToString() != null)
-                            {
-                                Result = RowAffected.Tables[i].Rows[0]["RetValue"].ToString();
-
-                            }
-                        }
-
-                    }
-                    //lbl_messages.Text = "Import Successfull...";
-                    //                ModalAlert.Show();
-
-                    if (Result == "")
-                    {
-                        btnApprove.Visible = true;
-                        lbl_messages.Text = "Data Verify successfully please approve";
-                        ModalAlert.Show();
-
-                    }
-                    else if (RowAffected.Tables.Count > 0)
-                    {
-                        DataTable ErrorData = Objcls.ExcelErrorData();
-                        ExporttoExcel(ErrorData);
-                    }
-
-                }
-                // binding form data with grid view
-                //GV.DataSource = ds.Tables[0].DefaultView;
-                //GV.DataBind();
-
-
-            }
-            else
-            {
-                lbl_messages.Text = "Invalid Excel....";
-                ModalAlert.Show();
-            }
-        }
-        // need to catch possible exceptions
-        catch (Exception ex)
-        {
-
-            lbl_messages.Text = ex.ToString();
-            ModalAlert.Show();
-
-        }
-        finally
-        {
-            oledbConn.Close();
-        }
+        if (v == null || v == DBNull.Value) return DBNull.Value;
+        string s = v.ToString().Trim();
+        return s.Length == 0 ? (object)DBNull.Value : s;
     }
     private void GenerateExcelData()
     {
@@ -739,13 +273,17 @@ public partial class FrmMasterImport : System.Web.UI.Page
                 DataTable dtTemp = dt.DefaultView.ToTable(true, arColoumn7);
 
                 string str = "";
-                
-          
-                       
-                str = "Truncate Table T_mstState Truncate Table T_mstBlock Truncate Table T_mstSchool Truncate Table T_mstVillage";
-                res = Objcls.AddUpdate(str);
-                str = "Truncate Table Temp_District_ImportExcel_Error ";
-                res = Objcls.AddUpdate(str);
+
+               
+                SqlParameter[] cmdParameters = new SqlParameter[]
+      {
+            new SqlParameter("@Condition", "")
+      };
+                int ivv= SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "usp_Import_ResetStaging", cmdParameters);
+                //str = "Truncate Table T_mstState Truncate Table T_mstBlock Truncate Table T_mstSchool Truncate Table T_mstVillage";
+                //res = Objcls.AddUpdate(str);
+                //str = "Truncate Table Temp_District_ImportExcel_Error ";
+                //res = Objcls.AddUpdate(str);
                 if (dtState.Rows.Count > 0)
                 {
                     //TempDistProfile
@@ -755,8 +293,8 @@ public partial class FrmMasterImport : System.Web.UI.Page
                     //Truncate Table T_mstPanchayat 
                     //Truncate Table T_mstVillage 
                     //Truncate Table TempDistProfile
-                    str = "Truncate Table TempDistProfile ";
-                    res = Objcls.AddUpdate(str);
+                    //str = "Truncate Table TempDistProfile ";
+                    //res = Objcls.AddUpdate(str);
                     //   objComman.BulkCopyTempDistProfile(dtTemp);
                     foreach (DataRow dr in dtState.Rows)
                     {
@@ -772,16 +310,25 @@ public partial class FrmMasterImport : System.Web.UI.Page
 
                             //else
                             //{
-                            str = "insert into [T_mstState] (  [StateCode],[StateName],[Active])  values('" + dr["StateCode"] + "','" + dr["StateName"] + "',1)";
-                            res = Objcls.AddUpdate(str);
-                            //}
+                            if (dtState.Rows.Count > 0)
+                            {
+                               
+                                    SqlParameter[] cmdParameters1 = new SqlParameter[]
+                                    {
+                                    new SqlParameter("@StateCode", SqlDbType.NVarChar, 50)  { Value = Val(dr["StateCode"]) },
+                                    new SqlParameter("@StateName", SqlDbType.NVarChar, 250) { Value = Val(dr["StateName"]) }
+                                    };
 
+                                    SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString,
+                                                              CommandType.StoredProcedure,
+                                                              "usp_mstState_Insert", cmdParameters1);
+                                }
+                            
                         }
                     }
                 }
                 // ********************** Insert District 
-                str = "Truncate Table T_mstDistrict ";
-                res = Objcls.AddUpdate(str);
+               
                 if (dtDistrict.Rows.Count > 0)
                 {
                     foreach (DataRow dr in dtDistrict.Rows)
@@ -790,27 +337,22 @@ public partial class FrmMasterImport : System.Web.UI.Page
 
                         if (dr["DistrictCode"].ToString() != "")
                         {
-                            //if (DtCheckDistrict.Rows.Count > 0)
-                            //{
-                            //    if (dr["OldDistrictCode"].ToString().Length > 3)
-                            //    {
-                            //        str = "update  [T_mstDistrict] set  [DistrictName]='" + dr["DistrictName"] + "' and OldDistrictCode='" + dr["OldDistrictCode"] + "' where DistrictCode= '" + dr["DistrictCode"].ToString() + "'";
-                            //        res = Objcls.AddUpdate(str);
-                            //    }
-                            //}
+                            SqlParameter[] cmdParameters3 = new SqlParameter[]
+                                 {
+                                    new SqlParameter("@StateCode",    SqlDbType.NVarChar, 50)  { Value = Val(dr["StateCode"])    },
+                                    new SqlParameter("@DistrictCode", SqlDbType.NVarChar, 50)  { Value = Val(dr["DistrictCode"]) },
+                                    new SqlParameter("@DistrictName", SqlDbType.NVarChar, 250) { Value = Val(dr["DistrictName"]) }
+                                 };
 
-                            //else
-                            //{
-                            str = "insert into [T_mstDistrict] (  [StateCode],[DistrictCode] ,[DistrictName],EGDistrictCode   )  values('" + dr["StateCode"] + "','" + dr["DistrictCode"] + "','" + dr["DistrictName"] + "' ,'" + dr["DistrictCode"] + "')";
-                            res = Objcls.AddUpdate(str);
-                            //}
+                                                    SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString,
+                                                                              CommandType.StoredProcedure,
+                                                                              "usp_mstDistrict_Insert", cmdParameters3);
 
                         }
                     }
                 }
                 // ********************** Insert Block
-                str = "Truncate Table T_mstBlock ";
-                res = Objcls.AddUpdate(str);
+              
                 if (dtBlock.Rows.Count > 0)
                 {
 
@@ -819,20 +361,17 @@ public partial class FrmMasterImport : System.Web.UI.Page
                         //  DataTable DtCheckBlock = obj.LoadData("Select BlockCode from [T_mstBlock] where BlockCode='" + dr["EGBlockCode"].ToString() + "'");
                         if (dr["EGBlockCode"].ToString() != "")
                         {
-                            //if (DtCheckBlock.Rows.Count > 0)
-                            //{
-                            //    if (dr["OldBlockCode"].ToString().Length > 3)
-                            //    {
-                            //        str = "update  [T_mstBlock] set StateCode='" + dr["StateCode"].ToString() + "', OldBlockCode='" + dr["OldBlockCode"].ToString() + "', DistrictCode='" + dr["DistrictCode"].ToString() + "' where BlockCode= '" + dr["EGBlockCode"].ToString() + "'";
-                            //        res = Objcls.AddUpdate(str);
-                            //    }
-                            //}
+                            SqlParameter[] cmdParameters4 = new SqlParameter[]
+        {
+            new SqlParameter("@StateCode",    SqlDbType.NVarChar, 50)  { Value = Val(dr["StateCode"])    },
+            new SqlParameter("@DistrictCode", SqlDbType.NVarChar, 50)  { Value = Val(dr["DistrictCode"]) },
+            new SqlParameter("@BlockCode",    SqlDbType.NVarChar, 50)  { Value = Val(dr["EGBlockCode"])  },
+            new SqlParameter("@BlockName",    SqlDbType.NVarChar, 250) { Value = Val(dr["EG_Block"])     }
+        };
 
-                            //else
-                            //{
-                            str = "insert into [T_mstBlock] ([StateCode],[DistrictCode] ,[BlockCode] ,[BlockName],EGBlockCode )  values('" + dr["StateCode"] + "','" + dr["DistrictCode"] + "','" + dr["EGBlockCode"] + "','" + dr["EG_Block"] + "','" + dr["EGBlockCode"] + "')";
-                            res = Objcls.AddUpdate(str);
-                            //}
+                            SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString,
+                                                      CommandType.StoredProcedure,
+                                                      "usp_mstBlock_Insert", cmdParameters4);
                         }
 
 
@@ -873,8 +412,7 @@ public partial class FrmMasterImport : System.Web.UI.Page
             
                 //}
                 // ********************** Insert Panchayat
-                str = "Truncate Table T_mstPanchayat ";
-                res = Objcls.AddUpdate(str);
+               
                 if (dtPanchayat.Rows.Count > 0)
                 {
 
@@ -931,8 +469,7 @@ public partial class FrmMasterImport : System.Web.UI.Page
 
                    
                 }
-                str = "Truncate Table T_mstVillage ";
-                res = Objcls.AddUpdate(str);
+               
                 if (dtVillage.Rows.Count > 0)
                 {
 
@@ -971,8 +508,7 @@ public partial class FrmMasterImport : System.Web.UI.Page
 
                 }
                 // ********** Insert Scholl
-                str = "Truncate Table T_mstSchool ";
-                res = Objcls.AddUpdate(str);
+              
                 WorkingStatus = 0;
                 if (dtSchool.Rows.Count > 0)
                 {

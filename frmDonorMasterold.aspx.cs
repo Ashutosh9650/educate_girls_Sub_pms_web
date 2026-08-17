@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
+using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Data;
+using System.Data.SqlClient;
+using System.Globalization;
+using System.Drawing;
+using System.IO;
 
 
-public partial class frmDonorMaster : System.Web.UI.Page
+public partial class frmDonorMasterold : System.Web.UI.Page
 {
     clsMain objMain = new clsMain();
     Comman objComman = new Comman();
@@ -26,7 +29,7 @@ public partial class frmDonorMaster : System.Web.UI.Page
                 LoadYear();
                 ddlYear.SelectedIndex = 1;
                 FillCBState();
-                //  LoadData();
+              //  LoadData();
                 ViewState["Save"] = "Save";
                 FillActive(1);
                 LoadDataMain();
@@ -39,7 +42,7 @@ public partial class frmDonorMaster : System.Web.UI.Page
             }
 
         }
-
+     
     }
     protected void ddlStartYear_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -53,7 +56,7 @@ public partial class frmDonorMaster : System.Web.UI.Page
         }
         LoadDataMain();
     }
-    public void LoadYear()
+        public void LoadYear()
     {
         //int fillYear = DateTime.Now.Year;
         //int StatYear = 2016;
@@ -92,7 +95,7 @@ public partial class frmDonorMaster : System.Web.UI.Page
     {
         FillActive(1);
         ClearData();
-
+    
         ViewState["Save"] = "Save";
         ViewState["DonorID"] = "";
     }
@@ -110,7 +113,7 @@ public partial class frmDonorMaster : System.Web.UI.Page
                     item.Enabled = true;
                     Session["eee"] = "BCC";
                     break;
-
+                   
 
                 }
                 else
@@ -139,11 +142,10 @@ public partial class frmDonorMaster : System.Web.UI.Page
         else
         {
             foreach (ListItem item in chkID.Items)
-            {
-                item.Enabled = true;
+            {item.Enabled = true;
             }
         }
-
+       
     }
     protected void btnNewSerach_Click(object sender, EventArgs e)
     {
@@ -181,7 +183,7 @@ public partial class frmDonorMaster : System.Web.UI.Page
 
     public void ClearData()
     {
-        txtDonorName.Text = "";
+        txtDonorName.Text ="";
 
         txtFromDate.Text = "";
         ddlMonth.SelectedIndex = 0;
@@ -211,11 +213,11 @@ public partial class frmDonorMaster : System.Web.UI.Page
         txtMuhala.Text = "";
         txtMuhala1.Text = "";
 
-        ViewState["dtAttendent"] = null;
-        ViewState["dtselect"] = null;
-        ViewState["dtselected"] = null;
+      ViewState["dtAttendent"]=null;
+      ViewState["dtselect"] = null;
+      ViewState["dtselected"] = null;
 
-
+     
     }
     public void FillControls(string ID)
     {
@@ -481,7 +483,7 @@ public partial class frmDonorMaster : System.Web.UI.Page
             GV_DynamicGrid.DataSource = null;
             GV_DynamicGrid.DataBind();
         }
-
+    
     }
     public void LoadData()
     {
@@ -496,7 +498,7 @@ public partial class frmDonorMaster : System.Web.UI.Page
                     Flag = true;
                     Oid += "'" + item.Text + "'" + ",";
                     break;
-
+                   
                 }
                 else
                 {
@@ -522,7 +524,7 @@ public partial class frmDonorMaster : System.Web.UI.Page
         {
             if (Flag == true)
             {
-                DataTable dtCheck = objMain.LoadData(" SELECT 0 MainID, [mstDonorSuboutcome].[SoutComeID],OutcomeName,      [mstDonorSuboutcome].[DOutcomeID]      ,[SubID]    ,[SSubOutcomeName]  FROM [mstDonorSuboutcome]  inner join mstDonorOutcome on mstDonorOutcome.[DOutcomeID]=[mstDonorSuboutcome].[DOutcomeID] where  [mstDonorSuboutcome].[DOutComeID] ='" + ddlOutcome.SelectedValue + "'  ");
+                DataTable dtCheck = objMain.LoadData(" SELECT 0 MainID, [mstDonorSuboutcome].[SoutComeID],OutcomeName,      [mstDonorSuboutcome].[DOutcomeID]      ,[SubID]    ,[SSubOutcomeName]  FROM [mstDonorSuboutcome]  inner join mstDonorOutcome on mstDonorOutcome.[DOutcomeID]=[mstDonorSuboutcome].[DOutcomeID] where  [mstDonorSuboutcome].[DOutComeID] ='" + ddlOutcome.SelectedValue+"'  ");
                 GV_DynamicGrid.DataSource = dtCheck;
                 GV_DynamicGrid.DataBind();
                 ViewState["dtselect"] = dtCheck;
@@ -606,10 +608,10 @@ public partial class frmDonorMaster : System.Web.UI.Page
     {
 
 
-        DataTable dtCheck = objMain.LoadData("select DID, DonorName,convert (varchar(10),[FromDate] ,105) as [FromDate], convert (varchar(10),todate ,105) as todate  FROM [mstDonorDeatils] where  Dyear='" + ddlYear.SelectedItem.Text + "'   ");
+        DataTable dtCheck = objMain.LoadData("select DID, DonorName,convert (varchar(10),[FromDate] ,105) as [FromDate], convert (varchar(10),todate ,105) as todate  FROM [mstDonorDeatils] where  Dyear='"+ddlYear.SelectedItem.Text +"'   ");
         GVMain.DataSource = dtCheck;
         GVMain.DataBind();
-
+               
     }
     protected void UploadDist(object sender, EventArgs e)
     {
@@ -617,7 +619,7 @@ public partial class frmDonorMaster : System.Web.UI.Page
     }
     public void FillCBBock()
     {
-
+        
         string ddlDistrict = "";
 
         foreach (ListItem item in chkDistrict.Items)
@@ -636,15 +638,15 @@ public partial class frmDonorMaster : System.Web.UI.Page
             ddlDistrict = ddlDistrict.Substring(0, ddlDistrict.LastIndexOf(","));
         }
 
+     
 
 
+        
+     
 
-
-
-
-        string conditions = "DistrictCode in(" + ddlDistrict + ") ";
-        string ConAdmin = "AdminDistrictCode in(" + ddlDistrict + ") ";
-
+         string   conditions = "DistrictCode in(" + ddlDistrict + ") ";
+          string  ConAdmin = "AdminDistrictCode in(" + ddlDistrict + ") ";
+       
         //     objComman.BindDLL("mst3Block", "BlockCode,dbo.TitleCase(upper(BlockName)) as BlockName ", conditions, "BlockName", "asc", ddlBlock, "BlockName", "BlockCode", "--Select--");
 
         if (Convert.ToInt32(rblDist.SelectedValue) == 2)
@@ -694,20 +696,20 @@ public partial class frmDonorMaster : System.Web.UI.Page
             ddlState = ddlState.Substring(0, ddlState.LastIndexOf(","));
         }
 
-
-        if (Convert.ToInt32(rblDist.SelectedValue) == 2)
-        {
-            conditions = "StateCode in(" + ddlState + ") and mst5Village.FYear ='" + Session["FinYear"].ToString() + "'";
-            string strQry = " select distinct AdminDistrictCode as DistrictCode, dbo.TitleCase(upper(AdminDistrictName))  as DistrictName from mst5Village where    " + conditions + "   order by DistrictName   ";
-            dtDistrict = objMain.LoadData(strQry);
-        }
-        else
-        {
-            conditions = "StateCode in(" + ddlState + ") and mst2District.FYear ='" + Session["FinYear"].ToString() + "'";
-            string strQry = "  SELECT DistrictCode, dbo.TitleCase(upper(DistrictName))  as DistrictName FROM mst2District where " + conditions + "  order by DistrictName   ";
-            dtDistrict = objMain.LoadData(strQry);
-        }
-
+      
+            if (Convert.ToInt32(rblDist.SelectedValue) == 2)
+            {
+                conditions = "StateCode in(" + ddlState + ") and mst5Village.FYear ='" + Session["FinYear"].ToString() + "'";
+                string strQry = " select distinct AdminDistrictCode as DistrictCode, dbo.TitleCase(upper(AdminDistrictName))  as DistrictName from mst5Village where    " + conditions + "   order by DistrictName   ";
+                dtDistrict = objMain.LoadData(strQry);
+            }
+            else
+            {
+                conditions = "StateCode in(" + ddlState + ") and mst2District.FYear ='" + Session["FinYear"].ToString() + "'";
+                string strQry = "  SELECT DistrictCode, dbo.TitleCase(upper(DistrictName))  as DistrictName FROM mst2District where " + conditions + "  order by DistrictName   ";
+                dtDistrict = objMain.LoadData(strQry);
+            }
+        
 
         // objComman.BindDLL("mst2District", "DistrictCode,dbo.TitleCase(upper(DistrictName)) as DistrictName ", conditions, "DistrictName", "asc", ddlDistrict, "DistrictName", "DistrictCode", "Select");
 
@@ -749,14 +751,14 @@ public partial class frmDonorMaster : System.Web.UI.Page
         string strQry2 = "  SELECT DOutComeID, OutcomeName FROM mstDonorOutcome     order by DOutComeID ";
         DataTable dtID = objMain.LoadData(strQry2);
 
-        objComman.BindDLLMasterTable("mstSchool", "OutcomeName,DOutComeID", dtID, conditions, "Type", "asc", ddlOutcome, "OutcomeName", "DOutComeID", "Select");
+         objComman.BindDLLMasterTable("mstSchool", "OutcomeName,DOutComeID", dtID, conditions, "Type", "asc", ddlOutcome, "OutcomeName", "DOutComeID", "Select");
 
 
-
+       
     }
     protected void ddlOutcome_SelectedIndexChanged(object sender, EventArgs e)
     {
-        string strQry2 = " SELECT '0' as SubID,'ALL' as SSubOutcomeName,0 DOutComeID FROM mstDonorSuboutcome  union SELECT SubID, SSubOutcomeName,DOutComeID FROM mstDonorSuboutcome where DOutComeID='" + ddlOutcome.SelectedValue + "'    order by DOutComeID ";
+        string strQry2 = " SELECT '0' as SubID,'ALL' as SSubOutcomeName,0 DOutComeID FROM mstDonorSuboutcome  union SELECT SubID, SSubOutcomeName,DOutComeID FROM mstDonorSuboutcome where DOutComeID='" + ddlOutcome.SelectedValue +"'    order by DOutComeID ";
         DataTable dtID = objMain.LoadData(strQry2);
 
         chkID.DataSource = dtID;
@@ -794,8 +796,8 @@ public partial class frmDonorMaster : System.Web.UI.Page
         divState.Visible = false;
         divDist.Visible = false;
         divBlock.Visible = false;
-        divDistype.Visible = false;
-
+       divDistype.Visible = false;
+        
         if (Convert.ToInt32(ddInGeography.SelectedValue) == 2)
         {
             divState.Visible = true;
@@ -807,12 +809,12 @@ public partial class frmDonorMaster : System.Web.UI.Page
             divState.Visible = true;
             divDist.Visible = true;
             divBlock.Visible = true;
-            divDistype.Visible = true;
+           divDistype.Visible = true;
         }
     }
     protected void btnprevone_Click(object sender, EventArgs e)
     {
-        int indcount = 0;
+               int indcount = 0;
         DataTable dtAttendent = null;
         foreach (GridViewRow Itemst in GV_DynamicGrid.Rows)
         {
@@ -837,38 +839,38 @@ public partial class frmDonorMaster : System.Web.UI.Page
             DataRow drAtt;
             foreach (GridViewRow Itemst in GV_DynamicGrid.Rows)
             {
-                if (((CheckBox)Itemst.FindControl("rptCB")).Checked)
+                if (((CheckBox)Itemst.FindControl("rptCB")).Checked )
                 {
-
+                    
                     int ind = Itemst.DataItemIndex;
 
 
                     Int32 DayCount = 0;
 
                     dr = dtselected.NewRow();
+                     
+                        dr["MainID"] = GV_DynamicGrid.DataKeys[ind]["MainID"];
+                        dr["SoutComeID"] = GV_DynamicGrid.DataKeys[ind]["SoutComeID"];
+                        dr["OutcomeName"] = GV_DynamicGrid.DataKeys[ind]["OutcomeName"];
+                        dr["SubID"] = GV_DynamicGrid.DataKeys[ind]["SubID"];
+                        dr["SSubOutcomeName"] = GV_DynamicGrid.DataKeys[ind]["SSubOutcomeName"];
+                        dr["DOutcomeID"] = GV_DynamicGrid.DataKeys[ind]["DOutcomeID"];
+                        dtselected.Rows.Add(dr);
+                        dtselect.Rows.RemoveAt(ind - tmp);
 
-                    dr["MainID"] = GV_DynamicGrid.DataKeys[ind]["MainID"];
-                    dr["SoutComeID"] = GV_DynamicGrid.DataKeys[ind]["SoutComeID"];
-                    dr["OutcomeName"] = GV_DynamicGrid.DataKeys[ind]["OutcomeName"];
-                    dr["SubID"] = GV_DynamicGrid.DataKeys[ind]["SubID"];
-                    dr["SSubOutcomeName"] = GV_DynamicGrid.DataKeys[ind]["SSubOutcomeName"];
-                    dr["DOutcomeID"] = GV_DynamicGrid.DataKeys[ind]["DOutcomeID"];
-                    dtselected.Rows.Add(dr);
-                    dtselect.Rows.RemoveAt(ind - tmp);
+                        //drAtt = dtAttendent.NewRow();
 
-                    //drAtt = dtAttendent.NewRow();
+                        //drAtt["UniqueCode"] = gvSerach.DataKeys[ind]["UniqueCode"];
+                        //drAtt["Day1"] = gvSerach.Rows[ind].FindControl("lblDay1");
+                        //drAtt["Day2"] = gvSerach.Rows[ind].FindControl("lblDay2");
+                        //drAtt["Day3"] = gvSerach.Rows[ind].FindControl("lblDay3");
 
-                    //drAtt["UniqueCode"] = gvSerach.DataKeys[ind]["UniqueCode"];
-                    //drAtt["Day1"] = gvSerach.Rows[ind].FindControl("lblDay1");
-                    //drAtt["Day2"] = gvSerach.Rows[ind].FindControl("lblDay2");
-                    //drAtt["Day3"] = gvSerach.Rows[ind].FindControl("lblDay3");
-
-                    //dtAttendent.Rows.Add(dr);
+                        //dtAttendent.Rows.Add(dr);
 
 
-                    tmp++;
-                }
-
+                        tmp++;
+                    }
+                
             }
             //ViewState["dtAttendent"] = dtAttendent;
 
@@ -877,7 +879,7 @@ public partial class frmDonorMaster : System.Web.UI.Page
 
             GV_DynamicGrid.DataSource = dtselect;
             GV_DynamicGrid.DataBind();
-
+          
             ViewState["dtselect"] = dtselect;
             ViewState["dtselected"] = dtselected;
 
@@ -933,13 +935,13 @@ public partial class frmDonorMaster : System.Web.UI.Page
                     dr["OutcomeName"] = GvRight.DataKeys[ind]["OutcomeName"];
                     dr["SubID"] = GvRight.DataKeys[ind]["SubID"];
                     dr["SSubOutcomeName"] = GvRight.DataKeys[ind]["SSubOutcomeName"];
-
+                       
                     dtselect.Rows.Add(dr);
                     dtselected.Rows.RemoveAt(ind - tmp);
                     //  dtAttendent.Rows.RemoveAt(ind - tmp);
                     tmp++;
 
-
+                 
                 }
             }
             //ViewState["dtAttendent"] = dtAttendent;
@@ -963,59 +965,8 @@ public partial class frmDonorMaster : System.Web.UI.Page
         }
 
     }
-    public bool InterventionSql_Injection(string RVal)
-    {
-        SqlInjection objAudit = new SqlInjection();
-        bool injection = false;
-
-
-        injection = objAudit.CheckInputBool(RVal);
-
-        return injection;
-
-    }
-    public static List<Control> GetAllControls(List<Control> controls, Type t, Control parent /* can be Page */)
-    {
-        foreach (Control c in parent.Controls)
-        {
-            if (c.GetType() == t)
-                controls.Add(c);
-            if (c.HasControls())
-                controls = GetAllControls(controls, t, c);
-        }
-        return controls;
-    }
-    public string SetTextBoxFocusSelect(Page page)
-    {
-        string ALlTestBoxValue = "";
-        List<Control> list = new List<Control>();
-        list = GetAllControls(list, typeof(TextBox), page);
-        foreach (Control ctl in list)
-        {
-            if (ctl.GetType() == typeof(TextBox))
-            {
-                ((TextBox)ctl).Attributes.Add("onfocus", "this.select()");
-                string TempVari = ((TextBox)ctl).Text;
-                if (TempVari.Length > 0)
-                {
-                    ALlTestBoxValue += TempVari + "  ";
-                }
-            }
-        }
-        return ALlTestBoxValue;
-    }
     protected void btnSave_Click(object sender, EventArgs e)
     {
-        string RVal = SetTextBoxFocusSelect(this.Page);
-        if (!InterventionSql_Injection(RVal))
-        {
-        }
-        else
-        {
-            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Spurious input detected. Data rejected')</script>", false);
-
-            return;
-        }
         Save_Update(0);
     }
     private void Save_Update(int SchoolCode)
@@ -1104,16 +1055,16 @@ public partial class frmDonorMaster : System.Web.UI.Page
                 return;
             }
         }
+      
 
 
 
-
-
-
+     
+        
 
         int mainResult = 0;
-
-
+       
+      
 
         if (ViewState["Save"].ToString() == "Save")
         {
@@ -1126,13 +1077,13 @@ public partial class frmDonorMaster : System.Web.UI.Page
                 return;
             }
 
-
-
+          
+            
             ViewState["Save"] = "fff";
 
 
 
-
+         
             //System.Drawing.Bitmap bmpPostedImage = new System.Drawing.Bitmap(FileuploadAttach.PostedFile.InputStream);
             //System.Drawing.Image objImage = ScaleImage(bmpPostedImage, 81);
 
@@ -1140,7 +1091,7 @@ public partial class frmDonorMaster : System.Web.UI.Page
 
             string ActivieDate = "";
 
-            string FromDate = "";
+            string FromDate="";
 
             string TOdate = "";
 
@@ -1182,12 +1133,12 @@ public partial class frmDonorMaster : System.Web.UI.Page
                 INActiveDate = "1900-01-01";
             }
 
-            int result = 0;
+
             mainResult = DonorProfile(0, txtDonorName.Text, Convert.ToDateTime(FromDate), Convert.ToDateTime(TOdate), Convert.ToInt32(ddInGeography.SelectedValue), Convert.ToInt32(rblDist.SelectedValue), Convert.ToInt32(ddlFrequency.SelectedValue), Convert.ToInt32(ddlQualitative.SelectedValue), Convert.ToInt32(ddlAGP.SelectedValue), Convert.ToInt32(ddlPhage.SelectedValue), Convert.ToInt32(ddlStatus.SelectedValue), Convert.ToDateTime(ActivieDate), Convert.ToDateTime(INActiveDate), Session["username"].ToString(), txt_pbname.Text, txtMuhala.Text, txtMuhala1.Text);
             if (mainResult > 0)
             {
                 ViewState["DonorID"] = mainResult;
-                string Oid = "";
+                string Oid="";
                 if (Convert.ToInt32(ddInGeography.SelectedValue) == 3)
                 {
                     foreach (ListItem item in chkBlock.Items)
@@ -1197,20 +1148,13 @@ public partial class frmDonorMaster : System.Web.UI.Page
 
                             Oid += "" + item.Value + "" + "";
 
-
-                            SqlParameter[] parm4 = new SqlParameter[]
-                       {
-                                  new SqlParameter("@DID",mainResult),
-                                   new SqlParameter("@BlockCode",item.Value ),
-                                     new SqlParameter("@Flag","B"),
-                         };
-                            result = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUpdateDonor", parm4);
-
+                            string TSDInsertQuery = " INSERT INTO mstDonorDistrictProfile([DID],[BlockCode])Values('" + mainResult + "','" + item.Value + "')";
+                            bool InsertTSD = objMain.AddUpdate(TSDInsertQuery);
                         }
 
                     }
                 }
-                string District = "";
+                string District="";
                 if (Convert.ToInt32(ddInGeography.SelectedValue) == 2)
                 {
                     foreach (ListItem item in chkDistrict.Items)
@@ -1219,15 +1163,9 @@ public partial class frmDonorMaster : System.Web.UI.Page
                         {
 
                             District += "" + item.Value + "" + "";
-                            SqlParameter[] parm4 = new SqlParameter[]
-                       {
-                                  new SqlParameter("@DID",mainResult),
-                                   new SqlParameter("@BlockCode",item.Value ),
-                                     new SqlParameter("@Flag","D"),
-                         };
-                            result = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUpdateDonor", parm4);
 
-
+                            string TSDInsertQuery = " INSERT INTO mstDonorDistrictProfile([DID],[DistrictCode])Values('" + mainResult + "','" + item.Value + "')";
+                            bool InsertTSD = objMain.AddUpdate(TSDInsertQuery);
                         }
                     }
                 }
@@ -1239,18 +1177,12 @@ public partial class frmDonorMaster : System.Web.UI.Page
                     string SoutComeID = GvRight.DataKeys[ind]["DOutcomeID"].ToString();
                     string SubID = GvRight.DataKeys[ind]["SubID"].ToString();
 
-                    SqlParameter[] parm4 = new SqlParameter[]
-                      {
-                                  new SqlParameter("@DID",mainResult),
-                                   new SqlParameter("@OSID",SoutComeID ),
-                                     new SqlParameter("@OSubID",SubID),
-                        };
-                    result = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUpdateDonorIndicatore", parm4);
 
-
+                    string TSDInsertQuery = " INSERT INTO mstIndicatorDeatils([OID],[OSID],OSubID)Values('" + mainResult + "','" + SoutComeID + "','" + SubID + "')";
+                    bool InsertTSD = objMain.AddUpdate(TSDInsertQuery);
 
                 }
-
+                
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved sucessfully')</script>", false);
                 LoadDataMain();
                 //txtIDNO.Text = TBCode;
@@ -1258,13 +1190,13 @@ public partial class frmDonorMaster : System.Web.UI.Page
         }
         else
         {
+          
 
-            int result = 0;
             string INActiveDate;
 
             string ActivieDate = "";
 
-            string FromDate = "";
+            string FromDate="";
 
             string TOdate = "";
 
@@ -1306,12 +1238,12 @@ public partial class frmDonorMaster : System.Web.UI.Page
                 INActiveDate = "1900-01-01";
             }
 
+            string deleteInsertQuery = " delete from mstDonorDistrictProfile where DID='" + ViewState["DonorID"].ToString() + "' ";
+            bool InsertDel = objMain.AddUpdate(deleteInsertQuery);
 
-            SqlParameter[] parm = new SqlParameter[]
-             {
-                  new SqlParameter("@DID",ViewState["DonorID"].ToString()),
-               };
-            result = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "DeletetblDonor", parm);
+            string deleteInsertQuery1 = " delete from mstIndicatorDeatils where OID='" + ViewState["DonorID"].ToString() + "' ";
+            bool InsertDel1 = objMain.AddUpdate(deleteInsertQuery1);
+          
 
             string Oid = "";
             if (Convert.ToInt32(ddInGeography.SelectedValue) == 3)
@@ -1323,15 +1255,8 @@ public partial class frmDonorMaster : System.Web.UI.Page
 
                         Oid += "" + item.Value + "" + "";
 
-
-                        SqlParameter[] parm4 = new SqlParameter[]
-                          {
-                                  new SqlParameter("@DID",ViewState["DonorID"].ToString()),
-                                   new SqlParameter("@BlockCode",item.Value ),
-                                     new SqlParameter("@Flag","B"),
-                            };
-                        result = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUpdateDonor", parm4);
-
+                        string TSDInsertQuery = " INSERT INTO mstDonorDistrictProfile([DID],[BlockCode])Values('" + ViewState["DonorID"].ToString() + "','" + item.Value + "')";
+                        bool InsertTSD = objMain.AddUpdate(TSDInsertQuery);
                     }
 
                 }
@@ -1345,14 +1270,9 @@ public partial class frmDonorMaster : System.Web.UI.Page
                     {
 
                         District += "" + item.Value + "" + "";
-                        SqlParameter[] parm4 = new SqlParameter[]
-                         {
-                                  new SqlParameter("@DID",ViewState["DonorID"].ToString()),
-                                   new SqlParameter("@BlockCode",item.Value ),
-                                     new SqlParameter("@Flag","D"),
-                           };
-                        result = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUpdateDonor", parm4);
 
+                        string TSDInsertQuery = " INSERT INTO mstDonorDistrictProfile([DID],[DistrictCode])Values('" + ViewState["DonorID"].ToString() + "','" + item.Value + "')";
+                        bool InsertTSD = objMain.AddUpdate(TSDInsertQuery);
                     }
                 }
             }
@@ -1364,15 +1284,9 @@ public partial class frmDonorMaster : System.Web.UI.Page
                 string SoutComeID = GvRight.DataKeys[ind]["DOutcomeID"].ToString();
                 string SubID = GvRight.DataKeys[ind]["SubID"].ToString();
 
-                SqlParameter[] parm4 = new SqlParameter[]
-                        {
-                                  new SqlParameter("@DID",ViewState["DonorID"].ToString()),
-                                   new SqlParameter("@OSID",SoutComeID ),
-                                     new SqlParameter("@OSubID",SubID),
-                          };
-                result = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertUpdateDonorIndicatore", parm4);
 
-
+                string TSDInsertQuery = " INSERT INTO mstIndicatorDeatils([OID],[OSID],OSubID)Values('" + ViewState["DonorID"].ToString() + "','" + SoutComeID + "','" + SubID + "')";
+                bool InsertTSD = objMain.AddUpdate(TSDInsertQuery);
 
             }
 
@@ -1389,30 +1303,30 @@ public partial class frmDonorMaster : System.Web.UI.Page
 
 
     }
-    public int DonorProfile(Int32 DID, string DonorName, DateTime FromDate, DateTime ToDate, Int32 GeographyID, Int32 DistrictType, Int32 FrequencyID, int QualitativeID, int AGPID, int PhaseID, int ActiveStatus, DateTime ActiveDate, DateTime DeActiveDate, string createby, string State, string Dist, string Block)
+    public int DonorProfile(Int32 DID, string DonorName, DateTime FromDate, DateTime ToDate, Int32 GeographyID, Int32 DistrictType, Int32 FrequencyID, int QualitativeID, int AGPID, int PhaseID, int ActiveStatus, DateTime ActiveDate, DateTime DeActiveDate,string createby,string State,string Dist,string Block)
     {
         SqlParameter[] cmdParameters = new SqlParameter[]
-        {
-            new SqlParameter("@ID", DID),
-            new SqlParameter("@DonorName", DonorName),
+		{
+			new SqlParameter("@ID", DID),
+			new SqlParameter("@DonorName", DonorName),
             new SqlParameter("@FromDate", FromDate),
                new SqlParameter("@ToDate", ToDate),
-            new SqlParameter("@GeographyID", GeographyID),
-            new SqlParameter("@DistrictType", DistrictType),
-            new SqlParameter("@FrequencyID", FrequencyID),
-            new SqlParameter("@QualitativeID", QualitativeID),
-            new SqlParameter("@AGPID", AGPID),
-            new SqlParameter("@PhaseID", PhaseID),
-            new SqlParameter("@ActiveStatus", ActiveStatus),
-            new SqlParameter("@ActiveDate", ActiveDate),
-            new SqlParameter("@DeActiveDate", DeActiveDate),
-            new SqlParameter("@createby", createby),
+			new SqlParameter("@GeographyID", GeographyID),
+			new SqlParameter("@DistrictType", DistrictType),
+			new SqlParameter("@FrequencyID", FrequencyID),
+			new SqlParameter("@QualitativeID", QualitativeID),
+			new SqlParameter("@AGPID", AGPID),
+			new SqlParameter("@PhaseID", PhaseID),
+			new SqlParameter("@ActiveStatus", ActiveStatus),
+			new SqlParameter("@ActiveDate", ActiveDate),
+			new SqlParameter("@DeActiveDate", DeActiveDate),
+			new SqlParameter("@createby", createby),
             new SqlParameter("@State", State),
             new SqlParameter("@District", Dist),
             new SqlParameter("@Block", Block),
                new SqlParameter("@Fyear", ddlStartYear.SelectedValue),
             new SqlParameter("@Mmonth", ddlMonth.SelectedValue),
-        };
+		};
         Object Icount;
 
         Icount = SqlHelper.ExecuteScaler(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InserUpdateDonorNew", cmdParameters);
@@ -1421,53 +1335,50 @@ public partial class frmDonorMaster : System.Web.UI.Page
     public int DonorProfileUpdate(Int32 DID, string DonorName, DateTime FromDate, DateTime ToDate, Int32 GeographyID, Int32 DistrictType, Int32 FrequencyID, int QualitativeID, int AGPID, int PhaseID, int ActiveStatus, DateTime ActiveDate, DateTime DeActiveDate, string createby, string State, string Dist, string Block)
     {
         SqlParameter[] cmdParameters = new SqlParameter[]
-        {
-            new SqlParameter("@ID", DID),
-            new SqlParameter("@DonorName", DonorName),
+		{
+			new SqlParameter("@ID", DID),
+			new SqlParameter("@DonorName", DonorName),
             new SqlParameter("@FromDate", FromDate),
                new SqlParameter("@ToDate", ToDate),
-            new SqlParameter("@GeographyID", GeographyID),
-            new SqlParameter("@DistrictType", DistrictType),
-            new SqlParameter("@FrequencyID", FrequencyID),
-            new SqlParameter("@QualitativeID", QualitativeID),
-            new SqlParameter("@AGPID", AGPID),
-            new SqlParameter("@PhaseID", PhaseID),
-            new SqlParameter("@ActiveStatus", ActiveStatus),
-            new SqlParameter("@ActiveDate", ActiveDate),
-            new SqlParameter("@DeActiveDate", DeActiveDate),
-
-
-            new SqlParameter("@createby", createby),
+			new SqlParameter("@GeographyID", GeographyID),
+			new SqlParameter("@DistrictType", DistrictType),
+			new SqlParameter("@FrequencyID", FrequencyID),
+			new SqlParameter("@QualitativeID", QualitativeID),
+			new SqlParameter("@AGPID", AGPID),
+			new SqlParameter("@PhaseID", PhaseID),
+			new SqlParameter("@ActiveStatus", ActiveStatus),
+			new SqlParameter("@ActiveDate", ActiveDate),
+			new SqlParameter("@DeActiveDate", DeActiveDate),
+			
+			
+			new SqlParameter("@createby", createby),
                new SqlParameter("@State", State),
             new SqlParameter("@District", Dist),
             new SqlParameter("@Block", Block),
                new SqlParameter("@Fyear", ddlStartYear.SelectedValue),
             new SqlParameter("@Mmonth", ddlMonth.SelectedValue),
-
-        };
+         
+		};
 
 
         return SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InserUpdateDonorNew", cmdParameters);
-
+       
     }
     protected void btnReprot_Click(object sender, EventArgs e)
     {
         SqlParameter[] cmdParameters = new SqlParameter[]
-        {
-            new SqlParameter("@ffh",""),
-
-
-        };
+		{
+			new SqlParameter("@ffh",""),
+            
+            
+		};
         DataTable dt = null;
-        if (Convert.ToInt32(ddlYear.SelectedValue) == 2026)
-        {
-            dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptDonorMasterReport2026]", cmdParameters);
-        }
-     else   if (Convert.ToInt32(ddlYear.SelectedValue) == 2025)
+
+        if (Convert.ToInt32(ddlYear.SelectedValue) == 2025)
         {
             dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptDonorMasterReport]", cmdParameters);
         }
-        else if (Convert.ToInt32(ddlYear.SelectedValue) == 2024)
+       else if (Convert.ToInt32(ddlYear.SelectedValue) == 2024)
         {
             dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptDonorMasterReport2024]", cmdParameters);
         }
@@ -1480,68 +1391,68 @@ public partial class frmDonorMaster : System.Web.UI.Page
         {
             ExporttoExcel(dt, "DonorMaster");
         }
-
+        
     }
     private void ExporttoExcel(DataTable table, string FileName)
     {
         try
         {
 
+       
+        if (table != null)
+        {
+            HttpContext.Current.Response.Clear();
+            HttpContext.Current.Response.ClearContent();
+            HttpContext.Current.Response.ClearHeaders();
+            HttpContext.Current.Response.Buffer = true;
+            HttpContext.Current.Response.ContentType = "application/ms-excel";
+            HttpContext.Current.Response.Write(@"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.0 Transitional//EN"">");
+            string Fullfilename = "" + FileName + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + ".xls";
 
-            if (table != null)
-            {
-                HttpContext.Current.Response.Clear();
-                HttpContext.Current.Response.ClearContent();
-                HttpContext.Current.Response.ClearHeaders();
-                HttpContext.Current.Response.Buffer = true;
-                HttpContext.Current.Response.ContentType = "application/ms-excel";
-                HttpContext.Current.Response.Write(@"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.0 Transitional//EN"">");
-                string Fullfilename = "" + FileName + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + ".xls";
+            HttpContext.Current.Response.AddHeader("Content-Disposition", "attachment;filename=" + Fullfilename + " ");
 
-                HttpContext.Current.Response.AddHeader("Content-Disposition", "attachment;filename=" + Fullfilename + " ");
-
-                HttpContext.Current.Response.Charset = "utf-8";
-                HttpContext.Current.Response.ContentEncoding = System.Text.Encoding.GetEncoding("windows-1250");
-                //sets font
-                HttpContext.Current.Response.Write("<font style='font-size:10.0pt; font-family:Calibri;'>");
-                HttpContext.Current.Response.Write("<BR><BR><BR>");
-                //sets the table border, cell spacing, border color, font of the text, background, foreground, font height
-                HttpContext.Current.Response.Write("<Table border='1' bgColor='#ffffff' " +
-                  "borderColor='#000000' cellSpacing='0' cellPadding='0' " +
-                  "style='font-size:10.0pt; font-family:Calibri; background:white;'> <TR>");
-                //am getting my grid's column headers
-                int columnscount = table.Columns.Count;
+            HttpContext.Current.Response.Charset = "utf-8";
+            HttpContext.Current.Response.ContentEncoding = System.Text.Encoding.GetEncoding("windows-1250");
+            //sets font
+            HttpContext.Current.Response.Write("<font style='font-size:10.0pt; font-family:Calibri;'>");
+            HttpContext.Current.Response.Write("<BR><BR><BR>");
+            //sets the table border, cell spacing, border color, font of the text, background, foreground, font height
+            HttpContext.Current.Response.Write("<Table border='1' bgColor='#ffffff' " +
+              "borderColor='#000000' cellSpacing='0' cellPadding='0' " +
+              "style='font-size:10.0pt; font-family:Calibri; background:white;'> <TR>");
+            //am getting my grid's column headers
+            int columnscount = table.Columns.Count;
 
 
-                for (int j = 0; j < columnscount; j++)
-                {      //write in new column
+            for (int j = 0; j < columnscount; j++)
+            {      //write in new column
+                HttpContext.Current.Response.Write("<Td>");
+                //Get column headers  and make it as bold in excel columns
+                HttpContext.Current.Response.Write("<B>");
+                HttpContext.Current.Response.Write(table.Columns[j]);
+                HttpContext.Current.Response.Write("</B>");
+                HttpContext.Current.Response.Write("</Td>");
+            }
+            HttpContext.Current.Response.Write("</TR>");
+            foreach (DataRow row in table.Rows)
+            {//write in new row
+                HttpContext.Current.Response.Write("<TR>");
+                for (int i = 0; i < table.Columns.Count; i++)
+                {
                     HttpContext.Current.Response.Write("<Td>");
-                    //Get column headers  and make it as bold in excel columns
-                    HttpContext.Current.Response.Write("<B>");
-                    HttpContext.Current.Response.Write(table.Columns[j]);
-                    HttpContext.Current.Response.Write("</B>");
+                    HttpContext.Current.Response.Write(row[i].ToString());
                     HttpContext.Current.Response.Write("</Td>");
                 }
-                HttpContext.Current.Response.Write("</TR>");
-                foreach (DataRow row in table.Rows)
-                {//write in new row
-                    HttpContext.Current.Response.Write("<TR>");
-                    for (int i = 0; i < table.Columns.Count; i++)
-                    {
-                        HttpContext.Current.Response.Write("<Td>");
-                        HttpContext.Current.Response.Write(row[i].ToString());
-                        HttpContext.Current.Response.Write("</Td>");
-                    }
 
-                    HttpContext.Current.Response.Write("</TR>");
-                }
-                HttpContext.Current.Response.Write("</Table>");
-                HttpContext.Current.Response.Write("</font>");
-                HttpContext.Current.Response.Flush();
-                HttpContext.Current.Response.End();
+                HttpContext.Current.Response.Write("</TR>");
             }
+            HttpContext.Current.Response.Write("</Table>");
+            HttpContext.Current.Response.Write("</font>");
+            HttpContext.Current.Response.Flush();
+            HttpContext.Current.Response.End();
         }
-        catch
+        }
+        catch (Exception ex)
         {
 
             throw;

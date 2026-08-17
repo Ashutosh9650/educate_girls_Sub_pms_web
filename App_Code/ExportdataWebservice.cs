@@ -6103,7 +6103,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                             }
 
                            string StudentTSInsertQuery = " Update mstTravelLockDate set Status=1  where mMonth=" + pmonth + " and TypeID=1 ";
-                           bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
+                         //  bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
                       }
 
                 }
@@ -6135,7 +6135,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
                         }
                         string StudentTSInsertQuery = " Update mstTravelLockDate set Status=1  where mMonth=" + pmonth + " and TypeID=2 ";
-                        bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
+                      //  bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
                     }
                 }
 
@@ -6165,7 +6165,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
                         }
                         string StudentTSInsertQuery = " Update mstTravelLockDate set Status=1  where mMonth=" + pmonth + " and TypeID=3 ";
-                        bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
+                      //  bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
                     }
                 }
 
@@ -7067,7 +7067,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                 }
 
                 string StudentTSInsertQuery = " Update tblTravelMatrixDeatils set GenerateFlag=0  where mYear=" + cYear + " and mMonth=" + mMonth + " and UserID= " + dtemployeeCheck.Rows[E]["UserID"].ToString() + " ";
-                bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
+              //  bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
                 #endregion
             }
 

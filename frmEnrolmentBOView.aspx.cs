@@ -28,26 +28,33 @@ public partial class frmEnrolmentBOView : Page
     {
         if (!IsPostBack)
         {
-            //exec rptGKgrad
-            LoadYear();
-            LoadUserLeavel();
-
-            if (Convert.ToString(Session["user_level"]) == "30" || Convert.ToString(Session["user_level"]) == "1"  || Convert.ToString(Session["user_level"]) == "39" || Convert.ToString(Session["user_level"]) == "136" || Convert.ToString(Session["user_level"]) == "19" || Convert.ToString(Session["user_level"]) == "137")
+            if (Convert.ToString(Session["username"]) != "")
             {
-                liApprovalQueue.Visible = true;
-                ScriptManager.RegisterStartupScript(
-             this,
-             GetType(),
-             "ShowTab",
-             "$('#myTab a[href=\"#tab3\"]').tab('show');",
-             true);
+                //exec rptGKgrad
+                LoadYear();
+                LoadUserLeavel();
+
+                if (Convert.ToString(Session["user_level"]) == "30" || Convert.ToString(Session["user_level"]) == "1" || Convert.ToString(Session["user_level"]) == "39" || Convert.ToString(Session["user_level"]) == "136" || Convert.ToString(Session["user_level"]) == "19" || Convert.ToString(Session["user_level"]) == "137")
+                {
+                    liApprovalQueue.Visible = true;
+                    ScriptManager.RegisterStartupScript(
+                 this,
+                 GetType(),
+                 "ShowTab",
+                 "$('#myTab a[href=\"#tab3\"]').tab('show');",
+                 true);
+                }
+                else
+                {
+                    liApprovalQueue.Visible = false;
+                }
             }
             else
             {
-                liApprovalQueue.Visible = false;
+                Response.Redirect("Login.aspx", false);
+
             }
-           
-        }
+            }
     }
 
     public void LoadYear()
@@ -528,7 +535,7 @@ public partial class frmEnrolmentBOView : Page
 
         clsMain objMain = new clsMain();
         DataTable dt = null;
-        if (Schoolcode.Length > 0)
+        if (villageCode.Length > 0)
         {
             SqlParameter[] parm1 = new SqlParameter[]
                {

@@ -28,24 +28,33 @@ public partial class GkpBOView : Page
     {
         if (!IsPostBack)
         {
-            //exec rptGKgrad
-            LoadYear();
-            LoadUserLeavel();
-            if (Convert.ToString(Session["user_level"]) == "19" || Convert.ToString(Session["user_level"]) == "146")
+            if (Convert.ToString(Session["username"]) != "")
             {
-                liApprovalQueue.Visible = true;
-                ScriptManager.RegisterStartupScript(
-             this,
-             GetType(),
-             "ShowTab",
-             "$('#myTab a[href=\"#tab3\"]').tab('show');",
-             true);
+
+                //exec rptGKgrad
+                LoadYear();
+                LoadUserLeavel();
+                if (Convert.ToString(Session["user_level"]) == "19" || Convert.ToString(Session["user_level"]) == "146")
+                {
+                    liApprovalQueue.Visible = true;
+                    ScriptManager.RegisterStartupScript(
+                 this,
+                 GetType(),
+                 "ShowTab",
+                 "$('#myTab a[href=\"#tab3\"]').tab('show');",
+                 true);
+                }
+                else
+                {
+                    liApprovalQueue.Visible = false;
+                }
             }
             else
             {
-                liApprovalQueue.Visible = false;
+                Response.Redirect("Login.aspx", false);
+
             }
-        }
+            }
     }
 
     public void LoadYear()

@@ -233,22 +233,19 @@ public partial class frmReAddEnrollment : System.Web.UI.Page
             if (Session["UnquieId"].ToString().Length > 6)
             {
 
-                StudentTSInsertQuery = " Update  [tblReEnrolment] set [Category]=" + ddlScat.SelectedValue + ",[Class]=" + dllClass.SelectedValue + ",Serial='" + strSerial + "',ChildName='" + ChildName + "',FatherName='" + FathersName + "',Gender=" + Gender + ",[SchoolCode]='" + Session["Schoolid"].ToString() + "',[EnrolmentDate]='" + DateAdminision + "',[DOB]='" + ChildDOB + "',AgeAson=" + Age + ",AsOnDate='" + AsDob + "',[Type]='" + ddlEduationStatus.SelectedValue + "',EnrollCategory='" + ddlEnroll.SelectedValue + "',ModifyDate='" + DateTime.Now.ToString("yyyy-MM-dd") + "',ModifyBy='" + Session["username"].ToString() + "',HouseNo='" + txtHHNo.Text.Trim() + "' where UniqueChildCode ='" + Session["UnquieId"].ToString() + "'";
-                bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
-
               
 
-                if (UpdateTs == true)
-                {
-                    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved sucessfully')</script>", false);
-                    txtChildName.Text = "";
-                    txtFatherName.Text = "";
-                    txtHHNo.Text = "";
-                    txtSrno.Text = "";
-                    txtHHNo.Focus();
-                    txtBirth.Text = DateTime.Now.ToString("dd/MM/yyyy");
-                    ddlEduationStatus.SelectedIndex = 0;
-                }
+                //if (UpdateTs == true)
+                //{
+                //    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved sucessfully')</script>", false);
+                //    txtChildName.Text = "";
+                //    txtFatherName.Text = "";
+                //    txtHHNo.Text = "";
+                //    txtSrno.Text = "";
+                //    txtHHNo.Focus();
+                //    txtBirth.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                //    ddlEduationStatus.SelectedIndex = 0;
+                //}
             }
             else
             {
