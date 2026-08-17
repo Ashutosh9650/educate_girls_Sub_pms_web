@@ -82,7 +82,7 @@ public class SqlInjection : IHttpModule//CommonBLL,
                 HttpCookie cookie = Request.Cookies[key];
                 cookie.HttpOnly = true;
                 cookie.Secure = true;
-                cookie.SameSite = SameSiteMode.Strict;
+              cookie.SameSite = SameSiteMode.Strict;
                 if (cookie != null)
                 {
                     if (cookie.HasKeys)

@@ -116,7 +116,6 @@ a
 {
   
     font-weight: normal;
-    font-family: tahoma,Verdana,Geneva,Arial,Helvetica,sans-serif;
     font-size: 12px;
     text-decoration: none;
     cursor: pointer;
@@ -126,7 +125,6 @@ a:hover
 {
     color: #83848f;
     font-weight: normal;
-    font-family: tahoma,Verdana,Geneva,Arial,Helvetica,sans-serif;
     font-size: 12px;
     text-decoration: none;
     cursor: pointer;
@@ -141,7 +139,6 @@ er
 {
     color: #6f6f6f;
     font-weight: normal;
-    font-family: tahoma,Verdana,Geneva,Arial,Helvetica,sans-serif;
     font-size: 11px;
     text-decoration: underline;
 }
@@ -149,7 +146,7 @@ er
 .SmallHD
 {
     font-size: 11px;
-    font-family: tahoma, verdana, Arial, Helvetica, sans-serif;
+     
     font-weight: bold;
     line-height: 19px;
     color: #3465a4;
@@ -157,7 +154,7 @@ er
 .SmallHD1
 {
     font-size: 11px;
-    font-family: tahoma, verdana, Arial, Helvetica, sans-serif;
+     
     font-weight: bold;
     line-height: 19px;
     color: #3465a4;
@@ -165,7 +162,7 @@ er
 .GridHD
 {
     font-size: 11px;
-    font-family: tahoma, verdana, Arial, Helvetica, sans-serif;
+     
     font-weight: bold;
     text-align: Left;
     line-height: 19px;
@@ -210,7 +207,6 @@ er
 
 .DataGridFooter td, .DataGridFooter
 {
-    font-family: verdana, Helvetica, sans-serif;
     font-weight: normal;
     line-height: 18px;
     color: Black;
@@ -220,7 +216,6 @@ er
 .DataGridHeader td, .DataGridHeader
 {
     font-size: 12px;
-    font-family: verdana, Helvetica, sans-serif;
     font-weight: normal;
     line-height: 20px;
     background-color: #e1e1e1;
@@ -240,7 +235,6 @@ er
     height: 35px;
     display: inline-block;
     color: black;
-    font-family: verdana,tahoma,arial,sans-serif;
     font-size: 12px;
     font-weight: normal;
     padding: 6px 15px;
@@ -269,7 +263,6 @@ er
     height: 30px;
     display: inline-block;
     color: black;
-    font-family: verdana,tahoma,arial,sans-serif;
     font-size: 12px;
     font-weight: normal;
     padding: 6px 15px;
@@ -309,7 +302,6 @@ er
     background-color: #0e7a9e;
     color: White;
     vertical-align: middle;
-    font-family: verdana, Helvetica, sans-serif;
     font-weight: bold;
     text-align: left;
     width: 98%;
@@ -330,7 +322,6 @@ er
     height: 30px;
     padding: 5px 5px 0px 5px;
     border-radius: 5px;
-    font-family: verdana, Helvetica, sans-serif;
     text-transform: uppercase;
     font-weight: bold;
 }
@@ -367,7 +358,6 @@ er
     background-color: #D3D3D3;
     color: black;
     border: 1px solid silver;
-    font-family: verdana, Helvetica, sans-serif;
     padding: 1px 4px;
     width: 95%;
     margin-left: 20px;
@@ -456,7 +446,6 @@ er
 
 .headertablecss
 {
-    font-family: Arial;
     font-size: 9pt;
     width: 100%;
     height: 20px;
@@ -535,7 +524,6 @@ er
     white-space: nowrap;
     display: block;
     width: 20px;
-    font-family: Arial;
     font-size: 12px;
     font-weight: normal;
     text-shadow: 0px 0px 1px #333;
@@ -563,7 +551,6 @@ er
     border: 1px solid #84bbf3;
     display: inline-block;
     color: #ffffff;
-    font-family: arial;
     font-size: 15px;
     font-weight: bold;
     padding: 6px 24px;
@@ -713,7 +700,6 @@ er
 
 .homepagedashboard
 {
-    font-family: verdana, Helvetica, sans-serif;
     font-size: 16px;
     font-weight: bold;
     color: White;
@@ -767,7 +753,6 @@ er
     color: black;
     background-color: #f7f7f7;
     vertical-align: middle;
-    font-family: verdana, Helvetica, sans-serif;
     font-weight: bold;
     text-align: left;
     width: 98%;
@@ -829,7 +814,6 @@ tr.paging td
     background-color: #0E7A9E;
     padding: 10px;
     color: White;
-    font-family: WP Greek Courier;
     text-align: center;
 }
 

@@ -94,10 +94,7 @@
 
 
 
-        body {
-            font-family: Verdana, sans-serif;
-            margin: 0
-        }
+      
 
 
         .author {
@@ -112,18 +109,16 @@
             flex-direction: row;
             align-items: center;
         }
+
         .grid__2 {
-    display: grid;
-    width: 100%;
-    grid-template-columns: 40% auto;
-    gap: 15px;
-    padding: 0px 15px;
-}
+            display: grid;
+            width: 100%;
+            grid-template-columns: 40% auto;
+            gap: 15px;
+            padding: 0px 15px;
+        }
     </style>
     <style>
-        
-
-
         .birth-box h2 {
             font-size: 16px;
             margin-top: 0;
@@ -144,41 +139,42 @@
             padding: 0 32px;
             background: #ffe6cc;
             width: 100%;
-}
+        }
 
 
         a.left-carousel-control, a.right-carousel-control {
-    position: absolute;
-    left: -7px;
-    background: #5db7a8;
-    color: #fff !important;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 5px !important;
-    font-size: 11px;
-}
+            position: absolute;
+            left: -7px;
+            background: #5db7a8;
+            color: #fff !important;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px !important;
+            font-size: 11px;
+        }
 
-a.left-carousel-control {}
+        a.left-carousel-control {
+        }
 
-a.right-carousel-control {
-    left: unset;
-    right: -7px;
-}
+        a.right-carousel-control {
+            left: unset;
+            right: -7px;
+        }
 
-.carousel-inner {
-}
+        .carousel-inner {
+        }
 
-.panel-body {}
-
+        .panel-body {
+        }
     </style>
     <script type="text/javascript">
         function SetTarget() {
-            window.document.forms[0].target = "_blank";
-        }
-    </script>
+                     window.document.forms[0].target = "_blank";
+                 }
+    </script >
 
 
     <link rel="shortcut icon" href="#">
@@ -187,18 +183,18 @@ a.right-carousel-control {
 
     <asp:UpdatePanel ID="MainPanel" runat="server">
         <ContentTemplate>
-                <div id="balloon-container" >
-                <div class="container-fluid" >
-            <%--<div id="balloon-container" >
+            <div id="balloon-container">
+                <div class="container-fluid">
+                    <%--<div id="balloon-container" >
                 <div class="container-fluid" style="width: 100% !important">--%>
-                    <div class="row" style="display:none">
+                    <div class="row" style="display: none">
 
                         <asp:HiddenField ID="Hdncount" runat="server" />
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="panel panel-default" runat="server" id="div1">
                                 <div class="panel-heading">
                                     <h3 class="text-danger" style="margin: 0px;">
-                                        
+
 
                                         <span class="pull-right" style="font-size: 14px;">
                                             <asp:ImageButton ID="Button3" Text="Report" CssClass="pull-right" ToolTip="GSS MM And SMC" OnClick="btnReport_Click" Height="23px" Width="40px" ImageUrl="~/images/Excel-2-icon.png"
@@ -214,29 +210,29 @@ a.right-carousel-control {
                     <div id="ColMain">
 
                         <div class="row">
-                            <div style="width:90%;margin:auto;float: left;margin-left: 5%;">
+                            <div style="width: 90%; margin: auto; float: left; margin-left: 5%;">
                                 <div class="grid__2">
                                     <div>
-                                        <div class="panel panel-default" style="margin-bottom: 0px;height: 100%;">
-                                    <div class="panel-heading" style="background: #5db7a8;padding: 5px 15px;">
-                                        <div class="birthday-title">
-                                            <h4 class="panel-title text-left">
-                                                <asp:Label ID="LinkButton2" runat="server" Text="Team Balika Birthday" Style="color: #fff;"></asp:Label>
-                                            </h4>
-                                            <div style="display: flex;justify-content: space-between;align-items: center;gap: 10px;">
-                                                <asp:Label ID="lblDate" ForeColor="Black" class="text-danger" Style="font-size: 15px;" runat="server"></asp:Label>
-                                            
-                                            <asp:ImageButton ID="BtnImgeye" runat="server" ImageUrl="~/images/Eye_icon.png" OnClick="birthAnni_Click1" Style="color: #fff; height: 20px;" />
+                                        <div class="panel panel-default" style="margin-bottom: 0px; height: 100%;">
+                                            <div class="panel-heading" style="background: #5db7a8; padding: 5px 15px;">
+                                                <div class="birthday-title">
+                                                    <h4 class="panel-title text-left">
+                                                        <asp:Label ID="LinkButton2" runat="server" Text="Team Balika Birthday" Style="color: #fff;"></asp:Label>
+                                                    </h4>
+                                                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                                                        <asp:Label ID="lblDate" ForeColor="Black" class="text-danger" Style="font-size: 15px;" runat="server"></asp:Label>
+
+                                                        <asp:ImageButton ID="BtnImgeye" runat="server" ImageUrl="~/images/Eye_icon.png" OnClick="birthAnni_Click1" Style="color: #fff; height: 20px;" />
+                                                    </div>
                                                 </div>
-                                        </div>
 
 
 
-                                    </div>
-                                    <div class="panel-body" style="background: #ededed;height: calc(100% - 32px);">
+                                            </div>
+                                            <div class="panel-body" style="background: #ededed; height: calc(100% - 32px);">
 
-                                        <div id="MainDiv" runat="server" style="width: 100%;display: flex;justify-content: center;align-items: center;height: 100%;">
-                                            <%-- <asp:GridView ID="gvReport" Visible="false" runat="server" OnRowCreated="gvReport_RowCreated" CssClass="table table-striped table-bordered table-hover" AutoGenerateColumns="False" Font-Names="Arial"
+                                                <div id="MainDiv" runat="server" style="width: 100%; display: flex; justify-content: center; align-items: center; height: 100%;">
+                                                    <%-- <asp:GridView ID="gvReport" Visible="false" runat="server" OnRowCreated="gvReport_RowCreated" CssClass="table table-striped table-bordered table-hover" AutoGenerateColumns="False" Font-Names="Arial"
                                                 Font-Size="12px" Width="100%">
                                                 <EmptyDataTemplate>
                                                     <div style="font-family: Arial; font-size: 12px; font-weight: bold;">
@@ -299,305 +295,305 @@ a.right-carousel-control {
 
 
 
-                                            <div id="myCarousel" class="carousel slide birth-box-sld" data-ride="carousel">
-                                                         <!-- Indicators -->
-                                              <%--  <ol class="carousel-indicators">
+                                                    <div id="myCarousel" class="carousel slide birth-box-sld" data-ride="carousel">
+                                                        <!-- Indicators -->
+                                                        <%--  <ol class="carousel-indicators">
                                                     <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
                                                     <li data-target="#myCarousel" data-slide-to="1"></li>
                                                     <li data-target="#myCarousel" data-slide-to="2"></li>
                                         
                                                 </ol>--%>
 
-                                                <!-- Wrapper for slides -->
-                                                <div class="carousel-inner">
-                                                    <div class="item active">
+                                                        <!-- Wrapper for slides -->
+                                                        <div class="carousel-inner">
+                                                            <div class="item active">
 
-                                                        <div class="birth-box">
-                                                           
-                                                            <p id="Id_0" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
+                                                                <div class="birth-box">
+
+                                                                    <p id="Id_0" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="item ">
+
+                                                                <div class="birth-box">
+
+                                                                    <p id="Id_1" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="item ">
+
+                                                                <div class="birth-box">
+
+                                                                    <p id="Id_2" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="item ">
+
+                                                                <div class="birth-box">
+
+                                                                    <p id="Id_3" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="item ">
+
+                                                                <div class="birth-box">
+
+                                                                    <p id="Id_4" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="item ">
+
+                                                                <div class="birth-box">
+
+                                                                    <p id="Id_5" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="item ">
+
+                                                                <div class="birth-box">
+
+                                                                    <p id="Id_6" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
+                                                                </div>
+                                                            </div>
+
+
+
+                                                            <div class="item">
+
+                                                                <div class="birth-box">
+
+                                                                    <p id="Id_7" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="item ">
+
+                                                                <div class="birth-box">
+
+                                                                    <p id="Id_8" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="item ">
+
+                                                                <div class="birth-box">
+
+                                                                    <p id="Id_9" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="item ">
+
+                                                                <div class="birth-box">
+
+                                                                    <p id="Id_10" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="item ">
+
+                                                                <div class="birth-box">
+
+                                                                    <p id="Id_11" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="item ">
+
+                                                                <div class="birth-box">
+
+                                                                    <p id="Id_12" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="item ">
+
+                                                                <div class="birth-box">
+
+                                                                    <p id="Id_13" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="item ">
+
+                                                                <div class="birth-box">
+
+                                                                    <p id="Id_14" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="item ">
+
+                                                                <div class="birth-box">
+
+                                                                    <p id="Id_15" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="item ">
+
+                                                                <div class="birth-box">
+
+                                                                    <p id="Id_16" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="item ">
+
+                                                                <div class="birth-box">
+
+                                                                    <p id="Id_17" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="item ">
+
+                                                                <div class="birth-box">
+
+                                                                    <p id="Id_18" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="item ">
+
+                                                                <div class="birth-box">
+
+                                                                    <p id="Id_19" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
+                                                                </div>
+                                                            </div>
+
+
+
                                                         </div>
+
+                                                        <!-- Left and right controls -->
+                                                        <a class="left-carousel-control" href="#myCarousel" data-slide="prev">
+                                                            <span class="glyphicon glyphicon-chevron-left"></span>
+                                                            <span class="sr-only">Previous</span>
+                                                        </a>
+                                                        <a class="right-carousel-control" href="#myCarousel" data-slide="next">
+                                                            <span class="glyphicon glyphicon-chevron-right"></span>
+                                                            <span class="sr-only">Next</span>
+                                                        </a>
                                                     </div>
-
-                                                    <div class="item ">
-
-                                                        <div class="birth-box">
-                                                           
-                                                            <p id="Id_1" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="item ">
-
-                                                        <div class="birth-box">
-                                                           
-                                                            <p id="Id_2" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="item ">
-
-                                                        <div class="birth-box">
-                                                           
-                                                            <p id="Id_3" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="item ">
-
-                                                        <div class="birth-box">
-                                                           
-                                                            <p id="Id_4" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="item ">
-
-                                                        <div class="birth-box">
-                                                           
-                                                            <p id="Id_5" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="item ">
-
-                                                        <div class="birth-box">
-                                                           
-                                                            <p id="Id_6" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
-                                                        </div>
-                                                    </div>
-
-
-
-                                                     <div class="item">
-
-                                                        <div class="birth-box">
-                                                           
-                                                            <p id="Id_7" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="item ">
-
-                                                        <div class="birth-box">
-                                                           
-                                                            <p id="Id_8" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="item ">
-
-                                                        <div class="birth-box">
-                                                           
-                                                            <p id="Id_9" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="item ">
-
-                                                        <div class="birth-box">
-                                                           
-                                                            <p id="Id_10" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="item ">
-
-                                                        <div class="birth-box">
-                                                           
-                                                            <p id="Id_11" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="item ">
-
-                                                        <div class="birth-box">
-                                                           
-                                                            <p id="Id_12" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="item ">
-
-                                                        <div class="birth-box">
-                                                           
-                                                            <p id="Id_13" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
-                                                        </div>
-                                                    </div>
-
-                                                     <div class="item ">
-
-                                                        <div class="birth-box">
-                                                           
-                                                            <p id="Id_14" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="item ">
-
-                                                        <div class="birth-box">
-                                                           
-                                                            <p id="Id_15" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="item ">
-
-                                                        <div class="birth-box">
-                                                           
-                                                            <p id="Id_16" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="item ">
-
-                                                        <div class="birth-box">
-                                                           
-                                                            <p id="Id_17" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="item ">
-
-                                                        <div class="birth-box">
-                                                           
-                                                            <p id="Id_18" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="item ">
-
-                                                        <div class="birth-box">
-                                                           
-                                                            <p id="Id_19" style="font-weight: 600; color: cornflowerblue" runat="server"></p>
-                                                        </div>
-                                                    </div>
-
-
 
                                                 </div>
 
-                                                                                                <!-- Left and right controls -->
-                                                <a class="left-carousel-control" href="#myCarousel" data-slide="prev">
-                                                    <span class="glyphicon glyphicon-chevron-left"></span>
-                                                    <span class="sr-only">Previous</span>
-                                                </a>
-                                                <a class="right-carousel-control" href="#myCarousel" data-slide="next">
-                                                    <span class="glyphicon glyphicon-chevron-right"></span>
-                                                    <span class="sr-only">Next</span>
-                                                </a>
+
                                             </div>
 
                                         </div>
-
-
-                                    </div>
-
-                                </div>
                                     </div>
                                     <div>
-                                        <div class="panel panel-default" style="height: auto; overflow: auto; width: 100%; background: #ededed;margin-bottom: 0px;">
-                                    <div class="panel-heading" style="padding: 8px; background: #5db7a8; color: #fff;">
-                                        <h4 class="panel-title text-center">
-                                            <asp:Label ID="lblDashboard" runat="server" Text="Dashboard "></asp:Label>
-                                        </h4>
-                                    </div>
+                                        <div class="panel panel-default" style="height: auto; overflow: auto; width: 100%; background: #ededed; margin-bottom: 0px;">
+                                            <div class="panel-heading" style="padding: 8px; background: #5db7a8; color: #fff;">
+                                                <h4 class="panel-title text-center">
+                                                    <asp:Label ID="lblDashboard" runat="server" Text="Dashboard "></asp:Label>
+                                                </h4>
+                                            </div>
 
-                                    <div class="panel-body">
-                                        <div class="row card-rwo">
-                                            <div class="col-md-3">
-                                                <div class="min-card ">
+                                            <div class="panel-body">
+                                                <div class="row card-rwo">
+                                                    <div class="col-md-3">
+                                                        <div class="min-card ">
 
-                                                    <a href="urlOfThePage" id="lnkenrollment" runat="server" target="_blank">Retention 2025-26</a>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="min-card ">
-                                                    <a href="urlOfThePage" id="lnkPrimary" runat="server" target="_blank">Primary D2D</a>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="min-card    ">
-                                                    <a href="urlOfThePage" id="lnkCBL" runat="server" target="_blank">State Check-in</a>
+                                                            <a href="urlOfThePage" id="lnkenrollment" runat="server" target="_blank">Retention 2025-26</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="min-card ">
+                                                            <a href="urlOfThePage" id="lnkPrimary" runat="server" target="_blank">Primary D2D</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="min-card    ">
+                                                            <a href="urlOfThePage" id="lnkCBL" runat="server" target="_blank">State Check-in</a>
 
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="min-card ">
-                                                    <a href="f" id="lnkquality" runat="server" target="_blank">Quality Impact Dashboard</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="min-card ">
+                                                            <a href="f" id="lnkquality" runat="server" target="_blank">Quality Impact Dashboard</a>
 
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3" runat="server" visible="false">
-                                                <div class="min-card ">
-                                                    <a href="lnkqufity" id="lnkBalance" runat="server" target="_blank">Balance Scorecard</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3" runat="server" visible="false">
+                                                        <div class="min-card ">
+                                                            <a href="lnkqufity" id="lnkBalance" runat="server" target="_blank">Balance Scorecard</a>
 
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3" runat="server" visible="false">
-                                                <div class="min-card ">
-                                                    <a href="lnkqualifty" id="lnlCIOOSHG" runat="server" target="_blank">CIOOSG Survey</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3" runat="server" visible="false">
+                                                        <div class="min-card ">
+                                                            <a href="lnkqualifty" id="lnlCIOOSHG" runat="server" target="_blank">CIOOSG Survey</a>
 
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="min-card ">
+                                                            <a href="lnkquality" id="lnkTrainingDshboard" runat="server" target="_blank">Training Dashboard</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="min-card ">
+                                                            <a href="lnkquality" id="A1" runat="server" target="_blank">VM Dashboard</a>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="min-card ">
+                                                            <a href="lnkquality" id="A2" runat="server" target="_blank">Vidya Maitri-Bihar</a>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="min-card ">
+                                                            <a href="lnkquality" id="A3" runat="server" target="_blank">Vidya Maitri-UP</a>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="min-card ">
+                                                            <a href="lnkquality" id="A4" runat="server" target="_blank">Quality Monitoring Dashboard</a>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="min-card ">
+                                                            <a href="lnkquality" id="A5" runat="server" target="_blank">GKP Dashboard</a>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="min-card ">
+                                                            <a href="lnkquality" id="A6" runat="server" target="_blank">LSE Dashboard</a>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3" runat="server" visible="false">
+                                                        <div class="min-card ">
+                                                            <a href="lnkquality" id="A7" runat="server" target="_blank">D2D Contact Quality Alert</a>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="min-card ">
+                                                            <a href="lnkquality" id="A8" runat="server" target="_blank">Jagriti Vidya(D2D Contact and Enrolment)-2026-27</a>
+
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-3">
-                                                <div class="min-card ">
-                                                    <a href="lnkquality" id="lnkTrainingDshboard" runat="server" target="_blank">Training Dashboard</a>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="min-card ">
-                                                     <a href="lnkquality" id="A1" runat="server" target="_blank">VM Dashboard</a>
-                                                  
-                                                </div>
-                                            </div>
-                                             <div class="col-md-3">
-                                                <div class="min-card ">
-                                                     <a href="lnkquality" id="A2" runat="server" target="_blank">Vidya Maitri-Bihar</a>
-                                                  
-                                                </div>
-                                            </div>
-                                             <div class="col-md-3">
-                                                <div class="min-card ">
-                                                     <a href="lnkquality" id="A3" runat="server" target="_blank"> Vidya Maitri-UP</a>
-                                                  
-                                                </div>
-                                            </div>
-                                             <div class="col-md-3">
-                                                <div class="min-card ">
-                                                     <a href="lnkquality" id="A4" runat="server" target="_blank">Quality Monitoring Dashboard</a>
-                                                  
-                                                </div>
-                                            </div>
-                                             <div class="col-md-3">
-                                                <div class="min-card ">
-                                                     <a href="lnkquality" id="A5" runat="server" target="_blank">GKP Dashboard</a>
-                                                  
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="min-card ">
-                                                     <a href="lnkquality" id="A6" runat="server" target="_blank">LSE Dashboard</a>
-                                                  
-                                                </div>
-                                            </div>
-                                             <div class="col-md-3"  runat="server" visible="false">
-                                                <div class="min-card ">
-                                                     <a href="lnkquality" id="A7" runat="server" target="_blank">D2D Contact Quality Alert</a>
-                                                  
-                                                </div>
-                                            </div>
-                                               <div class="col-md-3">
-                                                <div class="min-card ">
-                                                     <a href="lnkquality" id="A8" runat="server" target="_blank">Jagriti Vidya(D2D Contact and Enrolment)-2026-27</a>
-                                                  
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
 
 
 
-                                    <%--
+                                            <%--
                                 <div id="Div2" runat="server" style="height: 475px; overflow: auto; width: 99%;">
                                     <asp:GridView ID="GridView1" runat="server" CssClass="table table-striped table-bordered table-hover" AutoGenerateColumns="False" Font-Names="Arial"
                                         Font-Size="12px" Width="100%">
@@ -630,12 +626,12 @@ a.right-carousel-control {
                                         </Columns>
                                     </asp:GridView>
                                     </div>--%>
-                                </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            
+
 
 
                         </div>

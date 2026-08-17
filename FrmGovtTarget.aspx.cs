@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Ionic.Zip;
+using System;
+using System.Data;
+using System.Data.OleDb;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.IO;
-using System.Data.OleDb;
-using System.Data;
-using System.Data.SqlClient;
-using Ionic.Zip;
-using System.Text;
-
-using System.Configuration;
 public partial class FrmGovtTarget : System.Web.UI.Page
 {
     Comman obj = new Comman();
@@ -167,11 +163,11 @@ public partial class FrmGovtTarget : System.Web.UI.Page
     {
 
         conditions = "";
-       
 
-            conditions = "StateCode ='" + ddlState.SelectedValue + "' and mst2District.FYear ='"+Session["FinYear"].ToString()  +"'";
-     
-      
+
+        conditions = "StateCode ='" + ddlState.SelectedValue + "' and mst2District.FYear ='" + Session["FinYear"].ToString() + "'";
+
+
         objComman.BindDLL("mst2District", "DistrictCode,dbo.TitleCase(upper(DistrictName)) as DistrictName ", conditions, "DistrictName", "asc", ddlDistrict, "DistrictName", "DistrictCode", "Select");
 
 
@@ -192,12 +188,12 @@ public partial class FrmGovtTarget : System.Web.UI.Page
         {
             GenerateExcelData();
         }
-        if (Convert.ToInt32(ddlType.SelectedValue) ==2)
+        if (Convert.ToInt32(ddlType.SelectedValue) == 2)
         {
             GenerateExcelData2();
         }
-      
-      
+
+
     }
     protected void btnImport1_Click(object sender, EventArgs e)
     {
@@ -206,57 +202,57 @@ public partial class FrmGovtTarget : System.Web.UI.Page
     protected void btnCSV_Click(object sender, EventArgs e)
     {
     }
-     public DataTable ReadCsvFile()  
-    {  
-  
-        DataTable dtCsv = new DataTable();  
-        string Fulltext;  
-        if (FileUpload1.HasFile)  
-        {  
-          
+    public DataTable ReadCsvFile()
+    {
 
-            string sDirectory = Server.MapPath("~/Mou//");
+        DataTable dtCsv = new DataTable();
+        string Fulltext;
+        if (FileUpload1.HasFile)
+        {
 
-            string excelPath = Server.MapPath("~/Mou/") + Path.GetFileName(FileUpload1.PostedFile.FileName);
+
+            string sDirectory = Server.MapPath(Comman.GetImagePath("MouPath"));
+
+            string excelPath = Server.MapPath(Comman.GetImagePath("MouPath") + "/") + Path.GetFileName(FileUpload1.PostedFile.FileName);
             FileUpload1.SaveAs(excelPath);
 
-            using (StreamReader sr = new StreamReader(excelPath))  
-            {  
-                while (!sr.EndOfStream)  
-                {  
+            using (StreamReader sr = new StreamReader(excelPath))
+            {
+                while (!sr.EndOfStream)
+                {
                     Fulltext = sr.ReadToEnd().ToString(); //read full file text  
                     string[] rows = Fulltext.Split('\n'); //split full file text into rows  
-                    for (int i = 0; i < rows.Count() - 1; i++)  
-                    {  
+                    for (int i = 0; i < rows.Count() - 1; i++)
+                    {
                         string[] rowValues = rows[i].Split(','); //split each row with comma to get individual values  
-                        {  
-                            if (i == 0)  
-                            {  
-                                for (int j = 0; j < rowValues.Count(); j++)  
+                        {
+                            if (i == 0)
+                            {
+                                for (int j = 0; j < rowValues.Count(); j++)
                                 {
                                     dtCsv.Columns.Add(rowValues[j].Replace("\r", "").Trim()); ; //add headers  
                                     if (rowValues[j] == "#Govt meeting conducted\r")
                                     {
                                         string gg = rowValues[j];
                                     }
-                                }  
-                            }  
-                            else  
-                            {  
-                                DataRow dr = dtCsv.NewRow();  
-                                for (int k = 0; k < rowValues.Count(); k++)  
-                                {  
-                                    dr[k] = rowValues[k].ToString();  
-                                }  
+                                }
+                            }
+                            else
+                            {
+                                DataRow dr = dtCsv.NewRow();
+                                for (int k = 0; k < rowValues.Count(); k++)
+                                {
+                                    dr[k] = rowValues[k].ToString();
+                                }
                                 dtCsv.Rows.Add(dr); //add other rows  
-                            }  
-                        }  
-                    }  
-                }  
-            }  
-        }  
-        return dtCsv;  
-    }  
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return dtCsv;
+    }
 
     private void GenerateExcelData2()
     {
@@ -280,9 +276,9 @@ public partial class FrmGovtTarget : System.Web.UI.Page
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Select  Month ')</script>", false);
                 return;
             }
-            //string sDirectory = Server.MapPath("~/Mou//");
+            //string sDirectory = Server.MapPath(Comman.GetImagePath("MouPath");
 
-            //string excelPath = Server.MapPath("~/Mou/") + Path.GetFileName(FileUpload1.PostedFile.FileName);
+            //string excelPath = Server.MapPath(Comman.GetImagePath("MouPath") + "/") + Path.GetFileName(FileUpload1.PostedFile.FileName);
             //FileUpload1.SaveAs(excelPath);
 
             //string conString = string.Empty;
@@ -302,7 +298,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
             //{
             //    excel_con.Open();
             //    string sheet1 = excel_con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null).Rows[0]["TABLE_NAME"].ToString();
-              
+
             //    //[OPTIONAL]: It is recommended as otherwise the data will be considered as String by default.
             //    //dtExcelData.Columns.AddRange(new DataColumn[3] { new DataColumn("Id", typeof(int)),
             //    //new DataColumn("Name", typeof(string)),
@@ -314,16 +310,15 @@ public partial class FrmGovtTarget : System.Web.UI.Page
             //    }
             //    excel_con.Close();
 
-                
+
             //}
 
             DataTable dt = new DataTable();
             dt = ReadCsvFile();
-         
+
             string str = "";
 
-            str = "delete from  tblGovtDataForEG where Mmonth=" + ddlMonth.SelectedValue + " and Myear=2024  ";
-            bool res = Objcls.AddUpdate(str);
+
 
 
             dt.Columns.Add("Myear", System.Type.GetType("System.Int32"));
@@ -338,7 +333,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
 
             if (hhh == true)
             {
-                lbl_messages.Text = "Data Import Success "+dt.Rows.Count+" Record";
+                lbl_messages.Text = "Data Import Success " + dt.Rows.Count + " Record";
                 ModalAlert.Show();
             }
             //DataSet RowAffected = new DataSet();
@@ -363,8 +358,8 @@ public partial class FrmGovtTarget : System.Web.UI.Page
         // need to catch possible exceptions
         catch (Exception ex)
         {
-            lbl_messages.Text = ex.ToString();
-            ModalAlert.Show();
+            //lbl_messages.Text = ex.ToString();
+            //ModalAlert.Show();
 
         }
         finally
@@ -392,7 +387,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Select  Month ')</script>", false);
                 return;
             }
-            string sDirectory = Server.MapPath("~/Mou//");
+            string sDirectory = Server.MapPath(Comman.GetImagePath("MouPath"));
 
             bool res = false;
 
@@ -422,21 +417,21 @@ public partial class FrmGovtTarget : System.Web.UI.Page
 
             OleDbConnection con = null;
             con = new OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + FilePath + ";Extended Properties=Excel 8.0;Persist Security Info=False;");
-                        con.Open();
-                        //DataTable dt2 = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables,null);
-                      
-                        /*int i = 0;
-                        foreach (DataRow row in dt.Rows)
-                        {
-                            cb.Items.Add(row["TABLE_NAME"].ToString());
-                            i++;
-                        }*/
-                        
-                        OleDbCommand ExcelCommand = new OleDbCommand(@"SELECT * FROM [Sheet1$]", con);
-                        OleDbDataAdapter ExcelAdapter = new OleDbDataAdapter(ExcelCommand);
-                        DataSet ExcelDataSet = new DataSet();
-                        ExcelAdapter.Fill(ExcelDataSet);
-                        con.Close();
+            con.Open();
+            //DataTable dt2 = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables,null);
+
+            /*int i = 0;
+            foreach (DataRow row in dt.Rows)
+            {
+                cb.Items.Add(row["TABLE_NAME"].ToString());
+                i++;
+            }*/
+
+            OleDbCommand ExcelCommand = new OleDbCommand(@"SELECT * FROM [Sheet1$]", con);
+            OleDbDataAdapter ExcelAdapter = new OleDbDataAdapter(ExcelCommand);
+            DataSet ExcelDataSet = new DataSet();
+            ExcelAdapter.Fill(ExcelDataSet);
+            con.Close();
 
             //oledbConn.Open();
             //OleDbCommand cmd = new OleDbCommand(); ;
@@ -447,33 +442,31 @@ public partial class FrmGovtTarget : System.Web.UI.Page
             //string Q = "SELECT * FROM [Sheet1$]";
             //OleDbDataAdapter oleda = new OleDbDataAdapter(Q, oledbConn);
             //oleda.Fill(ds);
-                        DataTable dt = new DataTable();
+            DataTable dt = new DataTable();
 
-             dt = ExcelDataSet.Tables[0];
+            dt = ExcelDataSet.Tables[0];
 
 
-             ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('" + dt.Rows.Count + "')</script>", false);
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('" + dt.Rows.Count + "')</script>", false);
 
             string str = "";
 
-            str = "delete from  tblGovtDataForEG where Mmonth="+ddlMonth.SelectedValue +"  ";
-            res = Objcls.AddUpdate(str);
 
-            
-        dt.Columns.Add("Myear", System.Type.GetType("System.Int32"));
-            
-        dt.Columns.Add("Mmonth", System.Type.GetType("System.Int32"));
-        for (int i = 0; i < dt.Rows.Count; i++)
-        {
-            dt.Rows[i]["Myear"] = 2021;
-            dt.Rows[i]["Mmonth"] = ddlMonth.SelectedValue;
-        }
+
+            dt.Columns.Add("Myear", System.Type.GetType("System.Int32"));
+
+            dt.Columns.Add("Mmonth", System.Type.GetType("System.Int32"));
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                dt.Rows[i]["Myear"] = 2021;
+                dt.Rows[i]["Mmonth"] = ddlMonth.SelectedValue;
+            }
             Boolean hhh = BulkCopyTbTrainingDeatilsTraker(dt);
 
             if (hhh == true)
             {
                 lbl_messages.Text = "Data Import Success..";
-                    ModalAlert.Show();
+                ModalAlert.Show();
             }
             //DataSet RowAffected = new DataSet();
             //RowAffected = SP_Check_District_Excel_ImportCheck();
@@ -518,8 +511,8 @@ public partial class FrmGovtTarget : System.Web.UI.Page
                the opposite. "IMEX=1;" tells the driver to always read "intermixed" 
                (numbers, dates, strings etc) data columns as text. 
             Note that this option might affect excel sheet write access negative. */
-            string sDirectory = Server.MapPath("~/Mou//");
-           
+            string sDirectory = Server.MapPath(Comman.GetImagePath("MouPath"));
+
             bool res = false;
             string FilePath = sDirectory + FileUpload1.FileName;
             FileUpload1.PostedFile.SaveAs(FilePath);
@@ -552,41 +545,40 @@ public partial class FrmGovtTarget : System.Web.UI.Page
             OleDbDataAdapter oleda = new OleDbDataAdapter(Q, oledbConn);
             oleda.Fill(ds);
 
-           
+
             DataTable dt = ds.Tables[0];
 
-      
-                string str = "";
 
-                str = "Truncate Table tblDTDGovTargetTemp ";
-                res = Objcls.AddUpdate(str);
-
-                Boolean hhh = BulkCopyTbTrainingDeatils(dt);
-               
-                DataSet RowAffected = new DataSet();
-                RowAffected = SP_Check_District_Excel_ImportCheck();
+            string str = "";
 
 
 
-                if (RowAffected.Tables[0].Rows.Count > 0)
-                {
-                    btnApprove.Visible = false;
-                    ExporttoExcel(RowAffected.Tables[0]);
-                }
-                else
-                {
-                    btnApprove.Visible = true;
-                    lbl_messages.Text = "Data Import Success..";
-                    ModalAlert.Show();
-                }
-              
-          
+            Boolean hhh = BulkCopyTbTrainingDeatils(dt);
+
+            DataSet RowAffected = new DataSet();
+            RowAffected = SP_Check_District_Excel_ImportCheck();
+
+
+
+            if (RowAffected.Tables[0].Rows.Count > 0)
+            {
+                btnApprove.Visible = false;
+                ExporttoExcel(RowAffected.Tables[0]);
+            }
+            else
+            {
+                btnApprove.Visible = true;
+                lbl_messages.Text = "Data Import Success..";
+                ModalAlert.Show();
+            }
+
+
         }
         // need to catch possible exceptions
         catch (Exception ex)
         {
-            lbl_messages.Text = ex.ToString();
-            ModalAlert.Show();
+            //lbl_messages.Text = ex.ToString();
+            //ModalAlert.Show();
 
         }
         finally
@@ -600,18 +592,18 @@ public partial class FrmGovtTarget : System.Web.UI.Page
         {
 
             SqlBulkCopyColumnMapping mapping01 = new SqlBulkCopyColumnMapping("UniqueID", "UniqueID");
-           // SqlBulkCopyColumnMapping mapping02 = new SqlBulkCopyColumnMapping("VillageCode", "VillageCode");
+            // SqlBulkCopyColumnMapping mapping02 = new SqlBulkCopyColumnMapping("VillageCode", "VillageCode");
             //SqlBulkCopyColumnMapping mapping03 = new SqlBulkCopyColumnMapping("DistrictName", "DistrictName");
             //SqlBulkCopyColumnMapping mapping04 = new SqlBulkCopyColumnMapping("BlockName", "BlockName");
             //SqlBulkCopyColumnMapping mapping05 = new SqlBulkCopyColumnMapping("VillageName", "VillageName");
             //SqlBulkCopyColumnMapping mapping06 = new SqlBulkCopyColumnMapping("VillageCode", "VillageCode");
 
-            
+
             SqlBulkCopy bulkCopy = new SqlBulkCopy(SqlHelper.mainConnectionString);
             bulkCopy.BatchSize = 5000;
             bulkCopy.BulkCopyTimeout = 10000;
             bulkCopy.ColumnMappings.Add(mapping01);
-          //  bulkCopy.ColumnMappings.Add(mapping02);
+            //  bulkCopy.ColumnMappings.Add(mapping02);
             //bulkCopy.ColumnMappings.Add(mapping03);
             //bulkCopy.ColumnMappings.Add(mapping04);
             //bulkCopy.ColumnMappings.Add(mapping05);
@@ -622,7 +614,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
             bulkCopy.WriteToServer(dt);
             return true;
         }
-        catch (Exception ex)
+        catch
         {
             return false;
         }
@@ -644,9 +636,9 @@ public partial class FrmGovtTarget : System.Web.UI.Page
 
             SqlBulkCopyColumnMapping mapping09 = new SqlBulkCopyColumnMapping("#Enrolment form Submitted to KGBV School", "KGBVEnrolment form Submitted to KGBV School");
             SqlBulkCopyColumnMapping mapping10 = new SqlBulkCopyColumnMapping("#KGBV Enrolled Girls", "KGBV Enrolled Girls");
-            SqlBulkCopyColumnMapping mapping11 = new SqlBulkCopyColumnMapping("#No.of Camps - Pragati/AGP","Community1Peoples having Discussion on Phone Calls" );
-            SqlBulkCopyColumnMapping mapping12 = new SqlBulkCopyColumnMapping( "# Unique Beneficiary in CBL Camp from Attendance - Pragati/AGP", "Community1Parents Contacted");
-            SqlBulkCopyColumnMapping mapping13 = new SqlBulkCopyColumnMapping("School Readiness Kit - # Schools","Community1Teachers Contacted");
+            SqlBulkCopyColumnMapping mapping11 = new SqlBulkCopyColumnMapping("#No.of Camps - Pragati/AGP", "Community1Peoples having Discussion on Phone Calls");
+            SqlBulkCopyColumnMapping mapping12 = new SqlBulkCopyColumnMapping("# Unique Beneficiary in CBL Camp from Attendance - Pragati/AGP", "Community1Parents Contacted");
+            SqlBulkCopyColumnMapping mapping13 = new SqlBulkCopyColumnMapping("School Readiness Kit - # Schools", "Community1Teachers Contacted");
             SqlBulkCopyColumnMapping mapping14 = new SqlBulkCopyColumnMapping("#Govt meeting conducted", "CommunityParents Contacted");
 
 
@@ -666,14 +658,14 @@ public partial class FrmGovtTarget : System.Web.UI.Page
             bulkCopy.ColumnMappings.Add(mapping11);
             bulkCopy.ColumnMappings.Add(mapping12);
             bulkCopy.ColumnMappings.Add(mapping13);
-           bulkCopy.ColumnMappings.Add(mapping14);
+            bulkCopy.ColumnMappings.Add(mapping14);
 
             bulkCopy.DestinationTableName = "tblGovtDataForEG";
             bulkCopy.NotifyAfter = 5000000;
             bulkCopy.WriteToServer(dt);
             return true;
         }
-        catch (Exception ex)
+        catch
         {
             return false;
         }
@@ -685,7 +677,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
 
             SqlBulkCopyColumnMapping mapping01 = new SqlBulkCopyColumnMapping("State", "State");
             SqlBulkCopyColumnMapping mapping02 = new SqlBulkCopyColumnMapping("District", "District");
-            SqlBulkCopyColumnMapping mapping03= new SqlBulkCopyColumnMapping("Village Name", "Block");
+            SqlBulkCopyColumnMapping mapping03 = new SqlBulkCopyColumnMapping("Village Name", "Block");
             SqlBulkCopyColumnMapping mapping04 = new SqlBulkCopyColumnMapping("Village Name", "Village Name");
             SqlBulkCopyColumnMapping mapping05 = new SqlBulkCopyColumnMapping("Village Code", "Village Code");
             SqlBulkCopyColumnMapping mapping06 = new SqlBulkCopyColumnMapping("Myear", "Myear");
@@ -736,32 +728,32 @@ public partial class FrmGovtTarget : System.Web.UI.Page
             bulkCopy.ColumnMappings.Add(mapping12);
             bulkCopy.ColumnMappings.Add(mapping13);
             bulkCopy.ColumnMappings.Add(mapping14);
-           // bulkCopy.ColumnMappings.Add(mapping15);
-           // bulkCopy.ColumnMappings.Add(mapping16);
-           // bulkCopy.ColumnMappings.Add(mapping17);
-           // bulkCopy.ColumnMappings.Add(mapping18);
-           // bulkCopy.ColumnMappings.Add(mapping19);
-           // bulkCopy.ColumnMappings.Add(mapping20);
-           // bulkCopy.ColumnMappings.Add(mapping21);
-           // bulkCopy.ColumnMappings.Add(mapping22);
-           // bulkCopy.ColumnMappings.Add(mapping23);
-           // bulkCopy.ColumnMappings.Add(mapping24);
-           // bulkCopy.ColumnMappings.Add(mapping25);
-           // bulkCopy.ColumnMappings.Add(mapping26);
-           // bulkCopy.ColumnMappings.Add(mapping27);
-           // bulkCopy.ColumnMappings.Add(mapping28);
-           // bulkCopy.ColumnMappings.Add(mapping29);
-           // bulkCopy.ColumnMappings.Add(mapping30);
-           // bulkCopy.ColumnMappings.Add(mapping31);
-           // bulkCopy.ColumnMappings.Add(mapping32);
-           // bulkCopy.ColumnMappings.Add(mapping33);
-           //bulkCopy.ColumnMappings.Add(mapping34);
+            // bulkCopy.ColumnMappings.Add(mapping15);
+            // bulkCopy.ColumnMappings.Add(mapping16);
+            // bulkCopy.ColumnMappings.Add(mapping17);
+            // bulkCopy.ColumnMappings.Add(mapping18);
+            // bulkCopy.ColumnMappings.Add(mapping19);
+            // bulkCopy.ColumnMappings.Add(mapping20);
+            // bulkCopy.ColumnMappings.Add(mapping21);
+            // bulkCopy.ColumnMappings.Add(mapping22);
+            // bulkCopy.ColumnMappings.Add(mapping23);
+            // bulkCopy.ColumnMappings.Add(mapping24);
+            // bulkCopy.ColumnMappings.Add(mapping25);
+            // bulkCopy.ColumnMappings.Add(mapping26);
+            // bulkCopy.ColumnMappings.Add(mapping27);
+            // bulkCopy.ColumnMappings.Add(mapping28);
+            // bulkCopy.ColumnMappings.Add(mapping29);
+            // bulkCopy.ColumnMappings.Add(mapping30);
+            // bulkCopy.ColumnMappings.Add(mapping31);
+            // bulkCopy.ColumnMappings.Add(mapping32);
+            // bulkCopy.ColumnMappings.Add(mapping33);
+            //bulkCopy.ColumnMappings.Add(mapping34);
             bulkCopy.DestinationTableName = "tblGovtDataForEG";
             bulkCopy.NotifyAfter = 5000000;
             bulkCopy.WriteToServer(dt);
             return true;
         }
-        catch (Exception ex)
+        catch
         {
             return false;
         }
@@ -794,7 +786,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -835,7 +827,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -852,20 +844,20 @@ public partial class FrmGovtTarget : System.Web.UI.Page
         try
         {
 
-             DataSet RowAffected = new DataSet();
-                    RowAffected = SP_Check_District_Excel_Import();
+            DataSet RowAffected = new DataSet();
+            RowAffected = SP_Check_District_Excel_Import();
 
 
 
-                    if (RowAffected.Tables[0].Rows.Count > 0)
-                    {
-                        ExporttoExcel(RowAffected.Tables[0]);
-                    }
-                    else
-                    {
-                        lbl_messages.Text = "Data Import Success..";
-                        ModalAlert.Show();
-                    }
+            if (RowAffected.Tables[0].Rows.Count > 0)
+            {
+                ExporttoExcel(RowAffected.Tables[0]);
+            }
+            else
+            {
+                lbl_messages.Text = "Data Import Success..";
+                ModalAlert.Show();
+            }
         }
         catch (Exception ex)
         {
@@ -875,7 +867,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
         }
         finally
         {
-            
+
         }
 
     }
@@ -906,7 +898,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -945,7 +937,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -1024,7 +1016,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
         HttpContext.Current.Response.Buffer = true;
         HttpContext.Current.Response.ContentType = "application/ms-excel";
         HttpContext.Current.Response.Write(@"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.0 Transitional//EN"">");
-        string Fullfilename = "" + "DistProfile" +".xls";
+        string Fullfilename = "" + "DistProfile" + ".xls";
 
         HttpContext.Current.Response.AddHeader("Content-Disposition", "attachment;filename=" + Fullfilename + " ");
 
@@ -1079,15 +1071,15 @@ public partial class FrmGovtTarget : System.Web.UI.Page
             ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Select  Month ')</script>", false);
             return;
         }
-      
+
         DateTime GivenDate = DateTime.Now;
         int GivenYear = GivenDate.Year;
         SqlParameter[] cmdParameters = new SqlParameter[]
-		{
-			new SqlParameter("@Year", "2021"),
+        {
+            new SqlParameter("@Year", "2021"),
          new SqlParameter("@month",ddlMonth.SelectedValue),
-            
-		};
+
+        };
         DataTable dt = null;
 
 
@@ -1112,11 +1104,11 @@ public partial class FrmGovtTarget : System.Web.UI.Page
         DateTime GivenDate = DateTime.Now;
         int GivenYear = GivenDate.Year;
         SqlParameter[] cmdParameters = new SqlParameter[]
-		{
-			new SqlParameter("@Year", "2022"),
+        {
+            new SqlParameter("@Year", "2022"),
          new SqlParameter("@month",ddlMonth.SelectedValue),
-            
-		};
+
+        };
         DataTable dt = null;
 
 
@@ -1127,12 +1119,12 @@ public partial class FrmGovtTarget : System.Web.UI.Page
         }
     }
 
-    private void GenerateExcelNewSUmmary(DataTable dt,string FIleName)
+    private void GenerateExcelNewSUmmary(DataTable dt, string FIleName)
     {
         try
         {
 
-       
+
 
             string Fullfilename = "" + FIleName + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + ".xls";
             if (dt.Rows.Count > 0)
@@ -1144,7 +1136,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
                 //sw.Buffer = true;
                 //sw.ContentType = "application/ms-excel";
                 //sw.Write(@"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.0 Transitional//EN"">");
-                string fileName = Server.MapPath("~/DataBackup/" + Fullfilename + "");
+                string fileName = Server.MapPath(Comman.GetImagePath("DataBackupPath") + "/" + Fullfilename + "");
 
                 StreamWriter sw = new StreamWriter(fileName, false);
                 sw.Write(@"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.0 Transitional//EN"">");
@@ -1152,24 +1144,24 @@ public partial class FrmGovtTarget : System.Web.UI.Page
                 //sw.AddHeader("Content-Disposition", "attachment;filename=" + Fullfilename + "");
                 //sw.Charset = "utf-8";
                 //sw.ContentEncoding = System.Text.Encoding.GetEncoding("windows-1250");
-                       sw.Write("<table  >");
-            
-                    sw.Write("<tr>");
-                    sw.Write("<td colspan='35' ' style='text-align:Center;border:.2pt solid windowtext;'>Annual Plan District Summary </td>");
-                    sw.Write("</tr>");
+                sw.Write("<table  >");
 
-                    String HeaderStyle = "border:.3pt solid windowtext; font-weight:700;   word-wrap: normal; word-break: break-all; ";
+                sw.Write("<tr>");
+                sw.Write("<td colspan='35' ' style='text-align:Center;border:.2pt solid windowtext;'>Annual Plan District Summary </td>");
+                sw.Write("</tr>");
 
-                    sw.Write("<tr style='font-width:bold;'>");
-                    int columnscount = dt.Columns.Count;
+                String HeaderStyle = "border:.3pt solid windowtext; font-weight:700;   word-wrap: normal; word-break: break-all; ";
 
-                    for (int j = 0; j < columnscount; j++)
-                    {
-                        sw.Write("<th class='header' style='" + HeaderStyle + "  width:2%;'> " + dt.Columns[j].ColumnName + "</th>");
-                    }
+                sw.Write("<tr style='font-width:bold;'>");
+                int columnscount = dt.Columns.Count;
 
-                    sw.Write("</tr>");
-           
+                for (int j = 0; j < columnscount; j++)
+                {
+                    sw.Write("<th class='header' style='" + HeaderStyle + "  width:2%;'> " + dt.Columns[j].ColumnName + "</th>");
+                }
+
+                sw.Write("</tr>");
+
                 String RowStyle = "border:.1pt solid windowtext; font-weight:100; font-size:9pt;rowspan=2;";
 
                 for (int i = 0; i < dt.Rows.Count; i++)
@@ -1181,8 +1173,8 @@ public partial class FrmGovtTarget : System.Web.UI.Page
                         sw.Write("<td style='" + RowStyle + "'>" + dt.Rows[i][c] + "</td>");
                     }
                 }
-             
-            
+
+
 
                 sw.Write("</tr>");
                 sw.Write("</table>");
@@ -1194,7 +1186,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
                 try
                 {
                     string path1 = Fullfilename;
-                    string foldername = Server.MapPath("~/DataBackup/" + path1 + "");
+                    string foldername = Server.MapPath(Comman.GetImagePath("DataBackupPath") + "/" + path1 + "");
                     string datafolder = path1.Substring(0, path1.Length - 4);
                     //  string[] file = Directory.GetFiles(foldername);
                     string path = foldername;
@@ -1203,7 +1195,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
                     {
                         zip.AddFile(foldername, "");
                         //    zip.AddFiles(file, foldername);
-                        zip.Save(Server.MapPath("~/DataBackup/" + datafolder + "" + ".zip"));
+                        zip.Save(Server.MapPath(Comman.GetImagePath("DataBackupPath")) + "/" + datafolder + "" + ".zip");
                     }
 
 
@@ -1252,7 +1244,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
                 }
             }
         }
-        catch (Exception ex)
+        catch
         {
 
             throw;
@@ -1260,7 +1252,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
 
 
     }
-    private void GenerateExcelNew2021( DataTable dt,string FIleName)
+    private void GenerateExcelNew2021(DataTable dt, string FIleName)
     {
         try
         {
@@ -1269,7 +1261,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
 
 
 
-         
+
             if (dt.Rows.Count > 0)
             {
 
@@ -1308,7 +1300,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
                 HttpContext.Current.Response.Write("<th class='header' colspan='7' style='" + HeaderStyle + "  width:2%;'>Community Calling- Phase-2</th>");
                 HttpContext.Current.Response.Write("<th class='header' colspan='1' style='" + HeaderStyle + "  width:2%;'> Rashan Distribution Data</th>");
                 HttpContext.Current.Response.Write("<th class='header' colspan='9' style='" + HeaderStyle + "  width:2%;'>E Learning</th>");
-               
+
                 HttpContext.Current.Response.Write("</tr>");
                 String RowStyle = "border:.1pt solid windowtext; font-weight:100; font-size:9pt;rowspan=2;";
 
@@ -1349,14 +1341,14 @@ public partial class FrmGovtTarget : System.Web.UI.Page
 
 
                 HttpContext.Current.Response.Write("</tr>");
-               
+
 
                 HttpContext.Current.Response.Write("</table>");
                 HttpContext.Current.Response.Flush();
                 HttpContext.Current.Response.End();
             }
         }
-        catch (Exception ex)
+        catch
         {
 
             throw;
@@ -1369,7 +1361,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
 
         conditions += "    and mst5Village.Fyear = '" + Session["FinYear"].ToString() + "' ";
 
-        
+
         if (ddlDistrict.SelectedIndex > 0)
         {
             conditions += " and mst5Village.DistrictCode ='" + ddlDistrict.SelectedValue + "' ";
@@ -1378,11 +1370,11 @@ public partial class FrmGovtTarget : System.Web.UI.Page
         DateTime GivenDate = DateTime.Now;
         int GivenYear = GivenDate.Year;
         SqlParameter[] cmdParameters = new SqlParameter[]
-		{
-			new SqlParameter("@Condition",conditions),
+        {
+            new SqlParameter("@Condition",conditions),
          new SqlParameter("@Fyear",GivenYear),
-            
-		};
+
+        };
         DataTable dt = null;
 
 
@@ -1415,7 +1407,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
 
                 }
             }
-            string sFileDir = Server.MapPath("~/DataBackup/");
+            string sFileDir = Server.MapPath(Comman.GetImagePath("DataBackupPath")); ;
             string Fullfilename = "" + filePath + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + ".csv";
             string path = sFileDir + Fullfilename;
             File.WriteAllText(path, sbldr.ToString());
@@ -1424,7 +1416,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
             try
             {
                 string path1 = Fullfilename;
-                string foldername = Server.MapPath("~/DataBackup/" + path1 + "");
+                string foldername = Server.MapPath(Comman.GetImagePath("DataBackupPath") + "/" + path1 + "");
                 string datafolder = path1.Substring(0, path1.Length - 4);
                 //  string[] file = Directory.GetFiles(foldername);
 
@@ -1433,7 +1425,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
                 {
                     zip.AddFile(foldername, "");
                     //    zip.AddFiles(file, foldername);
-                    zip.Save(Server.MapPath("~/DataBackup/" + datafolder + "" + ".zip"));
+                    zip.Save(Server.MapPath(Comman.GetImagePath("DataBackupPath")) + "/" + datafolder + "" + ".zip");
                 }
 
 
@@ -1488,7 +1480,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
     }
     protected void btnNewImport_Click(object sender, EventArgs e)
     {
-        string filePath = Server.MapPath("~/Export/GovtTarget_Formate.xlsx");
+        string filePath = Server.MapPath(Comman.GetImagePath("ExportPath") + "/GovtTarget_Formate.xlsx");
         Response.ContentType = ContentType;
         Response.AppendHeader("Content-Disposition", "attachment; filename=" + Path.GetFileName(filePath));
         Response.WriteFile(filePath);
@@ -1496,7 +1488,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
     }
     protected void btnNewImport1_Click(object sender, EventArgs e)
     {
-        string filePath = Server.MapPath("~/Export/GovernmentData.csv");
+        string filePath = Server.MapPath(Comman.GetImagePath("ExportPath") + "/GovernmentData.csv");
         Response.ContentType = ContentType;
         Response.AppendHeader("Content-Disposition", "attachment; filename=" + Path.GetFileName(filePath));
         Response.WriteFile(filePath);
@@ -1505,7 +1497,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
 
     protected void btnNewImport2_Click(object sender, EventArgs e)
     {
-        string filePath = Server.MapPath("~/Export/GovernmentData.xlsx");
+        string filePath = Server.MapPath(Comman.GetImagePath("ExportPath") + "/GovernmentData.xlsx");
         Response.ContentType = ContentType;
         Response.AppendHeader("Content-Disposition", "attachment; filename=" + Path.GetFileName(filePath));
         Response.WriteFile(filePath);
@@ -1524,14 +1516,14 @@ public partial class FrmGovtTarget : System.Web.UI.Page
         {
             strtemptblmstGroup = "";
             strtemptblmstGroup += " SELECT WorkingStatus,ManagementType,[VillageCode],[SchoolCode],[SchoolCodeID],[DISECode],[DISECode1],[DISECode2],[Name],[Name1],[Name2],[SchoolLevel],[SchoolLevel1],[SchoolLevel2],[SchoolCodeTemp],OldSchoolUniqueCode,OldVillageUniqueCode ";
-      
+
 
             strtemptblmstGroup += " INTO #temp_" + strParentTable_Name + " FROM " + strParentTable_Name + " ";
             strtemptblmstGroup += " where DISECode is null ";
             // ConStr = new SqlConnection("Data Source=EducateGirls.db.3975866.hostedresource.com;Initial Catalog=EducateGirls;User Id=educategirls;Password=mw2Master1EG0!");
 
         }
-     
+
         if (strParentTable_Name == "T_mstVillage")
         {
             strtemptblmstGroup = "";
@@ -1544,7 +1536,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
 
         }
 
-      
+
         getresult = objComman.INSERT_ImportDataSingleSP(dt, strSP_Name, strParentTable_Name, strtemptblmstGroupChk, strtemptblmstGroup, Flag, ConStr);
         return getresult;
     }

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using System.IO;
 
 public partial class frmdownloadGkp : System.Web.UI.Page
 {
@@ -14,18 +10,32 @@ public partial class frmdownloadGkp : System.Web.UI.Page
             if (Request.QueryString["ID"] != null)
             {
                 string IDImage = Request.QueryString["ID"];
-                string filename = "";
-                string sFileDir = Server.MapPath("~/GKP/");
-                filename = sFileDir + "GKP\\" + IDImage;
-                filename = sFileDir + IDImage;
+                IDImage = Path.GetFileName(IDImage ?? "");
 
+                if (string.IsNullOrEmpty(IDImage))
+                {
+                    Response.Write("No image specified.");
+                    Response.End();
+                    return;
+                }
 
-                Response.ContentType = ".jpg";
-                Response.AddHeader("Content-Disposition", "attachment; filename=" + IDImage + "");
+                string sFileDir = Server.MapPath(Comman.GetImagePath("GKPPath") + "/");
+                string filename = Path.Combine(sFileDir, IDImage);
 
-                Response.TransmitFile(filename);
-                Response.End();
-
+                if (File.Exists(filename))
+                {
+                    Response.Clear();
+                    Response.ContentType = "image/jpeg";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=" + IDImage);
+                    Response.TransmitFile(filename);
+                    Response.End();
+                }
+                else
+                {
+                    Response.Write("Image not found.");
+                    Response.End();
+                }
+             
             }
 
 

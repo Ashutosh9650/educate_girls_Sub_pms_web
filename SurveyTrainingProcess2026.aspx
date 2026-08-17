@@ -597,7 +597,7 @@
                         <div class="thumbnail" style="min-height: 757px; width: 233px;">
                             <div style="overflow: auto; height: 757px;">
                                 <asp:GridView ID="GVMain" runat="server" Width="100%" AllowPaging="true" PageSize="40"
-                                    BorderStyle="None" DataKeyNames="Tarining_ID,Todate" OnPageIndexChanging="GVMain_PageIndexChanging"
+                                    BorderStyle="None" DataKeyNames="Tarining_ID,Todate,BatchTypeID" OnPageIndexChanging="GVMain_PageIndexChanging"
                                     GridLines="None" AutoGenerateColumns="false" OnRowCommand="GVMain_OnRowCommand">
                                     <EmptyDataTemplate>
                                         <div style="font-family: Arial; font-size: 12px; font-weight: bold; color: Red;">
@@ -1197,7 +1197,7 @@
             </asp:ModalPopupExtender>
             <asp:HiddenField ID="HFFormName1" runat="server" />
 
-            <asp:Panel ID="pnlFormName1" runat="server" CssClass=" model-wid Mpopup1 mod-posi" Style="height: 610px  !important; position: fixed !important; width: 40% !important; display: none;">
+            <asp:Panel ID="pnlFormName1" runat="server" CssClass=" model-wid Mpopup1 mod-posi" Style="height: 625px  !important;overflow:auto; position: fixed !important; width: 40% !important; display: none;">
 
                 <div style="border: 0px solid #ccc; width: 100%; min-height: 100px; margin: 0 auto;">
                     <div class="modal-header">
@@ -1211,6 +1211,21 @@
                     <div class="modal-body">
                         <div style="height: auto;">
                             <div class="form-group">
+                                 <div class="row">
+
+
+                                                        <label class="col-sm-3"  style="margin-top: 3px; padding-left:0px;">Participant Type <span style="color: Red">*</span></label>
+                                                        <div class="col-sm-9">
+                                                            <asp:DropDownList ID="ddlType" runat="server" class="form-control">
+
+                                                                <asp:ListItem Selected="True" Value="0">--Select--</asp:ListItem>
+                                                                <asp:ListItem Value="1">Participants</asp:ListItem>
+                                                                <asp:ListItem Value="2">Trainer</asp:ListItem>
+                                                                <asp:ListItem Value="3">Observer</asp:ListItem>
+
+                                                            </asp:DropDownList>
+                                                        </div>
+                                                    </div>
                                 <div class="row" runat="server" id="Q1">
                                     <div class="form-group">
                                         <label class="control-label" style="margin-top: 10px; text-align: left;">
@@ -1240,7 +1255,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group" style="overflow: auto; margin-top: 2px; height: 270px;">
+                                <div class="form-group" style="overflow: auto; margin-top: 2px; max-height: 295px;">
                                     <%--<div style="overflow: auto; margin-top: -5px; height: 350px;">--%>
                                     <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" EmptyDataText="There are no data records to display." AllowSorting="True" GridLines="Both" BorderColor="#e1e1e1" AlternatingRowStyle-BackColor="#F7F7F7"
                                         CssClass="table table-striped table table-hover table-bordered" SelectedRowStyle-BackColor="#e1f4a6"
@@ -1256,6 +1271,14 @@
                                                     <%# Container.DataItemIndex + 1 %>
                                                 </ItemTemplate>
                                             </asp:TemplateField>
+
+                                             <asp:TemplateField HeaderText="Participant Type" ItemStyle-Width="1%">
+                                                                <ItemTemplate>
+                                                                    <asp:Label ID="lblOptisss559eeonse" runat="server" Text='<%#Bind("ParticipantTypeName") %>'></asp:Label>
+                                                                </ItemTemplate>
+
+                                                                <ItemStyle Width="20%" CssClass="gvtextcenter" />
+                                                            </asp:TemplateField>
                                             <asp:TemplateField HeaderText="Participate Code" ItemStyle-Width="1%">
                                                 <ItemTemplate>
                                                     <asp:Label ID="lblOptieeo5nse" runat="server" Text='<%#Bind("ParticiparticipateName") %>'></asp:Label>
@@ -1273,9 +1296,9 @@
                                             <asp:TemplateField HeaderText="Delete">
                                                 <ItemTemplate>
 
-                                                    <asp:LinkButton ID="Delete_Questionttt" OnClientClick="javascript:return confirm('Are you sure you want to delete this record?');" OnClick="Delete_Question_Click2" class="btn btn-sm btn-link" runat="server">
+                                                    <asp:LinkButton ID="Delete_Questionttt"  OnClick="Delete_Question_Click2" class="btn btn-sm btn-link" runat="server">
                                                                      <span class="glyphicon glyphicon-trash" data-fa-transform="shrink-10 up-.5" style="color:red"></span>
-																	 
+                                                                        
                                                     </asp:LinkButton>
                                                 </ItemTemplate>
                                                 <ItemStyle Width="5%" CssClass="gvtextcenter" />
@@ -1290,6 +1313,8 @@
 
                             </div>
                         </div>
+
+                       
                     </div>
                 </div>
             </asp:Panel>

@@ -1,14 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Globalization;
-using System.Drawing;
-using System.IO;
 using System.Data;
-using System.Data.SqlClient;
+using System.IO;
 public partial class frmdownloadsac : System.Web.UI.Page
 {
     clsMain objMain = new clsMain();
@@ -16,26 +8,37 @@ public partial class frmdownloadsac : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
-           
+
             if (Convert.ToString(Session["username"]) != "")
             {
+                string IDImage = Request.QueryString["ID"];
+                IDImage = Path.GetFileName(IDImage ?? "");
 
-                if (Request.QueryString["ID"] != null)
+                if (string.IsNullOrEmpty(IDImage))
                 {
-                    string IDImage = Request.QueryString["ID"];
-                    string filename = "";
-                    string sFileDir = Server.MapPath("~/TabletImage/");
-                    filename = sFileDir + "TabletImage\\" + IDImage;
-                    filename = sFileDir + IDImage;
+                    Response.Write("No image specified.");
+                    Response.End();
+                    return;
+                }
 
+                string sFileDir = Server.MapPath(Comman.GetImagePath("TabletImagePath") + "/");
+                string filename = Path.Combine(sFileDir, IDImage);
 
-                    Response.ContentType = ".jpg";
-                    Response.AddHeader("Content-Disposition", "attachment; filename=" + IDImage + "");
-
+                if (File.Exists(filename))
+                {
+                    Response.Clear();
+                    Response.ContentType = "image/jpeg";
+                    Response.AddHeader("Content-Disposition", "attachment; filename=" + IDImage);
                     Response.TransmitFile(filename);
                     Response.End();
-
                 }
+                else
+                {
+                    Response.Write("Image not found.");
+                    Response.End();
+                }
+
+
             }
             else
             {
@@ -43,41 +46,10 @@ public partial class frmdownloadsac : System.Web.UI.Page
 
             }
         }
-       
 
 
-    
+
+
     }
-    public void LoadData()
-    {
-        string filename = "";
-        string IDImage = "";
-        string strQry2 = "";
-        strQry2 += " select PicName from tblRandomSessionPhototemp where SchoolCode='930F1813F0F44E799D2AE08E9'  ";
-        
-        DataTable dtUseryyy = objMain.LoadData(strQry2);
-        var kk = 0;
-        for (kk = 0; kk < dtUseryyy.Rows.Count; kk++)
-        {
-            IDImage = dtUseryyy.Rows[kk]["PicName"].ToString();
-            string sFileDir = Server.MapPath("~/TabletImage/");
-            filename = sFileDir + "TabletImage\\" + IDImage;
-            filename = sFileDir + IDImage;
-
-
-
-            if (!File.Exists(filename))
-            {
-
-            }
-            else
-            {
-                Response.ContentType = ".jpg";
-                Response.AddHeader("Content-Disposition", "attachment; filename=" + IDImage + "");
-
-                Response.TransmitFile(filename);
-                Response.End();
-            }
-        }
-    }
+   
 }

@@ -10210,6 +10210,8 @@ public class Comman
             case "GeoTempPath":
                 return "~/GeoTemp";
 
+            case "Traning":
+                return "~/Traning";
 
             default:
                 return string.Empty;

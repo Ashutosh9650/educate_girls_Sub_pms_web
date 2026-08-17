@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.IO;
-using System.Data.OleDb;
+﻿using Ionic.Zip;
+using System;
 using System.Data;
+using System.Data.OleDb;
 using System.Data.SqlClient;
-using Ionic.Zip;
+using System.IO;
 using System.Text;
+using System.Web;
 
 
 public partial class FrmRetionDataUpload : System.Web.UI.Page
@@ -91,11 +87,11 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
     {
 
         conditions = "";
-       
 
-            conditions = "StateCode ='" + ddlState.SelectedValue + "' and mst2District.FYear ='2025-2026'";
-     
-      
+
+        conditions = "StateCode ='" + ddlState.SelectedValue + "' and mst2District.FYear ='2025-2026'";
+
+
         objComman.BindDLL("mst2District", "DistrictCode,dbo.TitleCase(upper(DistrictName)) as DistrictName ", conditions, "DistrictName", "asc", ddlDistrict, "DistrictName", "DistrictCode", "Select");
 
 
@@ -121,8 +117,8 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
                the opposite. "IMEX=1;" tells the driver to always read "intermixed" 
                (numbers, dates, strings etc) data columns as text. 
             Note that this option might affect excel sheet write access negative. */
-            string sDirectory = Server.MapPath("~/Mou//");
-           
+            string sDirectory = Server.MapPath(Comman.GetImagePath("MouPath"));
+
             bool res = false;
             string FilePath = sDirectory + FileUpload1.FileName;
             FileUpload1.PostedFile.SaveAs(FilePath);
@@ -155,41 +151,40 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
             OleDbDataAdapter oleda = new OleDbDataAdapter(Q, oledbConn);
             oleda.Fill(ds);
 
-           
+
             DataTable dt = ds.Tables[0];
 
-      
-                string str = "";
 
-                str = "Truncate Table tblRetaionDataTemp ";
-                res = Objcls.AddUpdate(str);
+            string str = "";
 
-                Boolean hhh = BulkCopyTbTrainingDeatils(dt);
-               
-                DataSet RowAffected = new DataSet();
-                RowAffected = SP_Check_District_Excel_ImportCheck();
+            str = " tblRetaionDataTemp ";
 
+            Boolean hhh = BulkCopyTbTrainingDeatils(dt);
+
+            DataSet RowAffected = new DataSet();
+            RowAffected = SP_Check_District_Excel_ImportCheck();
 
 
-                if (RowAffected.Tables[0].Rows.Count > 3)
-                {
-                    btnApprove.Visible = false;
-                    ExporttoExcel(RowAffected.Tables[0]);
-                }
-                else
-                {
-                    btnApprove.Visible = true;
-                    lbl_messages.Text = "Data Import Success..";
-                    ModalAlert.Show();
-                }
-              
-          
+
+            if (RowAffected.Tables[0].Rows.Count > 3)
+            {
+                btnApprove.Visible = false;
+                ExporttoExcel(RowAffected.Tables[0]);
+            }
+            else
+            {
+                btnApprove.Visible = true;
+                lbl_messages.Text = "Data Import Success..";
+                ModalAlert.Show();
+            }
+
+
         }
         // need to catch possible exceptions
         catch (Exception ex)
         {
-            lbl_messages.Text = ex.ToString();
-            ModalAlert.Show();
+            //lbl_messages.Text = ex.ToString();
+            //ModalAlert.Show();
 
         }
         finally
@@ -209,7 +204,7 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
             //SqlBulkCopyColumnMapping mapping05 = new SqlBulkCopyColumnMapping("VillageName", "VillageName");
             //SqlBulkCopyColumnMapping mapping06 = new SqlBulkCopyColumnMapping("VillageCode", "VillageCode");
 
-            
+
             SqlBulkCopy bulkCopy = new SqlBulkCopy(SqlHelper.mainConnectionString);
             bulkCopy.BatchSize = 5000;
             bulkCopy.BulkCopyTimeout = 10000;
@@ -225,7 +220,7 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
             bulkCopy.WriteToServer(dt);
             return true;
         }
-        catch (Exception ex)
+        catch
         {
             return false;
         }
@@ -258,7 +253,7 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -299,7 +294,7 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -316,20 +311,20 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
         try
         {
 
-             DataSet RowAffected = new DataSet();
-                    RowAffected = SP_Check_District_Excel_Import();
+            DataSet RowAffected = new DataSet();
+            RowAffected = SP_Check_District_Excel_Import();
 
 
 
-                    if (RowAffected.Tables[0].Rows.Count > 0)
-                    {
-                        ExporttoExcel(RowAffected.Tables[0]);
-                    }
-                    else
-                    {
-                        lbl_messages.Text = "Data Import Success..";
-                        ModalAlert.Show();
-                    }
+            if (RowAffected.Tables[0].Rows.Count > 0)
+            {
+                ExporttoExcel(RowAffected.Tables[0]);
+            }
+            else
+            {
+                lbl_messages.Text = "Data Import Success..";
+                ModalAlert.Show();
+            }
         }
         catch (Exception ex)
         {
@@ -339,7 +334,7 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
         }
         finally
         {
-            
+
         }
 
     }
@@ -370,7 +365,7 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -409,7 +404,7 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
                 sqlConnection.Dispose();
             }
 
-            throw e;
+            throw;
         }
         finally
         {
@@ -488,7 +483,7 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
         HttpContext.Current.Response.Buffer = true;
         HttpContext.Current.Response.ContentType = "application/ms-excel";
         HttpContext.Current.Response.Write(@"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.0 Transitional//EN"">");
-        string Fullfilename = "" + "DistProfile" +".xls";
+        string Fullfilename = "" + "DistProfile" + ".xls";
 
         HttpContext.Current.Response.AddHeader("Content-Disposition", "attachment;filename=" + Fullfilename + " ");
 
@@ -552,11 +547,11 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
         DateTime GivenDate = DateTime.Now;
         int GivenYear = GivenDate.Year;
         SqlParameter[] cmdParameters = new SqlParameter[]
-		{
-			new SqlParameter("@condtion",conditions),
-       
-            
-		};
+        {
+            new SqlParameter("@condtion",conditions),
+
+
+        };
         DataTable dt = null;
 
 
@@ -589,7 +584,7 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
 
                 }
             }
-            string sFileDir = Server.MapPath("~/DataBackup/");
+            string sFileDir = Server.MapPath(Comman.GetImagePath("DataBackupPath")); ;
             string Fullfilename = "" + filePath + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + ".csv";
             string path = sFileDir + Fullfilename;
             File.WriteAllText(path, sbldr.ToString());
@@ -598,7 +593,7 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
             try
             {
                 string path1 = Fullfilename;
-                string foldername = Server.MapPath("~/DataBackup/" + path1 + "");
+                string foldername = Server.MapPath(Comman.GetImagePath("DataBackupPath") + "/" + path1 + "");
                 string datafolder = path1.Substring(0, path1.Length - 4);
                 //  string[] file = Directory.GetFiles(foldername);
 
@@ -607,7 +602,7 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
                 {
                     zip.AddFile(foldername, "");
                     //    zip.AddFiles(file, foldername);
-                    zip.Save(Server.MapPath("~/DataBackup/" + datafolder + "" + ".zip"));
+                    zip.Save(Server.MapPath(Comman.GetImagePath("DataBackupPath")) + "/" + datafolder + "" + ".zip");
                 }
 
 
@@ -662,7 +657,7 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
     }
     protected void btnNewImport_Click(object sender, EventArgs e)
     {
-        string filePath = Server.MapPath("~/Export/Retention_Formate.xlsx");
+        string filePath = Server.MapPath(Comman.GetImagePath("ExportPath") + "/" + "Retention_Formate.xlsx");
         Response.ContentType = ContentType;
         Response.AppendHeader("Content-Disposition", "attachment; filename=" + Path.GetFileName(filePath));
         Response.WriteFile(filePath);
@@ -682,14 +677,14 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
         {
             strtemptblmstGroup = "";
             strtemptblmstGroup += " SELECT WorkingStatus,ManagementType,[VillageCode],[SchoolCode],[SchoolCodeID],[DISECode],[DISECode1],[DISECode2],[Name],[Name1],[Name2],[SchoolLevel],[SchoolLevel1],[SchoolLevel2],[SchoolCodeTemp],OldSchoolUniqueCode,OldVillageUniqueCode ";
-      
+
 
             strtemptblmstGroup += " INTO #temp_" + strParentTable_Name + " FROM " + strParentTable_Name + " ";
             strtemptblmstGroup += " where DISECode is null ";
             // ConStr = new SqlConnection("Data Source=EducateGirls.db.3975866.hostedresource.com;Initial Catalog=EducateGirls;User Id=educategirls;Password=mw2Master1EG0!");
 
         }
-     
+
         if (strParentTable_Name == "T_mstVillage")
         {
             strtemptblmstGroup = "";
@@ -702,7 +697,7 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
 
         }
 
-      
+
         getresult = objComman.INSERT_ImportDataSingleSP(dt, strSP_Name, strParentTable_Name, strtemptblmstGroupChk, strtemptblmstGroup, Flag, ConStr);
         return getresult;
     }
