@@ -1,17 +1,12 @@
-﻿using System;
+﻿using ClosedXML.Excel;
+using ExcelDataReader;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Data.SqlClient;
-using System.Data;
-using System.Globalization;
-using iTextSharp.text.pdf;
-using iTextSharp.text;
-using ClosedXML.Excel;
-using System.IO;
-using ExcelDataReader;
 public partial class frmChangeCluster2025 : System.Web.UI.Page
 {
     clsMain objMain = new clsMain();
@@ -51,38 +46,37 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
     }
     protected void btnNewImport1_Click(object sender, EventArgs e)
     {
-        if (Convert.ToInt32(ddlYear.SelectedValue)!= 2026)
+        if (Convert.ToInt32(ddlYear.SelectedValue) != 2026)
         {
 
             ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Fyear 2026 ')</script>", false);
             return;
         }
-        if (FileUpload1.FileName.Length>0)
+        if (FileUpload1.FileName.Length > 0)
         {
-
         }
         else
         {
             return;
         }
-      
-            // need to pass relative path after deploying on server
-            string path = System.IO.Path.GetFullPath(Server.MapPath(FileUpload1.FileName));
-            /* connection string  to work with excel file. HDR=Yes - indicates 
-               that the first row contains columnnames, not data. HDR=No - indicates 
-               the opposite. "IMEX=1;" tells the driver to always read "intermixed" 
-               (numbers, dates, strings etc) data columns as text. 
-            Note that this option might affect excel sheet write access negative. */
-            string sDirectory = Server.MapPath("~/Mou//");
-      
-            string FilePath = sDirectory + FileUpload1.FileName;
-            FileUpload1.PostedFile.SaveAs(FilePath);
-            ViewState["FileName"] = FileUpload1.FileName + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss");
+
+        // need to pass relative path after deploying on server
+        string path = System.IO.Path.GetFullPath(Server.MapPath(FileUpload1.FileName));
+        /* connection string  to work with excel file. HDR=Yes - indicates 
+           that the first row contains columnnames, not data. HDR=No - indicates 
+           the opposite. "IMEX=1;" tells the driver to always read "intermixed" 
+           (numbers, dates, strings etc) data columns as text. 
+        Note that this option might affect excel sheet write access negative. */
+        string sDirectory = Server.MapPath(Comman.GetImagePath("MouPath"));
+
+        string FilePath = sDirectory + FileUpload1.FileName;
+        FileUpload1.PostedFile.SaveAs(FilePath);
+        ViewState["FileName"] = FileUpload1.FileName + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss");
 
 
-            // Required for .NET Framework
+        // Required for .NET Framework
 
-            DataSet ds;
+        DataSet ds;
 
         using (var stream = File.Open(FilePath, FileMode.Open, FileAccess.Read))
         {
@@ -101,20 +95,20 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         foreach (DataTable dt11 in ds.Tables)
         {
             string sheetName = dt11.TableName;
-            if  (sheetName == "School Update")
+            if (sheetName == "School Update")
             {
                 Flag = Flag + 1;
             }
-           else if (sheetName == "Village Update")
+            else if (sheetName == "Village Update")
             {
                 Flag = Flag + 1;
             }
-            else if(sheetName == "Code Book")
+            else if (sheetName == "Code Book")
             {
                 Flag = Flag + 1;
             }
 
-            else if(sheetName == "Define Cluster")
+            else if (sheetName == "Define Cluster")
             {
                 Flag = Flag + 1;
             }
@@ -130,22 +124,21 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             {
                 Flag = 0;
                 break;
-               
-               
+
+
 
             }
 
 
         }
-        if (Flag!=6)
+        if (Flag != 6)
         {
 
             ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Valid Template ')</script>", false);
             return;
         }
         clsMain Objcls = new clsMain();
-        string  str = "delete from  MasterSchoolBulkUpdate where CreateBy='"+ Session["username"].ToString() + "'  delete from  MasterSchoolBulkVillage where CreateBy='" + Session["username"].ToString() + "'  delete from  MasterAssignClusterVillage where CreateBy='" + Session["username"].ToString() + "'  delete from  MasterDefineCluster where CreateBy='" + Session["username"].ToString() + "' ";
-       bool res = Objcls.AddUpdate(str);
+
         DataTable dt = ds.Tables[0];
         DataTable dt1 = ds.Tables[1];
         DataTable dt3 = ds.Tables[3];
@@ -157,11 +150,11 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         dt3.Columns.Add("CreateBy", System.Type.GetType("System.String"));
         foreach (DataRow dr in dt.Rows)
         {
-            dr["CreateBy"] = Session["username"].ToString(); 
+            dr["CreateBy"] = Session["username"].ToString();
         }
         foreach (DataRow dr in dt1.Rows)
         {
-            
+
             dr["CreateBy"] = Session["username"].ToString();
         }
         foreach (DataRow dr in dt2.Rows)
@@ -186,22 +179,22 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
              new SqlParameter("@YearID", ddlYear.SelectedItem.Text),
 
        };
-         DataSet dtcheck= SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptMatersheetErro]", cmdParameters); 
-       if( dtcheck.Tables[0].Rows.Count>0 || dtcheck.Tables[1].Rows.Count > 0 || dtcheck.Tables[2].Rows.Count > 0 || dtcheck.Tables[3].Rows.Count > 0)
+        DataSet dtcheck = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptMatersheetErro]", cmdParameters);
+        if (dtcheck.Tables[0].Rows.Count > 0 || dtcheck.Tables[1].Rows.Count > 0 || dtcheck.Tables[2].Rows.Count > 0 || dtcheck.Tables[3].Rows.Count > 0)
         {
             MultipuExeclTrackError(dtcheck);
         }
-       else
+        else
         {
             string MDG = "School and Village Data Saved sucessfully";
-                    SqlParameter[] cmdParameters1 = new SqlParameter[]
-             {
+            SqlParameter[] cmdParameters1 = new SqlParameter[]
+     {
                     new SqlParameter("@CreateBy", Session["username"].ToString()),
                      new SqlParameter("@YearID", ddlYear.SelectedItem.Text),
                       new SqlParameter("@Dist", ddlDistrict.SelectedValue),
-             };
-                    DataSet dtcheck1 = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptUploadData]", cmdParameters1);
-            if (dtcheck1.Tables[0].Rows.Count>0)
+     };
+            DataSet dtcheck1 = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptUploadData]", cmdParameters1);
+            if (dtcheck1.Tables[0].Rows.Count > 0)
             {
                 MDG = MDG + "  Cluster Add in GIS moduel";
             }
@@ -209,7 +202,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             if (Convert.ToInt32(ddlYear.SelectedValue) >= 2026)
             {
 
-                
+
 
                 int icount = 0;
                 SqlParameter[] cmdParameters15 = new SqlParameter[]
@@ -228,9 +221,9 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
 
                 LockIapproval();
             }
-            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('"+ MDG + "')</script>", false);
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('" + MDG + "')</script>", false);
         }
-      
+
 
 
     }
@@ -251,7 +244,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             SqlBulkCopyColumnMapping mapping10 = new SqlBulkCopyColumnMapping("SCHOOL LEVEL", "SCHOOL LEVEL");
             SqlBulkCopyColumnMapping mapping11 = new SqlBulkCopyColumnMapping("SCHOOL TYPE", "SCHOOL TYPE");
             SqlBulkCopyColumnMapping mapping12 = new SqlBulkCopyColumnMapping("GKP SCHOOL", "GKP SCHOOL");
-            //SqlBulkCopyColumnMapping mapping13 = new SqlBulkCopyColumnMapping("GOVT LED GKP", "GKP SCHOOL LEVEL");
+            SqlBulkCopyColumnMapping mapping13 = new SqlBulkCopyColumnMapping("GKP SCHOOL LEVEL", "GKP SCHOOL LEVEL");
             SqlBulkCopyColumnMapping mapping14 = new SqlBulkCopyColumnMapping("GKP++ SCHOOLS", "GKP++ SCHOOLS");
             SqlBulkCopyColumnMapping mapping15 = new SqlBulkCopyColumnMapping("BALSABHA SCHOOL", "BALSABHA SCHOOL");
             SqlBulkCopyColumnMapping mapping16 = new SqlBulkCopyColumnMapping("CLASS", "CLASS");
@@ -278,7 +271,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             bulkCopy.ColumnMappings.Add(mapping10);
             bulkCopy.ColumnMappings.Add(mapping11);
             bulkCopy.ColumnMappings.Add(mapping12);
-            //bulkCopy.ColumnMappings.Add(mapping13);
+            bulkCopy.ColumnMappings.Add(mapping13);
             bulkCopy.ColumnMappings.Add(mapping14);
             bulkCopy.ColumnMappings.Add(mapping15);
             bulkCopy.ColumnMappings.Add(mapping16);
@@ -287,14 +280,14 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             bulkCopy.ColumnMappings.Add(mapping19);
             bulkCopy.ColumnMappings.Add(mapping20);
             bulkCopy.ColumnMappings.Add(mapping21);
-           bulkCopy.ColumnMappings.Add(mapping22);
+            bulkCopy.ColumnMappings.Add(mapping22);
             bulkCopy.ColumnMappings.Add(mapping23);
             bulkCopy.DestinationTableName = "MasterSchoolBulkUpdate";
             bulkCopy.NotifyAfter = 200;
             bulkCopy.WriteToServer(dt);
             return true;
         }
-        catch (Exception ex)
+        catch
         {
             return false;
         }
@@ -314,7 +307,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             //SqlBulkCopyColumnMapping mapping08 = new SqlBulkCopyColumnMapping("Village Operational", "Village Operational");
             //SqlBulkCopyColumnMapping mapping09 = new SqlBulkCopyColumnMapping("AGP VILLAGE FLAG", "AGP VILLAGE FLAG");
             SqlBulkCopyColumnMapping mapping10 = new SqlBulkCopyColumnMapping("PANCHAYAT SAMITI", "PANCHAYAT SAMITI");
-        
+
             SqlBulkCopyColumnMapping mapping22 = new SqlBulkCopyColumnMapping("CreateBy", "CreateBy");
             SqlBulkCopy bulkCopy = new SqlBulkCopy(SqlHelper.mainConnectionString);
             bulkCopy.BatchSize = 5000;
@@ -335,7 +328,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             bulkCopy.WriteToServer(dt);
             return true;
         }
-        catch (Exception ex)
+        catch
         {
             return false;
         }
@@ -348,7 +341,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
 
             SqlBulkCopyColumnMapping mapping01 = new SqlBulkCopyColumnMapping("DISTRICT NAME", "DISTRICT NAME");
             SqlBulkCopyColumnMapping mapping02 = new SqlBulkCopyColumnMapping("BLOCK NAME", "BLOCK NAME");
-                 SqlBulkCopyColumnMapping mapping04 = new SqlBulkCopyColumnMapping("VILLAGE NAME", "VILLAGE NAME");
+            SqlBulkCopyColumnMapping mapping04 = new SqlBulkCopyColumnMapping("VILLAGE NAME", "VILLAGE NAME");
             SqlBulkCopyColumnMapping mapping05 = new SqlBulkCopyColumnMapping("VILLAGE CODE", "VILLAGE CODE");
             SqlBulkCopyColumnMapping mapping06 = new SqlBulkCopyColumnMapping("PANCHAYAT NAME", "PANCHAYAT NAME");
             SqlBulkCopyColumnMapping mapping07 = new SqlBulkCopyColumnMapping("PANCHAYAT CODE", "PANCHAYAT CODE");
@@ -376,7 +369,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             bulkCopy.WriteToServer(dt);
             return true;
         }
-        catch (Exception ex)
+        catch
         {
             return false;
         }
@@ -386,7 +379,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         try
         {
 
- 
+
             SqlBulkCopyColumnMapping mapping04 = new SqlBulkCopyColumnMapping("VILLAGE NAME", "VILLAGE NAME");
             SqlBulkCopyColumnMapping mapping05 = new SqlBulkCopyColumnMapping("VILLAGE CODE", "VILLAGE CODE");
 
@@ -394,17 +387,17 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             SqlBulkCopy bulkCopy = new SqlBulkCopy(SqlHelper.mainConnectionString);
             bulkCopy.BatchSize = 5000;
             bulkCopy.BulkCopyTimeout = 5;
-          
+
             bulkCopy.ColumnMappings.Add(mapping04);
             bulkCopy.ColumnMappings.Add(mapping05);
-        
+
             bulkCopy.ColumnMappings.Add(mapping22);
             bulkCopy.DestinationTableName = "MasterDefineCluster";
             bulkCopy.NotifyAfter = 200;
             bulkCopy.WriteToServer(dt);
             return true;
         }
-        catch (Exception ex)
+        catch
         {
             return false;
         }
@@ -456,7 +449,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
     {
         try
         {
-            string StartupPath = Server.MapPath("~/Export");
+            string StartupPath = Server.MapPath(Comman.GetImagePath("ExportPath"));
             string filepath = "";
             XLWorkbook wb = new XLWorkbook();
             wb = new XLWorkbook(StartupPath + "\\SchoolMaster.xlsx");
@@ -534,9 +527,9 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                 System.IO.File.Delete(filepath);
             }
         }
-        catch( Exception ex)
+        catch
         {
-
+            throw;
         }
 
     }
@@ -547,7 +540,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
     {
         try
         {
-            string StartupPath = Server.MapPath("~/Export");
+            string StartupPath = Server.MapPath(Comman.GetImagePath("TabletImagePath"));
             string filepath = "";
             XLWorkbook wb = new XLWorkbook();
             wb = new XLWorkbook(StartupPath + "\\SchoolMasterError.xlsx");
@@ -563,7 +556,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
 
             //dt1.Columns.Remove("rownNO");
             DataTable dt = dtMain.Tables[0];
-           DataTable dt1 = dtMain.Tables[1];
+            DataTable dt1 = dtMain.Tables[1];
             DataTable dt2 = dtMain.Tables[2];
             DataTable dt3 = dtMain.Tables[3];
             ws.Cell(2, 1).InsertData(dt.Rows);
@@ -621,9 +614,9 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                 System.IO.File.Delete(filepath);
             }
         }
-        catch (Exception ex)
+        catch
         {
-
+            throw;
         }
 
     }
@@ -645,7 +638,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         SqlParameter[] par = new SqlParameter[]
         {
               new SqlParameter("@Con",  ""),
-             
+
          };
         DataSet DT = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "rptClassLookup", par);
         Session["dtClass"] = DT;
@@ -691,13 +684,13 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             btnAdd.Enabled = false;
             btnsave.Enabled = false;
         }
-       
+
         if (vVerify == true)
         {
 
             btnsave.Enabled = true;
 
- 
+
         }
         if (vVerify == true || vADD == true)
         {
@@ -775,13 +768,13 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             }
 
         }
-      
-            objComman.BindDLLMasterTable("mstSchool", "Type,ID", dtYear, conditions, "Type", "asc", ddlYear, "Type", "ID", "Select");
 
-        
+        objComman.BindDLLMasterTable("mstSchool", "Type,ID", dtYear, conditions, "Type", "asc", ddlYear, "Type", "ID", "Select");
+
+
 
         ddlYear.SelectedIndex = 1;
-      
+
 
 
     }
@@ -804,7 +797,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             ddlVillage.Items.Clear();
         }
 
-        
+
     }
 
     public void Locking()
@@ -813,46 +806,46 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         {
 
             btnsave.Enabled = true;
-           // LinkButton1.Enabled = true;
+            // LinkButton1.Enabled = true;
             LinkButton2.Enabled = true;
-              string strQry;
-            
-                  strQry = "Select * from mstModuleLocking  where [FromName]='Cluster' and DistrictCode='" + ddlDistrict.SelectedValue + "' and Fyear='" + ddlYear.SelectedItem.Text + "' ";
+            string strQry;
+
+            strQry = "Select * from mstModuleLocking  where [FromName]='Cluster' and DistrictCode='" + ddlDistrict.SelectedValue + "' and Fyear='" + ddlYear.SelectedItem.Text + "' ";
 
 
-                  string Year = ddlYear.SelectedItem.Text;
-                  string[] Year1 = Year.Split('-');
-
-                
-                
-                 DateTime date1;
-                 DateTime date2;
-                 DataTable dtModel = objMain.LoadData(strQry);
-                 if (dtModel.Rows.Count > 0)
-                 {
-
-                    
-                    date1 = Convert.ToDateTime(dtModel.Rows[0]["lockdate"].ToString());
-                    date2 = DateTime.Now.Date;
+            string Year = ddlYear.SelectedItem.Text;
+            string[] Year1 = Year.Split('-');
 
 
 
-                 
-
-                    if (date2>date1)
-                    {
-                     
-
-
-                         btnsave.Enabled = false;
-                      //   LinkButton1.Enabled = false;
-                         LinkButton2.Enabled = false;
+            DateTime date1;
+            DateTime date2;
+            DataTable dtModel = objMain.LoadData(strQry);
+            if (dtModel.Rows.Count > 0)
+            {
 
 
+                date1 = Convert.ToDateTime(dtModel.Rows[0]["lockdate"].ToString());
+                date2 = DateTime.Now.Date;
 
-                     }
-                 }
-            
+
+
+
+
+                if (date2 > date1)
+                {
+
+
+
+                    btnsave.Enabled = false;
+                    //   LinkButton1.Enabled = false;
+                    LinkButton2.Enabled = false;
+
+
+
+                }
+            }
+
 
         }
     }
@@ -861,7 +854,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
 
         if (ddlType.SelectedIndex <= 0)
         {
-            
+
             ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Type')</script>", false);
             return;
         }
@@ -873,8 +866,59 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         }
         FillGrid();
     }
+    public bool InterventionSql_Injection(string RVal)
+    {
+        SqlInjection objAudit = new SqlInjection();
+        bool injection = false;
+
+
+        injection = objAudit.CheckInputBool(RVal);
+
+        return injection;
+
+    }
+    public static List<Control> GetAllControls(List<Control> controls, Type t, Control parent /* can be Page */)
+    {
+        foreach (Control c in parent.Controls)
+        {
+            if (c.GetType() == t)
+                controls.Add(c);
+            if (c.HasControls())
+                controls = GetAllControls(controls, t, c);
+        }
+        return controls;
+    }
+    public string SetTextBoxFocusSelect(Page page)
+    {
+        string ALlTestBoxValue = "";
+        List<Control> list = new List<Control>();
+        list = GetAllControls(list, typeof(TextBox), page);
+        foreach (Control ctl in list)
+        {
+            if (ctl.GetType() == typeof(TextBox))
+            {
+                ((TextBox)ctl).Attributes.Add("onfocus", "this.select()");
+                string TempVari = ((TextBox)ctl).Text;
+                if (TempVari.Length > 0)
+                {
+                    ALlTestBoxValue += TempVari + "  ";
+                }
+            }
+        }
+        return ALlTestBoxValue;
+    }
     protected void btnSaveClick_Click(object sender, EventArgs e)
     {
+        string RVal = SetTextBoxFocusSelect(this.Page);
+        if (!InterventionSql_Injection(RVal))
+        {
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Spurious input detected. Data rejected')</script>", false);
+
+            return;
+        }
         ImageButton9.Attributes.Add("onclick", "javascript:return " + "confirm('Do you really want to create “Village Name” as cluster? ')");
 
         if (ddlCLusterVillage.SelectedIndex > 0)
@@ -888,16 +932,44 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             {
                 EGVillagecode = dtEGVillagecode.Rows[0]["EGVillagecode"].ToString();
             }
-
-            string StudentTSInsertQuery = "";
-            StudentTSInsertQuery = " Update mst5Village set ClusterCode='" + ddlCLusterVillage.SelectedValue.ToString() + "' where VillageCode ='" + ddlCLusterVillage.SelectedValue.ToString() + "'";
-            bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
+            int icount = 0;
 
 
-            StudentTSInsertQuery = " insert into mstCluster([StateCode]     ,[DistrictCode]      ,[BlockCode]      ,[ClusterCode]      ,[ClusterName],fYear,EGClusterCode) values ('" + ddlState.SelectedValue.ToString() + "', '" + ddlDistrict.SelectedValue.ToString() + "','" + ddlBlock.SelectedValue.ToString() + "','" + ddlCLusterVillage.SelectedValue.ToString() + "','" + ddlCLusterVillage.SelectedItem.Text + "','" + ddlYear.SelectedItem.Text + "','" + EGVillagecode + "') ";
-            bool UpdateTs1 = objMain.AddUpdate(StudentTSInsertQuery);
+            SqlParameter[] cmdParameters = new SqlParameter[]
+        {
+            new SqlParameter("@ClusterCode", ddlDeleteCluster.SelectedValue),
+               new SqlParameter("@Villagecode", ddlCLusterVillage.SelectedValue),
+                 new SqlParameter("@Flag", "V"),
 
-            if (UpdateTs1 == true)
+
+
+        };
+            icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "UpdateCluster", cmdParameters);
+
+
+
+
+
+
+
+            SqlParameter[] cmdParameters1 = new SqlParameter[]
+        {
+            new SqlParameter("@StateCode", ddlState.SelectedValue),
+               new SqlParameter("@DistrictCode", ddlDistrict.SelectedValue),
+                  new SqlParameter("@BlockCode", ddlBlock.SelectedValue),
+                       new SqlParameter("@ClusterCode", ddlCLusterVillage.SelectedValue),
+                     new SqlParameter("@ClusterName", ddlCLusterVillage.SelectedItem.Text),
+                               new SqlParameter("@fYear", ddlYear.SelectedItem.Text),
+                 new SqlParameter("@EGClusterCode", EGVillagecode),
+
+
+
+        };
+            icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "UpdateCluster", cmdParameters1);
+
+
+
+            if (icount > 0)
             {
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved sucessfully')</script>", false);
                 FillGrid();
@@ -910,20 +982,24 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         if (ddlDeleteCluster.SelectedIndex > 0)
         {
             string StudentTSInsertQuery = "";
-
-            StudentTSInsertQuery = " Update mst5Village set ClusterCode='' where ClusterCode ='" + ddlDeleteCluster.SelectedValue.ToString() + "'";
-            bool UpdateTs1 = objMain.AddUpdate(StudentTSInsertQuery);
-
-            //string StudentTSInsertQuery6 = " select  * Into mstClusterCopy from mstCluster where  ClusterCode ='" + ddlDeleteCluster.SelectedValue.ToString() + "'";
-            //bool UpdateTs6 = objMain.AddUpdate(StudentTSInsertQuery6);
+            int Icount = 0;
 
 
-            //StudentTSInsertQuery = " delete from  mstCluster  where ClusterCode ='" + ddlDeleteCluster.SelectedValue.ToString() + "'";
-            //bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
+            SqlParameter[] cmdParameters = new SqlParameter[]
+            {
+            new SqlParameter("@ClusterCode", ddlDeleteCluster.SelectedValue),
+               new SqlParameter("@Villagecode", ""),
+                 new SqlParameter("@Flag", "B"),
+
+
+
+            };
+            Icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "UpdateCluster", cmdParameters);
+
 
             int icount = DeleteCLuster(ddlDeleteCluster.SelectedValue.ToString());
 
-            if (icount>0)
+            if (icount > 0)
             {
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Delete sucessfully')</script>", false);
                 FillGrid();
@@ -941,21 +1017,21 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             {
             new SqlParameter("@ClusterCode", ClusterCode),
                new SqlParameter("@UserName", Session["username"].ToString()),
-            
+
 
 
 
             };
             Icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "deletecluster", cmdParameters);
         }
-        catch (Exception ex)
+        catch
         {
-
+            throw;
         }
         return Icount;
     }
 
-    public int Update_SchoolWorkingStatus(string SchoolCode, int WorkingStatus, int MangmentType, int GKP, int GKPLevel, int SchoolType, int BalType, int SchoolCampus,string TeacherName,string TeacherContactNo ,string txtTeacherdesignation,string ClassID,string ClassIDName)
+    public int Update_SchoolWorkingStatus(string SchoolCode, int WorkingStatus, int MangmentType, int GKP, int GKPLevel, int SchoolType, int BalType, int SchoolCampus, string TeacherName, string TeacherContactNo, string txtTeacherdesignation, string ClassID, string ClassIDName)
     {
         SqlConnection dbSqlconnection = new SqlConnection(SqlHelper.mainConnectionString);
         try
@@ -988,7 +1064,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         }
         catch (SqlException exp)
         {
-            throw exp;
+            throw;
         }
         finally
         {
@@ -1022,8 +1098,8 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                 dbSqlCommand.Parameters.AddWithValue("@LSG", LSG);
                 dbSqlCommand.Parameters.AddWithValue("@DonorID", DonorID);
                 dbSqlCommand.Parameters.AddWithValue("@DonorIDName", DonorIDName);
-                
-               SqlParameter ReturnAffectedRows = new SqlParameter("@RowAffected", System.Data.SqlDbType.Int);
+
+                SqlParameter ReturnAffectedRows = new SqlParameter("@RowAffected", System.Data.SqlDbType.Int);
                 ReturnAffectedRows.Direction = ParameterDirection.Output;
                 dbSqlCommand.Parameters.Add(ReturnAffectedRows);
                 dbSqlCommand.ExecuteNonQuery();
@@ -1033,7 +1109,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         }
         catch (SqlException exp)
         {
-            throw exp;
+            throw;
         }
         finally
         {
@@ -1041,7 +1117,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         }
     }
 
-    public int Update_VillageCluster(string VillageCode, string ClusterCode, string VillageGeography, string VillageOperational, string CBlVillage, string FunctionalStatus, string AGPStatus,string TempID,string PanchayatSamiti)
+    public int Update_VillageCluster(string VillageCode, string ClusterCode, string VillageGeography, string VillageOperational, string CBlVillage, string FunctionalStatus, string AGPStatus, string TempID, string PanchayatSamiti)
     {
         SqlConnection dbSqlconnection = new SqlConnection(SqlHelper.mainConnectionString);
         try
@@ -1072,7 +1148,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         }
         catch (SqlException exp)
         {
-            throw exp;
+            throw;
         }
         finally
         {
@@ -1082,11 +1158,11 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
 
     protected void btnsave_Click(object sender, EventArgs e)
     {
-       
+
         if (Session["GridViewData"] != null)
         {
             UpdateData();
-            int ret = 0; 
+            int ret = 0;
             DataTable Dt = Session["GridViewData"] as DataTable;
 
             // DataRow[] dr = Dt.Select(Cond);
@@ -1113,7 +1189,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                     string LSG = Convert.ToString(Dt.Rows[i]["LSG"].ToString());
                     string DonorID = Convert.ToString(Dt.Rows[i]["DonorID"].ToString());
                     string DonorIDName = Convert.ToString(Dt.Rows[i]["School Donor Name"].ToString());
-                   
+
                     if (SchoolCampus == 0)
                     {
                         ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select School campus')</script>", false);
@@ -1149,11 +1225,11 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                         int icount = 0;
                         SqlParameter[] cmdParameters = new SqlParameter[]
                        {
-                            new SqlParameter("@DistrictCode", ddlDistrict.SelectedValue),
-                            new SqlParameter("@approveStataus", "0"),
-                            new SqlParameter("@Remark", ""),
-                             new SqlParameter("@UserName", Convert.ToString(Session["username"])),
-                               new SqlParameter("@Flag", "1"),
+            new SqlParameter("@DistrictCode", ddlDistrict.SelectedValue),
+            new SqlParameter("@approveStataus", "0"),
+            new SqlParameter("@Remark", ""),
+             new SqlParameter("@UserName", Convert.ToString(Session["username"])),
+               new SqlParameter("@Flag", "1"),
 
 
 
@@ -1164,7 +1240,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                 }
                 if (Convert.ToInt32(ddlType.SelectedValue) == 1 || Convert.ToInt32(ddlType.SelectedValue) == 3)
                 {
-                  
+
                     string VillageCode = Dt.Rows[i]["TempVillageCode"].ToString();
                     string ClusterCode = Dt.Rows[i]["ClusterCode"].ToString();
                     string VillageGeography = Dt.Rows[i]["VillageGeography"].ToString();
@@ -1182,7 +1258,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                             ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Village Operational Status')</script>", false);
                             return;
                         }
-                   
+
                         ret = Update_VillageCluster(VillageCode, ClusterCode, VillageGeography, VillageOperational, CBlVillage, FunctionalStatus, AGPStatus, TeacherContactNo, PanchayatSamiti);
 
                         if (Convert.ToInt32(ddlYear.SelectedValue) >= 2026)
@@ -1205,9 +1281,9 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                         }
                     }
                 }
-               
 
-           
+
+
             }
 
             if (ret > 0)
@@ -1216,13 +1292,13 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             }
         }
     }
-   
+
     private int Update_AnnualExamStatus(string str, string UID, string p)
     {
         int iReturnValue = 0;
         try
         {
-            iReturnValue = objComman.Update_AnnualExamStatus(str, UID,Flag);
+            iReturnValue = objComman.Update_AnnualExamStatus(str, UID, Flag);
         }
         catch (Exception exp)
         {
@@ -1284,7 +1360,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         if (Session["user_level_Role"].ToString() == "1")
         {
             //conditions = "StateCode='" + Session["StateCode"].ToString() + "' ";
-         //   objComman.BindDLL("mst1State", "StateCode, dbo.TitleCase(upper(StateName)) as StateName", conditions, "StateName", "Desc", ddlState, "StateName", "StateCode", "--Select--");
+            //   objComman.BindDLL("mst1State", "StateCode, dbo.TitleCase(upper(StateName)) as StateName", conditions, "StateName", "Desc", ddlState, "StateName", "StateCode", "--Select--");
             ddlState.Enabled = true;
             ddlDistrict.Enabled = true;
         }
@@ -1297,14 +1373,14 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         }
         else
         {
-           
-                //conditions = "StateCode='" + Session["StateCode"].ToString() + "' ";
-                //objComman.BindDLL("mst1State", "StateCode, dbo.TitleCase(upper(StateName)) as StateName", conditions, "StateName", "Desc", ddlState, "StateName", "StateCode", "--Select--");
 
-                ddlState.SelectedIndex = 1;
-                ddlState.Enabled = false;
-                ddlDistrict.Enabled = false;
-            
+            //conditions = "StateCode='" + Session["StateCode"].ToString() + "' ";
+            //objComman.BindDLL("mst1State", "StateCode, dbo.TitleCase(upper(StateName)) as StateName", conditions, "StateName", "Desc", ddlState, "StateName", "StateCode", "--Select--");
+
+            ddlState.SelectedIndex = 1;
+            ddlState.Enabled = false;
+            ddlDistrict.Enabled = false;
+
         }
 
 
@@ -1372,7 +1448,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
     {
         if (ddlBlock.SelectedIndex <= 0)
         {
-          
+
             this.ModalPopupExtender1.Hide();
             ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Block')</script>", false);
             return;
@@ -1381,12 +1457,12 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         if (ddlState.SelectedIndex > 0)
         {
             conditions = "  mst5Village.StateCode='" + ddlState.SelectedValue + "'";
-            
+
         }
         if (ddlDistrict.SelectedIndex > 0)
         {
             conditions = conditions + " and mst5Village.DistrictCode='" + ddlDistrict.SelectedValue + "'";
-           
+
         }
         if (ddlBlock.SelectedIndex > 0)
         {
@@ -1432,7 +1508,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         {
             conditions = conditions + " and mst5Village.VillageCode='" + ddlVillage.SelectedValue + "'";
         }
-      //  conditions = conditions + " and (mstCluster.ClusterCode is null or mstCluster.ClusterCode='' or mstCluster.ClusterCode=mst5Village.VillageCode) ";
+        //  conditions = conditions + " and (mstCluster.ClusterCode is null or mstCluster.ClusterCode='' or mstCluster.ClusterCode=mst5Village.VillageCode) ";
 
         objComman.BindDLL("mstCluster   left  join mst5Village on mst5Village.ClusterCode=mstCluster.ClusterCode ", "mstCluster.ClusterCode as ClusterCode ,mstCluster.ClusterName as ClusterName ", conditions, "ClusterName", "asc", ddlDeleteCluster, "ClusterName", "ClusterCode", "--Select--");
         ModalPopupExtender2.Show();
@@ -1442,7 +1518,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         try
         {
             conditions = "";
-           string  conditionsCLuster = "";
+            string conditionsCLuster = "";
             if (ddlState.SelectedIndex > 0)
             {
                 conditions = " where V.StateCode='" + ddlState.SelectedValue + "'";
@@ -1458,7 +1534,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             {
                 conditions = conditions + " and V.BlockCode='" + ddlBlock.SelectedValue + "'";
             }
-            if (ddlPanchayat.SelectedIndex >1)
+            if (ddlPanchayat.SelectedIndex > 1)
             {
                 conditions = conditions + " and V.PanchayatCode='" + ddlPanchayat.SelectedValue + "'";
             }
@@ -1472,7 +1548,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                 SqlParameter[] par1 = new SqlParameter[]
                 {
                       new SqlParameter("@Condition",  conditionsCLuster),
-                      new SqlParameter("@Flag", 4 ),      
+                      new SqlParameter("@Flag", 4 ),
                 };
                 DataTable DTcluster = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "rptReportClusterChange", par1);
                 Session["DTcluster"] = DTcluster;
@@ -1482,41 +1558,41 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             {
               new SqlParameter("@Condition",  conditions),
               new SqlParameter("@Flag",  ddlType.SelectedValue),
-      
-             };
-                DataTable DT = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "rptReportClusterChange", par);
-                Session["GridViewData"] = DT;
-                GVCluster.Visible = true;
-                if (DT.Rows.Count > 0)
-                {
-                    GVCluster.DataSource = DT;
-                    GVCluster.DataBind();
-                }
-                else
-                {
-                    GVCluster.DataSource = null;
-                    GVCluster.DataBind();
 
-                }
-                if (Convert.ToInt32(ddlType.SelectedValue) == 2)
-                {
-                    GVCluster.Columns[1].Visible = false;
-              
+             };
+            DataTable DT = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "rptReportClusterChange", par);
+            Session["GridViewData"] = DT;
+            GVCluster.Visible = true;
+            if (DT.Rows.Count > 0)
+            {
+                GVCluster.DataSource = DT;
+                GVCluster.DataBind();
+            }
+            else
+            {
+                GVCluster.DataSource = null;
+                GVCluster.DataBind();
+
+            }
+            if (Convert.ToInt32(ddlType.SelectedValue) == 2)
+            {
+                GVCluster.Columns[1].Visible = false;
+
                 GVCluster.Columns[9].Visible = true;
-                    GVCluster.Columns[10].Visible = true;
-                    GVCluster.Columns[11].Visible = true;
-                    GVCluster.Columns[12].Visible = true;
-                    GVCluster.Columns[13].Visible = false;
-                    GVCluster.Columns[14].Visible = false;
-                    GVCluster.Columns[15].Visible = false;
-                    GVCluster.Columns[16].Visible = true;
-                    GVCluster.Columns[17].Visible = true;
-                    GVCluster.Columns[18].Visible = false;
-                    GVCluster.Columns[19].Visible = true;
-                    GVCluster.Columns[20].Visible = false;
-                    GVCluster.Columns[21].Visible = false;
-                    GVCluster.Columns[22].Visible = false;
-                if (Convert.ToInt32(ddlYear.SelectedValue)>=2026)
+                GVCluster.Columns[10].Visible = true;
+                GVCluster.Columns[11].Visible = true;
+                GVCluster.Columns[12].Visible = true;
+                GVCluster.Columns[13].Visible = false;
+                GVCluster.Columns[14].Visible = false;
+                GVCluster.Columns[15].Visible = false;
+                GVCluster.Columns[16].Visible = true;
+                GVCluster.Columns[17].Visible = true;
+                GVCluster.Columns[18].Visible = true;
+                GVCluster.Columns[19].Visible = true;
+                GVCluster.Columns[20].Visible = false;
+                GVCluster.Columns[21].Visible = false;
+                GVCluster.Columns[22].Visible = false;
+                if (Convert.ToInt32(ddlYear.SelectedValue) >= 2026)
                 {
                     GVCluster.Columns[23].Visible = true;
                     GVCluster.Columns[24].Visible = true;
@@ -1538,30 +1614,30 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                 GVCluster.Columns[29].Visible = true;
                 GVCluster.Columns[30].Visible = true;
                 LinkButton1.Visible = false;
-                    LinkButton2.Visible = false;
+                LinkButton2.Visible = false;
                 GVCluster.Columns[31].Visible = false;
                 GVCluster.Width = Unit.Percentage(140);
-               // GVCluster.Height = 800;
+                // GVCluster.Height = 800;
 
             }
-                else
-                {
-                    GVCluster.Columns[1].Visible = false;
-                    GVCluster.Columns[9].Visible = false;
-                    GVCluster.Columns[10].Visible = false;
-                    GVCluster.Columns[11].Visible = false;
-                    GVCluster.Columns[12].Visible = false;
-                    GVCluster.Columns[13].Visible = true;
-                    GVCluster.Columns[14].Visible = true;
-                    GVCluster.Columns[15].Visible = true;
-                    GVCluster.Columns[16].Visible = false;
-                    GVCluster.Columns[17].Visible = false;
-                    GVCluster.Columns[18].Visible = false;
-                    GVCluster.Columns[19].Visible = false;
-                    GVCluster.Columns[20].Visible = false;
-                    GVCluster.Columns[21].Visible = false;
-                    GVCluster.Columns[22].Visible = true;
-                    GVCluster.Columns[23].Visible = false;
+            else
+            {
+                GVCluster.Columns[1].Visible = false;
+                GVCluster.Columns[9].Visible = false;
+                GVCluster.Columns[10].Visible = false;
+                GVCluster.Columns[11].Visible = false;
+                GVCluster.Columns[12].Visible = false;
+                GVCluster.Columns[13].Visible = true;
+                GVCluster.Columns[14].Visible = true;
+                GVCluster.Columns[15].Visible = true;
+                GVCluster.Columns[16].Visible = false;
+                GVCluster.Columns[17].Visible = false;
+                GVCluster.Columns[18].Visible = false;
+                GVCluster.Columns[19].Visible = false;
+                GVCluster.Columns[20].Visible = false;
+                GVCluster.Columns[21].Visible = false;
+                GVCluster.Columns[22].Visible = true;
+                GVCluster.Columns[23].Visible = false;
                 GVCluster.Columns[24].Visible = false;
                 GVCluster.Columns[25].Visible = false;
                 GVCluster.Columns[26].Visible = false;
@@ -1581,7 +1657,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                 }
                 GVCluster.Width = Unit.Percentage(100);
             }
-          
+
         }
         catch (Exception)
         {
@@ -1615,9 +1691,9 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
 
 
         //}
-         else
+        else
         {
-            conditions = "StateCode ='" + ddlState.SelectedValue + "' and mst2District.FYear ='"+ ddlYear.SelectedItem.Text +"' ";
+            conditions = "StateCode ='" + ddlState.SelectedValue + "' and mst2District.FYear ='" + ddlYear.SelectedItem.Text + "' ";
 
 
         }
@@ -1647,12 +1723,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
 
             conditions = "DistrictCode ='" + ddlDistrict.SelectedValue + "' and  DividedBlock=1 ";
         }
-      
-        else if (Session["user_level_Role"].ToString() == "6")
-        {
-            conditions = " BlockCode in( " + Session["blockCodeMul"].ToString() + " ) and FYear ='" + ddlYear.SelectedItem.Text + "' ";
-        }
-        else if (Session["user_level"].ToString() == "19")
+        if (Session["user_level"].ToString() == "19")
         {
             conditions = "DistrictCode ='" + ddlDistrict.SelectedValue + "' and  DividedBlock=1 and BlockCode in(" + Session["DistrictCodeNew"].ToString() + ")";
         }
@@ -1671,7 +1742,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         ////conditions = "DistrictCode ='" + ddlDistrict.SelectedValue + "'  and BlockCode ='" + ddlBlock.SelectedValue + "' and  PanchayatCode='" + ddlPanchayat.SelectedValue + "'  ";
         ////objComman.BindDLL("mst5Village", "VillageCode,dbo.TitleCase(upper(VillageName)) as VillageName", conditions, "VillageName", "asc", ddlVillage, "VillageName", "VillageCode", "--Select--");
 
-        if (Convert.ToString( ddlPanchayat.SelectedValue) == "1")
+        if (Convert.ToString(ddlPanchayat.SelectedValue) == "1")
         {
             conditions = "mst5Village.DistrictCode ='" + ddlDistrict.SelectedValue + "'  and mst5Village.BlockCode ='" + ddlBlock.SelectedValue + "'  ";
 
@@ -1690,7 +1761,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
 
     }
 
-    
+
     ////public void FillSchool()
     ////{
     ////    conditions = "";
@@ -1717,9 +1788,9 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
     }
     protected void ddlPanchayat_SelectedIndexChanged(object sender, EventArgs e)
     {
-         FillCVillage();
+        FillCVillage();
     }
-  
+
     //protected void ddlType_SelectedIndexChanged(object sender, EventArgs e)
     //{
     //    if (Convert.ToInt32(ddlType.SelectedValue) == 1)
@@ -1742,9 +1813,9 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
 
     protected void ddlBlock_SelectedIndexChanged(object sender, EventArgs e)
     {
-       // FillCVillage();
+        // FillCVillage();
         FillCBCluster();
-      //  FillSchool();
+        //  FillSchool();
         Locking();
         LockIapproval();
     }
@@ -1772,7 +1843,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                     divUp.Visible = true;
 
                 }
-               else if (dtSchool.Rows[0]["ApproveSatus"].ToString() == "0" && dtSchool.Rows[0]["AdminLock"].ToString() == "99")
+                else if (dtSchool.Rows[0]["ApproveSatus"].ToString() == "0" && dtSchool.Rows[0]["AdminLock"].ToString() == "99")
                 {
                     btnSubmit.Enabled = true;
                     btnSubmit.Visible = true;
@@ -1881,7 +1952,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                     btnSubmit.Visible = true;
                     btnsave.Visible = false;
                     Button2.Visible = false;
-                   // btnSubmit.Text = "Submitted to SIS for Approval";
+                    // btnSubmit.Text = "Submitted to SIS for Approval";
                     btnSubmit.Text = "Approval";
                     divUp.Visible = false;
                     btnReject.Visible = false;
@@ -1927,7 +1998,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                     btnSubmit.Visible = true;
                     btnsave.Visible = false;
                     Button2.Visible = false;
-                   // btnSubmit.Text = "Submitted to DOL for Approval";
+                    // btnSubmit.Text = "Submitted to DOL for Approval";
                     btnSubmit.Text = "Approval";
                     divUp.Visible = false;
                     btnReject.Visible = true;
@@ -2001,15 +2072,25 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                 LinkButton3.Visible = false;
                 btnsave.Visible = true;
             }
-         }
+        }
     }
 
     protected void btnReject_Click(object sender, EventArgs e)
     {
         ModalPopupExtender3.Show();
     }
-        protected void btnSubmitted_Click(object sender, EventArgs e)
+    protected void btnSubmitted_Click(object sender, EventArgs e)
     {
+        string RVal = SetTextBoxFocusSelect(this.Page);
+        if (!InterventionSql_Injection(RVal))
+        {
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Spurious input detected. Data rejected')</script>", false);
+
+            return;
+        }
         if (Convert.ToString(Session["username"]) != "")
         {
         }
@@ -2038,16 +2119,16 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             DataTable dtSchool = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[LoadMasterApprovalStatus]", cmdParameters1);
             if (dtSchool.Rows.Count > 0)
             {
-                if ( dtSchool.Rows[0]["AdminLock"].ToString() == "99")
+                if (dtSchool.Rows[0]["AdminLock"].ToString() == "99")
                 {
                     Flag = 1;
                 }
             }
-                approveStataus =1;
+            approveStataus = 1;
         }
         if (Convert.ToString(Session["user_level"]) == "91")
         {
-            approveStataus =2;
+            approveStataus = 2;
         }
         if (Convert.ToString(Session["user_level"]) == "59")
         {
@@ -2073,7 +2154,8 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         if (icount > 0)
         {
             if (Convert.ToString(Session["user_level"]) == "39" || Convert.ToString(Session["user_level"]) == "136" || Convert.ToString(Session["user_level"]) == "145")
-            {  if (Flag == 1)
+            {
+                if (Flag == 1)
                 {
                     ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Data Successfully Submitted to SIS!!')</script>", false);
                 }
@@ -2117,7 +2199,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
 
         }
         int approveStataus = 99;
- 
+
         int icount = 0;
         SqlParameter[] cmdParameters = new SqlParameter[]
        {
@@ -2137,10 +2219,10 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
 
         if (icount > 0)
         {
-            
-                ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Data Successfully Unlock!!')</script>", false);
 
-           
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Data Successfully Unlock!!')</script>", false);
+
+
             ddlDistrict_SelectedIndexChanged(ddlDistrict, null);
 
         }
@@ -2151,6 +2233,16 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
 
     protected void btnsaveReject_Click(object sender, EventArgs e)
     {
+        string RVal = SetTextBoxFocusSelect(this.Page);
+        if (!InterventionSql_Injection(RVal))
+        {
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Spurious input detected. Data rejected')</script>", false);
+
+            return;
+        }
         if (Convert.ToString(Session["username"]) != "")
         {
         }
@@ -2228,7 +2320,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
 
 
     }
-  
+
     protected void ddlVillage_SelectedIndexChanged(object sender, EventArgs e)
     {
         //FillSchool();
@@ -2265,9 +2357,9 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                 Label lblDISECode = (Label)GVCluster.Rows[i].FindControl("lblDISECode");
                 DropDownList ddlGKP = (DropDownList)GVCluster.Rows[i].FindControl("ddlGKP");
                 DropDownList ddlGKPLevel = (DropDownList)GVCluster.Rows[i].FindControl("ddlGKPLevel");
-                  DropDownList ddlSchoolType = (DropDownList)GVCluster.Rows[i].FindControl("ddlSchoolType");
-                  DropDownList ddlBalsabha = (DropDownList)GVCluster.Rows[i].FindControl("ddlBalsabha");
-                  DropDownList ddlSchoolCampus = (DropDownList)GVCluster.Rows[i].FindControl("ddlSchoolCampus");
+                DropDownList ddlSchoolType = (DropDownList)GVCluster.Rows[i].FindControl("ddlSchoolType");
+                DropDownList ddlBalsabha = (DropDownList)GVCluster.Rows[i].FindControl("ddlBalsabha");
+                DropDownList ddlSchoolCampus = (DropDownList)GVCluster.Rows[i].FindControl("ddlSchoolCampus");
 
                 TextBox txtTeacher = (TextBox)GVCluster.Rows[i].FindControl("txtTeacher");
                 TextBox txtTeacherMobile = (TextBox)GVCluster.Rows[i].FindControl("txtTeacherMobile");
@@ -2297,13 +2389,16 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                     string ClassCOde = "";
                     string ClassName = "";
                     foreach (System.Web.UI.WebControls.ListItem item in ddlClass.Items)
+	 
+		   
                     {
                         if (item.Selected)
                         {
                             ClassCOde += "" + item.Value + "" + ",";
                             ClassName += "" + item.Text + "" + ";";
                         }
-                   }
+                    }
+	 
                     if (ClassCOde.Length > 0)
                     {
                         ClassCOde = ClassCOde.Substring(0, ClassCOde.LastIndexOf(","));
@@ -2314,6 +2409,8 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                     string ClassCOde1 = "";
                     string ClassName1 = "";
                     foreach (System.Web.UI.WebControls.ListItem item in ddlClassDo.Items)
+	 
+		   
                     {
                         if (item.Selected)
                         {
@@ -2321,6 +2418,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                             ClassName1 += "" + item.Text + "" + ";";
                         }
                     }
+	 
                     if (ClassCOde1.Length > 0)
                     {
                         ClassCOde1 = ClassCOde1.Substring(0, ClassCOde1.LastIndexOf(","));
@@ -2359,11 +2457,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                 DropDownList ddlAGP = (DropDownList)GVCluster.Rows[i].FindControl("ddlAGP");
                 Label lblTempID = (Label)GVCluster.Rows[i].FindControl("lblTempID");
                 TextBox txtPanchayatSamiti = (TextBox)GVCluster.Rows[i].FindControl("txtPanchayatSamiti");
-           
-
-
-
-                Label lblVillageCode = (Label)GVCluster.Rows[i].FindControl("lblTempVillageCode");
+				Label lblVillageCode = (Label)GVCluster.Rows[i].FindControl("lblTempVillageCode");
 
                 DataRow[] dr = dt.Select("TempVillageCode='" + Convert.ToString(lblVillageCode.Text) + "'");
                 if (dr.Length > 0)
@@ -2385,9 +2479,6 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                 }
 
             }
-
-        
-
         }
         Session["GridViewData"] = dt;
 
@@ -2399,13 +2490,11 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         GridViewRow row1 = (GridViewRow)ddlLabTest1.NamingContainer;
         Label lblTempID = (Label)row1.FindControl("lblTempID");
         Label lblClusterCode = (Label)row1.FindControl("lblTempClusterCode");
-         string   strQry = "Select clustercode from tblAnualPlanClusterWiseDetail where   clustercode='" + lblClusterCode.Text.ToString() + "'";
+        string strQry = "Select clustercode from tblAnualPlanClusterWiseDetail where   clustercode='" + lblClusterCode.Text.ToString() + "'";
         //DataTable dtcountCheck = objMain.LoadData(strQry);
         //if (dtcountCheck.Rows.Count > 0)
         //{
         //    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('annual plan entry done if u change cluster annaul plan deleted')</script>", false);
-          
-
         //}
         //else
         //{
@@ -2413,9 +2502,8 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         //}
         lblTempID.Text = "1";
     }
-        protected void ddlVillageOperational_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlVillageOperational_SelectedIndexChanged(object sender, EventArgs e)
     {
-        
         DropDownList ddlLabTest1 = (DropDownList)sender;
         GridViewRow row1 = (GridViewRow)ddlLabTest1.NamingContainer;
 
@@ -2425,6 +2513,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
 
 
         Label lblTempVillageCode = (Label)row1.FindControl("lblTempVillageCode");
+	 
         if (ddlVillageOperational.SelectedIndex > 0)
         {
             if (Convert.ToInt32(ddlVillageOperational.SelectedValue) == 2)
@@ -2458,17 +2547,59 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         }
 
     }
+		
+	 
+												
+	 
 
+ 
+																	   
+ 
 
     protected void ddlFunctionalStatus_SelectedIndexChanged(object sender, EventArgs e)
+																
+																   
+																   
+																				 
+																																																						  
+	 
+	 
+		
     {
+																																													 
+								   
+			   
+	 
+ 
+																	  
+ 
 
         DropDownList ddlLabTest1 = (DropDownList)sender;
         GridViewRow row1 = (GridViewRow)ddlLabTest1.NamingContainer;
+																   
+																			 
+																				 
+																																																						  
+	 
+	 
+		
+	 
+																																													 
+										
+			   
+	 
 
         DropDownList ddlVillageOperational = (DropDownList)row1.FindControl("ddlVillageOperational");
         DropDownList ddlFunctionalStatus = (DropDownList)row1.FindControl("ddlFunctionalStatus");
 
+	   
+		  
+	   
+															  
+		   
+																																								   
+											  
+					 
 
         if (ddlFunctionalStatus.SelectedIndex > 0)
         {
@@ -2480,16 +2611,57 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                     ddlFunctionalStatus.SelectedValue = "2";
                 }
 
+	   
             }
+																	   
+ 
 
+													
+																
+																   
+																			 
+																				 
+												   
+	 
+																																										
+		 
         }
         else
         {
+																																														 
             ddlFunctionalStatus.SelectedValue = "1";
+				   
         }
+	 
 
+ 
+																	  
+ 
+
+													
+																
+																   
+																			 
+																				 
+												   
+	 
+										  
+		 
+
+																																							  
+									   
+				   
+		 
     }
     protected void ddlBal1_SelectedIndexChanged(object sender, EventArgs e)
+	 
+								   
+	 
+		
+	 
+									
+	 
+												   
     {
 
         DropDownList ddlLabTest1 = (DropDownList)sender;
@@ -2506,10 +2678,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             ddlKGG.SelectedValue = "0";
             return;
         }
-
-        
-
-    }
+	}
     protected void ddlBal_SelectedIndexChanged(object sender, EventArgs e)
     {
 
@@ -2527,6 +2696,10 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             ddlBalsabha.SelectedValue = "0";
             return;
         }
+	 
+ 
+																		
+ 
 
         //if (Convert.ToInt32(ddlManagement.SelectedValue) == 2)
         //{
@@ -2541,9 +2714,25 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         //        return;
 
         //    }
+															 
+															 
 
         //}
-        
+							
+																   
+																		 
+												  
+																   
+																		   
+																																																																	 
+	 
+								   
+							  
+	 
+		
+	 
+									
+							   
     }
     protected void ddlGKP1_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -2567,7 +2756,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         }
 
     }
-        protected void ddlGKP_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlGKP_SelectedIndexChanged(object sender, EventArgs e)
     {
 
         DropDownList ddlLabTest1 = (DropDownList)sender;
@@ -2575,40 +2764,43 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         DropDownList ddlGKP = (DropDownList)row1.FindControl("ddlGKP");
         DropDownList ddlGKPLevel = (DropDownList)row1.FindControl("ddlGKPLevel");
         DropDownList ddlManagement = (DropDownList)row1.FindControl("ddlManagement");
-        //if (Convert.ToInt32(ddlGKP.SelectedValue) == 2)
-        //{
-        //    if (ddlGKPLevel.SelectedIndex > 0)
-        //    {
+        if (Convert.ToInt32(ddlGKP.SelectedValue) == 2)
+        {
+            if (ddlGKPLevel.SelectedIndex > 0)
+            {
 
-        //        ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Remove GKP Level')</script>", false);
-        //        ddlGKP.SelectedValue = "1";
-        //        return;
-        //    }
-        //}
-        //if (Convert.ToInt32(ddlGKP.SelectedValue) == 1)
-        //{
-        //    ddlGKPLevel.Enabled = true;
-        //}
-        //else
-        //{
-        //    ddlGKPLevel.Enabled = false;
-        //}
-        //if (Convert.ToInt32(ddlGKP.SelectedValue) == 3)
-        //{
-        //    if (Convert.ToInt32(ddlManagement.SelectedValue) == 2 || Convert.ToInt32(ddlManagement.SelectedValue) == 3 || Convert.ToInt32(ddlManagement.SelectedValue) == 4)
-        //    {
-        //    }
-        //    else
-        //    {
-        //        ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select UPS and Secondary government schools')</script>", false);
-        //        ddlGKP.SelectedValue = "0";
-        //        return;
-        //    }
-        //}
+                ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Remove GKP Level')</script>", false);
+                ddlGKP.SelectedValue = "1";
+                return;
+            }
+        }
+        if (Convert.ToInt32(ddlGKP.SelectedValue) == 1)
+        {
+            ddlGKPLevel.Enabled = true;
+        }
+        else
+        {
+            ddlGKPLevel.Enabled = false;
+        }
+        if (Convert.ToInt32(ddlGKP.SelectedValue) == 3)
+        {
+            if (Convert.ToInt32(ddlManagement.SelectedValue) == 2 || Convert.ToInt32(ddlManagement.SelectedValue) == 3 || Convert.ToInt32(ddlManagement.SelectedValue) == 4)
+            {
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select UPS and Secondary government schools')</script>", false);
+                ddlGKP.SelectedValue = "0";
+                return;
+            }
+        }
         if (Convert.ToInt32(ddlGKP.SelectedValue) == 2)
         {
             if (Convert.ToInt32(ddlManagement.SelectedValue) == 1 || Convert.ToInt32(ddlManagement.SelectedValue) == 2 || Convert.ToInt32(ddlManagement.SelectedValue) == 3 || Convert.ToInt32(ddlManagement.SelectedValue) == 4)
+														   
             {
+
+										   
             }
             else
             {
@@ -2619,6 +2811,9 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         }
     }
     protected void ddlClass_SelectedIndexChanged(object sender, EventArgs e)
+	 
+	 
+		
     {
 
         DropDownList ddlLabTest1 = (DropDownList)sender;
@@ -2651,7 +2846,6 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         }
         if (Convert.ToInt32(ddlManagement.SelectedValue) == 2)
         {
-            
         }
         else
         {
@@ -2663,7 +2857,6 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
 
                     ddlBalsabha.SelectedValue = "0";
                 }
-                
             }
             if (ddlKGG.SelectedIndex > 0)
             {
@@ -2676,6 +2869,9 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
 
             }
         }
+	 
+																									 
+	 
         if (Convert.ToInt32(ddlManagement.SelectedValue) == 2 || Convert.ToInt32(ddlManagement.SelectedValue) == 3 || Convert.ToInt32(ddlManagement.SelectedValue) == 4)
         {
         }
@@ -2689,9 +2885,11 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                     ddlBalsabha.SelectedValue = "0";
                 }
             }
-           
         }
+	 
         if (Convert.ToInt32(ddlGKP.SelectedValue) == 3 || Convert.ToInt32(ddlGKPPlus.SelectedValue) == 1)
+	 
+																																																							 
         {
             if (Convert.ToInt32(ddlManagement.SelectedValue) == 2 || Convert.ToInt32(ddlManagement.SelectedValue) == 3 || Convert.ToInt32(ddlManagement.SelectedValue) == 4)
             {
@@ -2715,14 +2913,13 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                 return;
             }
         }
-        if (Convert.ToInt32(ddlManagement.SelectedValue) ==1)
+	 
+        if (Convert.ToInt32(ddlManagement.SelectedValue) == 1)
         {
             ddlClass.DataTextField = "Description";
             ddlClass.DataValueField = "LookupCode";
             ddlClass.DataSource = dtclass.Tables[0];
             ddlClass.DataBind();
-       
-
         }
         else if (Convert.ToInt32(ddlManagement.SelectedValue) == 2)
         {
@@ -2740,8 +2937,8 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             ddlClass.DataBind();
 
         }
-        else if  (Convert.ToInt32(ddlManagement.SelectedValue) == 4)
-            {
+        else if (Convert.ToInt32(ddlManagement.SelectedValue) == 4)
+        {
             ddlClass.DataTextField = "Description";
             ddlClass.DataValueField = "LookupCode";
             ddlClass.DataSource = dtclass.Tables[3];
@@ -2764,8 +2961,8 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             ddlClass.DataBind();
 
         }
-        else if  (Convert.ToInt32(ddlManagement.SelectedValue) == 7)
-            {
+        else if (Convert.ToInt32(ddlManagement.SelectedValue) == 7)
+        {
             ddlClass.DataTextField = "Description";
             ddlClass.DataValueField = "LookupCode";
             ddlClass.DataSource = dtclass.Tables[6];
@@ -2818,10 +3015,12 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
 
         Label lblTempVillageCode = (Label)row1.FindControl("lblTempVillageCode");
         if (ddlWorkingStatus.SelectedIndex > 0)
+	 
+																																																										 
         {
             if (Convert.ToInt32(ddlWorkingStatus.SelectedValue) == 2 || Convert.ToInt32(ddlWorkingStatus.SelectedValue) == 3 || Convert.ToInt32(ddlWorkingStatus.SelectedValue) == 4 || Convert.ToInt32(ddlWorkingStatus.SelectedValue) == 5)
             {
-                string strQry = "Select VillageGeographyOperational from mst5Village  where  VillageGeographyOperational=1  and Villagecode='" + lblTempVillageCode.Text.ToString() + "'  ";
+                string strQry = "Select * from mst5Village  where  VillageGeographyOperational=1  and Villagecode='" + lblTempVillageCode.Text.ToString() + "'  ";
 
 
                 //DataTable dtEGVillagecode = objMain.LoadData(strQry);
@@ -2848,8 +3047,24 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                 //    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Mark school as Non GKP School')</script>", false);
                 //    ddlWorkingStatus.SelectedValue = "1";
                 //    return;
-                //}
-             
+                //}             
+								   
+										
+										
+										
+									   
+								   
+									   
+											
+											
+		 
+			
+		 
+																																							  
+																 
+											   
+			 
+
                 ddlGKP.Enabled = false;
                 ddlGKPLevel.Enabled = false;
                 ddlGKPLevel.Enabled = false;
@@ -2862,11 +3077,13 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
             }
             else
             {
-                string strQry = "Select VillageGeographyOperational from mst5Village  where  VillageGeographyOperational=1  and Villagecode='" + lblTempVillageCode.Text.ToString() + "'  ";
-
-
-                DataTable dtEGVillagecode = objMain.LoadData(strQry);
+                string strQry = "Select * from mst5Village  where  VillageGeographyOperational=1  and Villagecode='" + lblTempVillageCode.Text.ToString() + "'  ";
+				DataTable dtEGVillagecode = objMain.LoadData(strQry);
                 if (dtEGVillagecode.Rows.Count > 0)
+			 
+																		   
+																						 
+																																														 
                 {
 
                 }
@@ -2878,7 +3095,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                 }
                 Label lblManagement = (Label)row1.FindControl("lblManagement");
                 DropDownList ddlManagement = (DropDownList)row1.FindControl("ddlManagement");
-                if ((Convert.ToInt32(ddlWorkingStatus.SelectedValue) == 2 ||(Convert.ToInt32(ddlWorkingStatus.SelectedValue) == 5)) && Convert.ToInt32(ddlWorkingStatus.SelectedValue) == 1)
+                if ((Convert.ToInt32(ddlWorkingStatus.SelectedValue) == 2 || (Convert.ToInt32(ddlWorkingStatus.SelectedValue) == 5)) && Convert.ToInt32(ddlWorkingStatus.SelectedValue) == 1)
                 {
 
                     ddlKGG.Enabled = true;
@@ -2888,12 +3105,10 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                 {
                     ddlBalsabha.Enabled = false;
                     ddlKGG.Enabled = false;
-                }
-              
+                }               
                 ddlGKPPlus.Enabled = true;
                 ddlGKP.Enabled = true;
                 ddlGKPLevel.Enabled = true;
-
             }
 
         }
@@ -2912,6 +3127,13 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         string orberbyfields = orberbyfield == "" ? "" : " order by " + orberbyfield;
         string orderbys = orderby == "" ? "" : orderby;
 
+ 
+																																																	   
+ 
+						
+																	 
+																				 
+												   
 
 
         if (dt.Rows.Count > 0)
@@ -2925,13 +3147,20 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
         }
         return status;
 
+							
+					   
+					  
     }
+				  
+
+ 
 
     protected void GV_luster_OnRowDataBound(object sender, GridViewRowEventArgs e)
+ 
+													
     {
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
-            
             if (Convert.ToInt32(ddlType.SelectedValue) == 2)
             {
                 Label lblWorkingStatus = (Label)e.Row.FindControl("lblWorkingStatus");
@@ -2946,7 +3175,11 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
 
                 Label lblSchoolCampus = (Label)e.Row.FindControl("lblSchoolCampus");
                 Label lblFunctionalStatus = (Label)e.Row.FindControl("lblFunctionalStatus");
-                
+																			
+																					  
+																						  
+																					  
+																							  
 
                 DropDownList ddlGKP = (DropDownList)e.Row.FindControl("ddlGKP");
                 DropDownList ddlGKPLevel = (DropDownList)e.Row.FindControl("ddlGKPLevel");
@@ -2956,11 +3189,15 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
 
                 DropDownList ddlGKPPlus = (DropDownList)e.Row.FindControl("ddlGKPPlus");
 
+																	  
                 DropDownList ddlKGG = (DropDownList)e.Row.FindControl("ddlKGG");
+																		  
 
                 ListBox ddlClass = (ListBox)e.Row.FindControl("ddlClass");
                 DropDownList ddlClassNew = (DropDownList)e.Row.FindControl("ddlMainNew");
                 ListBox ddlClassDo = (ListBox)e.Row.FindControl("ddlClassDo");
+																  
+																	  
 
                 Label lblClassID = (Label)e.Row.FindControl("lblClassID");
                 Label lblLSG = (Label)e.Row.FindControl("lblLSG");
@@ -2969,17 +3206,74 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                 Label lblDonorID = (Label)e.Row.FindControl("lblDonorID");
 
                 BindDLLDatatable("mst5Village", dtclassNew.Tables[0], "ClassID, ClassName", conditions, "ClassName", "asc", ddlClassNew, "ClassName", "ClassID", "--Select--");
+																	  
 
                 ddlClassNew.Items.Insert(0, new System.Web.UI.WebControls.ListItem("--Select--", "0"));
                 ListBox chkDonor = (ListBox)e.Row.FindControl("lstDonor");
+														 
+								  
+															   
+			 
+										   
+										 
+																 
+																   
+														   
+												   
+			 
+				
+			 
+											
+										
+																  
+															 
+			 
+																																									
+			 
+										   
+									  
+			 
+				
+			 
+											
+									   
+			 
+									 
+			   
+											 
+			   
+				  
+			   
+											  
+			   
+											 
+			 
+									  
+										  
+										   
+			 
+				
+			 
+									   
+										   
+											
+			 
+											   
+														 
+															 
+													   
+																   
+															 
+																 
+										   
+															
+									
+														  
 
                 ddlClassDo.DataTextField = "DonorName";
                 ddlClassDo.DataValueField = "DID";
                 ddlClassDo.DataSource = dtclassNew.Tables[1];
                 ddlClassDo.DataBind();
-
-             
-
                 if (Convert.ToInt32(ddlYear.SelectedValue)>=2026)
                 {
                     ddlClassNew.Visible = true;
@@ -2991,15 +3285,11 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                 }
                 else
                 {
-                   
                     ddlClassNew.Visible = false;
                     ddlClass.Visible = true;
                     ddlBalsabha.Items.FindByValue("3").Enabled = true;
                     ddlGKP.Items.FindByValue("3").Enabled = true;
                 }
-                    
-             
-                
                 if ((lblManagement.Text == "2" || lblManagement.Text == "4" || lblManagement.Text == "3" || lblManagement.Text == "10") && lblWorkingStatus.Text == "1")
                 {
                     ddlBalsabha.Enabled = true;
@@ -3019,20 +3309,16 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                 //    ddlGKPLevel.Enabled = false;
                 //}
                 if (lblWorkingStatus.Text == "1")
-                {
-                   
+                {                   
                     ddlGKP.Enabled = true;
                     ddlGKPPlus.Enabled = true;
-
                     ddlGKPLevel.Enabled = true;
                 }
                 else
-                {
-                   
+                {                   
                     ddlGKP.Enabled = false;
                     ddlGKPPlus.Enabled = false;
                     ddlGKPLevel.Enabled = false;
-
                 }
                 ddlGKP.SelectedValue = lblGKP.Text;
                 ddlGKPLevel.SelectedValue = lblGKPLevel.Text;
@@ -3043,7 +3329,6 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                 ddlSchoolCampus.SelectedValue = lblSchoolCampus.Text;
                 lblFunctionalStatus.Text = "0";
                 DataSet dtclass = Session["dtClass"] as DataSet;
-            
                 ddlClass.Enabled = true;
                 string[] meeting = lblClassID.Text.Split(',');
 
@@ -3078,14 +3363,12 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                 }
                 else
                 {
-
                     if (lblManagement.Text == "1")
                     {
                         ddlClass.DataTextField = "Description";
                         ddlClass.DataValueField = "LookupCode";
                         ddlClass.DataSource = dtclass.Tables[0];
                         ddlClass.DataBind();
-                       
                         //foreach (System.Web.UI.WebControls.ListItem item in ddlClass.Items)
                         //{
 
@@ -3145,10 +3428,9 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                                 }
                             }
                         }
-
                     }
                     else if (lblManagement.Text == "4")
-                    {
+					{
                         ddlClass.DataTextField = "Description";
                         ddlClass.DataValueField = "LookupCode";
                         ddlClass.DataSource = dtclass.Tables[3];
@@ -3184,8 +3466,8 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                                 }
                             }
                         }
-                    }
-                    else if (lblManagement.Text == "6")
+                    }				 
+                    else if (lblManagement.Text == "6")				 						 
                     {
                         ddlClass.DataTextField = "Description";
                         ddlClass.DataValueField = "LookupCode";
@@ -3203,8 +3485,8 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                                 }
                             }
                         }
-                    }
-                    else if (lblManagement.Text == "7")
+                    }				 
+                    else if (lblManagement.Text == "7")				 					 
                     {
                         ddlClass.DataTextField = "Description";
                         ddlClass.DataValueField = "LookupCode";
@@ -3222,7 +3504,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                                 }
                             }
                         }
-                    }
+                    }				 
                     else
                     {
                         ddlClass.Enabled = false;
@@ -3230,7 +3512,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                         ddlClass.DataBind();
                     }
                 }
-            }
+            }		 
             if (Convert.ToInt32(ddlType.SelectedValue) == 1 || Convert.ToInt32(ddlType.SelectedValue) ==3)
             {
                 Label lblBlockCode = (Label)e.Row.FindControl("lblTempBlockCode");
@@ -3260,7 +3542,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                 DataTable dtAddCluster = dt.Clone();
                 DataRow drNew;
                 DataRow[] dr = dt.Select("BlockCode='" + lblBlockCode.Text + "'");
-                if (dr.Length > 0)
+                if (dr.Length > 0)	   
                 {
                     foreach (DataRow row in dr)
                     {
@@ -3271,8 +3553,7 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
 
                         dtAddCluster.Rows.Add(drNew);
                     }
-                }
-               
+                }               
                     objComman.BindDLLDatatable("mst5Village", dtAddCluster, "ClusterCode, ClusterName", conditions, "ClusterName", "asc", ddlClusterCode, "ClusterName", "ClusterCode", "--Select--");
                      dtAddCluster=null;
                     if (lblClusterCode.Text.Length > 1)
@@ -3291,7 +3572,6 @@ public partial class frmChangeCluster2025 : System.Web.UI.Page
                     ddlAGP.SelectedValue = lblAGPStatus.Text;
                    lblFunctionalStatus.Text = "0";
             }
-               
                //ImgBut1.Enabled = false;
             //ImgAcc1.Enabled = false;
 

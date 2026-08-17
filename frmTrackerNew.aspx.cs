@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
-using System.Globalization;
-using System.Drawing;
+using System.Linq;
 using System.Threading;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 
 
 public partial class frmTrackerNew : System.Web.UI.Page
@@ -27,7 +23,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
             if (Convert.ToString(Session["username"]) != "")
             {
 
-               // FillFormType();
+                // FillFormType();
                 LoadYear();
                 LoadUserLeavel();
                 pnlMain.Visible = true;
@@ -36,7 +32,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
 
 
                 ViewState["M"] = "";
-               // btnDelete.Attributes.Add("onclick", "javascript:return " + "confirm('Are you sure you want to Delete? ')");
+                // btnDelete.Attributes.Add("onclick", "javascript:return " + "confirm('Are you sure you want to Delete? ')");
             }
             else
             {
@@ -134,8 +130,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
     {
         if (ddlYear.SelectedIndex > 0)
         {
-
-         
             if (Session["FinYear"].ToString() != ddlYear.SelectedItem.Text)
             {
                 string strQry;
@@ -147,7 +141,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
                 {
                     if (Convert.ToInt32(dtModel.Rows[0]["LockMonth"].ToString()) < DateTime.Today.Month)
                     {
-                     
                         ViewState["M"] = "M";
 
                     }
@@ -189,21 +182,15 @@ public partial class frmTrackerNew : System.Web.UI.Page
             ViewState["vVerify"] = vVerify;
             ViewState["vDelete"] = vDelete;
         }
-       
 
         if (vADD == true)
         {
             btnSerach.Enabled = true;
-          
         }
         else
         {
             btnSerach.Enabled = false;
-
         }
-       
-       
-
     }
     public void FromRight(Boolean EnableDisable)
     {
@@ -365,9 +352,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
     {
         Locking();
         //pnlMain.Enabled = false;
-
         FillCBBock();
-      
         ddlPanchayat.Items.Clear();
         ddlVillage.Items.Clear();
         ddlschool.Items.Clear();
@@ -375,9 +360,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
     }
     protected void ddlBlock_SelectedIndexChanged(object sender, EventArgs e)
     {
-     
-
-        FillCBCluster();
+		FillCBCluster();
         ddlschool.Items.Clear();
         ddlVillage.Items.Clear();
         ClearGrid();
@@ -536,7 +519,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
         //Grdform6.DataSource = dt;
         //Grdform6.DataBind();
 
-        if (typevalue != "10" )
+        if (typevalue != "10")
         {
 
 
@@ -586,30 +569,21 @@ public partial class frmTrackerNew : System.Web.UI.Page
         }
         else
         {
-            
+            //dtmstM = objMain.Tracker(str, typevalue);
+            if (Session["user_level"].ToString() == "112")
+            {
+                dtmstM = objMain.LoadData("select UniqueCode, mst5Village.VillageCode, SchoolCode,Status  ,case [Status] when 1 then 'Submitted'  when 2 then 'Approved (IO)' when 3 then 'Approved (Auditor)' when 4 then 'Rejected (IO)' when 5 then 'Rejected (Auditor)' else ''  end as [FStatus],ReceivedDate,CollectionDate,NoOfGirls,NoOfBoys,TBcode,EndlineReceivingDate,EndlineCollectionDate,EndlineNoofGirls,EndlineNoofBoysPresent,FormCode from tblTracker  inner join mst5Village on mst5Village.VillageCode = tblTracker.VillageCode inner join mst1State on mst1State.StateCode=mst5Village.StateCode inner join mst2District on mst2District.DistrictCode=mst5Village.DistrictCode inner join mst3Block on mst3Block.BlockCode=mst5Village.BlockCode inner join mstPanchayat on mstPanchayat.PanchayatCode=mst5Village.PanchayatCode" + str + "and" + "  Status in(2,3,5) and tblTracker.FormID = " + typevalue);
 
-                //dtmstM = objMain.Tracker(str, typevalue);
-                if (Session["user_level"].ToString() == "112")
-                {
-                    dtmstM = objMain.LoadData("select UniqueCode, mst5Village.VillageCode, SchoolCode,Status  ,case [Status] when 1 then 'Submitted'  when 2 then 'Approved (IO)' when 3 then 'Approved (Auditor)' when 4 then 'Rejected (IO)' when 5 then 'Rejected (Auditor)' else ''  end as [FStatus],ReceivedDate,CollectionDate,NoOfGirls,NoOfBoys,TBcode,EndlineReceivingDate,EndlineCollectionDate,EndlineNoofGirls,EndlineNoofBoysPresent,FormCode from tblTracker  inner join mst5Village on mst5Village.VillageCode = tblTracker.VillageCode inner join mst1State on mst1State.StateCode=mst5Village.StateCode inner join mst2District on mst2District.DistrictCode=mst5Village.DistrictCode inner join mst3Block on mst3Block.BlockCode=mst5Village.BlockCode inner join mstPanchayat on mstPanchayat.PanchayatCode=mst5Village.PanchayatCode" + str + "and" + "  Status in(2,3,5) and tblTracker.FormID = " + typevalue);
+            }
+            else
+            {
+                dtmstM = objMain.LoadData("select UniqueCode, mst5Village.VillageCode, SchoolCode,Status  ,case [Status] when 1 then 'Submitted'  when 2 then 'Approved (IO)' when 3 then 'Approved (Auditor)' when 4 then 'Rejected (IO)' when 5 then 'Rejected (Auditor)' else ''  end as [FStatus],ReceivedDate,CollectionDate,NoOfGirls,NoOfBoys,TBcode,EndlineReceivingDate,EndlineCollectionDate,EndlineNoofGirls,EndlineNoofBoysPresent,FormCode from tblTracker  inner join mst5Village on mst5Village.VillageCode = tblTracker.VillageCode inner join mst1State on mst1State.StateCode=mst5Village.StateCode inner join mst2District on mst2District.DistrictCode=mst5Village.DistrictCode inner join mst3Block on mst3Block.BlockCode=mst5Village.BlockCode inner join mstPanchayat on mstPanchayat.PanchayatCode=mst5Village.PanchayatCode" + str + "and" + " tblTracker.FormID = " + typevalue);
 
-                }
-                else
-                {
-
-                    dtmstM = objMain.LoadData("select UniqueCode, mst5Village.VillageCode, SchoolCode,Status  ,case [Status] when 1 then 'Submitted'  when 2 then 'Approved (IO)' when 3 then 'Approved (Auditor)' when 4 then 'Rejected (IO)' when 5 then 'Rejected (Auditor)' else ''  end as [FStatus],ReceivedDate,CollectionDate,NoOfGirls,NoOfBoys,TBcode,EndlineReceivingDate,EndlineCollectionDate,EndlineNoofGirls,EndlineNoofBoysPresent,FormCode from tblTracker  inner join mst5Village on mst5Village.VillageCode = tblTracker.VillageCode inner join mst1State on mst1State.StateCode=mst5Village.StateCode inner join mst2District on mst2District.DistrictCode=mst5Village.DistrictCode inner join mst3Block on mst3Block.BlockCode=mst5Village.BlockCode inner join mstPanchayat on mstPanchayat.PanchayatCode=mst5Village.PanchayatCode" + str + "and" + " tblTracker.FormID = " + typevalue);
-
-
-
-                }
-
+            }
             DataTable dtvillage = objMain.LoadData("select EGVillageCode from mst5Village where VillageCode = '" + ddlVillage.SelectedValue + "'");
             hdnvillagecode.Value = dtvillage.Rows[0]["EGVillageCode"].ToString();
-         
+
         }
-
- 
-
         if (dtmstM.Rows.Count > 0)
         {
 
@@ -622,7 +596,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
 
             if (typevalue == "9")
             {
-                Grdform6.Visible = true;                
+                Grdform6.Visible = true;
                 grdform7.Visible = false;
                 grdform8.Visible = false;
                 grdform9.Visible = false;
@@ -637,11 +611,10 @@ public partial class frmTrackerNew : System.Web.UI.Page
 
 
             }
-            if (typevalue == "10" )
+            if (typevalue == "10")
             {
-              
                 grdform7.Visible = true;
-                Grdform6.Visible = false;               
+                Grdform6.Visible = false;
                 grdform8.Visible = false;
                 grdform9.Visible = false;
                 grdform12.Visible = false;
@@ -658,7 +631,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
                 grdform8.Visible = true;
                 Grdform6.Visible = false;
                 grdform7.Visible = false;
-                
                 grdform9.Visible = false;
                 grdform12.Visible = false;
                 grdform13.Visible = false;
@@ -678,7 +650,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
                 Grdform6.Visible = false;
                 grdform7.Visible = false;
                 grdform8.Visible = false;
-               
                 grdform12.Visible = false;
                 grdform13.Visible = false;
 
@@ -718,7 +689,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
                 grdform13.DataSource = dtmstM;
                 grdform13.DataBind();
                 grdform12.Dispose();
-               pnlMain.Visible = true;
+                pnlMain.Visible = true;
                 pnlMain.Enabled = true;
             }
 
@@ -741,10 +712,8 @@ public partial class frmTrackerNew : System.Web.UI.Page
 
                 if (typevalue == "9")
                 {
-                    
                     string header = ddlformatype.SelectedItem.Text;
                     Grdform6.Visible = true;
-                    
                     grdform7.Visible = false;
                     grdform8.Visible = false;
                     grdform9.Visible = false;
@@ -845,7 +814,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
                     pnlMain.Enabled = true;
                 }
             }
-           
         }
 
     }
@@ -877,12 +845,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
 
                     GVMainBind();
                 }
-
-                
-
             }
-           
-
         }
         catch (Exception)
         {
@@ -957,7 +920,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
 
 
             }
-           // ScriptManager.RegisterStartupScript(Page, Page.GetType(), "funtions", "AddCollapsClassJ()", true);
+            // ScriptManager.RegisterStartupScript(Page, Page.GetType(), "funtions", "AddCollapsClassJ()", true);
 
         }
         catch (Exception)
@@ -1034,7 +997,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
 
 
             }
-       //     ScriptManager.RegisterStartupScript(Page, Page.GetType(), "funtions", "AddCollapsClassJ()", true);
+            //     ScriptManager.RegisterStartupScript(Page, Page.GetType(), "funtions", "AddCollapsClassJ()", true);
 
         }
         catch (Exception)
@@ -1464,15 +1427,15 @@ public partial class frmTrackerNew : System.Web.UI.Page
                     { dtCurrentTable.Rows[i - 1]["NoOfBoys"] = txtnboys.Text; }
 
 
-                  
-                     dtCurrentTable.Rows[i - 1]["EndlineReceivingDate"] = DBNull.Value; 
 
-                   dtCurrentTable.Rows[i - 1]["EndlineCollectionDate"] = DBNull.Value; 
-                     dtCurrentTable.Rows[i - 1]["EndlineNoofGirls"] = DBNull.Value; 
-                  
+                    dtCurrentTable.Rows[i - 1]["EndlineReceivingDate"] = DBNull.Value;
 
-                    dtCurrentTable.Rows[i - 1]["EndlineNoofBoysPresent"] = DBNull.Value; 
-                   
+                    dtCurrentTable.Rows[i - 1]["EndlineCollectionDate"] = DBNull.Value;
+                    dtCurrentTable.Rows[i - 1]["EndlineNoofGirls"] = DBNull.Value;
+
+
+                    dtCurrentTable.Rows[i - 1]["EndlineNoofBoysPresent"] = DBNull.Value;
+
 
                     rowIndex++;
                 }
@@ -1518,7 +1481,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
 
             ImageButton btnDeleteTab1 = (ImageButton)e.Row.FindControl("btnDeleteTab1");
 
-             btnDeleteTab1.Attributes.Add("onclick", "javascript:return " + "confirm('Are you sure you want to Delete? ')");
+            btnDeleteTab1.Attributes.Add("onclick", "javascript:return " + "confirm('Are you sure you want to Delete? ')");
 
 
             if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30")
@@ -1540,7 +1503,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
                     ImageButton2.Visible = false;
                 }
             }
-            else  if (Session["user_level"].ToString() == "112")
+            else if (Session["user_level"].ToString() == "112")
             {
                 btnSave6.Visible = false;
                 btnDeleteTab1.Visible = false;
@@ -1563,7 +1526,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
             {
                 ImageButton1.Visible = false;
                 ImageButton2.Visible = false;
-                if (lblStatus.Text == "1" )
+                if (lblStatus.Text == "1")
                 {
                     btnSave6.Visible = false;
                     btnDeleteTab1.Visible = true;
@@ -1626,7 +1589,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
             TextBox txtrecivedate = (TextBox)e.Row.FindControl("txtrecivedate");
 
             TextBox txtcollectiondate = (TextBox)e.Row.FindControl("txtcollectiondate");
-          
             ImageButton ImageButton1 = (ImageButton)e.Row.FindControl("ImageButton1");
 
             ImageButton ImageButton2 = (ImageButton)e.Row.FindControl("ImageButton2");
@@ -1644,7 +1606,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
                 btnDeleteTab2.Visible = false;
                 txtrecivedate.Enabled = false;
                 txtcollectiondate.Enabled = false;
-               
                 if (lblStatus.Text == "1")
                 {
                     ImageButton1.Visible = true;
@@ -1662,7 +1623,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
                 btnDeleteTab2.Visible = false;
                 txtrecivedate.Enabled = false;
                 txtcollectiondate.Enabled = false;
-              
                 if (lblStatus.Text == "2")
                 {
                     ImageButton1.Visible = true;
@@ -1684,7 +1644,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
                     btnDeleteTab2.Visible = true;
                     txtrecivedate.Enabled = false;
                     txtcollectiondate.Enabled = false;
-                   
                 }
                 else if (lblStatus.Text == "")
                 {
@@ -1698,7 +1657,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
                 {
                     txtrecivedate.Enabled = false;
                     txtcollectiondate.Enabled = false;
-                 
                     btnSave7.Visible = false;
                     btnDeleteTab2.Visible = false;
                 }
@@ -1720,22 +1678,21 @@ public partial class frmTrackerNew : System.Web.UI.Page
                 btn.Visible = true;
             }
         }
-           
     }
 
     protected void GvForm8_RowDataBound(object sender, GridViewRowEventArgs e)
     {
-      
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-                Label txtformvalue = (Label)e.Row.FindControl("txtcode");
-                txtformvalue.Visible = true;
-              
+
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            Label txtformvalue = (Label)e.Row.FindControl("txtcode");
+            txtformvalue.Visible = true;
+
             Label lblStatus = (Label)e.Row.FindControl("lblStatus");
             TextBox txtrecivedate = (TextBox)e.Row.FindControl("txtrecivedate");
 
             TextBox txtcollectiondate = (TextBox)e.Row.FindControl("txtcollectiondate");
-          
+
             ImageButton ImageButton1 = (ImageButton)e.Row.FindControl("ImageButton1");
 
             ImageButton ImageButton2 = (ImageButton)e.Row.FindControl("ImageButton2");
@@ -1753,7 +1710,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
                 btnDeleteTab3.Visible = false;
                 txtrecivedate.Enabled = false;
                 txtcollectiondate.Enabled = false;
-               
                 if (lblStatus.Text == "1")
                 {
                     ImageButton1.Visible = true;
@@ -1771,7 +1727,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
                 btnDeleteTab3.Visible = false;
                 txtrecivedate.Enabled = false;
                 txtcollectiondate.Enabled = false;
-              
                 if (lblStatus.Text == "2")
                 {
                     ImageButton1.Visible = true;
@@ -1793,7 +1748,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
                     btnDeleteTab3.Visible = true;
                     txtrecivedate.Enabled = false;
                     txtcollectiondate.Enabled = false;
-                   
                 }
                 else if (lblStatus.Text == "")
                 {
@@ -1807,7 +1761,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
                 {
                     txtrecivedate.Enabled = false;
                     txtcollectiondate.Enabled = false;
-                 
                     btnSave8.Visible = false;
                     btnDeleteTab3.Visible = false;
                 }
@@ -1829,9 +1782,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
                 btn.Visible = true;
             }
         }
-           
-           
-       
     }
 
     protected void GvForm9_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -1855,7 +1805,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
 
             ImageButton btnDeleteTab4 = (ImageButton)e.Row.FindControl("btnDeleteTab4");
 
-             btnDeleteTab4.Attributes.Add("onclick", "javascript:return " + "confirm('Are you sure you want to Delete? ')");
+            btnDeleteTab4.Attributes.Add("onclick", "javascript:return " + "confirm('Are you sure you want to Delete? ')");
 
             if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30")
             {
@@ -1897,7 +1847,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
             {
                 ImageButton1.Visible = false;
                 ImageButton2.Visible = false;
-                if (lblStatus.Text == "1" )
+                if (lblStatus.Text == "1")
                 {
                     btnSave9.Visible = false;
                     btnDeleteTab4.Visible = true;
@@ -1905,7 +1855,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
                     txtcollectiondate.Enabled = false;
 
                 }
-                else if ( lblStatus.Text == "")
+                else if (lblStatus.Text == "")
                 {
                     btnSave9.Visible = true;
                     btnDeleteTab4.Visible = true;
@@ -1939,10 +1889,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
                 btn.Visible = true;
             }
         }
-           
-           
-       
-       
     }
 
 
@@ -1964,7 +1910,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
                 ddltb1.DataValueField = "TBCode";
                 ddltb1.DataBind();
                 ddltb1.SelectedValue = dtdd.Rows[e.Row.RowIndex]["TBcode"].ToString();
-                
             }
         }
         if (Convert.ToString(ViewState["Save"]) == "Save")
@@ -2063,7 +2008,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
             {
                 ImageButton1.Visible = false;
                 ImageButton2.Visible = false;
-                if (lblStatus.Text == "1" )
+                if (lblStatus.Text == "1")
                 {
                     btnSave10.Visible = false;
                     btnDeleteTab5.Visible = true;
@@ -2177,8 +2122,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
             ImageButton ImageButton2 = (ImageButton)e.Row.FindControl("ImageButton2");
 
             ImageButton btnSave10 = (ImageButton)e.Row.FindControl("btnSave10");
-
-          
             DropDownList ddltb = (DropDownList)e.Row.FindControl("ddltb");
 
             //TextBox txtnoofgirols = (TextBox)e.Row.FindControl("txtnoofgirls");
@@ -2191,12 +2134,9 @@ public partial class frmTrackerNew : System.Web.UI.Page
 
             TextBox txtenoofgirls = (TextBox)e.Row.FindControl("txtenoofgirls");
             TextBox txteNoOfBoys = (TextBox)e.Row.FindControl("txteNoOfBoys");
-
-          
             if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30")
             {
                 btnSave10.Visible = false;
-               
                 //txtrecivedate.Enabled = false;
                 //txtcollectiondate.Enabled = false;
 
@@ -2221,7 +2161,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
             else if (Session["user_level"].ToString() == "112")
             {
                 btnSave10.Visible = false;
-              
                 //txtrecivedate.Enabled = false;
                 //txtcollectiondate.Enabled = false;
 
@@ -2246,10 +2185,9 @@ public partial class frmTrackerNew : System.Web.UI.Page
             {
                 ImageButton1.Visible = false;
                 ImageButton2.Visible = false;
-                if (lblStatus.Text == "1" )
+                if (lblStatus.Text == "1")
                 {
                     btnSave10.Visible = false;
-                   
                     //txtrecivedate.Enabled = true;
                     //txtcollectiondate.Enabled = true;
 
@@ -2264,7 +2202,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
                 else if (lblStatus.Text == "")
                 {
                     btnSave10.Visible = true;
-                   
                     //txtrecivedate.Enabled = true;
                     //txtcollectiondate.Enabled = true;
 
@@ -2288,7 +2225,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
                     //txtcollectiondate.Enabled = false;
 
                     btnSave10.Visible = false;
-                   
                 }
 
             }
@@ -2296,8 +2232,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
         }
 
     }
-   
-
     //protected void GvForm7_RowDataBound(object sender, GridViewRowEventArgs e)
     //{
     //    if (ViewState["Save"].ToString() == "Update")
@@ -2372,7 +2306,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
             dt = objMain.LoadData(" select UniqueCode, VillageCode, Value, ComboID, tbl_CVverfication.FormID ,tbl_CVverfication.CV_UID, mstCVverfication.CV_FieldName,mstCVverfication.CV_MaxLimit,mstCVverfication.CV_MaxLimit,mstCVverfication.CV_Validation, mstCVverfication.CV_FieldType  from  tbl_CVverfication inner join mstCVverfication on mstCVverfication.CV_UID = tbl_CVverfication.CV_UID where VillageCode ='" + VCode + "'and tbl_CVverfication.FormID = " + FID);
 
         }
-        catch (Exception ex)
+        catch
         {
         }
         if (dt.Rows.Count > 0)
@@ -2392,10 +2326,10 @@ public partial class frmTrackerNew : System.Web.UI.Page
     protected void btnsave_Click(object sender, EventArgs e)
     {
 
-        SaveData(0,"","");
+        SaveData(0, "", "");
         GVMainBind();
         pnlMain.Visible = true;
-     }
+    }
     protected void btnSumbit_Click(object sender, EventArgs e)
     {
 
@@ -2461,7 +2395,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
                     {
                         if (lblNum.Text == "" || lblNum.Text == "0")
                         {
-                            Unique(2, schoolscode,9);
+                            Unique(2, schoolscode, 9);
                             status = Convert.ToInt32(lblNum.Text);
                             trackCode = ViewState["TranckerCode"].ToString();
 
@@ -2614,7 +2548,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
                         flag = "U";
                         lblNum.Text = "0";
                     }
-                 //   trackCode = villagescode + "-" + "08" + "0" + row.RowIndex;
+                    //   trackCode = villagescode + "-" + "08" + "0" + row.RowIndex;
 
 
 
@@ -2678,7 +2612,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
                         lblNum.Text = "0";
                         flag = "U";
                     }
-                //    trackCode = villagescode + "-" + "09" + "0" + row.RowIndex;
+                    //    trackCode = villagescode + "-" + "09" + "0" + row.RowIndex;
 
 
                     TextBox txtrdate = (TextBox)row.FindControl("txtrecivedate");
@@ -2739,8 +2673,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
                         lblNum.Text = "0";
                         flag = "U";
                     }
-                   
-
 
                     //TextBox txtrdate = (TextBox)row.FindControl("txtrecivedate");
                     //TextBox txtcdate = (TextBox)row.FindControl("txtcollectiondate");
@@ -2799,7 +2731,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
             }
 
         }
-        catch (Exception ex)
+        catch
         {
         }
         if (result > 0)
@@ -2840,15 +2772,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
         }
         else if (Flag == "I")
         {
-            string MyConnection2 = SqlHelper.mainConnectionString;
-            string Query = " insert into tblTracker([UniqueCode]  ,[VillageCode]   ,[SchoolCode] ,[EndlineReceivingDate],[EndlineCollectionDate],[EndlineNoofGirls] ,[EndlineNoofBoysPresent], [FormCode],[TBcode] ,[FormID],SerialNo,CreateDate,CreateBy,EStatus ) values ('" + GUID + "','" + VCODE + "','" + SCODE + "','" + ERdate + "','" + ECdate + "','" + ENgirls + "','" + Enboys + "','" + trackCode + "','" + Tbcode + "','" + formid + "' ,'" + serial + "' ,'" + DateTime.Now.ToString("yyyy-MM-dd") + "','" + createby + "' ,'" + Status + "' )";
-            SqlConnection MyConn2 = new SqlConnection(MyConnection2);
-            SqlCommand MyCommand2 = new SqlCommand(Query, MyConn2);
-
-            MyConn2.Open();
-            Result = MyCommand2.ExecuteNonQuery();
-
-            MyConn2.Close();
         }
         return 1;
     }
@@ -2856,34 +2779,9 @@ public partial class frmTrackerNew : System.Web.UI.Page
     public int SaveDataGrid(string GUID, string VCODE, string SCODE, string Rdate, string Cdate, int Ngirls, int nboys, string ERdate, string ECdate, int ENgirls, int Enboys, string Flag, int formid, string trackCode, string Tbcode, Int32 serial, string createby, Int32 Status, string ApptoveByIO, string ApptoveByA)
     {
         int Result = 0;
-        if (Flag == "U")
-        {
-
-            string MyConnection2 = SqlHelper.mainConnectionString;
-            string Query = "UPDATE tblTracker SET [ReceivedDate] = '" + Rdate + "' , [ModifyBy] = '" + createby + "',[ModifyDate] = '" + DateTime.Now.ToString("yyyy-MM-dd") + "', [Status] = '" + ApptoveByIO + "' , [ApptoveByIO] = '" + ApptoveByIO + "', [ApptoveByA] = '" + ApptoveByA + "', CollectionDate='" + Cdate + "' , NoOfGirls='" + Ngirls + "' , NoOfBoys='" + nboys + "' , EndlineReceivingDate='" + ERdate + "' , EndlineCollectionDate='" + ECdate + "' , EndlineNoofGirls='" + ENgirls + "' , TBcode='" + Tbcode + "' , EndlineNoofBoysPresent='" + Enboys + "' where UniqueCode='" + GUID + "' and FormID='" + formid + "'";
-            SqlConnection MyConn2 = new SqlConnection(MyConnection2);
-            SqlCommand MyCommand2 = new SqlCommand(Query, MyConn2);
-
-            MyConn2.Open();
-            Result = MyCommand2.ExecuteNonQuery();
-
-            MyConn2.Close();
-        }
-        else if (Flag == "I")
-        {
-            string MyConnection2 = SqlHelper.mainConnectionString;
-            string Query = " insert into tblTracker([UniqueCode]  ,[VillageCode]   ,[SchoolCode] ,[ReceivedDate],[CollectionDate] ,[NoOfGirls] ,[NoOfBoys],[EndlineReceivingDate],[EndlineCollectionDate],[EndlineNoofGirls] ,[EndlineNoofBoysPresent], [FormCode],[TBcode] ,[FormID],SerialNo,CreateDate,CreateBy,Status ) values ('" + GUID + "','" + VCODE + "','" + SCODE + "','" + Rdate + "','" + Cdate + "','" + Ngirls + "','" + nboys + "','" + ERdate + "','" + ECdate + "','" + ENgirls + "','" + Enboys + "','" + trackCode + "','" + Tbcode + "','" + formid + "' ,'" + serial + "' ,'" + DateTime.Now.ToString("yyyy-MM-dd") + "','" + createby + "' ,'" + Status + "' )";
-            SqlConnection MyConn2 = new SqlConnection(MyConnection2);
-            SqlCommand MyCommand2 = new SqlCommand(Query, MyConn2);
-
-            MyConn2.Open();
-            Result = MyCommand2.ExecuteNonQuery();
-
-            MyConn2.Close();
-        }
         return 1;
     }
-    public void Unique(Int32 Type, string Code,Int32 fromid)
+    public void Unique(Int32 Type, string Code, Int32 fromid)
     {
 
         Int32 mNewNo = 0;
@@ -2960,12 +2858,9 @@ public partial class frmTrackerNew : System.Web.UI.Page
     protected void btnS_Click(object sender, EventArgs e)
     {
         //string StudentTSInsertQuery2 = " Update tblEnrolment set [IsUploadPic]=0 where session='2023' ";
-        //bool UpdateTs1 = objMain.AddUpdate(StudentTSInsertQuery2);
-
-        //string strQry = " select distinct ExpensereceiptImage from tblTravelMatrixDeatils2024 with(nolock) where mMonth=10 and len(ExpensereceiptImage)>0 ";
 
         //DataTable dt = objMain.LoadData(strQry);
-        string sDirectory = Server.MapPath("~/Travel");
+        string sDirectory = Server.MapPath(Comman.GetImagePath("TravelvouchersPath"));
         Int32 icount = 0;
         SqlParameter[] parm1 = new SqlParameter[]
 {
@@ -2988,49 +2883,17 @@ public partial class frmTrackerNew : System.Web.UI.Page
             sFilename = sDirectory + "\\" + sFilename;
             if (!File.Exists(sFilename))
             {
-                string StudentTSInsertQuery = " Update tblTravelMatrixDeatils2024 set [IsUploadPic]=1 where ExpensereceiptImage='" + Image + "'";
-                bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
-
-                string StudentTSInsertQuery1 = " Update tblTravelMatrixExpens set [IsExUploadPic]=1 where ImagePath='" + Image + "'";
-                bool UpdateTs1 = objMain.AddUpdate(StudentTSInsertQuery1);
             }
             icount = icount + 1;
         }
         lblNag.Text = icount.ToString();
 
     }
-    //protected void btnS_Click(object sender, EventArgs e)
-    //{
-    //    //string StudentTSInsertQuery2 = " Update tblEnrolment set [IsUploadPic]=0 where session='2023' ";
-    //    //bool UpdateTs1 = objMain.AddUpdate(StudentTSInsertQuery2);
-
-    //    string strQry = " select distinct SealFormImage from tblEnrolment with(nolock) where  session='2023' and  len(SealFormImage)>2   ";
-
-    //    DataTable dt = objMain.LoadData(strQry);
-    //    string sDirectory = Server.MapPath("~/TabletImage");
-    //    Int32 icount = 0;
-    //    foreach (DataRow dr in dt.Rows)
-    //    {
-    //        string sFilename = "";
-    //        string Image = dr["SealFormImage"].ToString();
-    //        sFilename = dr["SealFormImage"].ToString();
-
-    //        sFilename = sDirectory + "\\" + sFilename;
-    //        if (!File.Exists(sFilename))
-    //        {
-    //            string StudentTSInsertQuery = " Update tblEnrolment set [IsUploadPic]=1 where SealFormImage='" + Image + "'";
-    //            bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
-    //        }
-    //        icount = icount + 1;
-    //    }
-    //    lblNag.Text = icount.ToString();
-    //}
     protected void btnS5_Click(object sender, EventArgs e)
     {
-       
-        string sourceFolder = Server.MapPath("~/TabletImage"); // Replace with your source folder path
-      
-        string destinationFolder = Server.MapPath("~/Travel"); // Replace with your destination folder path
+        string sourceFolder = Server.MapPath(Comman.GetImagePath("TabletImagePath")); // Replace with your source folder path
+
+        string destinationFolder = Server.MapPath(Comman.GetImagePath("TravelPath") + "/"); // Replace with your destination folder path
         Int32 icount = 0;
 
         // Replace with your image file name
@@ -3038,7 +2901,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
 {
 
              new SqlParameter("@UserName", ""),
-         
 
 
 };
@@ -3062,27 +2924,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
             }
             lblNag.Text = icount.ToString();
         }
-        //string strQry = " select distinct SealFormImage from tblEnrolment with(nolock) where  session='2023' and  len(SealFormImage)>2   ";
-
-        //DataTable dt = objMain.LoadData(strQry);
-        //string sDirectory = Server.MapPath("~/TabletImage");
-        //Int32 icount = 0;
-        //foreach (DataRow dr in dt.Rows)
-        //{
-        //    string sFilename = "";
-        //    string Image = dr["SealFormImage"].ToString();
-        //    sFilename = dr["SealFormImage"].ToString();
-
-        //    sFilename = sDirectory + "\\" + sFilename;
-        //    if (!File.Exists(sFilename))
-        //    {
-        //        string StudentTSInsertQuery = " Update tblEnrolment set [IsUploadPic]=1 where SealFormImage='" + Image + "'";
-        //        bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
-        //    }
-        //    icount = icount + 1;
-        //    lblNag.Text = icount.ToString();
-        //}
-
     }
 
     protected void btnSerach_Click(object sender, EventArgs e)
@@ -3096,21 +2937,19 @@ public partial class frmTrackerNew : System.Web.UI.Page
             ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Select From Type')</script>", false);
         }
         string typevalue = ddlformatype.SelectedValue;
-
-
-        if (typevalue != "10" )
+        if (typevalue != "10")
         {
-                if (ddlschool.SelectedIndex > 0)
-                {
-                    GVMainBind();
-                    pnlMain.Enabled = true;
-                }
-                else
-                {
-                    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Select School')</script>", false);
-                }
-        
-         
+            if (ddlschool.SelectedIndex > 0)
+            {
+                GVMainBind();
+                pnlMain.Enabled = true;
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Select School')</script>", false);
+            }
+
+
         }
         else
         {
@@ -3179,11 +3018,9 @@ public partial class frmTrackerNew : System.Web.UI.Page
     {
         try
         {
-           
             string vCODE = ddlVillage.SelectedValue.ToString();
             string SCode;
             string flag = "";
-           
             string trackCode = "";
             int trackid = 0;
             string Rdate, Cdate, ERdate = "", ECdate = "", Tbcode = "";
@@ -3206,47 +3043,39 @@ public partial class frmTrackerNew : System.Web.UI.Page
             Int32 mNewNo = 0;
             if (formID == 9)
             {
-                 GridViewRow gvr = ((GridViewRow)(((ImageButton)sender)).NamingContainer);
-                 int rowIndex = gvr.RowIndex;
-                 Label uidcode = (Label)Grdform6.Rows[rowIndex].FindControl("lblUniqueCode");
-
-                    string UCode = uidcode.Text;
-                    if (UCode == "")
-                    {
-                       
-                            Unique(2, schoolscode, 9);
-                            status = Convert.ToInt32(lblNum.Text);
-                            trackCode = ViewState["TranckerCode"].ToString();
+                GridViewRow gvr = ((GridViewRow)(((ImageButton)sender)).NamingContainer);
+                int rowIndex = gvr.RowIndex;
+                Label uidcode = (Label)Grdform6.Rows[rowIndex].FindControl("lblUniqueCode");
+                string UCode = uidcode.Text;
+                if (UCode == "")
+                {
+                    Unique(2, schoolscode, 9);
+                    status = Convert.ToInt32(lblNum.Text);
+                    trackCode = ViewState["TranckerCode"].ToString();
 
 
-                        UCode = Generate_RandomStringTemp(8);
-                        flag = "I";
-                    }
-                    else
-                    {
-                        lblNum.Text = "0";
-                        flag = "U";
-                    }
-                 
-                    TextBox txtrdate = (TextBox)Grdform6.Rows[rowIndex].FindControl("txtrecivedate");
-                    TextBox txtcdate = (TextBox)Grdform6.Rows[rowIndex].FindControl("txtcollectiondate");
-                    TextBox txtgirl = (TextBox)Grdform6.Rows[rowIndex].FindControl("txtnoofgirols");
-                    TextBox txtboy = (TextBox)Grdform6.Rows[rowIndex].FindControl("txtNoOfBoys");
+                    UCode = Generate_RandomStringTemp(8);
+                    flag = "I";
+                }
+                else
+                {
+                    lblNum.Text = "0";
+                    flag = "U";
+                }
+                TextBox txtrdate = (TextBox)Grdform6.Rows[rowIndex].FindControl("txtrecivedate");
+                TextBox txtcdate = (TextBox)Grdform6.Rows[rowIndex].FindControl("txtcollectiondate");
+                TextBox txtgirl = (TextBox)Grdform6.Rows[rowIndex].FindControl("txtnoofgirols");
+                TextBox txtboy = (TextBox)Grdform6.Rows[rowIndex].FindControl("txtNoOfBoys");
 
+                Rdate = txtrdate.Text;
 
-                    Rdate = txtrdate.Text;
+                Cdate = txtcdate.Text;
 
-                    Cdate = txtcdate.Text;
+                NGirls = Convert.ToInt32(txtgirl.Text);
 
-                    NGirls = Convert.ToInt32(txtgirl.Text);
+                NBoys = Convert.ToInt32(txtboy.Text);
 
-                    NBoys = Convert.ToInt32(txtboy.Text);
-
-                    result = SaveDataGrid(UCode, vCODE, SCode, Rdate, Cdate, NGirls, NBoys, ERdate, ECdate, ENgirls, ENboys, flag, formID, trackCode, Tbcode, Convert.ToInt32(lblNum.Text), Session["username"].ToString(), 1, "", "");
-
-
-                
-
+                result = SaveDataGrid(UCode, vCODE, SCode, Rdate, Cdate, NGirls, NBoys, ERdate, ECdate, ENgirls, ENboys, flag, formID, trackCode, Tbcode, Convert.ToInt32(lblNum.Text), Session["username"].ToString(), 1, "", "");
 
             }
 
@@ -3291,7 +3120,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
             {
                 SCode = "";
             }
-            
 
             int formID = Convert.ToInt32(ddlformatype.SelectedValue);
             string schoolscode = hdnschoolcode.Value;
@@ -3305,48 +3133,29 @@ public partial class frmTrackerNew : System.Web.UI.Page
                 GridViewRow gvr = ((GridViewRow)(((ImageButton)sender)).NamingContainer);
                 int rowIndex = gvr.RowIndex;
                 Label uidcode = (Label)grdform7.Rows[rowIndex].FindControl("lblUniqueCode");
+                string UCode = uidcode.Text;
+                if (UCode == "")
+                {
+                    Unique(2, villagescode, 10);
+                    status = Convert.ToInt32(lblNum.Text);
+                    trackCode = ViewState["TranckerCode"].ToString();
+                    UCode = Generate_RandomStringTemp(8);
+                    flag = "I";
+                }
+                else
+                {
+                    lblNum.Text = "0";
+                    flag = "U";
+                }
+                // trackCode = villagescode + "-" + "07" + "0" + row.RowIndex;
+                TextBox txtrdate = (TextBox)grdform7.Rows[rowIndex].FindControl("txtrecivedate");
+                TextBox txtcdate = (TextBox)grdform7.Rows[rowIndex].FindControl("txtcollectiondate");
+                Rdate = txtrdate.Text;
+                // SaveDataGrid(UCode, vCODE, SCode, trackid, value, trackCode, formID, flag);
 
-                  
+                Cdate = txtcdate.Text;
 
-                    string UCode = uidcode.Text;
-                    if (UCode == "")
-                    {
-                          Unique(2, villagescode, 10);
-                            status = Convert.ToInt32(lblNum.Text);
-                            trackCode = ViewState["TranckerCode"].ToString();
-
-                        UCode = Generate_RandomStringTemp(8);
-                        flag = "I";
-                    }
-                    else
-                    {
-                        lblNum.Text = "0";
-                        flag = "U";
-                    }
-                    // trackCode = villagescode + "-" + "07" + "0" + row.RowIndex;
-
-
-
-
-                    TextBox txtrdate = (TextBox)grdform7.Rows[rowIndex].FindControl("txtrecivedate");
-                    TextBox txtcdate = (TextBox)grdform7.Rows[rowIndex].FindControl("txtcollectiondate");
-
-
-
-                    Rdate = txtrdate.Text;
-
-                    // SaveDataGrid(UCode, vCODE, SCode, trackid, value, trackCode, formID, flag);
-
-
-                    Cdate = txtcdate.Text;
-
-                    result = SaveDataGrid(UCode, vCODE, SCode, Rdate, Cdate, NGirls, NBoys, ERdate, ECdate, ENgirls, ENboys, flag, formID, trackCode, Tbcode, Convert.ToInt32(lblNum.Text), Session["username"].ToString(), 1, "", "");
-
-
-
-
-               
-
+                result = SaveDataGrid(UCode, vCODE, SCode, Rdate, Cdate, NGirls, NBoys, ERdate, ECdate, ENgirls, ENboys, flag, formID, trackCode, Tbcode, Convert.ToInt32(lblNum.Text), Session["username"].ToString(), 1, "", "");
             }
 
 
@@ -3406,59 +3215,33 @@ public partial class frmTrackerNew : System.Web.UI.Page
             GridViewRow gvr = ((GridViewRow)(((ImageButton)sender)).NamingContainer);
             int rowIndex = gvr.RowIndex;
             Label uidcode = (Label)grdform8.Rows[rowIndex].FindControl("lblUniqueCode");
-
-                
-
-                    string UCode = uidcode.Text;
-                    if (UCode == "")
-                    {
-                        
-                            Unique(2, schoolscode, 11);
-                            status = Convert.ToInt32(lblNum.Text);
-                            trackCode = ViewState["TranckerCode"].ToString();
-
-
-                        UCode = Generate_RandomStringTemp(8);
-                        flag = "I";
-                    }
-                    else
-                    {
-                        flag = "U";
-                        lblNum.Text = "0";
-                    }
-                 //   trackCode = villagescode + "-" + "08" + "0" + row.RowIndex;
-
-
-
-
-                    TextBox txtrdate = (TextBox)grdform8.Rows[rowIndex].FindControl("txtrecivedate");
-                    TextBox txtcdate = (TextBox)grdform8.Rows[rowIndex].FindControl("txtcollectiondate");
-
-
-
-                    Rdate = txtrdate.Text;
-
-
-                    Cdate = txtcdate.Text;
-
-                    result = SaveDataGrid(UCode, vCODE, SCode, Rdate, Cdate, NGirls, NBoys, ERdate, ECdate, ENgirls, ENboys, flag, formID, trackCode, Tbcode, Convert.ToInt32(lblNum.Text), Session["username"].ToString(), 1, "", "");
-
-
-
-
-
-
+            string UCode = uidcode.Text;
+            if (UCode == "")
+            {
+                Unique(2, schoolscode, 11);
+                status = Convert.ToInt32(lblNum.Text);
+                trackCode = ViewState["TranckerCode"].ToString();
+                UCode = Generate_RandomStringTemp(8);
+                flag = "I";
+            }
+            else
+            {
+                flag = "U";
+                lblNum.Text = "0";
+            }
+            TextBox txtrdate = (TextBox)grdform8.Rows[rowIndex].FindControl("txtrecivedate");
+            TextBox txtcdate = (TextBox)grdform8.Rows[rowIndex].FindControl("txtcollectiondate");
+            Rdate = txtrdate.Text;
+            Cdate = txtcdate.Text;
+            result = SaveDataGrid(UCode, vCODE, SCode, Rdate, Cdate, NGirls, NBoys, ERdate, ECdate, ENgirls, ENboys, flag, formID, trackCode, Tbcode, Convert.ToInt32(lblNum.Text), Session["username"].ToString(), 1, "", "");
             if (result > 0)
             {
-
                 ViewState["NumNo"] = "";
                 ViewState["TranckerCode"] = "";
                 lblNum.Text = "0";
                 GVMainBind();
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved Successfully')</script>", false);
                 return;
-
-
             }
 
         }
@@ -3502,54 +3285,30 @@ public partial class frmTrackerNew : System.Web.UI.Page
 
             if (formID == 12)
             {
-               
-                
-            GridViewRow gvr = ((GridViewRow)(((ImageButton)sender)).NamingContainer);
-            int rowIndex = gvr.RowIndex;
-            Label uidcode = (Label)grdform9.Rows[rowIndex].FindControl("lblUniqueCode");
-                    string UCode = uidcode.Text;
-                    if (UCode == "")
-                    {
-                       
-                            Unique(2, schoolscode, 12);
-                            status = Convert.ToInt32(lblNum.Text);
-                            trackCode = ViewState["TranckerCode"].ToString();
+                GridViewRow gvr = ((GridViewRow)(((ImageButton)sender)).NamingContainer);
+                int rowIndex = gvr.RowIndex;
+                Label uidcode = (Label)grdform9.Rows[rowIndex].FindControl("lblUniqueCode");
+                string UCode = uidcode.Text;
+                if (UCode == "")
+                {
 
-
-
-                        UCode = Generate_RandomStringTemp(8);
-                        flag = "I";
-                    }
-                    else
-                    {
-                        lblNum.Text = "0";
-                        flag = "U";
-                    }
-                    //    trackCode = villagescode + "-" + "09" + "0" + row.RowIndex;
-
-
-                    TextBox txtrdate = (TextBox)grdform9.Rows[rowIndex].FindControl("txtrecivedate");
-                    TextBox txtcdate = (TextBox)grdform9.Rows[rowIndex].FindControl("txtcollectiondate");
-
-
-
-                    Rdate = txtrdate.Text;
-
-                    Cdate = txtcdate.Text;
-
-                    result = SaveDataGrid(UCode, vCODE, SCode, Rdate, Cdate, NGirls, NBoys, ERdate, ECdate, ENgirls, ENboys, flag, formID, trackCode, Tbcode, Convert.ToInt32(lblNum.Text), Session["username"].ToString(), 1, "", "");
-
-
-
-
-
-                
-
+                    Unique(2, schoolscode, 12);
+                    status = Convert.ToInt32(lblNum.Text);
+                    trackCode = ViewState["TranckerCode"].ToString();
+                    flag = "I";
+                }
+                else
+                {
+                    lblNum.Text = "0";
+                    flag = "U";
+                }
+                //    trackCode = villagescode + "-" + "09" + "0" + row.RowIndex;
+                TextBox txtrdate = (TextBox)grdform9.Rows[rowIndex].FindControl("txtrecivedate");
+                TextBox txtcdate = (TextBox)grdform9.Rows[rowIndex].FindControl("txtcollectiondate");
+                Rdate = txtrdate.Text;
+                Cdate = txtcdate.Text;
+                result = SaveDataGrid(UCode, vCODE, SCode, Rdate, Cdate, NGirls, NBoys, ERdate, ECdate, ENgirls, ENboys, flag, formID, trackCode, Tbcode, Convert.ToInt32(lblNum.Text), Session["username"].ToString(), 1, "", "");
             }
-
-
-
-
             if (result > 0)
             {
 
@@ -3568,7 +3327,6 @@ public partial class frmTrackerNew : System.Web.UI.Page
         {
         }
     }
-   
     protected void btnSave10_Click(object sender, ImageClickEventArgs e)
     {
         try
@@ -3592,77 +3350,65 @@ public partial class frmTrackerNew : System.Web.UI.Page
             {
                 SCode = "";
             }
-            
             int formID = Convert.ToInt32(ddlformatype.SelectedValue);
             string schoolscode = hdnschoolcode.Value;
             string villagescode = hdnvillagecode.Value;
             string value = "";
             Int32 status;
             Int32 mNewNo = 0;
-                GridViewRow gvr = ((GridViewRow)(((ImageButton)sender)).NamingContainer);
-                int rowIndex = gvr.RowIndex;
-                Label uidcode = (Label)grdform12.Rows[rowIndex].FindControl("lblUniqueCode");
-           
-                string UCode = uidcode.Text;
-                if (UCode == "")
-                {
-                   
-                        Unique(2, schoolscode, 13);
-                        status = Convert.ToInt32(lblNum.Text);
-                        trackCode = ViewState["TranckerCode"].ToString();
+            GridViewRow gvr = ((GridViewRow)(((ImageButton)sender)).NamingContainer);
+            int rowIndex = gvr.RowIndex;
+            Label uidcode = (Label)grdform12.Rows[rowIndex].FindControl("lblUniqueCode");
 
+            string UCode = uidcode.Text;
+            if (UCode == "")
+            {
+                Unique(2, schoolscode, 13);
+                status = Convert.ToInt32(lblNum.Text);
+                trackCode = ViewState["TranckerCode"].ToString();
+                UCode = Generate_RandomStringTemp(8);
+                flag = "I";
+            }
+            else
+            {
+                lblNum.Text = "0";
+                flag = "U";
+            }
 
-                    UCode = Generate_RandomStringTemp(8);
-                    flag = "I";
-                }
-                else
-                {
-                    lblNum.Text = "0";
-                    flag = "U";
-                }
+            //TextBox txtrdate = (TextBox)row.FindControl("txtrecivedate");
+            //TextBox txtcdate = (TextBox)row.FindControl("txtcollectiondate");
 
+            DropDownList ddltb = (DropDownList)grdform12.Rows[rowIndex].FindControl("ddltb");
 
+            TextBox txtreciveddate = (TextBox)grdform12.Rows[rowIndex].FindControl("txtrecivedate");
+            TextBox txtcollectiondate = (TextBox)grdform12.Rows[rowIndex].FindControl("txtcollectiondate");
 
-                //TextBox txtrdate = (TextBox)row.FindControl("txtrecivedate");
-                //TextBox txtcdate = (TextBox)row.FindControl("txtcollectiondate");
+            TextBox txtngirls = (TextBox)grdform12.Rows[rowIndex].FindControl("txtnoofgirls");
+            TextBox txtnboys = (TextBox)grdform12.Rows[rowIndex].FindControl("txtNoOfBoys");
 
-                DropDownList ddltb = (DropDownList)grdform12.Rows[rowIndex].FindControl("ddltb");
+            TextBox txtereciveddate = (TextBox)grdform12.Rows[rowIndex].FindControl("txtendrecivedate");
+            TextBox txtecollectiondate = (TextBox)grdform12.Rows[rowIndex].FindControl("txtendcollectiondate");
 
-                TextBox txtreciveddate = (TextBox)grdform12.Rows[rowIndex].FindControl("txtrecivedate");
-                TextBox txtcollectiondate = (TextBox)grdform12.Rows[rowIndex].FindControl("txtcollectiondate");
+            TextBox txtengirls = (TextBox)grdform12.Rows[rowIndex].FindControl("txtenoofgirls");
+            TextBox txtenboys = (TextBox)grdform12.Rows[rowIndex].FindControl("txteNoOfBoys");
 
-                TextBox txtngirls = (TextBox)grdform12.Rows[rowIndex].FindControl("txtnoofgirls");
-                TextBox txtnboys = (TextBox)grdform12.Rows[rowIndex].FindControl("txtNoOfBoys");
+            Tbcode = ddltb.SelectedValue;
 
-                TextBox txtereciveddate = (TextBox)grdform12.Rows[rowIndex].FindControl("txtendrecivedate");
-                TextBox txtecollectiondate = (TextBox)grdform12.Rows[rowIndex].FindControl("txtendcollectiondate");
+            Rdate = txtreciveddate.Text;
 
-                TextBox txtengirls = (TextBox)grdform12.Rows[rowIndex].FindControl("txtenoofgirls");
-                TextBox txtenboys = (TextBox)grdform12.Rows[rowIndex].FindControl("txteNoOfBoys");
+            Cdate = txtcollectiondate.Text;
 
-                Tbcode = ddltb.SelectedValue;
+            NGirls = Convert.ToInt32(txtngirls.Text);
 
-                Rdate = txtreciveddate.Text;
+            NBoys = Convert.ToInt32(txtnboys.Text);
 
-                Cdate = txtcollectiondate.Text;
+            ERdate = "";
+            ECdate = "";
 
-                NGirls = Convert.ToInt32(txtngirls.Text);
+            ENgirls = 0;
 
-                NBoys = Convert.ToInt32(txtnboys.Text);
-
-                ERdate = "";
-                ECdate = "";
-               
-                    ENgirls = 0;
-              
-                    ENboys = 0;
-            
-
-                result = SaveDataGrid(UCode, vCODE, SCode, Rdate, Cdate, NGirls, NBoys, ERdate, ECdate, ENgirls, ENboys, flag, formID, trackCode, Tbcode, Convert.ToInt32(lblNum.Text), Session["username"].ToString(), 1, "", "");
-
-            
-
-
+            ENboys = 0;
+            result = SaveDataGrid(UCode, vCODE, SCode, Rdate, Cdate, NGirls, NBoys, ERdate, ECdate, ENgirls, ENboys, flag, formID, trackCode, Tbcode, Convert.ToInt32(lblNum.Text), Session["username"].ToString(), 1, "", "");
             if (result > 0)
             {
 
@@ -3672,18 +3418,12 @@ public partial class frmTrackerNew : System.Web.UI.Page
                 GVMainBind();
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved Successfully')</script>", false);
                 return;
-
-
             }
-
         }
         catch (Exception)
         {
         }
     }
-
-
-
     protected void btnApprove12_Click(object sender, ImageClickEventArgs e)
     {
         GridViewRow gvr = ((GridViewRow)(((ImageButton)sender)).NamingContainer);
@@ -3691,21 +3431,19 @@ public partial class frmTrackerNew : System.Web.UI.Page
         Label uidcode = (Label)grdform12.Rows[rowIndex].FindControl("lblUniqueCode");
         Int32 result = 0;
 
-        if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30" )
+        if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30")
         {
-         
-         result=    objMain.ApproveTracker(uidcode.Text, 1, 2, Session["username"].ToString());
+
+            result = objMain.ApproveTracker(uidcode.Text, 1, 2, Session["username"].ToString());
 
         }
         if (Session["user_level"].ToString() == "112")
         {
             result = objMain.ApproveTracker(uidcode.Text, 1, 3, Session["username"].ToString());
         }
-      
         if (result > 0)
         {
-
-          GVMainBind();
+            GVMainBind();
             ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Approve Successfully')</script>", false);
             return;
         }
@@ -3722,7 +3460,7 @@ public partial class frmTrackerNew : System.Web.UI.Page
         if (Session["user_level"].ToString() == "39" || Session["user_level"].ToString() == "30")
         {
 
-            result = objMain.ApproveTracker(uidcode.Text, 1, 4 ,Session["username"].ToString());
+            result = objMain.ApproveTracker(uidcode.Text, 1, 4, Session["username"].ToString());
 
         }
         if (Session["user_level"].ToString() == "112")
@@ -4085,23 +3823,14 @@ public partial class frmTrackerNew : System.Web.UI.Page
 
             //TextBox txtrdate = (TextBox)row.FindControl("txtrecivedate");
             //TextBox txtcdate = (TextBox)row.FindControl("txtcollectiondate");
-
             DropDownList ddltb = (DropDownList)grdform13.Rows[rowIndex].FindControl("ddltb");
-
-     
-
-        
-
             TextBox txtereciveddate = (TextBox)grdform13.Rows[rowIndex].FindControl("txtendrecivedate");
             TextBox txtecollectiondate = (TextBox)grdform13.Rows[rowIndex].FindControl("txtendcollectiondate");
-
             TextBox txtengirls = (TextBox)grdform13.Rows[rowIndex].FindControl("txtenoofgirls");
             TextBox txtenboys = (TextBox)grdform13.Rows[rowIndex].FindControl("txteNoOfBoys");
 
             if (txtereciveddate.Text == "")
             {
-
-               
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Enter Recivedate')</script>", false);
                 return;
             }

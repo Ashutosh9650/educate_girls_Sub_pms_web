@@ -181,7 +181,7 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
 
         }
         // need to catch possible exceptions
-        catch (Exception ex)
+        catch
         {
             //lbl_messages.Text = ex.ToString();
             //ModalAlert.Show();
@@ -330,13 +330,11 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
         {
             lbl_messages.Text = ex.ToString();
             ModalAlert.Show();
-
         }
         finally
         {
 
         }
-
     }
     public DataSet SP_Check_District_Excel_ImportCheck()
     {
@@ -604,9 +602,6 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
                     //    zip.AddFiles(file, foldername);
                     zip.Save(Server.MapPath(Comman.GetImagePath("DataBackupPath")) + "/" + datafolder + "" + ".zip");
                 }
-
-
-
                 HttpResponse Response = HttpContext.Current.Response; Response.Clear(); Response.ClearHeaders(); Response.Charset = "UTF-8";
                 fs = File.Open(fullPath, FileMode.Open);
                 byte[] bytBytes = new byte[(fs.Length)];
@@ -682,15 +677,12 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
             strtemptblmstGroup += " INTO #temp_" + strParentTable_Name + " FROM " + strParentTable_Name + " ";
             strtemptblmstGroup += " where DISECode is null ";
             // ConStr = new SqlConnection("Data Source=EducateGirls.db.3975866.hostedresource.com;Initial Catalog=EducateGirls;User Id=educategirls;Password=mw2Master1EG0!");
-
         }
 
         if (strParentTable_Name == "T_mstVillage")
         {
             strtemptblmstGroup = "";
             strtemptblmstGroup += " SELECT  [StateCode],[DistrictCode] ,[BlockCode] ,[MainBlockCode],[MainBlockName],[ClusterCode],[GP_CODE],[VillageCode],[VillageName],OldUniqueCode ";
-
-
             strtemptblmstGroup += " INTO #temp_" + strParentTable_Name + " FROM " + strParentTable_Name + " ";
             strtemptblmstGroup += " where VillageCode is null ";
             // ConStr = new SqlConnection("Data Source=EducateGirls.db.3975866.hostedresource.com;Initial Catalog=EducateGirls;User Id=educategirls;Password=mw2Master1EG0!");

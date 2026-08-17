@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Data;
 using System.Linq;
-using System.Web;
+using System.Threading;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Data;
-using System.Data.SqlClient;
-using System.IO;
-using System.Globalization;
-using System.Drawing;
-using System.Threading;
-
-
 public partial class frmTrackerNewOld : System.Web.UI.Page
 {
     clsMain objMain = new clsMain();
@@ -288,8 +280,6 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
         }
 
     }
-
-  
     public void LoadUserLeavel()
     {
         conditions = "";
@@ -566,21 +556,20 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
             case "11":
             case "12":
             case "13":
-
                 if (ddlschool.SelectedValue != null && ddlschool.SelectedIndex > 0)
                 {
                     str += " and SchoolCode='" + ddlschool.SelectedValue.ToString() + "'";
                     //dtmstM = objMain.Tracker(str, typevalue);
                     dtmstM = objMain.LoadData("select UniqueCode, mst5Village.VillageCode, SchoolCode,ReceivedDate,CollectionDate,NoOfGirls,NoOfBoys,TBcode,EndlineReceivingDate,EndlineCollectionDate,EndlineNoofGirls,EndlineNoofBoysPresent,FormCode from tblTracker  inner join mst5Village on mst5Village.VillageCode = tblTracker.VillageCode inner join mst1State on mst1State.StateCode=mst5Village.StateCode inner join mst2District on mst2District.DistrictCode=mst5Village.DistrictCode inner join mst3Block on mst3Block.BlockCode=mst5Village.BlockCode inner join mstPanchayat on mstPanchayat.PanchayatCode=mst5Village.PanchayatCode" + str + "and" + " tblTracker.FormID = " + typevalue);
-                
+
                     dtschool = objMain.LoadData("select DISECode from mstSchool where SchoolCode = '" + ddlschool.SelectedValue + "'");
                     hdnschoolcode.Value = dtschool.Rows[0]["DISECode"].ToString();
                     if (typevalue == "13")
                     {
-                         dtddl = objMain.LoadData("select TBCode,TBName from mstTeamBalika ");
-                         ViewState["DDown"] = dtddl;
+                        dtddl = objMain.LoadData("select TBCode,TBName from mstTeamBalika ");
+                        ViewState["DDown"] = dtddl;
                     }
-                   
+
 
                 }
                 break;
@@ -608,7 +597,7 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
             {
                 Grdform6.Visible = true;
 
-                      grdform7.Visible = false;
+                grdform7.Visible = false;
                 grdform8.Visible = false;
                 grdform9.Visible = false;
                 grdform12.Visible = false;
@@ -622,12 +611,11 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
 
 
             }
-            if (typevalue == "10" )
+            if (typevalue == "10")
             {
                 grdform7.Visible = true;
 
                 Grdform6.Visible = false;
-               
                 grdform8.Visible = false;
                 grdform9.Visible = false;
                 grdform12.Visible = false;
@@ -638,9 +626,7 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
                 grdform7.Columns[3].Visible = true;
                 pnlMain.Visible = true;
                 pnlMain.Enabled = true;
-                
-
-               //  || typevalue == "11"  || typevalue == "12"
+                //  || typevalue == "11"  || typevalue == "12"
             }
             if (typevalue == "11")
             {
@@ -648,7 +634,6 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
 
                 Grdform6.Visible = false;
                 grdform7.Visible = false;
-                
                 grdform9.Visible = false;
                 grdform12.Visible = false;
 
@@ -667,7 +652,6 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
                 Grdform6.Visible = false;
                 grdform7.Visible = false;
                 grdform8.Visible = false;
-               
                 grdform12.Visible = false;
 
                 grdform9.DataSource = dtmstM;
@@ -713,7 +697,6 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
 
                     string header = ddlformatype.SelectedItem.Text;
                     Grdform6.Visible = true;
-                    
                     grdform7.Visible = false;
                     grdform8.Visible = false;
                     grdform9.Visible = false;
@@ -770,7 +753,6 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
                     grdform9.DataSource = dtmstM;
                     grdform9.DataBind();
                     grdform9.Dispose();
-                    
                     pnlMain.Visible = true;
                     pnlMain.Enabled = true;
                 }
@@ -1051,7 +1033,7 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
             Response.Write("ViewState is null");
         }
         ScriptManager.RegisterStartupScript(Page, Page.GetType(), "funtions", "AddCollapsClass()", true);
-  
+
     }
 
 
@@ -1131,7 +1113,6 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
             {
                 DropDownList ddltb1 = (DropDownList)e.Row.FindControl("ddltb");
                 ddltb1.DataSource = dtdropdown;
-                
                 ddltb1.DataTextField = "TBName";
                 ddltb1.DataValueField = "TBCode";
                 ddltb1.DataBind();
@@ -1214,7 +1195,7 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
             dt = objMain.LoadData(" select UniqueCode, VillageCode, Value, ComboID, tbl_CVverfication.FormID ,tbl_CVverfication.CV_UID, mstCVverfication.CV_FieldName,mstCVverfication.CV_MaxLimit,mstCVverfication.CV_MaxLimit,mstCVverfication.CV_Validation, mstCVverfication.CV_FieldType  from  tbl_CVverfication inner join mstCVverfication on mstCVverfication.CV_UID = tbl_CVverfication.CV_UID where VillageCode ='" + VCode + "'and tbl_CVverfication.FormID = " + FID);
 
         }
-        catch (Exception ex)
+        catch
         {
         }
         if (dt.Rows.Count > 0)
@@ -1233,14 +1214,9 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
 
     protected void btnsave_Click(object sender, EventArgs e)
     {
-
-       // SaveData();
         GVMainBind();
         pnlMain.Visible = true;
         //Gv_Profile_Search.Visible = false;
-
-
-
     }
 
     //public void cleargrids()
@@ -1256,57 +1232,56 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
     //    grdform12.Visible = false;
     //}
 
-    public void Unique(Int32 Type,string Code)
+    public void Unique(Int32 Type, string Code)
     {
-       
-                Int32 mNewNo = 0;
-                string strAlias;
-                string strQry = "";
-                if (Type == 1)
+
+        Int32 mNewNo = 0;
+        string strAlias;
+        string strQry = "";
+        if (Type == 1)
+        {
+            strQry = " Select top 1 isnull(max(SerialNo),0) as Serial from tblTracker where VillageCode='" + ddlVillage.SelectedValue + "'   ";
+        }
+        if (Type == 2)
+        {
+            strQry = " Select top 1 isnull(max(SerialNo),0) as Serial from tblTracker where Schoolcode='" + ddlschool.SelectedValue + "'   ";
+        }
+        DataTable dt = objMain.LoadData(strQry);
+
+
+        if (Code.Length > 0)
+        {
+
+            if (dt.Rows.Count > 0)
+            {
+                if (dt.Rows[0]["Serial"].ToString() == "" || dt.Rows[0]["Serial"].ToString() == "-1")
                 {
-                    strQry = " Select top 1 isnull(max(SerialNo),0) as Serial from tblTracker where VillageCode='" + ddlVillage.SelectedValue + "'   ";
+                    mNewNo += 1;
+                    strAlias = mNewNo.ToString().PadLeft(5, '0');
+                    ViewState["TranckerCode"] = Code + "-" + strAlias;
+                    ViewState["NumNo"] = strAlias;
+
+                    lblNum.Text = mNewNo.ToString();
                 }
-                if (Type == 2)
+                else
                 {
-                    strQry = " Select top 1 isnull(max(SerialNo),0) as Serial from tblTracker where Schoolcode='" + ddlschool.SelectedValue + "'   ";
+                    mNewNo = Convert.ToInt32(dt.Rows[0]["Serial"].ToString());
+                    mNewNo += 1;
+                    strAlias = mNewNo.ToString().PadLeft(5, '0');
+
+                    ViewState["NumNo"] = strAlias;
+                    ViewState["TranckerCode"] = Code + "-" + strAlias;
+                    lblNum.Text = mNewNo.ToString();
                 }
-                DataTable dt = objMain.LoadData(strQry);
+            }
 
-                
-                if (Code.Length > 0)
-                {
 
-                    if (dt.Rows.Count > 0)
-                    {
-                        if (dt.Rows[0]["Serial"].ToString() == "" || dt.Rows[0]["Serial"].ToString() == "-1")
-                        {
-                            mNewNo += 1;
-                            strAlias = mNewNo.ToString().PadLeft(5, '0');
-                            ViewState["TranckerCode"] = Code + "-" + strAlias;
-                            ViewState["NumNo"] = strAlias;
+        }
 
-                            lblNum.Text = mNewNo.ToString();
-                        }
-                        else
-                        {
-                            mNewNo = Convert.ToInt32(dt.Rows[0]["Serial"].ToString());
-                            mNewNo += 1;
-                            strAlias = mNewNo.ToString().PadLeft(5, '0');
 
-                            ViewState["NumNo"] = strAlias;
-                            ViewState["TranckerCode"] = Code + "-" + strAlias;
-                            lblNum.Text = mNewNo.ToString();
-                        }
-                    }
-                                     
-
-                }
-               
-        
 
     }
-
-    public void SaveData(Int32 S1,string ApproveIo,string ApproveAu)
+    public void SaveData(Int32 S1, string ApproveIo, string ApproveAu)
     {
         int result = 0;
         try
@@ -1362,7 +1337,7 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
                         {
                             mNewNo = Convert.ToInt32(lblNum.Text);
                             mNewNo += 1;
-                            string   strAlias = mNewNo.ToString().PadLeft(5, '0');
+                            string strAlias = mNewNo.ToString().PadLeft(5, '0');
 
                             ViewState["NumNo"] = strAlias;
                             ViewState["TranckerCode"] = schoolscode + "-" + strAlias;
@@ -1376,14 +1351,12 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
                     {
                         flag = "U";
                     }
-                   // trackCode = schoolscode + "-" + "06" + "0" + row.RowIndex;
+                    // trackCode = schoolscode + "-" + "06" + "0" + row.RowIndex;
 
                     TextBox txtrdate = (TextBox)row.FindControl("txtrecivedate");
                     TextBox txtcdate = (TextBox)row.FindControl("txtcollectiondate");
                     TextBox txtgirl = (TextBox)row.FindControl("txtnoofgirols");
                     TextBox txtboy = (TextBox)row.FindControl("txtNoOfBoys");
-
-                    
                     Rdate = txtrdate.Text;
 
                     Cdate = txtcdate.Text;
@@ -1392,7 +1365,7 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
 
                     NBoys = Convert.ToInt32(txtboy.Text);
 
-                   result= SaveDataGrid(UCode, vCODE, SCode, Rdate, Cdate, NGirls, NBoys, ERdate, ECdate, ENgirls, ENboys, flag, formID, trackCode, Tbcode, Convert.ToInt32(lblNum.Text), Session["username"].ToString(), S1, ApproveIo, ApproveAu);
+                    result = SaveDataGrid(UCode, vCODE, SCode, Rdate, Cdate, NGirls, NBoys, ERdate, ECdate, ENgirls, ENboys, flag, formID, trackCode, Tbcode, Convert.ToInt32(lblNum.Text), Session["username"].ToString(), S1, ApproveIo, ApproveAu);
 
 
                 }
@@ -1435,11 +1408,7 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
                     {
                         flag = "U";
                     }
-                   // trackCode = villagescode + "-" + "07" + "0" + row.RowIndex;
-
-                    
-
-
+                    // trackCode = villagescode + "-" + "07" + "0" + row.RowIndex;
                     TextBox txtrdate = (TextBox)row.FindControl("txtrecivedate");
                     TextBox txtcdate = (TextBox)row.FindControl("txtcollectiondate");
 
@@ -1447,12 +1416,12 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
 
                     Rdate = txtrdate.Text;
 
-                   // SaveDataGrid(UCode, vCODE, SCode, trackid, value, trackCode, formID, flag);
+                    // SaveDataGrid(UCode, vCODE, SCode, trackid, value, trackCode, formID, flag);
 
 
                     Cdate = txtcdate.Text;
 
-                   result= SaveDataGrid(UCode, vCODE, SCode, Rdate, Cdate, NGirls, NBoys, ERdate, ECdate, ENgirls, ENboys, flag, formID, trackCode, Tbcode, Convert.ToInt32(lblNum.Text), Session["username"].ToString(), S1, ApproveIo, ApproveAu);
+                    result = SaveDataGrid(UCode, vCODE, SCode, Rdate, Cdate, NGirls, NBoys, ERdate, ECdate, ENgirls, ENboys, flag, formID, trackCode, Tbcode, Convert.ToInt32(lblNum.Text), Session["username"].ToString(), S1, ApproveIo, ApproveAu);
 
 
 
@@ -1499,10 +1468,6 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
                         flag = "U";
                     }
                     trackCode = villagescode + "-" + "08" + "0" + row.RowIndex;
-
-                   
-
-
                     TextBox txtrdate = (TextBox)row.FindControl("txtrecivedate");
                     TextBox txtcdate = (TextBox)row.FindControl("txtcollectiondate");
 
@@ -1513,7 +1478,7 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
 
                     Cdate = txtcdate.Text;
 
-                 result=   SaveDataGrid(UCode, vCODE, SCode, Rdate, Cdate, NGirls, NBoys, ERdate, ECdate, ENgirls, ENboys, flag, formID, trackCode, Tbcode, Convert.ToInt32(lblNum.Text), Session["username"].ToString(), S1, ApproveIo, ApproveAu);
+                    result = SaveDataGrid(UCode, vCODE, SCode, Rdate, Cdate, NGirls, NBoys, ERdate, ECdate, ENgirls, ENboys, flag, formID, trackCode, Tbcode, Convert.ToInt32(lblNum.Text), Session["username"].ToString(), S1, ApproveIo, ApproveAu);
 
 
 
@@ -1571,8 +1536,7 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
 
                     Cdate = txtcdate.Text;
 
-                  result=  SaveDataGrid(UCode, vCODE, SCode, Rdate, Cdate, NGirls, NBoys, ERdate, ECdate, ENgirls, ENboys, flag, formID, trackCode, Tbcode, Convert.ToInt32(lblNum.Text), Session["username"].ToString(), S1, ApproveIo, ApproveAu);
-
+                    result = SaveDataGrid(UCode, vCODE, SCode, Rdate, Cdate, NGirls, NBoys, ERdate, ECdate, ENgirls, ENboys, flag, formID, trackCode, Tbcode, Convert.ToInt32(lblNum.Text), Session["username"].ToString(), S1, ApproveIo, ApproveAu);
 
 
 
@@ -1645,7 +1609,6 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
                     Cdate = txtcollectiondate.Text;
 
                     NGirls = Convert.ToInt32(txtngirls.Text);
-                   
                     NBoys = Convert.ToInt32(txtnboys.Text);
 
                     ERdate = txtereciveddate.Text;
@@ -1654,7 +1617,7 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
                     ENgirls = Convert.ToInt32(txtengirls.Text);
                     ENboys = Convert.ToInt32(txtenboys.Text);
 
-                result=  SaveDataGrid(UCode, vCODE, SCode, Rdate, Cdate, NGirls, NBoys, ERdate, ECdate, ENgirls, ENboys, flag, formID, trackCode, Tbcode, Convert.ToInt32(lblNum.Text), Session["username"].ToString(), S1, ApproveIo, ApproveAu);
+                    result = SaveDataGrid(UCode, vCODE, SCode, Rdate, Cdate, NGirls, NBoys, ERdate, ECdate, ENgirls, ENboys, flag, formID, trackCode, Tbcode, Convert.ToInt32(lblNum.Text), Session["username"].ToString(), S1, ApproveIo, ApproveAu);
 
 
 
@@ -1665,61 +1628,24 @@ public partial class frmTrackerNewOld : System.Web.UI.Page
             }
 
         }
-        catch (Exception ex)
+        catch
         {
         }
         if (result > 0)
         {
-
             ViewState["NumNo"] = "";
             ViewState["TranckerCode"] = "";
-            lblNum.Text ="0";
-
-                ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved Successfully')</script>", false);
-                return;
-
-            
+            lblNum.Text = "0";
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved Successfully')</script>", false);
+            return;
         }
-
-
-
-
-
-
     }
-
-
     public int SaveDataGrid(string GUID, string VCODE, string SCODE, string Rdate, string Cdate, int Ngirls, int nboys, string ERdate, string ECdate, int ENgirls, int Enboys, string Flag, int formid, string trackCode, string Tbcode, Int32 serial, string createby, Int32 Status, string ApptoveByIO, string ApptoveByA)
     {
         int Result = 0;
-        if (Flag == "U")
-        {
 
-            string MyConnection2 = SqlHelper.mainConnectionString;
-            string Query = "UPDATE tblTracker SET [ReceivedDate] = '" + Rdate + "' , [ModifyBy] = '" + createby + "',[ModifyDate] = '" + DateTime.Now.ToString("yyyy-MM-dd") + "', [Status] = '" + ApptoveByIO + "' , [ApptoveByIO] = '" + ApptoveByIO + "', [ApptoveByA] = '" + ApptoveByA + "', CollectionDate='" + Cdate + "' , NoOfGirls='" + Ngirls + "' , NoOfBoys='" + nboys + "' , EndlineReceivingDate='" + ERdate + "' , EndlineCollectionDate='" + ECdate + "' , EndlineNoofGirls='" + ENgirls + "' , TBcode='" + Tbcode + "' , EndlineNoofBoysPresent='" + Enboys + "' where UniqueCode='" + GUID + "' and FormID='" + formid + "'";
-            SqlConnection MyConn2 = new SqlConnection(MyConnection2);
-            SqlCommand MyCommand2 = new SqlCommand(Query, MyConn2);
-
-            MyConn2.Open();
-          Result=  MyCommand2.ExecuteNonQuery();
-
-            MyConn2.Close();
-        }
-        else if (Flag == "I")
-        {
-            string MyConnection2 = SqlHelper.mainConnectionString;
-            string Query = " insert into tblTracker([UniqueCode]  ,[VillageCode]   ,[SchoolCode] ,[ReceivedDate],[CollectionDate] ,[NoOfGirls] ,[NoOfBoys],[EndlineReceivingDate],[EndlineCollectionDate],[EndlineNoofGirls] ,[EndlineNoofBoysPresent], [FormCode],[TBcode] ,[FormID],SerialNo,CreateDate,CreateBy,Status ) values ('" + GUID + "','" + VCODE + "','" + SCODE + "','" + Rdate + "','" + Cdate + "','" + Ngirls + "','" + nboys + "','" + ERdate + "','" + ECdate + "','" + ENgirls + "','" + Enboys + "','" + trackCode + "','" + Tbcode + "','" + formid + "' ,'" + serial + "' ,'" + DateTime.Now.ToString("yyyy-MM-dd") + "','" + createby + "' ,'" + Status + "' )";  
-            SqlConnection MyConn2 = new SqlConnection(MyConnection2);
-            SqlCommand MyCommand2 = new SqlCommand(Query, MyConn2);
-
-            MyConn2.Open();
-            Result = MyCommand2.ExecuteNonQuery();
-
-            MyConn2.Close();
-        }
         return 1;
     }
-
     public string Generate_RandomStringTemp(int NoChar)
     {
         Thread.Sleep(200);

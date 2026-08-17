@@ -37,8 +37,6 @@ public partial class frmdownloadsac : System.Web.UI.Page
                     Response.Write("Image not found.");
                     Response.End();
                 }
-
-
             }
             else
             {
@@ -46,10 +44,6 @@ public partial class frmdownloadsac : System.Web.UI.Page
 
             }
         }
-
-
-
-
     }
    
 }

@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Security.Cryptography;
-using System.Web.Security;
 using System.Text;
 using System.Text.RegularExpressions;
 /// <summary>
@@ -11,8 +8,7 @@ using System.Text.RegularExpressions;
 /// </summary>
 public class Password
 {
-    private static readonly int Password_saltArraySize = 16;
-
+    private static readonly int Password_saltArraySize = Comman.PasswordSaltSize;
     //public Password()
     //{
     //    //
@@ -30,7 +26,11 @@ public class Password
         // Return a Base64 string representation of the random number
         return Convert.ToBase64String(buff);
     }
+    public string CreatePasswordHashSecurityAudit(string pwd)
+    {
 
+        return pwd;
+    }
     public static string CreatePasswordHash(string pwd)
     {
         string saltAndPwd = String.Concat(pwd, Password_saltArraySize.ToString());
@@ -41,7 +41,7 @@ public class Password
         return hashedPwd;
     }
 
-    public  string CreatePasswordHashNew(string pwd)
+    public string CreatePasswordHashNew(string pwd)
     {
         string saltAndPwd = String.Concat(pwd, Password_saltArraySize.ToString());
         HashAlgorithm hashAlgorithm = SHA512.Create();
@@ -64,7 +64,7 @@ public class Password
     public static bool VerifyPassword(string userPassword, string dbUserPassword)
     {
         bool passwordMatch = false;
-        if(dbUserPassword.Equals(""))
+        if (dbUserPassword.Equals(""))
             return false;
         string salt = dbUserPassword.Substring(dbUserPassword.Length - CreateSalt(Password_saltArraySize).Length);
         string hashedPasswordAndSalt = CreatePasswordHash(userPassword);
@@ -75,8 +75,8 @@ public class Password
     public static bool CheckPasswordAgainstPolicy(string username, string password)
     {
         bool passwordValid = true;
-        string patthern = @"^.*(?=.{6,})(?=.*[a-z])(?=.*[A-Z])(?=.*[\d]).*$"; 
-       // string patthern = @"^.*(?=.{6,})(?=.*[a-z])(?=.*[A-Z])(?=.*[\d])(?=.*[$]).*$"; 
+        string patthern = @"^.*(?=.{6,})(?=.*[a-z])(?=.*[A-Z])(?=.*[\d]).*$";
+        // string patthern = @"^.*(?=.{6,})(?=.*[a-z])(?=.*[A-Z])(?=.*[\d])(?=.*[$]).*$"; 
         //Password should contain one upper case letter, one lower case letter, one special character and one digit and should be atlease of six characters
         if (!Regex.IsMatch(password, patthern))
         {
@@ -92,15 +92,15 @@ public class Password
 
     public static string checkpasswordCharacters(string password)
     {
-        string msg = "";       
+        string msg = "";
         Regex len = new Regex("^.{6,15}$");
         Regex num = new Regex("\\d");
-       // Regex alphaL = new Regex("\\D");
+        // Regex alphaL = new Regex("\\D");
         Regex alphaL = new Regex("[a-z]");
         Regex alphaU = new Regex("[A-Z]");
-       // Regex special = new Regex("[><#@=._!$-]"); 
+        // Regex special = new Regex("[><#@=._!$-]"); 
 
-        if (!len.IsMatch(password) )
+        if (!len.IsMatch(password))
         {
             msg += "-Minimum password length is 6 characters <br/>";
         }
@@ -120,28 +120,26 @@ public class Password
         //{
         //    msg += "-Please enter atleast one special Character <br/>";
         //}
-        
-        return msg;       
-
+        return msg;
     }
-   // private static string checkpsdpattern(string str)
-   // {    
-   //string msg="";
+    // private static string checkpsdpattern(string str)
+    // {    
+    //string msg="";
 
-   //string password = "456tgfd>";
-   //Regex len = new Regex("^.{8,10}$");
-   //Regex num = new Regex("\\d");
-   //Regex alpha = new Regex("\\D");
-   //Regex special = new Regex("[><%#@]"); // Put  here more special characters
+    //string password = "456tgfd>";
+    //Regex len = new Regex("^.{8,10}$");
+    //Regex num = new Regex("\\d");
+    //Regex alpha = new Regex("\\D");
+    //Regex special = new Regex("[><%#@]"); // Put  here more special characters
 
-   //if (len.IsMatch(password) && num.IsMatch(password) && alpha.IsMatch(password) && special.IsMatch(password))
-   //{
-   //    // successful match - write your code here
-   //}
-   // return msg;
+    //if (len.IsMatch(password) && num.IsMatch(password) && alpha.IsMatch(password) && special.IsMatch(password))
+    //{
+    //    // successful match - write your code here
+    //}
+    // return msg;
 
-    
-   // }
+
+    // }
 
     private static bool CheckPatterInString(string username, string password)
     {

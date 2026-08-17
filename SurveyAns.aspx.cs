@@ -174,13 +174,12 @@ public partial class SurveyAns : System.Web.UI.Page
     public void FillFormName()
     {
         //string UserID = Session["UserID"].ToString();
-        
         DataTable dt = new DataTable();
         //int FormLevel;
        
-            dt = Get_DataFor3Filter("USP_GetSurveyOnAgencyAndLevelForm", "", ddlForm.SelectedValue.ToString(), "");
-            //dt = objBLL.Select_All_Data("MSTForm", "FormID,FormName", "IsDeleted = 0 and FormLevel = " + FormLevel  + " ", "", "");
-          
+        dt = Get_DataFor3Filter("USP_GetSurveyOnAgencyAndLevelForm", "", ddlForm.SelectedValue.ToString(), "");
+        //dt = objBLL.Select_All_Data("MSTForm", "FormID,FormName", "IsDeleted = 0 and FormLevel = " + FormLevel  + " ", "", "");
+
         ddlForm.DataSource = dt;
         ddlForm.DataTextField = "FormName";
         ddlForm.DataValueField = "FormID";
@@ -214,9 +213,9 @@ public partial class SurveyAns : System.Web.UI.Page
     {
         DataTable dt = new DataTable();
         //hdnconditions.Value = Condition.ToString();
-        dt = Get_DataFor3Filter("USP_GetQuestionTraining20242025User", "0", FormID.ToString(),"0");
+        dt = Get_DataFor3Filter("USP_GetQuestionTraining20242025User", "0", FormID.ToString(), "0");
 
-      //  USP_GetQuestionTraining2024User
+        //  USP_GetQuestionTraining2024User
         Session["Ism"] = dt;
         //DataListQuestion.DataSource = dt;
         //DataListQuestion.DataBind();
@@ -277,8 +276,8 @@ public partial class SurveyAns : System.Web.UI.Page
         string Type, Questionid, Length;
         DataTable dtTempMSCommon = new DataTable();
         int QuestionType = 0;
-        DataTable dtMSCommon = Get_DataFor2Filter("USP_GetoptionsforWebSurvey", "4",ddlForm.SelectedValue);
-        int GID =0;
+        DataTable dtMSCommon = Get_DataFor2Filter("USP_GetoptionsforWebSurvey", "4", ddlForm.SelectedValue);
+        int GID = 0;
         int MGID = 0;
         sb.Append("<div class='container mt-3'> <div class='col-xl-12 col-lg-12 col-md-12 col-sm-12 m - auto p-0'><form class='form-horizontal'><table id='questions'  width='100%'> ");
         int icount = 0;
@@ -287,12 +286,12 @@ public partial class SurveyAns : System.Web.UI.Page
         {
             Questionid = dt.Rows[i]["QuestionId"].ToString();
             Length = dt.Rows[i]["MaxLenght"].ToString();
-            QuestionType= Convert.ToInt32(dt.Rows[i]["QuestionType"].ToString());
-            Type = gettypeofQuestion(dt.Rows[i]["QestionTypeID"].ToString(), dt.Rows[i]["Flag"].ToString(), dtMSCommon, dtTempMSCommon, Questionid, Length,Convert.ToInt32(dt.Rows[i]["MaskValidation"].ToString()), dt.Rows[i]["Value"].ToString(), dt.Rows[i]["QuestionAns"].ToString());
+            QuestionType = Convert.ToInt32(dt.Rows[i]["QuestionType"].ToString());
+            Type = gettypeofQuestion(dt.Rows[i]["QestionTypeID"].ToString(), dt.Rows[i]["Flag"].ToString(), dtMSCommon, dtTempMSCommon, Questionid, Length, Convert.ToInt32(dt.Rows[i]["MaskValidation"].ToString()), dt.Rows[i]["Value"].ToString(), dt.Rows[i]["QuestionAns"].ToString());
             icount = icount + 1;
             if (dt.Rows[i]["QestionTypeID"].ToString() == "9" && dt.Rows[i]["GroupID"].ToString() == "1")
             {
-                GID =Convert.ToInt32( Questionid);
+                GID = Convert.ToInt32(Questionid);
                 DataRow[] dr = dt.Select("GroupID=" + GID + "");
                 if (dr.Length > 0)
                 {
@@ -798,7 +797,7 @@ public partial class SurveyAns : System.Web.UI.Page
                     string FileName = Convert.ToString(fplUpload.PostedFile.FileName).Trim();//Path.GetFileName(excelFileUpload.PostedFile.FileName);
                                                                                              //ViewState["FileName"] = FileName;
                     hdnfilename.Value = FileName + DateTime.Now.ToString();
-                    string FilePath = Server.MapPath("~/SurveyFiles/") + FileName;
+                    string FilePath = Server.MapPath(Comman.GetImagePath("SurveyFilesPath") + "/") + FileName;
                     fplUpload.SaveAs(FilePath);
 
                 }
@@ -809,7 +808,7 @@ public partial class SurveyAns : System.Web.UI.Page
 
 
             }
-            catch (Exception ex)
+            catch
             {
                 //StatusLabel.Text = "Upload status: The file could not be uploaded. The following error occured: " + ex.Message;
             }
@@ -840,7 +839,7 @@ public partial class SurveyAns : System.Web.UI.Page
         //        //    string FileName = Convert.ToString(fplUpload.PostedFile.FileName).Trim();//Path.GetFileName(excelFileUpload.PostedFile.FileName);
         //        //                                                                             //ViewState["FileName"] = FileName;
 
-        //        //    FilePath = HttpContext.Current.Server.MapPath("~/SurveyFiles/") + FileName;
+        //        //    FilePath = HttpContext.Current.Server.MapPath(Comman.GetImagePath("SurveyFilesPath") + "/") + FileName;
         //        //    fplUpload.SaveAs(FilePath);
 
         //        //}
@@ -873,28 +872,28 @@ public partial class SurveyAns : System.Web.UI.Page
         {
             DateTime Fdate = Convert.ToDateTime(HttpContext.Current.Session["Fdate"]);
             DataTable dtCheck = HttpContext.Current.Session["Ism"] as DataTable;
-                string FormEvalGUID = "", GUID = "";
-                string UserID ="0";
-                string GUIDold ="0";
-                  string Flag = "0";
-                if (GUIDold == "0")
-                {
-                    GUID = Guid.NewGuid().ToString();
-                    FormEvalGUID = GUID + DateTime.Now;
-                }
-                else
-                {
-                    FormEvalGUID = GUIDold;
-                }
-                DataTable finaldt = (DataTable)JsonConvert.DeserializeObject(data, (typeof(DataTable)));
-                DataColumn newCol = new DataColumn("FormEvalGUID", typeof(string));
-                newCol.DefaultValue = FormEvalGUID.ToString();
-                newCol.AllowDBNull = true;
-                finaldt.Columns.Add(newCol);
-                string FID = HttpContext.Current.Session["FormID"] as string;
-                string point = "";
+            string FormEvalGUID = "", GUID = "";
+            string UserID = "0";
+            string GUIDold = "0";
+            string Flag = "0";
+            if (GUIDold == "0")
+            {
+                GUID = Guid.NewGuid().ToString();
+                FormEvalGUID = GUID + DateTime.Now;
+            }
+            else
+            {
+                FormEvalGUID = GUIDold;
+            }
+            DataTable finaldt = (DataTable)JsonConvert.DeserializeObject(data, (typeof(DataTable)));
+            DataColumn newCol = new DataColumn("FormEvalGUID", typeof(string));
+            newCol.DefaultValue = FormEvalGUID.ToString();
+            newCol.AllowDBNull = true;
+            finaldt.Columns.Add(newCol);
+            string FID = HttpContext.Current.Session["FormID"] as string;
+            string point = "";
             clsMain objBLL = new clsMain();
-            DataTable    dtcheck = objBLL.Get_DataFor8Filter("rptQuestionvaldation2026", FID, DistrictID);
+            DataTable dtcheck = objBLL.Get_DataFor8Filter("rptQuestionvaldation2026", FID, DistrictID);
             if (dtcheck.Rows.Count > 0)
             {
                 returndata = "Data Already Submitted" + "___" + Flag;
@@ -964,35 +963,29 @@ public partial class SurveyAns : System.Web.UI.Page
                             HttpContext.Current.Session["GUID"] = FormEvalGUID.Trim();
                             returndata = "Data Update Successfully." + "___" + Flag;
                         }
-                        else if (point == "3")
+                         else if (point == "3")
                         {
-                            Flag = "10";
-                            returndata = "Data Final Submitted." + "___" + Flag;
-                        }
-                        else if (point == "4")
-                        {
-                            Flag = "11";
+                            HttpContext.Current.Session["Formid"] = "1296";
                             returndata = "Data Final Submitted." + "___" + Flag;
                         }
                         else
                         {
-                            Flag = "12";
+										
                             returndata = "Please Fill Form." + "___" + Flag;
                         }
                     }
                     else
                     {
-                        Flag = "13";
+									
                         returndata = "Please Fill Form." + '-' + Flag;
                     }
                 }
-              
+
             }
         }
-        catch (Exception ex)
+        catch
         {
-            string gg = ex.ToString();
-            returndata = "Please Fill Form." + "___" + gg;
+            returndata = "Please Fill Form." + "___" + "0";
         }
 
         return returndata;

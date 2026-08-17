@@ -1,19 +1,12 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Vml.Spreadsheet;
-using Ionic.Zip;
-using NetTopologySuite;
+﻿using NetTopologySuite;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Ocsp;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -105,12 +98,11 @@ public partial class GIS : System.Web.UI.Page
             DataTable dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "rptLoadAllState", par1);
 
             return JsonConvert.SerializeObject(dt);
-        }
-        
+        }        
     }
 
     [WebMethod]
-    public static string GetDistricts(string stateId, string Fyear,string layertype)
+    public static string GetDistricts(string stateId, string Fyear, string layertype)
     {
         string districtCode = "";
         System.Data.DataTable dt = new DataTable();
@@ -118,16 +110,14 @@ public partial class GIS : System.Web.UI.Page
         if (user_level_Role == "1")
         {
 
-        }
-      
+        }      
         else
         {
             string[] items = Convert.ToString(HttpContext.Current.Session["DistrictCodeGIS2026"]).Split('#');
             districtCode = items[0];
         }
         if (user_level_Role == "1")
-        {
-           
+        {           
             using (SqlConnection con = new SqlConnection(conStr))
             {
                 if (layertype == "4" || layertype == "5")
@@ -155,8 +145,7 @@ public partial class GIS : System.Web.UI.Page
             }
         }
         else
-        {
-           
+        {           
             using (SqlConnection con = new SqlConnection(conStr))
             {
                 if (layertype == "4" || layertype == "5")
@@ -189,7 +178,7 @@ public partial class GIS : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static string GetBlocks(string districtId,string Fyear)
+    public static string GetBlocks(string districtId, string Fyear)
     {
         DataTable dt = new DataTable();
         using (SqlConnection con = new SqlConnection(conStr))
@@ -294,9 +283,8 @@ public partial class GIS : System.Web.UI.Page
     private static string password = "geoserver17";
     private static string workspace = "EG"; // change as needed
     private static string datastore = "my_datastore"; // you can use layerName as datastore too
-   
     [WebMethod]
-    public static string ExportShapefile(string fileName, object geojson,string layertype)
+    public static string ExportShapefile(string fileName, object geojson, string layertype)
     {
         if (geojson == null)
             throw new Exception("GeoJSON is missing");
@@ -319,35 +307,34 @@ public partial class GIS : System.Web.UI.Page
         }
         if (dt.Rows.Count == 0)
         {
-
             // 1️⃣ Deserialize GeoJSON
             string geoJsonText = JsonConvert.SerializeObject(geojson);
-        GeoJsonReader reader = new GeoJsonReader();
-        FeatureCollection fc = reader.Read<FeatureCollection>(geoJsonText);
+            GeoJsonReader reader = new GeoJsonReader();
+            FeatureCollection fc = reader.Read<FeatureCollection>(geoJsonText);
 
-        GeometryFactory gf =
-            (GeometryFactory)NtsGeometryServices.Instance.CreateGeometryFactory(4326);
+            GeometryFactory gf =
+                (GeometryFactory)NtsGeometryServices.Instance.CreateGeometryFactory(4326);
 
-        List<IFeature> featuresList = new List<IFeature>();
+            List<IFeature> featuresList = new List<IFeature>();
 
-        // 2️⃣ Fix geometries + DBF-safe attributes
-        foreach (IFeature f in fc.Features)
-        {
-            if (f.Geometry == null)
-                continue;
+            // 2️⃣ Fix geometries + DBF-safe attributes
+            foreach (IFeature f in fc.Features)
+            {
+                if (f.Geometry == null)
+                    continue;
 
-            Geometry g = (Geometry)f.Geometry;
+                Geometry g = (Geometry)f.Geometry;
 
-            // Fix invalid geometries
-            if (!g.IsValid)
-                g = (Geometry)g.Buffer(0);
+                // Fix invalid geometries
+                if (!g.IsValid)
+                    g = (Geometry)g.Buffer(0);
 
-            if (g == null || g.IsEmpty)
-                continue;
+                if (g == null || g.IsEmpty)
+                    continue;
 
-            // Normalize to MultiPolygon
-            if (g is Polygon)
-                g = (Geometry)gf.CreateMultiPolygon(new Polygon[] { (Polygon)g });
+                // Normalize to MultiPolygon
+                if (g is Polygon)
+                    g = (Geometry)gf.CreateMultiPolygon(new Polygon[] { (Polygon)g });
 
 
                 // 🔹 get block code from attributes
@@ -360,10 +347,7 @@ public partial class GIS : System.Web.UI.Page
                 string FYear = f.Attributes["FYear"].ToString();
 
                 // 🔹 update database geometry
-                
-
-
-                if(layertype=="3")
+                if (layertype == "3")
                 {
                     UpdateGeometryInDatabase(egDistrictCode, FYear, g, layertype);
                     UpdateLatLongInDatabase(egDistrictCode, FYear, g, layertype);
@@ -376,8 +360,7 @@ public partial class GIS : System.Web.UI.Page
                 else if (layertype == "5")
                 {
                     UpdateGeometryInDatabase(ClusterCode, FYear, g, layertype);
-                }
-               
+                } 
                 //// ---- DBF FIELD NAME FIX (<=10 chars) ----
                 //AttributesTable newAttributes = new AttributesTable();
                 //string[] attrNames = f.Attributes.GetNames();
@@ -409,49 +392,49 @@ public partial class GIS : System.Web.UI.Page
                 //featuresList.Add(new Feature(g, newAttributes));
             }
 
-        //if (featuresList.Count == 0)
-        //    throw new Exception("No valid geometries after repair");
+            //if (featuresList.Count == 0)
+            //    throw new Exception("No valid geometries after repair");
 
-        //// 3️⃣ Output folder
-        //string folder = HttpContext.Current.Server.MapPath("~/GeoTemp/");
-        //if (!Directory.Exists(folder))
-        //    Directory.CreateDirectory(folder);
+            //// 3️⃣ Output folder
+            //string folder = HttpContext.Current.Server.MapPath(Comman.GetImagePath("SurveyAnsPath") + "/");
+            //if (!Directory.Exists(folder))
+            //    Directory.CreateDirectory(folder);
 
-        //string name = fileName + "_" + DateTime.Now.Ticks;
-        //string shpPath = Path.Combine(folder, name + ".shp");
+            //string name = fileName + "_" + DateTime.Now.Ticks;
+            //string shpPath = Path.Combine(folder, name + ".shp");
 
-        //// 4️⃣ Write shapefile
-        //ShapefileDataWriter writer = new ShapefileDataWriter(shpPath, gf);
-        //writer.Header = ShapefileDataWriter.GetHeader(featuresList[0], featuresList.Count);
-        //writer.Write(featuresList);
+            //// 4️⃣ Write shapefile
+            //ShapefileDataWriter writer = new ShapefileDataWriter(shpPath, gf);
+            //writer.Header = ShapefileDataWriter.GetHeader(featuresList[0], featuresList.Count);
+            //writer.Write(featuresList);
 
-        //// 5️⃣ Create .prj (WGS84)
-        //File.WriteAllText(Path.Combine(folder, name + ".prj"),
-        //    "GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\"," +
-        //    "SPHEROID[\"WGS 84\",6378137,298.257223563]]," +
-        //    "PRIMEM[\"Greenwich\",0],UNIT[\"degree\",0.0174532925199433]]");
+            //// 5️⃣ Create .prj (WGS84)
+            //File.WriteAllText(Path.Combine(folder, name + ".prj"),
+            //    "GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\"," +
+            //    "SPHEROID[\"WGS 84\",6378137,298.257223563]]," +
+            //    "PRIMEM[\"Greenwich\",0],UNIT[\"degree\",0.0174532925199433]]");
 
-        //// 6️⃣ ZIP using Ionic.Zip (DotNetZip)
-        //string zipPath = Path.Combine(folder, name + ".zip");
-        //if (File.Exists(zipPath))
-        //    File.Delete(zipPath);
+            //// 6️⃣ ZIP using Ionic.Zip (DotNetZip)
+            //string zipPath = Path.Combine(folder, name + ".zip");
+            //if (File.Exists(zipPath))
+            //    File.Delete(zipPath);
 
-        //using (ZipFile zip = new ZipFile())
-        //{
-        //    string[] exts = { ".shp", ".shx", ".dbf", ".prj" };
+            //using (ZipFile zip = new ZipFile())
+            //{
+            //    string[] exts = { ".shp", ".shx", ".dbf", ".prj" };
 
-        //    foreach (string ext in exts)
-        //    {
-        //        string file = Path.Combine(folder, name + ext);
-        //        if (File.Exists(file))
-        //            zip.AddFile(file, "");
-        //    }
+            //    foreach (string ext in exts)
+            //    {
+            //        string file = Path.Combine(folder, name + ext);
+            //        if (File.Exists(file))
+            //            zip.AddFile(file, "");
+            //    }
 
-        //    zip.Save(zipPath);
-        //}
-       //string msg = PublishShapefileZip(geoServerUrl, "EG", name, folder, username, password, layertype, dbfilename);
-        //return ""+ "msg" + " [" + name + " ]";
-        return "✔ Shapefile save successfully!";
+            //    zip.Save(zipPath);
+            //}
+            //string msg = PublishShapefileZip(geoServerUrl, "EG", name, folder, username, password, layertype, dbfilename);
+            //return ""+ "msg" + " [" + name + " ]";
+            return "✔ Shapefile save successfully!";
         }
         else
         {
@@ -465,71 +448,68 @@ public partial class GIS : System.Web.UI.Page
         string datastore,
         string zipFilePath,
         string username,
-        string password,string layertype,string dbfilename)
+        string password, string layertype, string dbfilename)
     {
         string url = geoServerUrl.TrimEnd('/') +
             "/rest/workspaces/" + workspace +
             "/datastores/" + datastore +
             "/file.shp";
 
-        byte[] zipBytes = File.ReadAllBytes(zipFilePath+"/"+ datastore + ".zip");
+        byte[] zipBytes = File.ReadAllBytes(zipFilePath + "/" + datastore + ".zip");
+        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+        request.Method = "PUT";
+        request.ContentType = "application/zip";
+        request.KeepAlive = false;                     // FIX 3: prevent connection abort
+        request.ProtocolVersion = HttpVersion.Version10; // FIX 4: avoid chunked encoding
+        request.Timeout = 300000;                      // 5 min
+        request.ReadWriteTimeout = 300000;
+        request.ContentLength = zipBytes.Length;
 
-        
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "PUT";
-            request.ContentType = "application/zip";
-            request.KeepAlive = false;                     // FIX 3: prevent connection abort
-            request.ProtocolVersion = HttpVersion.Version10; // FIX 4: avoid chunked encoding
-            request.Timeout = 300000;                      // 5 min
-            request.ReadWriteTimeout = 300000;
-            request.ContentLength = zipBytes.Length;
+        string auth = Convert.ToBase64String(
+            Encoding.ASCII.GetBytes(username + ":" + password));
+        request.Headers["Authorization"] = "Basic " + auth;
 
-            string auth = Convert.ToBase64String(
-                Encoding.ASCII.GetBytes(username + ":" + password));
-            request.Headers["Authorization"] = "Basic " + auth;
+        using (Stream reqStream = request.GetRequestStream())
+        {
+            reqStream.Write(zipBytes, 0, zipBytes.Length);
+        }
 
-            using (Stream reqStream = request.GetRequestStream())
+        using (HttpWebResponse response =
+               (HttpWebResponse)request.GetResponse())
+        {
+            if (response.StatusCode != HttpStatusCode.Created &&
+                response.StatusCode != HttpStatusCode.OK)
             {
-                reqStream.Write(zipBytes, 0, zipBytes.Length);
+                throw new Exception("GeoServer publish failed: " + response.StatusCode);
             }
-
-            using (HttpWebResponse response =
-                   (HttpWebResponse)request.GetResponse())
+            else
             {
-                if (response.StatusCode != HttpStatusCode.Created &&
-                    response.StatusCode != HttpStatusCode.OK)
+                // Insert DB record
+                using (SqlConnection conn = new SqlConnection(conStr))
                 {
-                    throw new Exception("GeoServer publish failed: " + response.StatusCode);
-                }
-                else 
-                {
-                    // Insert DB record
-                    using (SqlConnection conn = new SqlConnection(conStr))
-                    {
-                        conn.Open();
-                        string q = @"INSERT INTO MapLayers (LayerName,GeoserverLayerName,LayerType)
+                    conn.Open();
+                    string q = @"INSERT INTO MapLayers (LayerName,GeoserverLayerName,LayerType)
                              VALUES (@LayerName,@GeoserverLayerName,@layetype)";
 
-                        using (SqlCommand cmd = new SqlCommand(q, conn))
-                        {
-                            cmd.Parameters.AddWithValue("@LayerName", dbfilename);      // store name
-                            cmd.Parameters.AddWithValue("@GeoserverLayerName", datastore); // UI name
-                            cmd.Parameters.AddWithValue("@layetype", layertype);
-                            cmd.ExecuteNonQuery();
-                        }
+                    using (SqlCommand cmd = new SqlCommand(q, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@LayerName", dbfilename);      // store name
+                        cmd.Parameters.AddWithValue("@GeoserverLayerName", datastore); // UI name
+                        cmd.Parameters.AddWithValue("@layetype", layertype);
+                        cmd.ExecuteNonQuery();
                     }
                 }
             }
+        }
 
-            
-        
+
+
         return "✔ Shapefile published successfully!";
 
     }
-
     private static void UpdateGeometryInDatabase(
-     string egCode,string FYear,
-     Geometry geom,string layerType)
+     string egCode, string FYear,
+     Geometry geom, string layerType)
     {
         string wkt = geom.AsText();
         using (SqlConnection conn = new SqlConnection(conStr))

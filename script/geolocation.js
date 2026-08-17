@@ -33,7 +33,7 @@ function Display(data, defLoc, villAdd) {
 
         data = Replace(data, "lb", "lat");
         data = Replace(data, "mb", "lng");
-        var aData = eval(data);
+        var aData = JSON.parse(data);
         for (var k = 0; k < aData.length; k++) {
             mData = aData[k];
             var nlatlang;

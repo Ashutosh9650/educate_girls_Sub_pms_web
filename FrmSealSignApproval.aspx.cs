@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
 using System.Globalization;
-
+using System.IO;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 public partial class FrmSealSignApproval : System.Web.UI.Page
 {
 
@@ -94,11 +91,10 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
                 {
                     Imag.ImageUrl = "TabletImage/" + Convert.ToString(dr1[Sequence - 1]["SealFormImage"]);
                     Session["Sequence"] = Sequence - 1;
-                    lblDisplay.Text = Convert.ToString(dr1[Sequence- 1]["SealFormImage"]);
+                    lblDisplay.Text = Convert.ToString(dr1[Sequence - 1]["SealFormImage"]);
                     lblSchoolName.Text = Convert.ToString(dr1[Sequence - 1]["SchoolName"]);
                     DataTable dt = Session["GridViewData"] as DataTable;
                     string strFilter = "";
-
                     string str = "SealFormImage";
 
                     DataTable dtfilter = dt.Copy();
@@ -125,14 +121,14 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
 
             DataRow[] dr1 = Session["dr"] as DataRow[];
             int Sequence = Convert.ToInt32(Session["Sequence"]);
-            FileInfo file = new FileInfo((Server.MapPath("~/TabletImage/" + Convert.ToString(dr1[Sequence]["SealFormImage"]))));
+            FileInfo file = new FileInfo((Server.MapPath(Comman.GetImagePath("TabletImagePath") + "/" + Convert.ToString(dr1[Sequence]["SealFormImage"]))));
             if (file.Exists)
             {
 
                 Response.ContentType = "application/octet-stream";
                 Response.AppendHeader("Content-Disposition", "attachment;filename=" + Convert.ToString(dr1[Sequence]["SealFormImage"]));
-                string aaa = Server.MapPath("~/TabletImage/" + Convert.ToString(dr1[Sequence]["SealFormImage"]));
-                Response.TransmitFile(Server.MapPath("~/TabletImage/" + Convert.ToString(dr1[Sequence]["SealFormImage"])));
+                string aaa = Server.MapPath(Comman.GetImagePath("TabletImagePath") + "/" + Convert.ToString(dr1[Sequence]["SealFormImage"]));
+                Response.TransmitFile(Server.MapPath(Comman.GetImagePath("TabletImagePath") + "/" + Convert.ToString(dr1[Sequence]["SealFormImage"])));
             }
 
         }
@@ -153,9 +149,7 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
                 if (Sequence < dr1.Length - 1)
                 {
                     Imag.ImageUrl = "TabletImage/" + Convert.ToString(dr1[Sequence + 1]["SealFormImage"]);
-
-                   
-                    Session["Sequence"] = Sequence + 1;
+					Session["Sequence"] = Sequence + 1;
                     lblDisplay.Text = Convert.ToString(dr1[Sequence + 1]["SealFormImage"]);
                     lblSchoolName.Text = Convert.ToString(dr1[Sequence + 1]["SchoolName"]);
                     DataTable dt = Session["GridViewData"] as DataTable;
@@ -195,15 +189,12 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
     {
         try
         {
-            
-            
-
             if (!Validation())
                 return;
             int ret = 0;
             Boolean Flag = false;
-          //  UpdateData();
-       ///     DataTable dt = (DataTable)Session["GridViewData"];
+            //  UpdateData();
+            ///     DataTable dt = (DataTable)Session["GridViewData"];
             Button btn = sender as Button;
             for (int i = 0; i < GVSealSign.Rows.Count; i++)
             {
@@ -216,26 +207,25 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
                 CheckBox chkReject = ((CheckBox)GVSealSign.Rows[i].FindControl("chkReject"));
                 DropDownList ddLRejectReasion = ((DropDownList)GVSealSign.Rows[i].FindControl("ddLRejectReasion"));
                 DropDownList ddlSubReasion = ((DropDownList)GVSealSign.Rows[i].FindControl("ddlSubReasion"));
-              
                 if (chkApprove.Checked == true || chkReject.Checked == true || ddLRejectReasion.SelectedIndex > 0)
-                {                   
-                        if (chkApprove.Checked == true)
-                        {
-                            Approve = 1;
-                        }
-                        if (chkReject.Checked == true)
-                        {
-                            Approve = 2;
-                        }
-                        if (ddLRejectReasion.SelectedIndex > 0)
-                        {
-                            Resone1 = Convert.ToInt32(ddLRejectReasion.SelectedValue);
-                            
-                        }
-                        if (ddlSubReasion.SelectedIndex > 0)
-                        {
-                            Resone2 = Convert.ToInt32(ddlSubReasion.SelectedValue);
-                        }
+                {
+                    if (chkApprove.Checked == true)
+                    {
+                        Approve = 1;
+                    }
+                    if (chkReject.Checked == true)
+                    {
+                        Approve = 2;
+                    }
+                    if (ddLRejectReasion.SelectedIndex > 0)
+                    {
+                        Resone1 = Convert.ToInt32(ddLRejectReasion.SelectedValue);
+
+                    }
+                    if (ddlSubReasion.SelectedIndex > 0)
+                    {
+                        Resone2 = Convert.ToInt32(ddlSubReasion.SelectedValue);
+                    }
                 }
                 if (chkApprove.Checked == true || chkReject.Checked == true)
                 {
@@ -302,7 +292,7 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
                 }
             }
         }
-        catch (Exception ex)
+        catch
         {
 
             throw;
@@ -586,7 +576,6 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
         }
         SqlParameter[] parm1 = new SqlParameter[]
             {
-         
                new SqlParameter("@Con",  conditions),
                  new SqlParameter("@Flag",  1),
             };
@@ -595,15 +584,15 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
         DataTable dt = GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[SP_GET_Seal_Sign]", parm1);
 
         String[] arColoumn = { "SchoolName", "SealFormImage", "SealSign_DiseCode" };
-       DataTable dtNew = dt.DefaultView.ToTable(true, arColoumn);
-       DataRow[] dr = dtNew.Select("len(SealFormImage)>2");
+        DataTable dtNew = dt.DefaultView.ToTable(true, arColoumn);
+        DataRow[] dr = dtNew.Select("len(SealFormImage)>2");
         Session["dr"] = dr;
         Session["Sequence"] = "0";
 
         if (dr.Length > 0)
         {
 
-            string path = Server.MapPath("~/TabletImage/");
+            string path = Comman.GetImagePath("TabletImagePath") + "/";
             if (Convert.ToString(dr[0]["SealFormImage"]) != "" && Convert.ToString(dr[0]["SealFormImage"]).Length > 2)
             {
                 DivImage.Visible = true;
@@ -611,7 +600,7 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
                 lblDisplay.Visible = true;
                 lblSchoolName.Text = Convert.ToString(dr[0]["SchoolName"]);
                 lblDisplay.Text = Convert.ToString(dr[0]["SealFormImage"]);
-               lblDiscode.Text = Convert.ToString(dr[0]["SealSign_DiseCode"]);
+                lblDiscode.Text = Convert.ToString(dr[0]["SealSign_DiseCode"]);
 
             }
             else
@@ -628,20 +617,18 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
             string strFilter = "";
 
             string str = "SealFormImage";
-         
             DataTable dtfilter = dt.Copy();
             strFilter = str + " = '" + lblDisplay.Text + "'    ";
             dtfilter.DefaultView.RowFilter = strFilter;
             dtfilter.DefaultView.Sort = "EnrolmentDateNew,Serial ";
             GVSealSign.DataSource = dtfilter.DefaultView.ToTable();
             GVSealSign.DataBind();
-        
         }
         else
         {
             GVSealSign.DataSource = null;
             GVSealSign.DataBind();
-            lblDisplay.Text= "";
+            lblDisplay.Text = "";
             Imag.ImageUrl = "";
             lblDiscode.Text = "";
         }
@@ -806,8 +793,6 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
             int index = gv.RowIndex;
             DropDownList ddLRejectReasion = (DropDownList)GVSealSign.Rows[index].FindControl("ddLRejectReasion");
             DropDownList ddlSubReasion = (DropDownList)GVSealSign.Rows[index].FindControl("ddlSubReasion");
-           
-       
             if (ddLRejectReasion.SelectedValue == "1")
             {
                 ddlSubReasion.Visible = true;
@@ -822,11 +807,9 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
             {
                 ddlSubReasion.Visible = false;
             }
-          
         }
-        catch (Exception ex)
+        catch
         {
-
             throw;
         }
     }
@@ -840,7 +823,6 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
             CheckBox chkReject = ((CheckBox)GVSealSign.Rows[i].FindControl("chkReject"));
             DropDownList ddLRejectReasion = ((DropDownList)GVSealSign.Rows[i].FindControl("ddLRejectReasion"));
             DropDownList ddlSubReasion = ((DropDownList)GVSealSign.Rows[i].FindControl("ddlSubReasion"));
-            
         }
     }
     protected void chkApproveAll_OnCheckedChanged(object sender, EventArgs e)
@@ -888,8 +870,6 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
     protected void chkRejectAl444l_OnCheckedChanged(object sender, EventArgs e)
     {
         chkApproveAll.Checked = false;
-
-     
         for (int i = 0; i < GVSealSign.Rows.Count; i++)
         {
             if (chkRejectAll.Checked == true)
@@ -912,8 +892,6 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
 
                     ddLRejectReasion.Visible = true;
                 }
-              
-              
                 MpexdrPopUp.Show();
             }
             else
@@ -938,7 +916,6 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
                 ddlSubReasion.Visible = false;
                 ddlSubReasion.Items.Clear();
             }
-         
         }
     }
     protected void chkReject_OnCheckedChanged(object sender, EventArgs e)
@@ -973,7 +950,7 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
 
 
         }
-        catch (Exception ex)
+        catch
         {
 
             throw;
@@ -1005,7 +982,7 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
         }
         catch (SqlException exp)
         {
-            throw exp;
+            throw;
         }
         finally
         {
@@ -1092,7 +1069,7 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
             DropDownList ddlSubReasion = ((DropDownList)GVSealSign.Rows[i].FindControl("ddlSubReasion"));
             if (chkReject.Checked == true || chkApprove.Checked == true)
             {
-                FIcountNew +=  1;
+                FIcountNew += 1;
             }
         }
 
@@ -1113,7 +1090,7 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
                 temp = true;
                 Icount += 1;
             }
-         }
+        }
 
         if (temp == true)
         {
@@ -1134,7 +1111,7 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
             if (Convert.ToInt32(ddLRejectReasion.SelectedValue) == 4)
             {
                 tempName = true;
-                IcountNew +=1;
+                IcountNew += 1;
             }
         }
 
@@ -1185,7 +1162,6 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
             //    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Approve or Reject')</script>", false);
             //    return false;
             //}
-            
         }
         return true;
     }
@@ -1213,8 +1189,6 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
             LinkButton lblChildName = ((LinkButton)e.Row.FindControl("lblChildName"));
             Label lblRejectFlag = ((Label)e.Row.FindControl("lblRejectFlag"));
             Label lblSealSign = ((Label)e.Row.FindControl("lblSealSign"));
-            
-          
             if (lblRejectFlag.Text == "2")
             {
                 lblChildName.ForeColor = System.Drawing.Color.Red;
@@ -1226,7 +1200,7 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
             else if (hdnApprov.Value == "2")
             {
                 chkReject.Checked = true;
-               //ddLRejectReasion.Attributes.Add("style", "display:block");
+                //ddLRejectReasion.Attributes.Add("style", "display:block");
                 ddLRejectReasion.Visible = true;
                 //ddlSubReasion.Visible = false;
             }
@@ -1268,7 +1242,6 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
             {
                 ddlSubReasion.Visible = false;
             }
-           
         }
     }
 
@@ -1282,40 +1255,38 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
         //Label lblStatus = (Label)gvr.FindControl("lblStatus");
         //Label lblSchool = (Label)gvr.FindControl("lblSchool");
         Label lblSchoolCode = (Label)gvr.FindControl("lblSchoolCode");
-           Label lblDisecode = (Label)gvr.FindControl("lblDisecode");
-           DropDownList ll = (DropDownList)gvr.FindControl("ddLRejectReasion");
-           if (Convert.ToInt32(ll.SelectedValue) == 3)
-           {
-               Session["UnquieId"] = UniqueChildCode;
-               Session["Disecode"] = lblDisecode.Text;
-               //Session["SchoolName"] = lblSchool.Text;
+        Label lblDisecode = (Label)gvr.FindControl("lblDisecode");
+        DropDownList ll = (DropDownList)gvr.FindControl("ddLRejectReasion");
+        if (Convert.ToInt32(ll.SelectedValue) == 3)
+        {
+            Session["UnquieId"] = UniqueChildCode;
+            Session["Disecode"] = lblDisecode.Text;
+            //Session["SchoolName"] = lblSchool.Text;
 
 
-               //if (ddlVillage.SelectedIndex > 0)
-               //{
-               //    Session["Villageame"] = ddlVillage.SelectedItem.Text;
-               //}
-               Session["mYear"] = ddlYear.SelectedValue;
-               //Session["EnStatus"] = lblStatus.Text;
+            //if (ddlVillage.SelectedIndex > 0)
+            //{
+            //    Session["Villageame"] = ddlVillage.SelectedItem.Text;
+            //}
+            Session["mYear"] = ddlYear.SelectedValue;
+            //Session["EnStatus"] = lblStatus.Text;
 
-               string strQry = "select ManagementType,WorkingStatus,SchoolLevel,SchoolCodeID from mstSchool where SchoolCode='" + lblSchoolCode.Text + "'   ";
+            string strQry = "select ManagementType,WorkingStatus,SchoolLevel,SchoolCodeID from mstSchool where SchoolCode='" + lblSchoolCode.Text + "'   ";
 
 
-               DataTable dtMangment = objMain.LoadData(strQry);
+            DataTable dtMangment = objMain.LoadData(strQry);
 
-               if (dtMangment.Rows.Count > 0)
-               {
-                   Session["ManagementType"] = dtMangment.Rows[0]["ManagementType"].ToString();
-                   Session["SchoolLevel"] = dtMangment.Rows[0]["SchoolLevel"].ToString();
-                   Session["WorkingStatus"] = dtMangment.Rows[0]["WorkingStatus"].ToString();
-                   Session["SchoolCodeID"] = dtMangment.Rows[0]["SchoolCodeID"].ToString();
+            if (dtMangment.Rows.Count > 0)
+            {
+                Session["ManagementType"] = dtMangment.Rows[0]["ManagementType"].ToString();
+                Session["SchoolLevel"] = dtMangment.Rows[0]["SchoolLevel"].ToString();
+                Session["WorkingStatus"] = dtMangment.Rows[0]["WorkingStatus"].ToString();
+                Session["SchoolCodeID"] = dtMangment.Rows[0]["SchoolCodeID"].ToString();
 
-               }
-               FillD2dData();
-               MpexdrDistrictAdd.Show();
-           }
-       
-
+            }
+            FillD2dData();
+            MpexdrDistrictAdd.Show();
+        }
     }
     public void FillClass()
     {
@@ -1414,16 +1385,10 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
             {
                 txtBirth.Text = SurvayDate.ToString("dd/MM/yyyy");
             }
-
-
-
-
             ddlScat.SelectedValue = dt.Rows[0]["Category"].ToString();
             //ddlEduationStatus.SelectedValue = Convert.ToInt32(dt.Rows[0]["EnrollCategory"].ToString()).ToString();
             //ddlEnroll.SelectedValue = dt.Rows[0]["EduationStatus"].ToString();
 
-
-         
             txtHHNo.Text = dt.Rows[0]["HouseNo"].ToString();
             dllClass.SelectedValue = dt.Rows[0]["Class"].ToString();
             //if (dt.Rows[0]["ReasonDO_NE"].ToString() == "0")
@@ -1445,7 +1410,6 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
     {
         try
         {
-          
             if (ddlAllResone.SelectedValue == "1")
             {
                 ddlAllResoneSub.Visible = true;
@@ -1462,7 +1426,7 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
             }
             MpexdrPopUp.Show();
         }
-        catch (Exception ex)
+        catch
         {
 
             throw;
@@ -1481,27 +1445,27 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
                 {
                     ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Reason ')</script>", false);
                     MpexdrPopUp.Show();
-                    return ;
+                    return;
                 }
                 if (ddlAllResone.SelectedValue == "1")
-                    {
-                        if (ddlAllResoneSub.SelectedIndex <= 0)
+                {
+                    if (ddlAllResoneSub.SelectedIndex <= 0)
 
-                         {
-                           ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Sub reason')</script>", false);
-                           MpexdrPopUp.Show();
-                            return ;
-                          }
-                    }
-                if (ddlAllResone.SelectedValue == "2")
-                 {
-                     if (ddlAllResoneSub.SelectedIndex <= 0)
-                     {
-                         ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Sub reason')</script>", false);
+                    {
+                        ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Sub reason')</script>", false);
                         MpexdrPopUp.Show();
-                         return;
-                     }
-                 }
+                        return;
+                    }
+                }
+                if (ddlAllResone.SelectedValue == "2")
+                {
+                    if (ddlAllResoneSub.SelectedIndex <= 0)
+                    {
+                        ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Sub reason')</script>", false);
+                        MpexdrPopUp.Show();
+                        return;
+                    }
+                }
             }
         }
 
@@ -1546,8 +1510,59 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
             }
         }
     }
+    public bool InterventionSql_Injection(string RVal)
+    {
+        SqlInjection objAudit = new SqlInjection();
+        bool injection = false;
+
+
+        injection = objAudit.CheckInputBool(RVal);
+
+        return injection;
+
+    }
+    public static List<Control> GetAllControls(List<Control> controls, Type t, Control parent /* can be Page */)
+    {
+        foreach (Control c in parent.Controls)
+        {
+            if (c.GetType() == t)
+                controls.Add(c);
+            if (c.HasControls())
+                controls = GetAllControls(controls, t, c);
+        }
+        return controls;
+    }
+    public string SetTextBoxFocusSelect(Page page)
+    {
+        string ALlTestBoxValue = "";
+        List<Control> list = new List<Control>();
+        list = GetAllControls(list, typeof(TextBox), page);
+        foreach (Control ctl in list)
+        {
+            if (ctl.GetType() == typeof(TextBox))
+            {
+                ((TextBox)ctl).Attributes.Add("onfocus", "this.select()");
+                string TempVari = ((TextBox)ctl).Text;
+                if (TempVari.Length > 0)
+                {
+                    ALlTestBoxValue += TempVari + "  ";
+                }
+            }
+        }
+        return ALlTestBoxValue;
+    }
     protected void btSave_Click(object sender, EventArgs e)
     {
+        string RVal = SetTextBoxFocusSelect(this.Page);
+        if (!InterventionSql_Injection(RVal))
+        {
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Spurious input detected. Data rejected')</script>", false);
+
+            return;
+        }
         if (!ValidationAdd())
             return;
         SaveData();
@@ -1634,8 +1649,8 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
         //    string exten = Path.GetExtension(FileuploadAttach.PostedFile.FileName);
         //    Fullfilename = "" + "IMG" + "_" + Convert.ToString(Session["Disecode"]) + "_" + DateTime.Now.ToString("ddMMyyyy_hhmmss") + exten;
         //}
+        //string sFileDir = Comman.GetImagePath("TabletImagePath") +"/"
 
-        //string sFileDir = Server.MapPath("~/TabletImage/");
 
         //if (FileuploadAttach.PostedFile != null && FileuploadAttach.PostedFile.FileName != "")
         //{
@@ -1652,7 +1667,7 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
         //    if (System.IO.File.Exists(sFileDir + "\\" + Fullfilename))
         //    {
         //        try { System.IO.File.Delete(sFileDir + "\\" + Fullfilename); }
-        //        catch (Exception ex)
+        //        catch
         //        {
 
         //        }
@@ -1660,133 +1675,166 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
         //    FileuploadAttach.PostedFile.SaveAs(sFileDir + Fullfilename);
 
         //  }
-
+        int icount = 0;
         if (Session["UnquieId"].ToString().Length > 6)
         {
 
-            StudentTSInsertQuery = " Update  tblEnrolment set mothername ='" + txtMonthName.Text + "', SamgraID ='" + txtSamgra.Text + "',[Category]=" + ddlScat.SelectedValue + ",[Class]=" + dllClass.SelectedValue + ",Serial='" + strSerial + "',ChildName='" + ChildName + "',FatherName='" + FathersName + "',Gender=" + Gender + ",[EnrolmentDate]='" + DateAdminision + "',DOBAvailable=" + DoAv + ",[DOB]='" + ChildDOB + "',AgeAson=" + Age + ",AsOnDate='" + AsDob.ToString("yyyy-MM-dd") + "',ModifyDate='" + DateTime.Now.ToString("yyyy-MM-dd") + "',ModifyBy='" + Session["username"].ToString() + "',HouseNo='" + txtHHNo.Text.Trim() + "',SealSenReject=3 where UniqueChildCode ='" + Session["UnquieId"].ToString() + "'";
-            bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
+            SqlParameter[] cmdParameters = new SqlParameter[]
+   {
+                            new SqlParameter("@MotherName", txtMonthName.Text),
+
+                            new SqlParameter("@SamgraID", txtSamgra.Text),
+
+                            new SqlParameter("@Category",
+                                Convert.ToInt32(ddlScat.SelectedValue)),
+
+                            new SqlParameter("@Class",
+                                Convert.ToInt32(dllClass.SelectedValue)),
+
+                            new SqlParameter("@Serial", strSerial),
+
+                            new SqlParameter("@ChildName", ChildName),
+
+                            new SqlParameter("@FatherName", FathersName),
+
+                            new SqlParameter("@Gender",
+                                Convert.ToInt32(Gender)),
+
+                            new SqlParameter("@EnrolmentDate",
+                                Convert.ToDateTime(DateAdminision)),
+
+                            new SqlParameter("@DOBAvailable",
+                                Convert.ToBoolean(DoAv)),
+
+                            new SqlParameter("@DOB",
+                                Convert.ToDateTime(ChildDOB)),
+
+                            new SqlParameter("@AgeAson",
+                                Convert.ToInt32(Age)),
+
+                            new SqlParameter("@AsOnDate",
+                                Convert.ToDateTime(AsDob)),
+
+                            new SqlParameter("@ModifyDate",
+                                DateTime.Now),
+
+                            new SqlParameter("@ModifyBy",
+                                Convert.ToString(Session["username"])),
+
+                            new SqlParameter("@HouseNo",
+                                txtHHNo.Text.Trim()),
+
+                            new SqlParameter("@UniqueChildCode",
+                                Convert.ToString(Session["UnquieId"]))
+   };
+
+            icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "USP_Update_tblEnrolment", cmdParameters);
 
             string D2StudentTSInsertQuery = "";
             if (Convert.ToString(Session["EnStatus"]) == "1")
             {
-                D2StudentTSInsertQuery = " Update tblDTD set   [HHNo]='" + txtHHNo.Text.Trim() + "',SurvayDate='" + Convert.ToDateTime(DateAdminision).ToString("yyyy-MM-dd") + "',[SocialCategory]=" + ddlScat.SelectedValue + ",[ChildName]='" + ChildName + "',[FathersName]='" + FathersName + "',[Gender]=" + Gender + ",[DOB]='" + ChildDOB + "',[AgeAson]=" + Age + ",    DoChild=" + dllClass.SelectedValue + " ,ModifyDate='" + DateTime.Now.ToString("yyyy-MM-dd") + "',ModifyBy='" + Session["username"].ToString() + "' where UniqueCode ='" + Session["UnquieId"].ToString() + "' ";
-                bool UpdateD2d = objMain.AddUpdate(D2StudentTSInsertQuery);
-            }
+                SqlParameter[] cmdParameters1 = new SqlParameter[]
+  {
+    new SqlParameter("@HHNo",
+        txtHHNo.Text.Trim()),
 
+    new SqlParameter("@SurvayDate",
+        Convert.ToDateTime(DateAdminision)),
 
-            if (UpdateTs == true)
-            {
-                ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved sucessfully')</script>", false);
+    new SqlParameter("@SocialCategory",
+        Convert.ToInt32(ddlScat.SelectedValue)),
+    new SqlParameter("@ChildName",
+        ChildName),
 
-                txtChildName.Text = "";
-                txtFatherName.Text = "";
-                txtHHNo.Text = "";
-                txtSrno.Text = "";
-                txtSamgra.Text = "";
+    new SqlParameter("@FathersName",
+        FathersName),
 
+    new SqlParameter("@Gender",
+        Convert.ToInt32(Gender)),
+    new SqlParameter("@DOB",
+        Convert.ToDateTime(ChildDOB)),
 
-                txtHHNo.Focus();
-                txtBirth.Text = DateTime.Now.ToString("dd/MM/yyyy");
-                ddlEduationStatus.SelectedIndex = 0;
-                //  Response.Write("<script>window.close();</" + "script>");
-                string strQry = "";
-                conditions = "";
-                conditions = " v.StateCode='" + ddlState.SelectedValue.ToString() + "'";
+    new SqlParameter("@AgeAson",
+        Convert.ToInt32(Age)),
 
-                if (ddlDistrict.SelectedIndex > 0)
+    new SqlParameter("@DoChild",
+        Convert.ToInt32(dllClass.SelectedValue)),
+
+    new SqlParameter("@ModifyDate",
+        DateTime.Now),
+
+    new SqlParameter("@ModifyBy",
+        Convert.ToString(Session["username"])),
+
+    new SqlParameter("@UniqueCode",
+        Convert.ToString(Session["UnquieId"]))
+  };
+
+                icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "USP_Update_tblDTD", cmdParameters1);
+                if (icount > 0)
                 {
-                    conditions = conditions + " and v.DistrictCode='" + ddlDistrict.SelectedValue.ToString() + "' ";
-                }
+                    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved sucessfully')</script>", false);
 
-                if (ddlBlock.SelectedIndex > 0)
+                    txtChildName.Text = "";
+                    txtFatherName.Text = "";
+                    txtHHNo.Text = "";
+                    txtSrno.Text = "";
+                    txtSamgra.Text = "";
+
+
+                    txtHHNo.Focus();
+                    txtBirth.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                    ddlEduationStatus.SelectedIndex = 0;
+                    //  Response.Write("<script>window.close();</" + "script>");
+                    string strQry = "";
+                    conditions = "";
+                    conditions = " v.StateCode='" + ddlState.SelectedValue.ToString() + "'";
+
+                    if (ddlDistrict.SelectedIndex > 0)
+                    {
+                        conditions = conditions + " and v.DistrictCode='" + ddlDistrict.SelectedValue.ToString() + "' ";
+                    }
+
+                    if (ddlBlock.SelectedIndex > 0)
+                    {
+                        conditions = conditions + " and v.BlockCode='" + ddlBlock.SelectedValue.ToString() + "' ";
+                    }
+                    if (ddlVillage.SelectedIndex > 0)
+                    {
+                        conditions = conditions + " and v.ClusterCode='" + ddlVillage.SelectedValue.ToString() + "' ";
+                    }
+                    if (ddlSchool.SelectedIndex > 0)
+                    {
+                        conditions = conditions + " and tblEnrolment.SchoolCode='" + ddlSchool.SelectedValue.ToString() + "' ";
+                    }
+                    if (ddlFc.SelectedIndex > 0)
+                    {
+                        conditions = conditions + " and tblEnrolment.CreateBy='" + ddlFc.SelectedValue.ToString() + "' ";
+                    }
+                    if (ddlVillageNew.SelectedIndex > 0)
+                    {
+                        conditions = conditions + " and v.Villagecode='" + ddlVillageNew.SelectedValue.ToString() + "' ";
+                    }
+                    conditions = conditions + " and SealFormImage='" + lblDisplay.Text + "' ";
+
+                    SqlParameter[] parm1 = new SqlParameter[]
                 {
-                    conditions = conditions + " and v.BlockCode='" + ddlBlock.SelectedValue.ToString() + "' ";
-                }
-                if (ddlVillage.SelectedIndex > 0)
-                {
-                    conditions = conditions + " and v.ClusterCode='" + ddlVillage.SelectedValue.ToString() + "' ";
-                }
-                if (ddlSchool.SelectedIndex > 0)
-                {
-                    conditions = conditions + " and tblEnrolment.SchoolCode='" + ddlSchool.SelectedValue.ToString() + "' ";
-                }
-                if (ddlFc.SelectedIndex > 0)
-                {
-                    conditions = conditions + " and tblEnrolment.CreateBy='" + ddlFc.SelectedValue.ToString() + "' ";
-                }
-                if (ddlVillageNew.SelectedIndex > 0)
-                {
-                    conditions = conditions + " and v.Villagecode='" + ddlVillageNew.SelectedValue.ToString() + "' ";
-                }
-                conditions = conditions + " and SealFormImage='" + lblDisplay.Text + "' ";
-               
-                SqlParameter[] parm1 = new SqlParameter[]
-            {
-         
+
                new SqlParameter("@Con",  conditions),
                  new SqlParameter("@Flag",  1),
-            };
+                };
 
 
-                DataTable dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[SP_GET_Seal_Sign]", parm1);
-                GVSealSign.DataSource = dt;
-                GVSealSign.DataBind();
-              //  LoadData();
+                    DataTable dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[SP_GET_Seal_Sign]", parm1);
+                    GVSealSign.DataSource = dt;
+                    GVSealSign.DataBind();
+                    //  LoadData();
 
-            }
-            else
-            {
-                //string VillageCodwwwe = "  VillageCode in(select VillageCode from mst5Village where EGVillageCode in(select EGVillageCode from mst5Village where VillageCode='" + Session["VillCode"].ToString() + "')) ";
+                }
+                else
+                {
 
-                //Int32 ssNo = 0;
-                //string strQry = " select isnull(Max(Serial),0)+1 Serial from [tblDTD]  where " + VillageCodwwwe + " ";
-                //DataTable dt = objMain.LoadData(strQry);
-                //if (dt.Rows.Count > 0)
-                //{
-                //    ssNo = Convert.ToInt32(dt.Rows[0]["Serial"].ToString());
-                //}
-
-                //string UNICOde = objMain.Generate_RandomString(8);
-
-
-                //string UCOde = objComman.Generate_RandomString(8);
-
-                //StudentTSInsertQuery = " INSERT INTO tblEnrolment([UniqueChildCode],[ChildCode],[VillageCode],[Serial],[Category],[Class],[Session],ChildName,FatherName,Gender,[SchoolCode],[EnrolmentDate],DOBAvailable,[DOB],AgeAson,AsOnDate,[Type],EnrollCategory,[Status],Createdate,CreateBy,HouseNo,DeleteFlag,VillagenameOther,SamgraID) Values  ('" + UNICOde + "','" + 0 + "','" + Session["VillCode"].ToString() + "','" + txtSrno.Text + "'," + ddlScat.SelectedValue + "," + dllClass.SelectedValue + ",'" + Session["mYear"].ToString() + "','" + ChildName + "','" + FathersName + "'," + Gender + ",'" + Session["Schoolid"].ToString() + "','" +  Convert.ToDateTime( Adminision).ToString("yyyy-MM-dd") + "'," + DoAv + ",'" + ChildDOB + "'," + Age + ",'" + AsDob.ToString("yyyy-MM-dd") + "','" + ddlEduationStatus.SelectedValue + "','" + ddlEnroll.SelectedValue + "',1,'" + DateTime.Now.ToString("yyyy-MM-dd") + "','" + Session["username"].ToString() + "','" + txtHHNo.Text + "',1,'" + txtSurveyVillage.Text + "','" + txtSamgra.Text + "')";
-                //bool InsertTSEnroll = objMain.AddUpdate(StudentTSInsertQuery);
-
-                //StudentTSInsertQuery = "";
-                //StudentTSInsertQuery = " INSERT INTO tblDTD([UniqueChildCode],[UniqueCode],[VillageCode],[Serial],[SocialCategory],[SocialCategory1],[SocialCategory2],[ChildName],[ChildName1],[ChildName2],[FathersName],[FathersName1],[FathersName2],[Gender],[Gender1],[Gender2],[DOBAvailable],[DOBAvailable1],[DOBAvailable2],[DOB],[DOB1],[DOB2],[AgeAson],[AgeAson1],[AgeAson2],[School],[School1],[School2],EnrolmentCategory,[EnrolmentCategory1],[EnrolmentCategory2],HHNo,HHNo1,HHNo2,DoChild,DoChild1,DoChild2,SWType,Status,AsOnDate,AsOnDate1,AsOnDate2,Createdate,CreateBy,SurvayDate,EnrollCode,EnrollStatus,DeleteFlag)Values  ('" + UCOde + "','" + UNICOde + "','" + Session["VillCode"].ToString() + "','" + ssNo + "'," + ddlScat.SelectedValue + "," + ddlScat.SelectedValue + "," + ddlScat.SelectedValue + ",'" + ChildName + "','" + ChildName + "','" + ChildName + "','" + FathersName + "','" + FathersName + "','" + FathersName + "'," + Gender + "," + Gender + "," + Gender + "," + DoAv + "," + DoAv + "," + DoAv + ",'" + Convert.ToDateTime(ChildDOB).ToString("yyyy-MM-dd") + "','" + Convert.ToDateTime(ChildDOB).ToString("yyyy-MM-dd") + "','" + Convert.ToDateTime(ChildDOB).ToString("yyyy-MM-dd") + "'," + Age + "," + Age + "," + Age + ",'" + Session["Schoolid"].ToString() + "','" + Session["Schoolid"].ToString() + "','" + Session["Schoolid"].ToString() + "'," + ddlEnroll.SelectedValue + "," + ddlEnroll.SelectedValue + "," + ddlEnroll.SelectedValue + ",'" + txtHHNo.Text.Trim() + "','" + txtHHNo.Text.Trim() + "','" + txtHHNo.Text.Trim() + "'," + dllClass.SelectedValue + "," + dllClass.SelectedValue + "," + dllClass.SelectedValue + ",3,4,'" + AsDob.ToString("yyyy-MM-dd") + "','" + AsDob.ToString("yyyy-MM-dd") + "','" + AsDob.ToString("yyyy-MM-dd") + "','" + DateTime.Now.ToString("yyyy-MM-dd") + "','" + Session["username"].ToString() + "','" + AsDob.ToString("yyyy-MM-dd") + "','" + UNICOde + "',3,1)";
-                //bool InsertTS = objMain.AddUpdate(StudentTSInsertQuery);
-
-
-
-                //if (InsertTS == true)
-                //{
-
-                //    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved sucessfully')</script>", false);
-                //    //if (UnquieId.Length > 6)
-                //    //{
-                //    //}
-                //    //else
-                //    //{
-                //    //    Program.EnrollDate = DTPicker_Sur.Value;
-                //    //    Program.Esc = Convert.ToInt32(cmbCategory.SelectedValue);
-                //    //    Program.Escatory = Convert.ToInt32(cmbEnrollCat.SelectedValue);
-                //    //    Program.Gender = Convert.ToInt32(cmbGender.SelectedIndex);
-
-                //    //}
-                //    txtChildName.Text = "";
-                //    txtFatherName.Text = "";
-                //    txtHHNo.Text = "";
-                //    txtSrno.Text = "";
-                //    txtSamgra.Text = "";
-                //    txtSurveyVillage.Text = "";
-                //    txtHHNo.Focus();
-                //    txtBirth.Text = DateTime.Now.ToString("dd/MM/yyyy");
-                //    ddlEduationStatus.SelectedIndex = 0;
-                //    //this.Close();
-                //}
+                }
             }
 
         }
@@ -1936,7 +1984,7 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
 
 
 
-           // Age = Convert.ToInt32(b[2]) - Convert.ToInt32(a[2]);
+            // Age = Convert.ToInt32(b[2]) - Convert.ToInt32(a[2]);
             DOB = Convert.ToDateTime(a[2] + '-' + a[1] + '-' + a[0]);
 
             string strQry66 = "select dbo.udfDateDiffinYrMonDay('" + DobDateQ1.ToString("yyyy-MM-dd") + "','" + AdmissionDate.ToString("yyyy-MM-dd") + "') as age ";
@@ -2154,11 +2202,10 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
             return true;
 
         }
-        catch (Exception ex)
+        catch
         {
             // MessageBox.Show(ex.Message, "EG", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return false;
         }
     }
-  
 }

@@ -247,7 +247,6 @@ public partial class SurveyTrainingProcess2026 : System.Web.UI.Page
               
                 txtLocation.Text = dtScheduling.Rows[0]["Location"].ToString();
                 txtFromDate.Text = StartDate.ToString("dd/MM/yyyy");
-
                 DateTime EnDate = Convert.ToDateTime(dtScheduling.Rows[0]["ToDate"].ToString());
                 ddlCategory.SelectedIndex = 0;
                 txtToDate.Text = EnDate.ToString("dd/MM/yyyy");
@@ -1332,7 +1331,6 @@ public partial class SurveyTrainingProcess2026 : System.Web.UI.Page
                         // dtQuestion.Rows.Add(Assessment, QuestionCategory, QuestionID, Tarining_ID, Sequence);
                         
                         int icount4 = objMain.InsertUpdateAssment(ddlassement.SelectedValue, QuestionID.ToString(), Tarining_ID.ToString(), Sequence.ToString());
-
                     }
                     /// DataTable dtFinal = dtQuestion;
                     
@@ -3638,7 +3636,7 @@ public partial class SurveyTrainingProcess2026 : System.Web.UI.Page
                 HttpContext.Current.Response.End();
             }
         }
-        catch (Exception ex)
+        catch
         {
 
             throw;
@@ -3660,7 +3658,7 @@ public partial class SurveyTrainingProcess2026 : System.Web.UI.Page
             dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "LoadEmployeeTB2025", parm);
 
         }
-        catch (Exception ex)
+        catch
         {
 
         }
@@ -3681,7 +3679,7 @@ public partial class SurveyTrainingProcess2026 : System.Web.UI.Page
             dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "LoadEmployeeTB", parm);
 
         }
-        catch (Exception ex)
+        catch
         {
 
         }
@@ -3722,7 +3720,6 @@ public partial class SurveyTrainingProcess2026 : System.Web.UI.Page
                     ExporttoExcel(dt);
                 }
             }
-
         }
         else if (Convert.ToInt32(ddlLevel.SelectedValue) == 5)
         {

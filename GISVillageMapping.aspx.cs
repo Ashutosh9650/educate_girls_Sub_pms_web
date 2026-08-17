@@ -142,8 +142,9 @@ public partial class GISVillageMapping: System.Web.UI.Page
         Response.Clear();
         Response.Buffer = true;
         Response.Charset = "";
-        Response.AddHeader("content-disposition", "attachment;filename="+filename+".xls");
+        Response.AddHeader("content-disposition", "attachment;filename=" + filename + ".xls");
         Response.ContentType = "application/vnd.ms-excel";
+
 
         using (StringWriter sw = new StringWriter())
         {
@@ -273,7 +274,7 @@ public partial class GISVillageMapping: System.Web.UI.Page
             new SqlParameter("@fyear", fyear)
             };
 
-            DataTable dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString,CommandType.StoredProcedure,"SP_Remove_Mapping",p);
+            DataTable dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "SP_Remove_Mapping", p);
 
             if (dt != null && dt.Rows.Count > 0)
             {
@@ -469,28 +470,26 @@ public partial class GISVillageMapping: System.Web.UI.Page
         if (villages == null || villages.Count == 0)
             return "No data received";
 
-            foreach (var v in villages)
+        foreach (var v in villages)
+        {
+            SqlParameter[] p = new SqlParameter[]
             {
-
-                SqlParameter[] p = new SqlParameter[]
-                {
-                new SqlParameter("@GISVillageCode", v.VillageID),
+				new SqlParameter("@GISVillageCode", v.VillageID),
                 new SqlParameter("@VillageName", v.VillageName),
                 new SqlParameter("@EGVillageCode", v.EG_VillageCode)
-                };
+            };
 
-                SqlHelper.ExecuteNonQuery(
-                    SqlHelper.mainConnectionString,
-                    CommandType.StoredProcedure,
-                    "Save_VillageMapping",   // your stored procedure
-                    p
-                );
-
-                
-            }
+            SqlHelper.ExecuteNonQuery(
+                SqlHelper.mainConnectionString,
+                CommandType.StoredProcedure,
+                "Save_VillageMapping",   // your stored procedure
+                p
+            );
+        }
 
         return "SUCCESS";
     }
+
 
 
     [WebMethod]
@@ -792,7 +791,7 @@ public partial class GISVillageMapping: System.Web.UI.Page
                 return "Mapping Successful";
             }
         }
-        catch (Exception ex)
+        catch
         {
             // Log error (you can add your own logging mechanism here)
             //return "Error: " + ex.Message;

@@ -1,25 +1,18 @@
-﻿using AjaxControlToolkit.HTMLEditor.ToolbarButton;
-using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Wordprocessing;
-using GeoAPI.Geometries;
-using Ionic.Zip;
+﻿using Ionic.Zip;
 using NetTopologySuite;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
-using NetTopologySuite.Simplify;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI;
@@ -204,7 +197,7 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
         //string query = "SELECT a.* FROM MapLayers a  WHERE a.IsActive = 1 and flag='P' order by a.LayerName";
         if (layerType != "")
         {
-            query = "Select a.LayerID,a.LayerName,a.Workspace,a.GeoServerURL,a.IsActive,a.GeoserverLayerName,a.flag,a.createdDate,\r\ncase when a.LayerType=1 then 'State' when a.LayerType=2 then 'District'  when a.LayerType=3 then 'Block' when a.LayerType=4 then 'Village' End as LayerType FROM MapLayers a inner join (Select Distinct LayerID from GIS_Village) b on a.LayerID=b.LayerID WHERE a.IsActive = 1 and flag='P' and a.LayerType="+layerType+" order by a.LayerName";
+            query = "Select a.LayerID,a.LayerName,a.Workspace,a.GeoServerURL,a.IsActive,a.GeoserverLayerName,a.flag,a.createdDate,\r\ncase when a.LayerType=1 then 'State' when a.LayerType=2 then 'District'  when a.LayerType=3 then 'Block' when a.LayerType=4 then 'Village' End as LayerType FROM MapLayers a inner join (Select Distinct LayerID from GIS_Village) b on a.LayerID=b.LayerID WHERE a.IsActive = 1 and flag='P' and a.LayerType=" + layerType + " order by a.LayerName";
         }
 
         using (SqlConnection con = new SqlConnection(conStr))
@@ -424,7 +417,7 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
         {
             return "ERROR";
         }
-        catch (Exception ex)
+        catch
         {
             return "ERROR";
         }
@@ -455,8 +448,6 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
 
             row["BlockCode"] = GetValue(p, "SUB_DIST_C");
             row["BlockName"] = GetValue(p, "SUB_DIST_N");
-            
-
             dt.Rows.Add(row);
         }
 
@@ -613,7 +604,7 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
         {
             return "ERROR";
         }
-        catch (Exception ex)
+        catch
         {
             return "ERROR";
         }
@@ -696,7 +687,7 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
     //    {
     //        return "ERROR";
     //    }
-    //    catch (Exception ex)
+    //    catch
     //    {
     //        return "ERROR";
     //    }
@@ -732,12 +723,12 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
             }
         }
     }
-    private static void CreateGeometry(string tableName,int layerid)
+    private static void CreateGeometry(string tableName, int layerid)
     {
         string sql =
             "UPDATE [" + tableName + "] " +
             "SET Geom = geometry::STGeomFromText([polygon], 4326) " +
-            "WHERE layerid="+layerid+" and Geom IS NULL AND [polygon] IS NOT NULL";
+            "WHERE layerid=" + layerid + " and Geom IS NULL AND [polygon] IS NOT NULL";
 
         using (SqlConnection con = new SqlConnection(conStr))
         {
@@ -749,12 +740,12 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
         }
     }
 
-    private void CreateGeometryBlock(string tableName,string layerid)
+    private void CreateGeometryBlock(string tableName, string layerid)
     {
         string sql =
             "UPDATE [" + tableName + "] " +
             "SET Geom = geometry::STGeomFromText([polygon], 4326) " +
-            "WHERE layerid="+layerid+" and Geom IS NULL AND [polygon] IS NOT NULL";
+            "WHERE layerid=" + layerid + " and Geom IS NULL AND [polygon] IS NOT NULL";
 
         using (SqlConnection con = new SqlConnection(conStr))
         {
@@ -831,7 +822,7 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
         return null;
     }
 
-    private static string CheckShpName(string layertype,string layername)
+    private static string CheckShpName(string layertype, string layername)
     {
         try
         {
@@ -851,7 +842,7 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
             }
 
         }
-        catch (Exception ex)
+        catch
         {
             return "-1";
             //return "Error: " + ex.Message;
@@ -879,7 +870,7 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
     //            layerid = "-1";
     //        }
     //    }
-    //    catch (Exception ex)
+    //    catch
     //    {
     //        layerid = "-1";
     //    }
@@ -901,7 +892,7 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
             // Call your stored procedure and return the inserted ID
             DataTable dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "SP_Save_MapedLayer", p);
 
-            if (dt.Rows.Count>0)
+            if (dt.Rows.Count > 0)
             {
                 return "Mapping Successful";
             }
@@ -910,7 +901,7 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
                 return "Mapping Successful";
             }
         }
-        catch (Exception ex)
+        catch
         {
             // Log error (you can add your own logging mechanism here)
             //return "Error: " + ex.Message;
@@ -944,7 +935,7 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
                 //throw new Exception("Error: No data returned from the stored procedure.");
             }
         }
-        catch (Exception ex)
+        catch
         {
             // Log error (you can add your own logging mechanism here)
             //throw new Exception("Error: " + ex.Message);
@@ -998,7 +989,7 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
     //        DataTable dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "SP_Map_Layer", p);
 
     //    }
-    //    catch (Exception ex)
+    //    catch
     //    {
 
     //    }
@@ -1035,10 +1026,8 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
 
             // Export the data to Excel
             if (dt.Rows.Count > 0)
-            {
-                
-                ExportToExcel(dt);
-               
+            {                
+                ExportToExcel(dt);               
             }
             else
             {
@@ -1046,14 +1035,11 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
                 //Label1.Text = "Error: No data returned from the stored procedure.";
             }
         }
-        catch (Exception ex)
-        {
-            
+        catch
+        {            
             // Handle the exception (you can log it or display an error message)
             //Label1.Text = "Error: " + ex.Message;
-
-        }
-        
+        }        
     }
 
     private void ExportToExcel(DataTable dt)
@@ -1096,7 +1082,7 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
 
             DataTable dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "SP_Delete_MapLayer", p);
         }
-        catch (Exception ex)
+        catch
         {
 
         }
@@ -1121,9 +1107,6 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
         //GIS_Village Import
         if (CheckShpName(layertype, fileName) == "1")
         {
-            
-
-
             GeoJsonReader reader = new GeoJsonReader();
             FeatureCollection fc = reader.Read<FeatureCollection>(geoJsonText);
 
@@ -1216,7 +1199,7 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
                 throw new Exception("No valid geometries after repair");
 
             // 3️⃣ Output folder
-            string folder = HttpContext.Current.Server.MapPath("~/GeoPublish/");
+            string folder = HttpContext.Current.Server.MapPath(Comman.GetImagePath("GeoPublishPath") + "/");
             if (!Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
 
@@ -1252,9 +1235,9 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
 
                 zip.Save(zipPath);
             }
-            msg = PublishShapefileZip(geoServerUrl, "EG", name, folder, username, password, layertype, dbfilename, geoJsonText,fileName);
+            msg = PublishShapefileZip(geoServerUrl, "EG", name, folder, username, password, layertype, dbfilename, geoJsonText, fileName);
 
-            
+
         }
         else
         {
@@ -1272,7 +1255,7 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
         string datastore,
         string zipFilePath,
         string username,
-        string password, string layertype, string dbfilename, string json,string fileName)
+        string password, string layertype, string dbfilename, string json, string fileName)
     {
         string url = geoServerUrl.TrimEnd('/') +
             "/rest/workspaces/" + workspace +
@@ -1323,7 +1306,7 @@ public partial class GISEGBlockUpload : System.Web.UI.Page
                 }
                 else
                 {
-                    int newLayerId=0;
+                    int newLayerId = 0;
                     // Insert DB record
                     using (SqlConnection conn = new SqlConnection(conStr))
                     {

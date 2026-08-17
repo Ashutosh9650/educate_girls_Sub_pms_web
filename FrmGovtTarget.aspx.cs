@@ -161,7 +161,6 @@ public partial class FrmGovtTarget : System.Web.UI.Page
 
     public void FillCBDist()
     {
-
         conditions = "";
 
 
@@ -169,9 +168,6 @@ public partial class FrmGovtTarget : System.Web.UI.Page
 
 
         objComman.BindDLL("mst2District", "DistrictCode,dbo.TitleCase(upper(DistrictName)) as DistrictName ", conditions, "DistrictName", "asc", ddlDistrict, "DistrictName", "DistrictCode", "Select");
-
-
-
     }
 
     protected void btnImport_Click(object sender, EventArgs e)
@@ -367,11 +363,11 @@ public partial class FrmGovtTarget : System.Web.UI.Page
             oledbConn.Close();
         }
     }
-    private void GenerateExcelData1()
+     private void GenerateExcelData1()
     {
         OleDbConnection oledbConn = new OleDbConnection();
-        try
-        {
+        //try
+        //{
             // need to pass relative path after deploying on server
             string path = System.IO.Path.GetFullPath(Server.MapPath(FileUpload1.FileName));
             /* connection string  to work with excel file. HDR=Yes - indicates 
@@ -486,18 +482,18 @@ public partial class FrmGovtTarget : System.Web.UI.Page
             //}
 
 
-        }
+        //}
         // need to catch possible exceptions
-        catch (Exception ex)
-        {
-            lbl_messages.Text = ex.ToString();
-            ModalAlert.Show();
+        //catch (Exception ex)
+        //{
+        //    //lbl_messages.Text = ex.ToString();
+        //    //ModalAlert.Show();
 
-        }
-        finally
-        {
-            oledbConn.Close();
-        }
+        //}
+        //finally
+        //{
+        //    oledbConn.Close();
+        //}
     }
     private void GenerateExcelData()
     {
@@ -575,7 +571,7 @@ public partial class FrmGovtTarget : System.Web.UI.Page
 
         }
         // need to catch possible exceptions
-        catch (Exception ex)
+        catch 
         {
             //lbl_messages.Text = ex.ToString();
             //ModalAlert.Show();
@@ -1129,7 +1125,6 @@ public partial class FrmGovtTarget : System.Web.UI.Page
             string Fullfilename = "" + FIleName + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + ".xls";
             if (dt.Rows.Count > 0)
             {
-
                 //sw.Clear();
                 //sw.ClearContent();
                 //sw.ClearHeaders();
@@ -1163,7 +1158,6 @@ public partial class FrmGovtTarget : System.Web.UI.Page
                 sw.Write("</tr>");
 
                 String RowStyle = "border:.1pt solid windowtext; font-weight:100; font-size:9pt;rowspan=2;";
-
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
 
@@ -1197,9 +1191,6 @@ public partial class FrmGovtTarget : System.Web.UI.Page
                         //    zip.AddFiles(file, foldername);
                         zip.Save(Server.MapPath(Comman.GetImagePath("DataBackupPath")) + "/" + datafolder + "" + ".zip");
                     }
-
-
-
                     HttpResponse Response = HttpContext.Current.Response; Response.Clear(); Response.ClearHeaders(); Response.Charset = "UTF-8";
                     fs = File.Open(fullPath, FileMode.Open);
                     byte[] bytBytes = new byte[(fs.Length)];
@@ -1208,12 +1199,6 @@ public partial class FrmGovtTarget : System.Web.UI.Page
                     Response.AddHeader("Content-disposition", "attachment; filename=" + datafolder + "" + ".zip");
                     Response.ContentType = "application/octet-stream";
                     Response.BinaryWrite(bytBytes);
-
-
-
-
-
-
                     if (File.Exists(path))
                     {
                         System.IO.File.Delete(path);
@@ -1222,7 +1207,6 @@ public partial class FrmGovtTarget : System.Web.UI.Page
                     {
                         System.IO.File.Delete(fullPath);
                     }
-
                     Response.Flush();
                     HttpContext.Current.ApplicationInstance.CompleteRequest();
                     Response.End();
@@ -1503,7 +1487,6 @@ public partial class FrmGovtTarget : System.Web.UI.Page
         Response.WriteFile(filePath);
         Response.End();
     }
-
     public string INSERT_ImportDataSingle(DataTable dt, string strSP_Name, string strParentTable_Name, string Flag)
     {
         string getresult = "";

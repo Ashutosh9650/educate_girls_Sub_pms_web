@@ -472,7 +472,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
 
         if (rpSocialMapping.Checked == true)
         {
-	
             string strQry;
             strQry = " select *  from [MSTtopicDiscuss]   where Flag=107 and [Language]=0  and  TopicDIscussID  in(1, 3, 9, 10) ";
 
@@ -2694,10 +2693,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             div22.Visible = true;
             dfiv22.Visible = true;
             div24.Visible = false;
-
-   
-
-
             Label lblDtdUniqid = (Label)row1.FindControl("lblDtdUniqid");
 
             string strQry = " select *  from [tblDTDMobileActivity]   where IsActive=0 and [GUIDDTDMobileActivity]='" + lblDtdUniqid.Text + "' and ActivityStatus=1 ";
@@ -2953,11 +2948,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
     }
     public void LoadPreviousData(Int32 Staus, string Uniq)
     {
-		
-
-
-
-
         ModalPopupExtender.Show();
         dvIngilible.Visible = false;
         dvidFollowp.Visible = false;
@@ -3059,8 +3049,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             DataTable dtIne = objMain.LoadData(strQry);
             if (dtIne.Rows.Count > 0)
             {
-
-             
                 if (Convert.ToString(dtIne.Rows[0]["Availability"]) != "")
                 {
                     ddlAvilIO.SelectedValue = Convert.ToString(dtIne.Rows[0]["Availability"]);
@@ -3090,9 +3078,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 if (Convert.ToString(dtIne.Rows[0]["SamgraID "]).Length > 0)
                 {
                 }
-		   
-
-
                 txtIoAlternateMobile.Text = Convert.ToString(dtIne.Rows[0]["AlternateMobileNumber "]);
                 txtatalterIO_mobile(txtIORelation, null);
                 txtIoAlternateMobile.Text = Convert.ToString(dtIne.Rows[0]["AlternatemobileOwneName "]);
@@ -3173,9 +3158,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             }
 
         }
-     
-
-
     }
     protected void ddlAvaiFO_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -3194,7 +3176,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             {
                 divF2.Visible = true;
             }
-          
         }
         else if (Convert.ToInt32(ddlAvaiFO.SelectedValue) == 2)
         {
@@ -3236,7 +3217,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             {
                 DivI11.Visible = true;
             }
-            
         }
         else if (Convert.ToInt32(ddlAvilIO.SelectedValue) == 1)
         {
@@ -3299,7 +3279,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             {
                 DivE13.Visible = true;
             }
-          
         }
         else
         {
@@ -3308,8 +3287,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
 
                 DivE12.Visible = true;
             }
-           
-            DivE13.Visible = false;
+			DivE13.Visible = false;
         }
         MpexdrFollowup.Show();
     }
@@ -3353,7 +3331,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
     }
     protected void btnEditEnroll_Click(object sender, EventArgs e)
     {
-       
         ImageButton ddlLabTest1 = (ImageButton)sender;
         GridViewRow row1 = (GridViewRow)ddlLabTest1.NamingContainer;
 
@@ -3362,11 +3339,8 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
         DropDownList ddlContactTb = (DropDownList)row1.FindControl("ddlContactTb");
         Label lbUniqueCode = (Label)row1.FindControl("lbUniqueCode");
         Label lblDtdUniqid = (Label)row1.FindControl("lblDtdUniqid");
-	   
-								  
 
         lblEditRow.Text = "1";
-
         Label lbStatus = (Label)row1.FindControl("lbStatus");
         lblEnrollId.Text = ddlStatus.SelectedValue;
         lblRtbFc.Text = rblTBFC.SelectedValue;
@@ -3414,7 +3388,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
         div22.Visible = false;
         dfiv22.Visible = false;
         div24.Visible = false;
-        
         if (Convert.ToInt32(ddlStatus.SelectedValue) == 1)
         {
             dvidFollowp.Visible = true;
@@ -3430,9 +3403,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             txtOtherVillage.Text = "";
             txtOtherSchool.Text = "";
             ddlOtherVillage.SelectedIndex = 0;
-          
-
-
         }
         if (Convert.ToInt32(ddlStatus.SelectedValue) == 2)
         {
@@ -3451,7 +3421,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             div26.Visible = true;
 
             Div27.Visible = true;
-            
             DivI3.Visible = false;
             DivI4.Visible = false;
             DivI5.Style.Add("display", "none");
@@ -3507,7 +3476,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 if (Convert.ToString(dtIne.Rows[0]["Awareness"]) != "")
                 {
                     string[] meeting = Convert.ToString(dtIne.Rows[0]["Awareness"]).Split(',');
-                   
                     foreach (string s in meeting)
                     {
                         foreach (ListItem item in chkAwarenessIo.Items)
@@ -3700,7 +3668,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             {
        new SqlParameter("@villagecode",   ddlVilage.SelectedValue ),
               new SqlParameter("@Flag","1"),
-      
                  };
         DataTable dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertActivityDTD2022", parm);
 
@@ -3708,7 +3675,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             {
        new SqlParameter("@villagecode",   ddlVilage.SelectedValue ),
               new SqlParameter("@Flag","2"),
-      
                  };
         DataSet ds = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "InsertActivityDTD2022", parm1);
 
@@ -3748,8 +3714,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             SamgraID = Convert.ToString(txtSamgraID.Text);
         }
         string UNICOde = objMain.Generate_RandomString(15);
-
-      
         if (lblEnrollId.Text == "1")
         {
             #region InsertFollow
@@ -3776,7 +3740,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
 
                     //}
                 }
-               
             }
             else
             {
@@ -3929,7 +3892,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 {
 
                     ab += "" + item.Value + "" + ",";
-                  
                 }
             }
             if (ab.Length > 0)
@@ -4739,8 +4701,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                         new SqlParameter("@DOB", DBNull.Value),
                                 new SqlParameter("@DOBproof", ddlDOproof.SelectedValue),
                         new SqlParameter("@Other","" ),
-				
-
 
                           new SqlParameter("@FromPanding6",ddlFromStatus.SelectedValue),
                         new SqlParameter("@EnrollmentCategory",ddlCategory.SelectedValue),
@@ -5138,8 +5098,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                     txtmOther.Enabled = true;
                     return;
                 }
-               
-
             }
             else
             {
@@ -5147,7 +5105,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             }
             if (Muhula1.Length > 0)
             {
-              
             }
             else
             {
@@ -5166,8 +5123,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                     txtmOther1.Enabled = true;
                     return;
                 }
-               
-
             }
             else
             {
@@ -5239,7 +5194,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
 
 
             Int32 Total = Convert.ToInt32(TxtMM_FeMale.Text) + Convert.ToInt32(TxtMM_Male.Text);
-            
             if (TotalVIllager > Total)
             {
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please ensure Attendance-Male and MM Attendance-Female Greater then OOSC')</script> ", false);
@@ -5257,7 +5211,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
         string othercom2 = "";
         string Tempothercom = "";
         string Tempothercom1 = "";
-       
         foreach (ListItem item in chk_othercom.Items)
         {
             if (item.Selected)
@@ -5322,7 +5275,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             {
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Enter Meeting Name Community Meeting 1')</script>", false);
                 this.tc1.Focus();
-               
                 return;
             }
             if (rblothercommTb.Checked == true)
@@ -5354,7 +5306,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                     txtOtherComm.Enabled = true;
                     return;
                 }
-               
             }
             else
             {
@@ -5429,10 +5380,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 this.TxtCm1_Male.Focus();
                 return;
             }
-
-
-       
-
             //if (txtvillager3.Text == "")
             //{
             //    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please ensure the number of Present OOSC/No. of parents of irregular childeren is more than or equal to zero')</script>", false);
@@ -5494,8 +5441,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
         }
         if (othercom11.Length > 0 || txtAtt1.Text != "" || txtoC1.Text != "" || rblc1.Checked == true || rblc2.Checked == true)
         {
-        
-
             if (rblc1.Checked == true || rblc2.Checked == true)
             {
 
@@ -5556,7 +5501,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                     txtoC111.Enabled = true;
                     return;
                 }
-               
             }
             else
             {
@@ -5582,10 +5526,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 }
             }
         }
-
-      
-
-
         string AmbitionComm = "";
         string OtherAmbitionComm = "";
 
@@ -5613,7 +5553,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
         }
         if (AmbitionComm.Length > 0 || Ambition.Length > 0 || rblcommtb.Checked == true || rblCommFC.Checked == true)
         {
-           
             if (rblcommtb.Checked == true || rblCommFC.Checked == true)
             {
 
@@ -5634,8 +5573,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Enter Reason Community Contact')</script>", false);
 
 
-                this.chk_comm.Focus();
-               
+                this.chk_comm.Focus();               
                 return;
             }
             if (OtherAmbitionComm == "Others")
@@ -5667,8 +5605,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
 
                 return;
             }
-          
-
             if (AmbitionComOther == "8")
             {
                 if (txt_con_other.Text.ToString() == "")
@@ -5680,8 +5616,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                     txt_con_other.Enabled = true;
                     return;
                 }
-               
-
             }
             else
             {
@@ -5719,11 +5653,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
             else
             {
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select Support TB or FC')</script>", false);
-
-
-
-
-                this.rblsupportfc.Focus();
+				this.rblsupportfc.Focus();
                 return;
             }
             if (Suport.Length > 0)
@@ -7555,7 +7485,6 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
 
 
                  };
-				 
         DataTable dtUserVillage = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptLoadBundal]", parm);
         Session["D2dBindChild"] = dtUserVillage;
         Gv_DisplayNew.DataSource = dtUserVillage;

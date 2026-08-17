@@ -96,9 +96,6 @@ public partial class login : System.Web.UI.Page
                                     {
                                         Session.Clear();
                                         LoadYear();
-
-
-
                                         // FIX: never store the plaintext password in session state.                                        
                                         Session["username"] = ds.Tables[0].Rows[0]["UserName"].ToString();
 

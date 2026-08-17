@@ -31,7 +31,7 @@ public class Comman
             DataSet ds = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Get_Select_AllTableData", paramvT);
             dtcombo = ds.Tables[0] as DataTable;
         }
-        catch (Exception)
+        catch
         {
             //string mmsg = ex.Message; showMessages(mmsg);
             //showMessages("(SelectAllData)  " + mmsg);
@@ -83,13 +83,16 @@ public class Comman
 
             dtcombo = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Get_Select_Table_Data_Common", paramvT);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            //string msg = ex.Message;
-            //string mmsg = ex.Message; showMessages(mmsg);
-            //showMessages("(SelectAllData)  " + mmsg);
-            throw;
+            System.Diagnostics.Trace.TraceError("Error: {0}", ex);
         }
+        //catch 
+        //{
+        //    string msg = ex.Message;
+        //    //string mmsg = ex.Message; showMessages(mmsg);
+        //    //showMessages("(SelectAllData)  " + mmsg);
+        //}
         return dtcombo;
     }
     public static void Bind_DDL_ZeroIndex_String_List(ListBox dll, DataTable dtall, string fname, string fvalue, string ZeroIndex)
@@ -128,9 +131,9 @@ public class Comman
             dll.Items.Insert(0, new System.Web.UI.WebControls.ListItem("  " + ZeroIndex + "  ", "0"));
 
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            System.Diagnostics.Trace.TraceError("Error: {0}", ex);
         }
     }
     public DataTable Select_All_DataNew(string TableName, string TFieldName, string Condition, string OrderbyCondition, string Sortcondition, string Sortcofndition)
@@ -155,11 +158,15 @@ public class Comman
             DataSet ds = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Get_Select_AllTableData", paramvT);
             dtcombo = ds.Tables[0] as DataTable;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            //string mmsg = ex.Message; showMessages(mmsg);
-            //showMessages("(SelectAllData)  " + mmsg);
+            System.Diagnostics.Trace.TraceError("Error: {0}", ex);
         }
+        //catch 
+        //{
+        //    //string mmsg = ex.Message; showMessages(mmsg);
+        //    //showMessages("(SelectAllData)  " + mmsg);
+        //}
         return dtcombo;
     }
 
@@ -240,11 +247,8 @@ public class Comman
         {
             DataRow dr;
             dr = dt.NewRow();
-            if (dt.Columns.Contains(textData))
-                dr[textData] = "--" + ZeroIndex + "--";
-
-            if (dt.Columns.Contains(valData))
-                dr[valData] = "0";
+            dr[textData] = "--" + ZeroIndex + "--";
+            dr[valData] = "0";
             dt.Rows.InsertAt(dr, 0);
             dt.AcceptChanges();
         }
@@ -341,11 +345,15 @@ public class Comman
 
 
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            //string mmsg = ex.Message; showMessages(mmsg);
-            //showMessages("(SelectAllData)  " + mmsg);
+            System.Diagnostics.Trace.TraceError("Error: {0}", ex);
         }
+        //catch
+        //{
+        //    //string mmsg = ex.Message; showMessages(mmsg);
+        //    //showMessages("(SelectAllData)  " + mmsg);
+        //}
         return dtcombo;
     }
     public string Generate_RandomString(int NoChar)
@@ -392,7 +400,7 @@ public class Comman
             return dbOleDataTable;
 
         }
-        catch (OleDbException)
+        catch (OleDbException sqlEx)
         {
             if (dbOleconnection.State == ConnectionState.Open)
             {
@@ -400,7 +408,7 @@ public class Comman
             }
             throw;
         }
-        catch (Exception)
+        catch (Exception ex1)
         {
             if (dbOleconnection.State == ConnectionState.Open)
             {
@@ -708,7 +716,6 @@ public class Comman
             });
             sqlcmd.Parameters.Add("@UserID", SqlDbType.Int).Value = iUserID;
             sqlcmd.Parameters.Add("@JSON", SqlDbType.VarChar, -1).Value = sJason;
-
             SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
             da.Fill(dbSqlDataSet);
             return dbSqlDataSet;
@@ -2362,8 +2369,9 @@ public class Comman
         }
         catch (Exception _ex)
         {
-            return "5000";
             ConStr.Close();
+            return "5000";
+
         }
         finally
         {
@@ -2408,7 +2416,7 @@ public class Comman
             bulkCopy.WriteToServer(dt);
             return true;
         }
-        catch (Exception)
+        catch
         {
             return false;
         }
@@ -2447,7 +2455,7 @@ public class Comman
             bulkCopy.WriteToServer(dt);
             return true;
         }
-        catch (Exception)
+        catch
         {
             return false;
         }
@@ -2476,7 +2484,7 @@ public class Comman
             bulkCopy.WriteToServer(dt);
             return true;
         }
-        catch (Exception)
+        catch
         {
             return false;
         }
@@ -2524,7 +2532,7 @@ public class Comman
             bulkCopy.WriteToServer(dt);
             return true;
         }
-        catch (Exception)
+        catch
         {
             return false;
         }
@@ -2590,8 +2598,9 @@ public class Comman
         }
         catch (Exception _ex)
         {
-            return "5000";
             ConStr.Close();
+            return "5000";
+
         }
         finally
         {
@@ -2630,7 +2639,7 @@ public class Comman
         }
         catch (SqlException exp)
         {
-            throw exp;
+            throw;
         }
         finally
         {
@@ -2658,7 +2667,7 @@ public class Comman
         }
         catch (SqlException exp)
         {
-            throw exp;
+            throw;
         }
         finally
         {
@@ -2693,7 +2702,7 @@ public class Comman
         }
         catch (SqlException exp)
         {
-            throw exp;
+            throw;
         }
         finally
         {
@@ -2730,7 +2739,7 @@ public class Comman
         }
         catch (SqlException exp)
         {
-            throw exp;
+            throw;
         }
         finally
         {
@@ -2761,7 +2770,7 @@ public class Comman
         }
         catch (SqlException exp)
         {
-            throw exp;
+            throw;
         }
         finally
         {
@@ -2794,7 +2803,7 @@ public class Comman
         }
         catch (SqlException exp)
         {
-            throw exp;
+            throw;
         }
         finally
         {
@@ -2828,7 +2837,7 @@ public class Comman
         }
         catch (SqlException exp)
         {
-            throw exp;
+            throw;
         }
         finally
         {
@@ -2860,7 +2869,7 @@ public class Comman
         }
         catch (SqlException exp)
         {
-            throw exp;
+            throw;
         }
         finally
         {
@@ -2893,7 +2902,7 @@ public class Comman
         }
         catch (SqlException exp)
         {
-            throw exp;
+            throw;
         }
         finally
         {
@@ -9157,179 +9166,6 @@ public class Comman
         }
     }
 
-
-    public DataSet Tablet_Post_Session_Insert_Update_Json(string Json, string UserName)
-    {
-        SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
-        try
-        {
-            if (sqlConnection.State != ConnectionState.Open)
-            {
-                sqlConnection.Open();
-            }
-
-            DataSet dbSqlDataSet = new DataSet();
-            SqlCommand sqlcmd = new SqlCommand();
-            sqlcmd.Connection = sqlConnection;
-            sqlcmd.CommandType = CommandType.StoredProcedure;
-            sqlcmd.CommandText = "Tablet_Post_Session_Insert_UpdateJson";
-
-            sqlcmd.Parameters.AddWithValue("@Json", Json);
-            sqlcmd.Parameters.AddWithValue("@UserName", UserName);
-            SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
-            da.Fill(dbSqlDataSet);
-            return dbSqlDataSet;
-        }
-        catch (SqlException e)
-        {
-            if (!(sqlConnection.State == ConnectionState.Closed))
-            {
-                sqlConnection.Close();
-                sqlConnection.Dispose();
-            }
-
-            throw;
-        }
-        finally
-        {
-            if (!(sqlConnection.State == ConnectionState.Closed))
-            {
-                sqlConnection.Close();
-                sqlConnection.Dispose();
-            }
-
-        }
-    }
-
-
-    public DataSet Tablet_Post_Session_Insert_Update_Tbl_Photo_Attendance2027(DataTable DttblActivityUpdate_School, DataTable Dttbltraning, string Json, string UserName)
-    {
-        SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
-        try
-        {
-            if (sqlConnection.State != ConnectionState.Open)
-            {
-                sqlConnection.Open();
-            }
-
-            DataSet dbSqlDataSet = new DataSet();
-            SqlCommand sqlcmd = new SqlCommand();
-            sqlcmd.Connection = sqlConnection;
-            sqlcmd.CommandType = CommandType.StoredProcedure;
-            sqlcmd.CommandText = "Tablet_Post_Session_Insert_Update_Tbl_Photo_Attendance2027";
-            sqlcmd.Parameters.AddWithValue("@tblPlanActivity", DttblActivityUpdate_School);
-            sqlcmd.Parameters.AddWithValue("@@tblTrainaudit", Dttbltraning);
-            sqlcmd.Parameters.AddWithValue("@Json", Json);
-            sqlcmd.Parameters.AddWithValue("@UserName", UserName);
-            SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
-            da.Fill(dbSqlDataSet);
-            return dbSqlDataSet;
-        }
-        catch (SqlException e)
-        {
-            if (!(sqlConnection.State == ConnectionState.Closed))
-            {
-                sqlConnection.Close();
-                sqlConnection.Dispose();
-            }
-
-            throw;
-        }
-        finally
-        {
-            if (!(sqlConnection.State == ConnectionState.Closed))
-            {
-                sqlConnection.Close();
-                sqlConnection.Dispose();
-            }
-
-        }
-    }
-    public DataSet Tablet_Post_Session_Insert_Update_InsertUpdateVidhyaSabhaGKP(DataTable tblVidhyaSabhaGKP, DataTable tblUtsavGKP, DataTable tblChildPreparationGKP)
-    {
-        SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
-        try
-        {
-            if (sqlConnection.State != ConnectionState.Open)
-            {
-                sqlConnection.Open();
-            }
-
-            DataSet dbSqlDataSet = new DataSet();
-            SqlCommand sqlcmd = new SqlCommand();
-            sqlcmd.Connection = sqlConnection;
-            sqlcmd.CommandType = CommandType.StoredProcedure;
-            sqlcmd.CommandText = "Tablet_Post_Session_Insert_Update_tblVidhyaSabhaGKP";
-            sqlcmd.Parameters.AddWithValue("@tblVidhyaSabhaGKP", tblVidhyaSabhaGKP);
-            sqlcmd.Parameters.AddWithValue("@tblUtsavGKP", tblUtsavGKP);
-            sqlcmd.Parameters.AddWithValue("@tblChildPreparationGKP", tblChildPreparationGKP);
-            SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
-            da.Fill(dbSqlDataSet);
-            return dbSqlDataSet;
-        }
-        catch (SqlException e)
-        {
-            if (!(sqlConnection.State == ConnectionState.Closed))
-            {
-                sqlConnection.Close();
-                sqlConnection.Dispose();
-            }
-
-            throw;
-        }
-        finally
-        {
-            if (!(sqlConnection.State == ConnectionState.Closed))
-            {
-                sqlConnection.Close();
-                sqlConnection.Dispose();
-            }
-
-        }
-    }
-    public DataSet Tablet_Post_Session_Insert_Update_tbldAttendanceGKPBO(DataTable tblVidhyaSabhaGKP, DataTable tblUtsavGKP, DataTable tblChildPreparationGKP)
-    {
-        SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
-        try
-        {
-            if (sqlConnection.State != ConnectionState.Open)
-            {
-                sqlConnection.Open();
-            }
-
-            DataSet dbSqlDataSet = new DataSet();
-            SqlCommand sqlcmd = new SqlCommand();
-            sqlcmd.Connection = sqlConnection;
-            sqlcmd.CommandType = CommandType.StoredProcedure;
-            sqlcmd.CommandText = "Tablet_Post_Session_Insert_Update_tbldAttendanceGKPBO";
-            sqlcmd.Parameters.AddWithValue("@tblChildRegistrationGKPBO", tblVidhyaSabhaGKP);
-            sqlcmd.Parameters.AddWithValue("@tblChildAttendanceGKPBO", tblUtsavGKP);
-            sqlcmd.Parameters.AddWithValue("@tblClassAttendanceGKPBO", tblChildPreparationGKP);
-            SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
-            da.Fill(dbSqlDataSet);
-            return dbSqlDataSet;
-        }
-        catch (SqlException e)
-        {
-            if (!(sqlConnection.State == ConnectionState.Closed))
-            {
-                sqlConnection.Close();
-                sqlConnection.Dispose();
-            }
-
-            throw;
-        }
-        finally
-        {
-            if (!(sqlConnection.State == ConnectionState.Closed))
-            {
-                sqlConnection.Close();
-                sqlConnection.Dispose();
-            }
-
-        }
-    }
-
     public DataSet Tablet_Post_Session_Insert_Update_Tbl_Attendance_Audit(DataTable DttblActivityUpdate_School)
     {
         SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
@@ -9556,50 +9392,6 @@ public class Comman
             sqlcmd.Connection = sqlConnection;
             sqlcmd.CommandType = CommandType.StoredProcedure;
             sqlcmd.CommandText = "Tablet_Post_Session_Insert_Update_tblEnrolment_Temp2025";
-            sqlcmd.Parameters.AddWithValue("@tblEnrolment_Temp", DttblEnrolment_Temp);
-            //sqlcmd.Parameters.AddWithValue("@UserID", iUserID);
-            //sqlcmd.Parameters.AddWithValue("@JSON", sJason);
-            SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
-            da.Fill(dbSqlDataSet);
-            return dbSqlDataSet;
-        }
-        catch (SqlException e)
-        {
-            if (!(sqlConnection.State == ConnectionState.Closed))
-            {
-                sqlConnection.Close();
-                sqlConnection.Dispose();
-            }
-
-            throw;
-        }
-        finally
-        {
-            if (!(sqlConnection.State == ConnectionState.Closed))
-            {
-                sqlConnection.Close();
-                sqlConnection.Dispose();
-            }
-
-        }
-    }
-
-
-    public DataSet Tablet_Post_Session_Insert_Update_tblEnrolment_Temp2026(DataTable DttblEnrolment_Temp)
-    {
-        SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
-        try
-        {
-            if (sqlConnection.State != ConnectionState.Open)
-            {
-                sqlConnection.Open();
-            }
-
-            DataSet dbSqlDataSet = new DataSet();
-            SqlCommand sqlcmd = new SqlCommand();
-            sqlcmd.Connection = sqlConnection;
-            sqlcmd.CommandType = CommandType.StoredProcedure;
-            sqlcmd.CommandText = "Tablet_Post_Session_Insert_Update_tblEnrolment_Temp2026";
             sqlcmd.Parameters.AddWithValue("@tblEnrolment_Temp", DttblEnrolment_Temp);
             //sqlcmd.Parameters.AddWithValue("@UserID", iUserID);
             //sqlcmd.Parameters.AddWithValue("@JSON", sJason);
@@ -10218,9 +10010,178 @@ public class Comman
         }
     }
 
+    public DataSet Tablet_Post_Session_Insert_Update_tblEnrolment_Temp2026(DataTable DttblEnrolment_Temp)
+    {
+        SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
+        try
+        {
+            if (sqlConnection.State != ConnectionState.Open)
+            {
+                sqlConnection.Open();
+            }
+
+            DataSet dbSqlDataSet = new DataSet();
+            SqlCommand sqlcmd = new SqlCommand();
+            sqlcmd.Connection = sqlConnection;
+            sqlcmd.CommandType = CommandType.StoredProcedure;
+            sqlcmd.CommandText = "Tablet_Post_Session_Insert_Update_tblEnrolment_Temp2026";
+            sqlcmd.Parameters.AddWithValue("@tblEnrolment_Temp", DttblEnrolment_Temp);
+            //sqlcmd.Parameters.AddWithValue("@UserID", iUserID);
+            //sqlcmd.Parameters.AddWithValue("@JSON", sJason);
+            SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
+            da.Fill(dbSqlDataSet);
+            return dbSqlDataSet;
+        }
+        catch (SqlException e)
+        {
+            if (!(sqlConnection.State == ConnectionState.Closed))
+            {
+                sqlConnection.Close();
+                sqlConnection.Dispose();
+            }
+
+            throw;
+        }
+        finally
+        {
+            if (!(sqlConnection.State == ConnectionState.Closed))
+            {
+                sqlConnection.Close();
+                sqlConnection.Dispose();
+            }
+
+        }
+    }
+
+    public DataSet Tablet_Post_Session_Insert_Update_tbldAttendanceGKPBO(DataTable tblVidhyaSabhaGKP, DataTable tblUtsavGKP, DataTable tblChildPreparationGKP)
+    {
+        SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
+        try
+        {
+            if (sqlConnection.State != ConnectionState.Open)
+            {
+                sqlConnection.Open();
+            }
+
+            DataSet dbSqlDataSet = new DataSet();
+            SqlCommand sqlcmd = new SqlCommand();
+            sqlcmd.Connection = sqlConnection;
+            sqlcmd.CommandType = CommandType.StoredProcedure;
+            sqlcmd.CommandText = "Tablet_Post_Session_Insert_Update_tbldAttendanceGKPBO";
+            sqlcmd.Parameters.AddWithValue("@tblChildRegistrationGKPBO", tblVidhyaSabhaGKP);
+            sqlcmd.Parameters.AddWithValue("@tblChildAttendanceGKPBO", tblUtsavGKP);
+            sqlcmd.Parameters.AddWithValue("@tblClassAttendanceGKPBO", tblChildPreparationGKP);
+            SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
+            da.Fill(dbSqlDataSet);
+            return dbSqlDataSet;
+        }
+        catch (SqlException e)
+        {
+            if (!(sqlConnection.State == ConnectionState.Closed))
+            {
+                sqlConnection.Close();
+                sqlConnection.Dispose();
+            }
+
+            throw;
+        }
+        finally
+        {
+            if (!(sqlConnection.State == ConnectionState.Closed))
+            {
+                sqlConnection.Close();
+                sqlConnection.Dispose();
+            }
+
+        }
+    }
+
+    public DataSet Tablet_Post_Session_Insert_Update_Json(string Json, string UserName)
+    {
+        SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
+        try
+        {
+            if (sqlConnection.State != ConnectionState.Open)
+            {
+                sqlConnection.Open();
+            }
+
+            DataSet dbSqlDataSet = new DataSet();
+            SqlCommand sqlcmd = new SqlCommand();
+            sqlcmd.Connection = sqlConnection;
+            sqlcmd.CommandType = CommandType.StoredProcedure;
+            sqlcmd.CommandText = "Tablet_Post_Session_Insert_UpdateJson";
+
+            sqlcmd.Parameters.AddWithValue("@Json", Json);
+            sqlcmd.Parameters.AddWithValue("@UserName", UserName);
+            SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
+            da.Fill(dbSqlDataSet);
+            return dbSqlDataSet;
+        }
+        catch (SqlException e)
+        {
+            if (!(sqlConnection.State == ConnectionState.Closed))
+            {
+                sqlConnection.Close();
+                sqlConnection.Dispose();
+            }
+
+            throw;
+        }
+        finally
+        {
+            if (!(sqlConnection.State == ConnectionState.Closed))
+            {
+                sqlConnection.Close();
+                sqlConnection.Dispose();
+            }
+
+        }
+    }
+    public DataSet Tablet_Post_Session_Insert_Update_InsertUpdateVidhyaSabhaGKP(DataTable tblVidhyaSabhaGKP, DataTable tblUtsavGKP, DataTable tblChildPreparationGKP)
+    {
+        SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
+        try
+        {
+            if (sqlConnection.State != ConnectionState.Open)
+            {
+                sqlConnection.Open();
+            }
+
+            DataSet dbSqlDataSet = new DataSet();
+            SqlCommand sqlcmd = new SqlCommand();
+            sqlcmd.Connection = sqlConnection;
+            sqlcmd.CommandType = CommandType.StoredProcedure;
+            sqlcmd.CommandText = "Tablet_Post_Session_Insert_Update_tblVidhyaSabhaGKP";
+            sqlcmd.Parameters.AddWithValue("@tblVidhyaSabhaGKP", tblVidhyaSabhaGKP);
+            sqlcmd.Parameters.AddWithValue("@tblUtsavGKP", tblUtsavGKP);
+            sqlcmd.Parameters.AddWithValue("@tblChildPreparationGKP", tblChildPreparationGKP);
+            SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
+            da.Fill(dbSqlDataSet);
+            return dbSqlDataSet;
+        }
+        catch (SqlException e)
+        {
+            if (!(sqlConnection.State == ConnectionState.Closed))
+            {
+                sqlConnection.Close();
+                sqlConnection.Dispose();
+            }
+
+            throw;
+        }
+        finally
+        {
+            if (!(sqlConnection.State == ConnectionState.Closed))
+            {
+                sqlConnection.Close();
+                sqlConnection.Dispose();
+            }
+
+        }
+    }
+
 }
-
-
 public class GoogleCaptchaResponse
 {
     [JsonProperty("success")]

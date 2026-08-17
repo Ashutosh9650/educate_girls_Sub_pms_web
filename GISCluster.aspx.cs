@@ -1,19 +1,12 @@
 ﻿using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Presentation;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Services;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 public partial class GISCluster : System.Web.UI.Page
 {
     clsMain objMain = new clsMain();
@@ -1002,7 +995,7 @@ public partial class GISCluster : System.Web.UI.Page
     public void ExeclHeatMap(DataTable dtMain1)
     {
 
-        string StartupPath = Server.MapPath("~/Export");
+        string StartupPath = Server.MapPath(Comman.GetImagePath("ExportPath"));
         string filepath = "";
         XLWorkbook wb = new XLWorkbook();
         DataTable dt = dtMain1;
@@ -1122,7 +1115,7 @@ public partial class GISCluster : System.Web.UI.Page
                 Response.End();
             }
         }
-        catch (Exception ex)
+        catch
         {
             throw;
         }
