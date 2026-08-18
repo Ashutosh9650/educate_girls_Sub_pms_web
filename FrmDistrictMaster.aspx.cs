@@ -52,7 +52,7 @@ public partial class FrmDistrictMaster : System.Web.UI.Page
             string DistrictCode = LblDistrictCode.Text;
             if (Year != "" && DistrictCode != "")
             {
-                ret = objMain.AddUpdate("Update mst2District Set StartYear='" + Year + "' where DistrictCode='" + DistrictCode + "'");
+             //   ret = objMain.AddUpdate("Update mst2District Set StartYear='" + Year + "' where DistrictCode='" + DistrictCode + "'");
             }
             if (ret == true)
             {

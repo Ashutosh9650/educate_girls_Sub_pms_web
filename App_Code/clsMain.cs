@@ -205,37 +205,37 @@ new SqlParameter("@Filter3",Filter3),
         return SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "LoadMasterVillage", cmdParameters);
     }
 
-    public bool AddUpdate(string query)
-    {
-        bool result;
-        using (SqlCommand sqlCommand = new SqlCommand())
-        {
-            SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
-            try
-            {
-                new DataTable();
-                if (sqlConnection.State == ConnectionState.Closed)
-                {
-                    sqlConnection.Open();
-                }
-                sqlCommand.CommandType = CommandType.Text;
-                sqlCommand.CommandText = query;
-                sqlCommand.Connection = sqlConnection;
-                sqlCommand.ExecuteNonQuery();
-                sqlCommand.Dispose();
-                result = true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                sqlConnection.Close();
-            }
-        }
-        return result;
-    }
+    //public bool AddUpdate(string query)
+    //{
+    //    bool result;
+    //    using (SqlCommand sqlCommand = new SqlCommand())
+    //    {
+    //        SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
+    //        try
+    //        {
+    //            new DataTable();
+    //            if (sqlConnection.State == ConnectionState.Closed)
+    //            {
+    //                sqlConnection.Open();
+    //            }
+    //            sqlCommand.CommandType = CommandType.Text;
+    //            sqlCommand.CommandText = query;
+    //            sqlCommand.Connection = sqlConnection;
+    //            sqlCommand.ExecuteNonQuery();
+    //            sqlCommand.Dispose();
+    //            result = true;
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            throw ex;
+    //        }
+    //        finally
+    //        {
+    //            sqlConnection.Close();
+    //        }
+    //    }
+    //    return result;
+    //}
 
     public int DeleteSchool(string Schoolcode, int year)
     {

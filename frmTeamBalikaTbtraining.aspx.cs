@@ -373,7 +373,7 @@ public partial class frmTeamBalikaTbtraining : System.Web.UI.Page
             string UpdateQuery = "";
             UpdateQuery = "Update [tblTraining] set [Status]=2 where UniqueCode='" + ViewState["TBCode"].ToString() + "' ";
 
-             InsertTSD1 = objMain.AddUpdate(UpdateQuery);
+           //  InsertTSD1 = objMain.AddUpdate(UpdateQuery);
            
             //if (InsertTSD1 == true)
             //{

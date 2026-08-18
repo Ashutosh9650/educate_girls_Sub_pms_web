@@ -4353,8 +4353,8 @@ public partial class frmNewSchoolActivity : System.Web.UI.Page
             {
 
                 string StudentTSInsertQueryD2d = "";
-                StudentTSInsertQueryD2d += " Update tblActivityDTD set ActivityStatus =" + ddlStatus.SelectedValue + ",UserType='P' , ActivityDate ='" + DateTime.Now.ToString("yyyy-MM-dd") + "' where UniqueCode ='" + lbUniqueCode.Text + "' ";
-                 InsertD2d = objMain.AddUpdate(StudentTSInsertQueryD2d);
+                //StudentTSInsertQueryD2d += " Update tblActivityDTD set ActivityStatus =" + ddlStatus.SelectedValue + ",UserType='P' , ActivityDate ='" + DateTime.Now.ToString("yyyy-MM-dd") + "' where UniqueCode ='" + lbUniqueCode.Text + "' ";
+                // InsertD2d = objMain.AddUpdate(StudentTSInsertQueryD2d);
             }
         }
         if (InsertD2d == true)

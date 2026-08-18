@@ -269,12 +269,12 @@ public partial class frmChangeClusterAgp : System.Web.UI.Page
         {
             bool UpdateTs = false;
 
-            string StudentTSInsertQuery1 = " Update  mst5VillageAgp set BlockCode=''  where BlockCode ='" + ddlDeleteBlock.SelectedValue.ToString() + "'";
-            UpdateTs = objMain.AddUpdate(StudentTSInsertQuery1);
+            //string StudentTSInsertQuery1 = " Update  mst5VillageAgp set BlockCode=''  where BlockCode ='" + ddlDeleteBlock.SelectedValue.ToString() + "'";
+            //UpdateTs = objMain.AddUpdate(StudentTSInsertQuery1);
                
           
-                   string StudentTSInsertQuery = " delete from  mst3BlockAgp  where BlockCode ='" + ddlDeleteBlock.SelectedValue.ToString() + "'";
-                    UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
+            //       string StudentTSInsertQuery = " delete from  mst3BlockAgp  where BlockCode ='" + ddlDeleteBlock.SelectedValue.ToString() + "'";
+            //        UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
                
                if (UpdateTs == true)
                {
@@ -301,18 +301,18 @@ public partial class frmChangeClusterAgp : System.Web.UI.Page
             }
 
             string StudentTSInsertQuery = "";
-            StudentTSInsertQuery = " Update mst5VillageAgp set ClusterCode='" + ddlCLusterVillage.SelectedValue.ToString() + "' where VillageCode ='" + ddlCLusterVillage.SelectedValue.ToString() + "'";
-            bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
+            //StudentTSInsertQuery = " Update mst5VillageAgp set ClusterCode='" + ddlCLusterVillage.SelectedValue.ToString() + "' where VillageCode ='" + ddlCLusterVillage.SelectedValue.ToString() + "'";
+            //bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
 
 
-            StudentTSInsertQuery = " insert into mstClusterAgp([StateCode]     ,[DistrictCode]      ,[BlockCode]      ,[ClusterCode]      ,[ClusterName],fYear,EGClusterCode) values ('" + ddlState.SelectedValue.ToString() + "', '" + ddlDistrict.SelectedValue.ToString() + "','" + ddlBlock.SelectedValue.ToString() + "','" + ddlCLusterVillage.SelectedValue.ToString() + "','" + ddlCLusterVillage.SelectedItem.Text + "','" + ddlYear.SelectedItem.Text + "','" + EGVillagecode + "') ";
-            bool UpdateTs1 = objMain.AddUpdate(StudentTSInsertQuery);
+            //StudentTSInsertQuery = " insert into mstClusterAgp([StateCode]     ,[DistrictCode]      ,[BlockCode]      ,[ClusterCode]      ,[ClusterName],fYear,EGClusterCode) values ('" + ddlState.SelectedValue.ToString() + "', '" + ddlDistrict.SelectedValue.ToString() + "','" + ddlBlock.SelectedValue.ToString() + "','" + ddlCLusterVillage.SelectedValue.ToString() + "','" + ddlCLusterVillage.SelectedItem.Text + "','" + ddlYear.SelectedItem.Text + "','" + EGVillagecode + "') ";
+            //bool UpdateTs1 = objMain.AddUpdate(StudentTSInsertQuery);
 
-            if (UpdateTs1 == true)
-            {
-                ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved sucessfully')</script>", false);
-                FillGrid();
-            }
+            //if (UpdateTs1 == true)
+            //{
+            //    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved sucessfully')</script>", false);
+            //    FillGrid();
+            //}
         }
     }
 
@@ -322,19 +322,19 @@ public partial class frmChangeClusterAgp : System.Web.UI.Page
         {
             string StudentTSInsertQuery = "";
 
-            StudentTSInsertQuery = " Update mst5VillageAgp set ClusterCode='' where ClusterCode ='" + ddlDeleteCluster.SelectedValue.ToString() + "'";
-            bool UpdateTs1 = objMain.AddUpdate(StudentTSInsertQuery);
+            //StudentTSInsertQuery = " Update mst5VillageAgp set ClusterCode='' where ClusterCode ='" + ddlDeleteCluster.SelectedValue.ToString() + "'";
+            //bool UpdateTs1 = objMain.AddUpdate(StudentTSInsertQuery);
 
-            StudentTSInsertQuery = " delete from  mstClusterAgp  where ClusterCode ='" + ddlDeleteCluster.SelectedValue.ToString() + "'";
-            bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
+            //StudentTSInsertQuery = " delete from  mstClusterAgp  where ClusterCode ='" + ddlDeleteCluster.SelectedValue.ToString() + "'";
+            //bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
 
 
            
-            if (UpdateTs == true)
-            {
-                ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Delete sucessfully')</script>", false);
-                FillGrid();
-            }
+            //if (UpdateTs == true)
+            //{
+            //    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Delete sucessfully')</script>", false);
+            //    FillGrid();
+            //}
         }
     }
     public int Update_SchoolWorkingStatus(string SchoolCode, int WorkingStatus, int MangmentType, int GKP, int GKPLevel, int SchoolType, int BalType, int SchoolCampus,string Villagecode)
@@ -644,14 +644,14 @@ public partial class frmChangeClusterAgp : System.Web.UI.Page
        
 
         string UCOde1 = objComman.Generate_RandomStringAnu(8);
-        string StudentTSInsertQuery = " insert into mst3BlockAgp([StateCode]     ,[DistrictCode]      ,[BlockCode]      ,[BlockName]   ,EGBlockCode   ,fYear,AdminBlock,SerialNo) values ('" + ddlState.SelectedValue.ToString() + "', '" + ddlDistrict.SelectedValue.ToString() + "','" + UCOde1 + "','" + txtBlockName.Text + "','" + txtBlockCOde.Text + "','" + ddlYear.SelectedItem.Text + "','" + ddlAdminBlock.SelectedValue + "','" + lblSerial.Text + "') ";
-        bool UpdateTs1 = objMain.AddUpdate(StudentTSInsertQuery);
+        //string StudentTSInsertQuery = " insert into mst3BlockAgp([StateCode]     ,[DistrictCode]      ,[BlockCode]      ,[BlockName]   ,EGBlockCode   ,fYear,AdminBlock,SerialNo) values ('" + ddlState.SelectedValue.ToString() + "', '" + ddlDistrict.SelectedValue.ToString() + "','" + UCOde1 + "','" + txtBlockName.Text + "','" + txtBlockCOde.Text + "','" + ddlYear.SelectedItem.Text + "','" + ddlAdminBlock.SelectedValue + "','" + lblSerial.Text + "') ";
+        //bool UpdateTs1 = objMain.AddUpdate(StudentTSInsertQuery);
 
-        if (UpdateTs1 == true)
-        {
-            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved sucessfully')</script>", false);
-            ddlDistrict_SelectedIndexChanged(ddlDistrict, null);
-        }
+        //if (UpdateTs1 == true)
+        //{
+        //    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved sucessfully')</script>", false);
+        //    ddlDistrict_SelectedIndexChanged(ddlDistrict, null);
+        //}
     }
     protected void ddlAdminBlock_SelectedIndexChanged(object sender, EventArgs e)
     {

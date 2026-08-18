@@ -885,13 +885,13 @@ public partial class FrmAnnualPlan : System.Web.UI.Page
             string Vilagecode = Convert.ToString(ViewState["VillageCode"]); ;
             if (SchoolId.Length > 3)
             {
-                string StudentTSInsertQuery1 = " delete from  tblAnualPlanDataDetail where schoolCode ='" + SchoolId + "' ";
-                InsertTS = objMain.AddUpdate(StudentTSInsertQuery1);
+                //string StudentTSInsertQuery1 = " delete from  tblAnualPlanDataDetail where schoolCode ='" + SchoolId + "' ";
+                //InsertTS = objMain.AddUpdate(StudentTSInsertQuery1);
             }
             else
             {
-                string StudentTSInsertQuery1 = " delete from  tblAnualPlanDataDetail where VillageCode ='" + Vilagecode + "' ";
-                InsertTS = objMain.AddUpdate(StudentTSInsertQuery1);
+                //string StudentTSInsertQuery1 = " delete from  tblAnualPlanDataDetail where VillageCode ='" + Vilagecode + "' ";
+                //InsertTS = objMain.AddUpdate(StudentTSInsertQuery1);
             }
             if (InsertTS == true)
             {
@@ -1075,13 +1075,13 @@ public partial class FrmAnnualPlan : System.Web.UI.Page
             string Vilagecode = Convert.ToString(ViewState["VillageCode"]); ;
             if (SchoolId.Length > 3)
             {
-                string StudentTSInsertQuery1 = " delete from  tblAnualPlanDataDetail where schoolCode ='" + SchoolId + "' ";
-                bool InsertTS = objMain.AddUpdate(StudentTSInsertQuery1);
+                //string StudentTSInsertQuery1 = " delete from  tblAnualPlanDataDetail where schoolCode ='" + SchoolId + "' ";
+                //bool InsertTS = objMain.AddUpdate(StudentTSInsertQuery1);
             }
             else
             {
-                string StudentTSInsertQuery1 = " delete from  tblAnualPlanDataDetail where VillageCode ='" + Vilagecode + "' ";
-                bool InsertTS = objMain.AddUpdate(StudentTSInsertQuery1);
+                //string StudentTSInsertQuery1 = " delete from  tblAnualPlanDataDetail where VillageCode ='" + Vilagecode + "' ";
+                //bool InsertTS = objMain.AddUpdate(StudentTSInsertQuery1);
             }
 
             string UniqueID = "";
@@ -1174,8 +1174,8 @@ public partial class FrmAnnualPlan : System.Web.UI.Page
                 {
                     Mar1 = Convert.ToInt32(Mar);
                 }
-                string StudentTSInsertQuery = " INSERT INTO tblAnualPlanDataDetail([AnnualPlanGUID],[Description],SchoolCode,VillageCode,Myear,[RowNo],[Apr],[May],[Jun],[Jul],[Aug],[Sep],[Oct],[Nov],[Dec],[Jan],Feb,[Mar],Createdate,CreateBy)Values('" + UniqueID + "','" + Description + "','" + SchoolId + "','" + Vilagecode + "','" + ddlYear.SelectedValue + "','" + LookCode + "'," + Apr1 + "," + May1 + "," + Jun1 + "," + Jul1 + "," + Aug1 + "," + Sep1 + "," + Oct1 + "," + Nov1 + "," + Dec1 + "," + Jan1 + "," + Feb1 + "," + Mar1 + ",'" + DateTime.Now.ToString("yyyy-MM-dd") + "','" + Convert.ToString(Session["username"]) + "')";
-                InsertTSEnroll = objMain.AddUpdate(StudentTSInsertQuery);
+                //string StudentTSInsertQuery = " INSERT INTO tblAnualPlanDataDetail([AnnualPlanGUID],[Description],SchoolCode,VillageCode,Myear,[RowNo],[Apr],[May],[Jun],[Jul],[Aug],[Sep],[Oct],[Nov],[Dec],[Jan],Feb,[Mar],Createdate,CreateBy)Values('" + UniqueID + "','" + Description + "','" + SchoolId + "','" + Vilagecode + "','" + ddlYear.SelectedValue + "','" + LookCode + "'," + Apr1 + "," + May1 + "," + Jun1 + "," + Jul1 + "," + Aug1 + "," + Sep1 + "," + Oct1 + "," + Nov1 + "," + Dec1 + "," + Jan1 + "," + Feb1 + "," + Mar1 + ",'" + DateTime.Now.ToString("yyyy-MM-dd") + "','" + Convert.ToString(Session["username"]) + "')";
+                //InsertTSEnroll = objMain.AddUpdate(StudentTSInsertQuery);
 
 
             }

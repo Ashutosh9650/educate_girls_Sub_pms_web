@@ -131,7 +131,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.CheckPassword(UserName, checkpass);
 
@@ -192,7 +192,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.CheckPasswordNew(UserName, checkpass, IMEINo);
 
@@ -254,7 +254,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.CheckPasswordNew(UserName, checkpass, IMEINo);
 
@@ -379,7 +379,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewBO(UserName, checkpass, IMEINo);
 
@@ -442,7 +442,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewBO(UserName, checkpass, IMEINo);
 
@@ -998,7 +998,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -1060,7 +1060,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -1129,7 +1129,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -1191,7 +1191,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -1304,7 +1304,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -1365,7 +1365,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.CheckPasswordNew(UserName, checkpass, IMEINo);
 
@@ -1437,7 +1437,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -3482,7 +3482,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
             int UserID = 0;
             if (UserName.Trim() != "" && Pass.Trim() != "")
             {
-                string checkpass = objPass.CreatePasswordHashNew(Pass);
+                string checkpass = objPass.CreatePasswordHashSecurityAudit(Pass);
 
                 DataTable dtUser = objComman.GetUserAuthenticate(UserName, Pass);
 
@@ -5911,7 +5911,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                 if (UserName.Trim() != "")
                 {
                     Password ojbP = new Password();
-                    string NewPassWord = ojbP.CreatePasswordHashNew(Password.Trim());
+                    string NewPassWord = ojbP.CreatePasswordHashSecurityAudit(Password.Trim());
                     SqlParameter[] pr = new SqlParameter[] 
                     { 
                        new SqlParameter("@UserID",UserName.ToString()),
@@ -5964,7 +5964,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                 if (UserName.Trim() != "")
                 {
                     Password ojbP = new Password();
-                    string NewPassWord = ojbP.CreatePasswordHashNew(Password.Trim());
+                    string NewPassWord = ojbP.CreatePasswordHashSecurityAudit(Password.Trim());
                     SqlParameter[] pr = new SqlParameter[] 
                     { 
                        new SqlParameter("@UserID",UserName.ToString()),
@@ -8762,7 +8762,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.CheckPasswordNew(UserName, checkpass, IMEINo);
 
@@ -8824,7 +8824,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.CheckPasswordNew(UserName, checkpass, IMEINo);
 
@@ -10423,7 +10423,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -11570,7 +11570,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -12514,7 +12514,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -12861,7 +12861,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewBO(UserName, checkpass, IMEINo);
 
@@ -13127,7 +13127,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
             int UserID = 0;
             //if (UserName.Trim() != "" && Password.Trim() != "")
             //{
-                string checkpass = objPass.CreatePasswordHashNew(Password);
+                string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
                 DataTable dtUser = DBTask.GetUserLoginAuthenticateFC(UserName, checkpass, IMEINo);
 
@@ -13454,7 +13454,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -13540,7 +13540,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -13664,7 +13664,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -13961,7 +13961,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            //string checkpass = objPass.CreatePasswordHashNew(Password);
+            //string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             //DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -14095,7 +14095,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -14531,7 +14531,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -14592,7 +14592,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -14848,7 +14848,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -14937,7 +14937,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            //string checkpass = objPass.CreatePasswordHashNew(Password);
+            //string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             //DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -16460,7 +16460,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashNew(Password);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -18121,7 +18121,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
             DataSet dtExportData = new DataSet();
             int UserID = 0;
 
-            string checkpass = objPass.CreatePasswordHashNew(Pass);
+            string checkpass = objPass.CreatePasswordHashSecurityAudit(Pass);
 
 
             if (UserName.Trim() != "" && Pass.Trim() != "")
