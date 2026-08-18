@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 public partial class FrmSealSignRemoveDuplicate : System.Web.UI.Page
 {
     clsMain objMain = new clsMain();
@@ -68,7 +65,7 @@ public partial class FrmSealSignRemoveDuplicate : System.Web.UI.Page
         {
             LoadReport();
         }
-        catch (Exception ex)
+        catch
         {
 
             throw;
@@ -173,7 +170,7 @@ public partial class FrmSealSignRemoveDuplicate : System.Web.UI.Page
 
         }
     }
-    protected void IMG_DTDSerch_Click(object sender, EventArgs e)   
+    protected void IMG_DTDSerch_Click(object sender, EventArgs e)
     {
         DataTable Ds_gvReport1 = Session["D2d"] as DataTable;
         //DataRow[] drArr1 = null;
@@ -259,8 +256,8 @@ public partial class FrmSealSignRemoveDuplicate : System.Web.UI.Page
     }
     protected void btnMatch_Click(object sender, EventArgs e)
     {
-        int indcount1 = 0, indD2d = 0;       
-        if (lblUniqueCode.Text.Length>0)
+        int indcount1 = 0, indD2d = 0;
+        if (lblUniqueCode.Text.Length > 0)
         {
             MatchData(indcount1, indD2d);
 
@@ -268,7 +265,7 @@ public partial class FrmSealSignRemoveDuplicate : System.Web.UI.Page
     }
     protected void MatchData(int indcount2, int indD2d)
     {
-        string UniqueIDLeft = "", UniqueIDRight = "";    
+        string UniqueIDLeft = "", UniqueIDRight = "";
         if (lblUniqueCode.Text.Length > 0)
         {
             int Ret = Insert_Update(lblUniqueCode.Text, Convert.ToString(Session["username"]), 2);
@@ -306,7 +303,7 @@ public partial class FrmSealSignRemoveDuplicate : System.Web.UI.Page
         }
         catch (SqlException exp)
         {
-            throw exp;
+            throw;
         }
         finally
         {
@@ -320,7 +317,6 @@ public partial class FrmSealSignRemoveDuplicate : System.Web.UI.Page
     protected void GVMain_OnRowCommand(object sender, GridViewCommandEventArgs e)
     {
         int row1 = int.Parse(e.CommandArgument.ToString()); // commandargument is same as row index
-      
         if (e.CommandName == "GVUIO")
         {
             int iIndex = Convert.ToInt32(e.CommandArgument);
@@ -611,7 +607,7 @@ public partial class FrmSealSignRemoveDuplicate : System.Web.UI.Page
         }
         if (ddlYear.SelectedIndex > 0)
         {
-            conditions += " and mst5Village.Fyear='"+ddlYear.SelectedItem.Text+"'";
+            conditions += " and mst5Village.Fyear='" + ddlYear.SelectedItem.Text + "'";
         }
         return conditions;
     }

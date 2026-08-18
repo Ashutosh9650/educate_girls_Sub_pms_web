@@ -2579,8 +2579,8 @@ public partial class SurveyQuestion : System.Web.UI.Page
                        "USP_Update_MSTFormQuestion",
                        cmdParameters
                    );
-
-            if (icount > 0)            {
+            if (icount > 0)
+			{
                 showMessages("Save successfully");
 
             }
@@ -2750,7 +2750,7 @@ public partial class SurveyQuestion : System.Web.UI.Page
         {
             dbSqlCommand.ExecuteNonQuery();
         }
-        catch (Exception ex)
+        catch
         {
             return -1;
         }
@@ -2758,7 +2758,6 @@ public partial class SurveyQuestion : System.Web.UI.Page
     }
     protected void lnkbtn1_Click(object sender, EventArgs e)
     {
-       
         if (ddlForm.SelectedIndex > 0)
         {
             MPEFormNameQ.Show();

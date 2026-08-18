@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Data;
-using System.Data.SqlClient;
-using System.Data.SqlTypes;
-using System.Collections;
-using System.Configuration;
-using System.IO;
-using System.Threading;
-using System.Web.UI.HtmlControls;
-using Newtonsoft.Json;
 public partial class SurveyAnstest : System.Web.UI.Page
 {
     [System.Runtime.InteropServices.ComVisible(true)]
@@ -100,7 +95,7 @@ public partial class SurveyAnstest : System.Web.UI.Page
             DataSet ds = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, ProcedureName, paramvT);
             dtcombo = ds.Tables[0] as DataTable;
         }
-        catch (Exception ex)
+        catch
         {
 
         }
@@ -257,7 +252,7 @@ public partial class SurveyAnstest : System.Web.UI.Page
                     }
                     //  sb.Append("<tr class=" + Questionid + " style='background-color:#ffdfba'><td style='width:2%'><span> " + dt.Rows[i]["QuestionNo"].ToString() + " </span></td><td width='48%' class='fs'>" + dt.Rows[i]["Question"].ToString().Replace("'", "") + "   " + Idmm + "</td>");
                     sb.Append("<tr><td><table  id='questions1' class='w - 100'><tr class=" + Questionid + " ><td style='width:50px'><span> " + dt.Rows[i]["QuestionNo"].ToString() + " </span></td><td class='fs'>" + dt.Rows[i]["Question"].ToString().Replace("'", "") + " </br><img  Height = '80px' Width = '100px' BorderStyle = 'Ridge' BorderWidth = '1px' src = " + img + ">  " + Idmm + "</td></tr><tr><td style='width:50px'><td>" + Type + "</td></tr></table></td></tr> ");
-                   // sb.Append("<tr><td><table  id='questions1' class='w-100'><tr class=" + Questionid + " ><td style='width:50px'><span> " + dt.Rows[i]["QuestionNo"].ToString() + " </span></td><td class='fs' >" + dt.Rows[i]["Question"].ToString().Replace("'", "") + "  </br><img  Height = '80px' Width = '100px' BorderStyle = 'Ridge' BorderWidth = '1px' src = " + img + "> " + Idmm + "</td></tr><tr><td style='width:50px'><td>" + Type + "</td></tr></table></td></tr> ");
+                    // sb.Append("<tr><td><table  id='questions1' class='w-100'><tr class=" + Questionid + " ><td style='width:50px'><span> " + dt.Rows[i]["QuestionNo"].ToString() + " </span></td><td class='fs' >" + dt.Rows[i]["Question"].ToString().Replace("'", "") + "  </br><img  Height = '80px' Width = '100px' BorderStyle = 'Ridge' BorderWidth = '1px' src = " + img + "> " + Idmm + "</td></tr><tr><td style='width:50px'><td>" + Type + "</td></tr></table></td></tr> ");
 
                     //sb.Append("<tr class=" + Questionid + " style='background-color:#ffdfba'><td style='width:2%'><span> " + dt.Rows[i]["QuestionNo"].ToString() + " </span></td><td width='48%' class='fs'>" + dt.Rows[i]["Question"].ToString().Replace("'", "") + " </br><img  Height = '80px' Width = '100px' BorderStyle = 'Ridge' BorderWidth = '1px' src = " + img + "> " + Idmm + " </td>");
                 }
@@ -294,8 +289,8 @@ public partial class SurveyAnstest : System.Web.UI.Page
         sb.Append("</table></form></div></div>");
         dialog.Text = sb.ToString();
         StringBuilder sb2 = new StringBuilder();
-      //  sb2.Append("<input type='button' name='Submit' class='btn btn-primary px-5' id='IDSub' value='Submit' onclick='savedata()'/>");
-      //  Savebutton.Text = sb2.ToString();
+        //  sb2.Append("<input type='button' name='Submit' class='btn btn-primary px-5' id='IDSub' value='Submit' onclick='savedata()'/>");
+        //  Savebutton.Text = sb2.ToString();
         //14300/14301/14302
     }
 
@@ -716,9 +711,8 @@ public partial class SurveyAnstest : System.Web.UI.Page
                     string FileName = Convert.ToString(fplUpload.PostedFile.FileName).Trim();//Path.GetFileName(excelFileUpload.PostedFile.FileName);
                                                                                              //ViewState["FileName"] = FileName;
                     hdnfilename.Value = FileName + DateTime.Now.ToString();
-                    string FilePath = Server.MapPath("~/SurveyFiles/") + FileName;
+                    string FilePath = Server.MapPath(Comman.GetImagePath("SurveyFilesPath") + "/") + FileName;
                     fplUpload.SaveAs(FilePath);
-
                 }
                 else
                 {
@@ -727,7 +721,7 @@ public partial class SurveyAnstest : System.Web.UI.Page
 
 
             }
-            catch (Exception ex)
+            catch
             {
                 //StatusLabel.Text = "Upload status: The file could not be uploaded. The following error occured: " + ex.Message;
             }
@@ -758,9 +752,8 @@ public partial class SurveyAnstest : System.Web.UI.Page
         //        //    string FileName = Convert.ToString(fplUpload.PostedFile.FileName).Trim();//Path.GetFileName(excelFileUpload.PostedFile.FileName);
         //        //                                                                             //ViewState["FileName"] = FileName;
 
-        //        //    FilePath = HttpContext.Current.Server.MapPath("~/SurveyFiles/") + FileName;
+        //        //    FilePath = HttpContext.Current.Server.MapPath(Comman.GetImagePath("SurveyFilesPath") + "/") + FileName;
         //        //    fplUpload.SaveAs(FilePath);
-
         //        //}
         //        //else
         //        //{
@@ -769,7 +762,7 @@ public partial class SurveyAnstest : System.Web.UI.Page
 
 
         //    }
-        //    catch (Exception ex)
+        //    catch
         //    {
         //        //StatusLabel.Text = "Upload status: The file could not be uploaded. The following error occured: " + ex.Message;
         //    }
@@ -874,7 +867,7 @@ public partial class SurveyAnstest : System.Web.UI.Page
             }
 
         }
-        catch (Exception ex)
+        catch
         {
             returndata = "Data Not Submitted Successfully.";
         }

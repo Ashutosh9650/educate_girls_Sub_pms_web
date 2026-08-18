@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Data;
-using System.Data.SqlClient;
-using System.Data.SqlTypes;
-using System.Collections;
-using System.Configuration;
-using System.IO;
-using System.Threading;
-using System.Web.UI.HtmlControls;
-using Newtonsoft.Json;
 public partial class SurveyAnspre : System.Web.UI.Page
 {
     [System.Runtime.InteropServices.ComVisible(true)]
@@ -63,7 +58,6 @@ public partial class SurveyAnspre : System.Web.UI.Page
                 //FillQuestion(Convert.ToInt32(ddlForm.SelectedValue));
                 //Session["FormID"] = ddlForm.SelectedValue;
             }
-           
             //userid.InnerText = Session["UserID"].ToString();
         }
     }
@@ -431,7 +425,7 @@ public partial class SurveyAnspre : System.Web.UI.Page
         dialog.Text = sb.ToString();
         StringBuilder sb2 = new StringBuilder();
         sb2.Append("<input type='button' name='Submit' class='btn btn-primary px-5' id='IDSub' value='Submit' onclick='savedata()'/>");
-      //  Savebutton.Text = sb2.ToString();
+        //  Savebutton.Text = sb2.ToString();
         //14300/14301/14302
     }
 
@@ -852,9 +846,8 @@ public partial class SurveyAnspre : System.Web.UI.Page
                     string FileName = Convert.ToString(fplUpload.PostedFile.FileName).Trim();//Path.GetFileName(excelFileUpload.PostedFile.FileName);
                                                                                              //ViewState["FileName"] = FileName;
                     hdnfilename.Value = FileName + DateTime.Now.ToString();
-                    string FilePath = Server.MapPath("~/SurveyFiles/") + FileName;
+                    string FilePath = Server.MapPath(Comman.GetImagePath("SurveyFilesPath") + "/") + FileName;
                     fplUpload.SaveAs(FilePath);
-
                 }
                 else
                 {
@@ -863,7 +856,7 @@ public partial class SurveyAnspre : System.Web.UI.Page
 
 
             }
-            catch (Exception ex)
+            catch
             {
                 //StatusLabel.Text = "Upload status: The file could not be uploaded. The following error occured: " + ex.Message;
             }
@@ -894,7 +887,7 @@ public partial class SurveyAnspre : System.Web.UI.Page
         //        //    string FileName = Convert.ToString(fplUpload.PostedFile.FileName).Trim();//Path.GetFileName(excelFileUpload.PostedFile.FileName);
         //        //                                                                             //ViewState["FileName"] = FileName;
 
-        //        //    FilePath = HttpContext.Current.Server.MapPath("~/SurveyFiles/") + FileName;
+        //        //    FilePath = HttpContext.Current.Server.MapPath(Comman.GetImagePath("SurveyFilesPath") + "/") + FileName;
         //        //    fplUpload.SaveAs(FilePath);
 
         //        //}
@@ -905,7 +898,7 @@ public partial class SurveyAnspre : System.Web.UI.Page
 
 
         //    }
-        //    catch (Exception ex)
+        //    catch
         //    {
         //        //StatusLabel.Text = "Upload status: The file could not be uploaded. The following error occured: " + ex.Message;
         //    }
@@ -1035,7 +1028,7 @@ public partial class SurveyAnspre : System.Web.UI.Page
 
             }
         }
-        catch (Exception ex)
+        catch
         {
             returndata = "Please Fill Form." + "___" + "0";
         }

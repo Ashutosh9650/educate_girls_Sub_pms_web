@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using iTextSharp.text;
+using iTextSharp.text.html.simpleparser;
+using iTextSharp.text.pdf;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
-using iTextSharp.text.pdf;
 using System.Net;
-using iTextSharp.text;
-using iTextSharp.text.html.simpleparser;
 using System.Text;
-using iTextSharp.text.html;
-
-using DocumentFormat.OpenXml.Spreadsheet;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 public partial class frmFilingSystem : System.Web.UI.Page
 {
     clsMain objMain = new clsMain();
@@ -52,7 +48,7 @@ public partial class frmFilingSystem : System.Web.UI.Page
 
                 }
 
-               // LoadData();
+                // LoadData();
             }
             else
             {
@@ -86,7 +82,7 @@ public partial class frmFilingSystem : System.Web.UI.Page
         try
         {
             LoadData();
-          //  GVSealSign.Enabled = false;
+            //  GVSealSign.Enabled = false;
         }
         catch (Exception)
         {
@@ -111,7 +107,7 @@ public partial class frmFilingSystem : System.Web.UI.Page
             string st = RetStringBuilder(lblSchoolCode.Text);
             PrintCards(st);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             throw;
         }
@@ -134,10 +130,6 @@ public partial class frmFilingSystem : System.Web.UI.Page
         {
             conditions = "DistrictCode ='" + ddlDistrict.SelectedValue + "'  and BlockCode in( " + Session["BlockCode"].ToString() + " ) and FYear ='" + ddlYear.SelectedItem.Text + "' ";
         }
-        else if (Session["user_level_Role"].ToString() == "6")
-        {
-            conditions = "DistrictCode ='" + ddlDistrict.SelectedValue + "'  and BlockCode in( " + Session["blockCodeMul"].ToString() + " ) and FYear ='" + ddlYear.SelectedItem.Text + "' ";
-        }
         else
         {
             conditions = "DistrictCode ='" + ddlDistrict.SelectedValue + "' ";
@@ -155,9 +147,7 @@ public partial class frmFilingSystem : System.Web.UI.Page
         {
             foreach (System.Web.UI.WebControls.ListItem item in ddlBlock.Items)
             {
-               
-
-                    item.Selected = true;
+                item.Selected = true;
 
             }
 
@@ -173,7 +163,6 @@ public partial class frmFilingSystem : System.Web.UI.Page
     }
     public void AlllStateCode()
     {
-       
         if (Session["user_level_Role"].ToString() == "1")
         {
             SqlParameter[] par1 = new SqlParameter[]
@@ -253,7 +242,6 @@ public partial class frmFilingSystem : System.Web.UI.Page
         }
         else if (Session["user_level_Role"].ToString() == "2")
         {
-     
             conditions = "StateCode ='" + ddlState.SelectedValue + "'  and Fyear= '" + ddlYear.SelectedItem.Text + "'  ";
             objComman.BindDLL("mst2District", "DistrictCode,dbo.TitleCase(upper(DistrictName)) as DistrictName", conditions, "DistrictName", "asc", ddlDistrict, "DistrictName", "DistrictCode", "--Select--");
 
@@ -268,7 +256,6 @@ public partial class frmFilingSystem : System.Web.UI.Page
 
         else
         {
-            
             conditions = "StateCode ='" + ddlState.SelectedValue + "' and DistrictCode in(" + Session["DistrictCode"].ToString() + ") and Fyear= '" + ddlYear.SelectedItem.Text + "' ";
             objComman.BindDLL("mst2District", "DistrictCode,dbo.TitleCase(upper(DistrictName)) as DistrictName", conditions, "DistrictName", "asc", ddlDistrict, "DistrictName", "DistrictCode", "--Select--");
             string strQry;
@@ -417,7 +404,7 @@ public partial class frmFilingSystem : System.Web.UI.Page
     }
     public void FillFC()
     {
-      string  conditions = "ActiveStatus =1 And UserLevel=24 ";
+        string conditions = "ActiveStatus =1 And UserLevel=24 ";
         string ddlBlockStr = ""; string ddlVillageStr = "";
         foreach (System.Web.UI.WebControls.ListItem item in ddlBlock.Items)
         {
@@ -550,7 +537,6 @@ public partial class frmFilingSystem : System.Web.UI.Page
             {
 
                new SqlParameter("@Con",  conditions)
-              
             };
 
 
@@ -613,8 +599,6 @@ public partial class frmFilingSystem : System.Web.UI.Page
         {
             ddlPhan = ddlPhan.Substring(0, ddlPhan.LastIndexOf(","));
         }
-    
-
         conditions = "DistrictCode in('" + ddlDistrict.SelectedValue + "')  and BlockCode in('" + ddlBlock.SelectedValue + "') and  ClusterCode in(" + ddlPhan + ")";
 
         //conditions = "DistrictCode ='" + ddlDistrict.SelectedValue + "'  and BlockCode ='" + ddlBlock.SelectedValue + "' and  PanchayatCode='" + ddlPanchayat.SelectedValue + "'  ";
@@ -902,7 +886,7 @@ public partial class frmFilingSystem : System.Web.UI.Page
             Response.ContentType = "application/ms-excel";
             Response.Buffer = true;
             Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            string dsssssssssssss1 = Server.MapPath("~/") + "Travel vouchers\\" + filename;
+            string dsssssssssssss1 = Server.MapPath(Comman.GetImagePath("TravelvouchersPath") + "//" + filename);
             Response.ContentEncoding = Encoding.UTF8;
             Response.Charset = "";
 
@@ -926,7 +910,7 @@ public partial class frmFilingSystem : System.Web.UI.Page
         //Response.Cache.SetCacheability(HttpCacheability.NoCache);
         //Response.Charset = "utf-8";
         //Response.ContentEncoding = Encoding.UTF7;
-        //string dsssssssssssss1 = Server.MapPath("~/") + "Travel vouchers\\" + filename;
+        //string dsssssssssssss1 = Server.MapPath(Comman.GetImagePath("TravelvouchersPath")\\" + filename;
         //// byte[] data = req.DownloadData(dsssssssssssss1);
         ////Response.BinaryWrite(data);
         //Response.BinaryWrite(dsssssssssssss1);
@@ -1051,7 +1035,7 @@ public partial class frmFilingSystem : System.Web.UI.Page
         sb.Append("</table>");
         ViewState["Filename"] = "";
         string FC = ddlFc.SelectedItem.Text;
-        string filename = Server.MapPath("~/") + "Travel vouchers\\" + "SealSign" + "_" + FC.Substring(0, 7) + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + ".xls";
+        string filename = Server.MapPath(Comman.GetImagePath("TravelvouchersPath") + "\\" + "SealSign" + "_" + FC.Substring(0, 7) + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + ".xls");
         StreamWriter sw = new StreamWriter(filename, false);
         sw.Write(@"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.0 Tr
 ansitional//EN"">");
@@ -1177,7 +1161,6 @@ ansitional//EN"">");
 
         SqlParameter[] parm1 = new SqlParameter[]
             {
-         
                new SqlParameter("@Con",  conditionsNew),
                  new SqlParameter("@Flag",  3),
             };
@@ -1196,7 +1179,6 @@ ansitional//EN"">");
         {
             return "";
         }
-      
         DataRow[] d = dt.Select("Class='1'");
         DataRow[] dr = dt.Select("Class in(2,3,4,5,6,7,8)");
         DataRow[] dr1 = dt.Select("(len(Class)>2 or Class>8)");
@@ -1509,7 +1491,6 @@ ansitional//EN"">");
             Label lblSchoolCode = (Label)e.Row.FindControl("lblSchoolCode");
             Label lblSealSign = (Label)e.Row.FindControl("lblSealSign");
             Label lblAprrove = (Label)e.Row.FindControl("lblAprrove");
-            
             //LinkButton lnkGenerate = (LinkButton)e.Row.FindControl("lnkGenerate");
             //LinkButton lblCategory = (LinkButton)e.Row.FindControl("lblCategory");
             LinkButton lnkbtnsend = (LinkButton)e.Row.FindControl("lnkbtnsend");
@@ -1521,22 +1502,19 @@ ansitional//EN"">");
 
 
             Int32 Icount = 0;
-          
-         
             if (Session["user_level"].ToString() == "30" || Session["user_level"].ToString() == "136") // Role DEO
             {
                 if (sendval == "" || sendval == "0")
                 {
                     lnkbtnsend.Text = "Submit to BO";
                     //lnkbtnsend.Enabled = true;
-                  
                 }
                 else
                 {
                     lnkbtnsend.Visible = false;
                 }
 
-                if (recieveval == "2" )
+                if (recieveval == "2")
                 {
                     lnkbtnRecieve.Text = "Received from BO";
                     lnkbtnRecieve.Visible = true;
@@ -1560,7 +1538,7 @@ ansitional//EN"">");
                     lnkbtnsend.Visible = true;
                     lnkbtnsend.Text = "Submit to FC";
                 }
-                else if (sendval == "1" )
+                else if (sendval == "1")
                 {
                     lnkbtnsend.Visible = false;
                 }
@@ -1568,12 +1546,12 @@ ansitional//EN"">");
                 {
                     lnkbtnsend.Visible = false;
                 }
-                if (recieveval == "1" && lblSealSign.Text=="1")
+                if (recieveval == "1" && lblSealSign.Text == "1")
                 {
                     lnkbtnRecieve.Visible = true;
                     lnkbtnRecieve.Text = "Received from FC";
                 }
-               else
+                else
                 {
                     lnkbtnRecieve.Visible = false;
                 }
@@ -1590,20 +1568,18 @@ ansitional//EN"">");
             int indx = row.RowIndex;
             Label lblSchoolCode = (Label)GVSealSign.Rows[indx].FindControl("lblSchoolCode");
             Label lblClusterCode = (Label)GVSealSign.Rows[indx].FindControl("lblClusterCode");
-          //  DropDownList ddlRe = (DropDownList)GVSealSign.Rows[indx].FindControl("ddlRe");
+            //  DropDownList ddlRe = (DropDownList)GVSealSign.Rows[indx].FindControl("ddlRe");
             LinkButton lnkPdf1 = (LinkButton)GVSealSign.Rows[indx].FindControl("lnkPdf1");
             //GenratePDF(lblSchoolCode.Text);
             // GenratePDF_pdfTable(lblSchoolCode.Text);
 
             // GenrateExcel_toPDf(lblSchoolCode.Text);
             //ConvertExcelTopdf(Convert.ToString(ViewState["Filename"]));
-         
-                string st = RetStringBuilderNew(lblSchoolCode.Text, lnkPdf1.Text, lblClusterCode.Text);
-                PrintCards(st);
-         
 
+            string st = RetStringBuilderNew(lblSchoolCode.Text, lnkPdf1.Text, lblClusterCode.Text);
+            PrintCards(st);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             throw;
         }
@@ -1611,11 +1587,9 @@ ansitional//EN"">");
 
     protected void PrintCards(string RetStringBuilder)
     {
-
-        string a = HttpContext.Current.Server.MapPath("~/Mou/Testhtml.htm");
+        string a = HttpContext.Current.Server.MapPath(Comman.GetImagePath("MouPath") + "/" + "Testhtml.htm");
         string FIleName = ddlDistrict.SelectedItem.Text + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + "Testhtml" + ".htm";
-        string b = HttpContext.Current.Server.MapPath("~/Mou/" + FIleName + "");
-
+        string b = HttpContext.Current.Server.MapPath(Comman.GetImagePath("MouPath") + "/" + FIleName + "");
 
         File.Copy(a, b, true);
         StreamReader s = File.OpenText(b.ToString());
@@ -1652,7 +1626,6 @@ ansitional//EN"">");
     {
         try
         {
-           
             int rowIndex = Convert.ToInt32(e.CommandArgument);
             if (e.CommandName == "LnkSend")
             {
@@ -1668,7 +1641,7 @@ ansitional//EN"">");
                     string ReceiveFile = Convert.ToString(this.GVSealSign.DataKeys[rowIndex]["ReceiveFile"]);
                     string SealSign_DiseCode = Convert.ToString(this.GVSealSign.DataKeys[rowIndex]["SealSign_DiseCode"]);
 
-                    
+
                     hdnsend.Value = "1";
                     hdnrecieve.Value = "0";
                     string SendFiles = hdnsend.Value;
@@ -1699,8 +1672,6 @@ ansitional//EN"">");
                     LinkButton lnkbtnsend = (LinkButton)GVSealSign.Rows[rowIndex].FindControl("lnkbtnsend");
                     LinkButton lnkbtnRecieve = (LinkButton)GVSealSign.Rows[rowIndex].FindControl("lnkbtnRecieve");
                     string SealSign_DiseCode = Convert.ToString(this.GVSealSign.DataKeys[rowIndex]["SealSign_DiseCode"]);
-
-                  
                     hdnsend.Value = "2";
                     hdnrecieve.Value = "1";
                     string SendFiles = hdnsend.Value;
@@ -1741,7 +1712,7 @@ ansitional//EN"">");
                     string ReceiveFile = Convert.ToString(this.GVSealSign.DataKeys[rowIndex]["ReceiveFile"]);
                     string SealSign_DiseCode = Convert.ToString(this.GVSealSign.DataKeys[rowIndex]["SealSign_DiseCode"]);
 
-                   // hdnsend.Value = "2";
+                    // hdnsend.Value = "2";
                     hdnrecieve.Value = "3";
                     if (ReceiveFile == "3")
                     {
@@ -1776,10 +1747,10 @@ ansitional//EN"">");
                     LinkButton lnkbtnRecieve = (LinkButton)GVSealSign.Rows[rowIndex].FindControl("lnkbtnRecieve");
                     string SealSign_DiseCode = Convert.ToString(this.GVSealSign.DataKeys[rowIndex]["SealSign_DiseCode"]);
 
-                    hdnrecieve.Value =string.Empty;
+                    hdnrecieve.Value = string.Empty;
                     string RoleDEO = "19";
                     string RecieveFiles = "2";
-                    int Result = UpdateFilingSystemRecieved(SchoolCode, RecieveFiles, RoleDEO,SealSign_DiseCode);
+                    int Result = UpdateFilingSystemRecieved(SchoolCode, RecieveFiles, RoleDEO, SealSign_DiseCode);
                     if (Result > 0)
                     {
                         lnkbtnsend.Visible = false;
@@ -1802,10 +1773,10 @@ ansitional//EN"">");
             }
 
         }
-        catch (Exception ex)
+        catch (Exception)
         {
 
-            throw ex;
+            throw;
         }
     }
 
@@ -1818,7 +1789,6 @@ ansitional//EN"">");
             new SqlParameter("@RecieveFlag", RecieveFiles),
             new SqlParameter("@Role", Role),
             new SqlParameter("@SealSign_DiseCode", SealSign_DiseCode)
-            
        };
         return SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "usp_FilingSendUpdate", cmdParameters);
     }

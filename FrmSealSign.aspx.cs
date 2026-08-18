@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using iTextSharp.text;
+using iTextSharp.text.html.simpleparser;
+using iTextSharp.text.pdf;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
-using iTextSharp.text.pdf;
 using System.Net;
-using iTextSharp.text;
-using iTextSharp.text.html.simpleparser;
 using System.Text;
-using iTextSharp.text.html;
-
-using DocumentFormat.OpenXml.Spreadsheet;
-
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 public partial class FrmSealSign : System.Web.UI.Page
 {
     clsMain objMain = new clsMain();
@@ -58,12 +53,11 @@ public partial class FrmSealSign : System.Web.UI.Page
                         ddlDistrict.SelectedValue = Session["NewDistrictCode"].ToString();
                     }
 
-                    ddlBlock.SelectedValue = Convert.ToString(a[0].ToString()); 
+                    ddlBlock.SelectedValue = Convert.ToString(a[0].ToString());
                     ddlBlock_SelectedIndexChanged(ddlBlock, null);
 
                     ddlVillage.SelectedValue = Convert.ToString(a[1].ToString());
-                    ddlVillage_SelectedIndexChanged(ddlVillage, null);
-          
+                    ddlVillage_SelectedIndexChanged(ddlVillage, null);          
                 }
                 LoadData();
             }
@@ -114,7 +108,6 @@ public partial class FrmSealSign : System.Web.UI.Page
             GridViewRow row = (GridViewRow)lnk.NamingContainer;
             int indx = row.RowIndex;
             Label lblSchoolCode = (Label)GVSealSign.Rows[indx].FindControl("lblSchoolCode");
-          
             //GenratePDF(lblSchoolCode.Text);
             // GenratePDF_pdfTable(lblSchoolCode.Text);
 
@@ -123,7 +116,7 @@ public partial class FrmSealSign : System.Web.UI.Page
             string st = RetStringBuilder(lblSchoolCode.Text);
             PrintCards(st);
         }
-        catch (Exception ex)
+        catch
         {
             throw;
         }
@@ -145,10 +138,6 @@ public partial class FrmSealSign : System.Web.UI.Page
         else if (Session["user_level_Role"].ToString() == "4")
         {
             conditions = "DistrictCode ='" + ddlDistrict.SelectedValue + "'  and BlockCode in( " + Session["BlockCode"].ToString() + " ) and FYear ='" + ddlYear.SelectedItem.Text + "' ";
-        }
-        else if (Session["user_level_Role"].ToString() == "6")
-        {
-            conditions = "   BlockCode in( " + Session["blockCodeMul"].ToString() + " ) and FYear ='" + ddlYear.SelectedItem.Text + "' ";
         }
         else
         {
@@ -172,7 +161,6 @@ public partial class FrmSealSign : System.Web.UI.Page
     }
     public void LoadYear()
     {
-        
         DataTable dtYear = objComman.Generate_Financial_Year();
         objComman.BindDLLMasterTable("mstSchool", "Type,ID", dtYear, "", "Type", "asc", ddlYear, "Type", "ID", "Select");
         ddlYear.SelectedIndex = 1;
@@ -359,7 +347,6 @@ public partial class FrmSealSign : System.Web.UI.Page
         ddlVillage.DataTextField = "ClusterName";
         ddlVillage.DataValueField = "ClusterCode";
         ddlVillage.DataBind();
-        
     }
     public void FillFC()
     {
@@ -384,8 +371,6 @@ public partial class FrmSealSign : System.Web.UI.Page
         {
             conditions = conditions + " and BlockCode in (" + ddlBlockStr + ")";
         }
-      
-        
         foreach (System.Web.UI.WebControls.ListItem item in ddlVillage.Items)
         {
             if (item.Selected)
@@ -405,13 +390,12 @@ public partial class FrmSealSign : System.Web.UI.Page
         {
             conditions = conditions + " and VillageCode in (" + ddlVillageStr + ") ";
         }
-     
         objComman.BindDLL("mstuser", " UserName as UserID,UserName +' ('+ FristName +')' as UserName ", conditions, "UserName", "asc", ddlFc, "UserName", "UserID", "Select");
 
     }
     public void LoadData()
     {
-        string strQry = "", conditions = "",conditions1="";
+        string strQry = "", conditions = "", conditions1 = "";
         conditions = " v.StateCode='" + ddlState.SelectedValue.ToString() + "'";
 
         if (ddlDistrict.SelectedIndex > 0)
@@ -491,12 +475,9 @@ public partial class FrmSealSign : System.Web.UI.Page
         //if (ddlFc.SelectedIndex > 0)
         //{
         //    conditions = conditions + " and tblEnrolment.CreateBy='" + ddlFc.SelectedValue.ToString() + "' ";
-            
         //}
-       
         SqlParameter[] parm1 = new SqlParameter[]
             {
-         
                new SqlParameter("@Con",  conditions),
                  new SqlParameter("@Flag",  2),
             };
@@ -564,7 +545,6 @@ public partial class FrmSealSign : System.Web.UI.Page
 
 
         conditions = "DistrictCode in('" + ddlDistrict.SelectedValue + "')  and BlockCode in('" + ddlBlock.SelectedValue + "') and  ClusterCode in(" + ddlPhan + ")";
-        
         //conditions = "DistrictCode ='" + ddlDistrict.SelectedValue + "'  and BlockCode ='" + ddlBlock.SelectedValue + "' and  PanchayatCode='" + ddlPanchayat.SelectedValue + "'  ";
         //objComman.BindDLL("mst5Village", "VillageCode,dbo.TitleCase(upper(VillageName)) as VillageName", conditions, "VillageName", "asc", ddlVillage, "VillageName", "VillageCode", "--All-");
 
@@ -634,8 +614,7 @@ public partial class FrmSealSign : System.Web.UI.Page
             conditions = conditions + " and tblEnrolment.SchoolCode='" + SchoolCode + "' ";
         }
         SqlParameter[] parm1 = new SqlParameter[]
-            {
-         
+            {         
                new SqlParameter("@Con",  conditions),
                  new SqlParameter("@Flag",  3),
             };
@@ -742,8 +721,7 @@ public partial class FrmSealSign : System.Web.UI.Page
             conditions = conditions + " and tblEnrolment.SchoolCode='" + SchoolCode + "' ";
         }
         SqlParameter[] parm1 = new SqlParameter[]
-            {
-         
+            {         
                new SqlParameter("@Con",  conditions),
                  new SqlParameter("@Flag",  3),
             };
@@ -849,7 +827,7 @@ public partial class FrmSealSign : System.Web.UI.Page
             Response.ContentType = "application/ms-excel";
             Response.Buffer = true;
             Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            string dsssssssssssss1 = Server.MapPath("~/") + "Travel vouchers\\" + filename;
+            string dsssssssssssss1 = Server.MapPath(Comman.GetImagePath("TravelvouchersPath") + "\\" + filename);
             Response.ContentEncoding = Encoding.UTF8;
             Response.Charset = "";
 
@@ -873,7 +851,7 @@ public partial class FrmSealSign : System.Web.UI.Page
         //Response.Cache.SetCacheability(HttpCacheability.NoCache);
         //Response.Charset = "utf-8";
         //Response.ContentEncoding = Encoding.UTF7;
-        //string dsssssssssssss1 = Server.MapPath("~/") + "Travel vouchers\\" + filename;
+        //string dsssssssssssss1 = Server.MapPath(Comman.GetImagePath("TravelvouchersPath")\\" + filename;
         //// byte[] data = req.DownloadData(dsssssssssssss1);
         ////Response.BinaryWrite(data);
         //Response.BinaryWrite(dsssssssssssss1);
@@ -914,8 +892,7 @@ public partial class FrmSealSign : System.Web.UI.Page
             conditions = conditions + " and tblEnrolment.SchoolCode='" + SchoolCode + "' ";
         }
         SqlParameter[] parm1 = new SqlParameter[]
-            {
-         
+            {         
                new SqlParameter("@Con",  conditions),
                  new SqlParameter("@Flag",  3),
             };
@@ -998,7 +975,7 @@ public partial class FrmSealSign : System.Web.UI.Page
         sb.Append("</table>");
         ViewState["Filename"] = "";
         string FC = ddlFc.SelectedItem.Text;
-        string filename = Server.MapPath("~/") + "Travel vouchers\\" + "SealSign" + "_" + FC.Substring(0, 7) + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + ".xls";
+        string filename = Server.MapPath(Comman.GetImagePath("TravelvouchersPath") + "\\" + "SealSign" + "_" + FC.Substring(0, 7) + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + ".xls");
         StreamWriter sw = new StreamWriter(filename, false);
         sw.Write(@"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.0 Tr
 ansitional//EN"">");
@@ -1049,7 +1026,7 @@ ansitional//EN"">");
 
     #endregion
     #region
-       public static DataSet GetDataSetNew(string connString, CommandType cmdType, string cmdText, params SqlParameter[] cmdParameters)
+    public static DataSet GetDataSetNew(string connString, CommandType cmdType, string cmdText, params SqlParameter[] cmdParameters)
     {
         SqlDataAdapter da = new SqlDataAdapter();
         DataSet ds = new DataSet();
@@ -1092,7 +1069,7 @@ ansitional//EN"">");
         }
     }
 
-    private string RetStringBuilderNew(string SchoolCode, string DiseCode,string ClusterCode)
+    private string RetStringBuilderNew(string SchoolCode, string DiseCode, string ClusterCode)
     {
         // string imageURLLogo =  "/images/logo-new.png";
         StringBuilder sb = new StringBuilder();
@@ -1112,21 +1089,18 @@ ansitional//EN"">");
         {
             conditions = conditions + " and v.ClusterCode='" + ddlVillage.SelectedValue.ToString() + "' ";
         }
-       
         if (ddlFc.SelectedIndex > 0)
         {
             conditions = conditions + " and tblEnrolment.SchoolCode='" + SchoolCode + "' ";
         }
         conditions = conditions + " and tblEnrolment.SealSign_DiseCode='" + DiseCode + "'";
-           
         SqlParameter[] parm1 = new SqlParameter[]
             {
-         
                new SqlParameter("@Con",  conditions),
                  new SqlParameter("@Flag",  3),
             };
 
-        string [] a=DiseCode.Split('_');
+        string[] a = DiseCode.Split('_');
         DataSet ds = GetDataSetNew(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[SP_GET_Seal_Sign_New_08_06]", parm1);
 
         DataTable dtFcName = objComman.Select_All_Data("MstUser", "UserName +' ('+ FristName +')' as UserName", " DistrictCode ='" + ddlDistrict.SelectedValue + "' and  VillageCode='" + ClusterCode + "' and len(VillageCode)>2 and UserLevel=24 and ActiveStatus=1", "", "");
@@ -1208,13 +1182,11 @@ ansitional//EN"">");
         sb.Append("" + Server.HtmlDecode(Convert.ToString(dt1.Rows[0]["17"])) + "</th>");
         sb.Append("<th style='font-weight:bold'>");
         sb.Append("" + Server.HtmlDecode(Convert.ToString(dt1.Rows[0]["18"])) + "</th>");
-     
-     
         sb.Append("<th style='font-weight:bold'> ");
         sb.Append("" + Server.HtmlDecode(Convert.ToString(dt1.Rows[0]["20"])) + "</th>");
 
-        
-       
+
+
         sb.Append("<th style='font-weight:bold'>");
         sb.Append("Unique ID</th>");
         if (Convert.ToString(Session["StateCode"]) == "23")
@@ -1223,11 +1195,6 @@ ansitional//EN"">");
             sb.Append("" + Server.HtmlDecode("समग्र ID") + "</th>");
 
         }
-       
-        
-      
-    
-       
         sb.Append("</tr>");
         //sb.Append("<tr>");
         //sb.Append("<th style='font-weight:bold'>");
@@ -1260,7 +1227,6 @@ ansitional//EN"">");
             dt.Columns.Remove("School");
             dt.Columns.Remove("DISECode");
             dt.Columns.Remove("Division");
-         
             dt.Columns.Remove("EnrolmentDate");
             if (Convert.ToString(Session["StateCode"]) != "23")
             {
@@ -1333,7 +1299,6 @@ ansitional//EN"">");
         }
         SqlParameter[] parm1 = new SqlParameter[]
             {
-         
                new SqlParameter("@Con",  conditions),
                  new SqlParameter("@Flag",  3),
             };
@@ -1365,7 +1330,6 @@ ansitional//EN"">");
         sb.Append("<tr>");
         sb.Append("<th style='font-weight:bold'>");
         sb.Append("" + Server.HtmlDecode(Convert.ToString(dt1.Rows[0]["10"])) + "</th>");
-       
         sb.Append("<th style='font-weight:bold'>");
         sb.Append("" + Server.HtmlDecode(Convert.ToString(dt1.Rows[0]["13"])) + "</th>");
         sb.Append("<th style='font-weight:bold'>");
@@ -1449,14 +1413,14 @@ ansitional//EN"">");
 
             DropDownList ddlRe = (DropDownList)e.Row.FindControl("ddlRe");
             Label lblSchoolCode = (Label)e.Row.FindControl("lblSchoolCode");
-            LinkButton lnkGenerate =(LinkButton)e.Row.FindControl("lnkGenerate");
+            LinkButton lnkGenerate = (LinkButton)e.Row.FindControl("lnkGenerate");
             LinkButton lblCategory = (LinkButton)e.Row.FindControl("lblCategory");
 
-            Int32 Icount=0;
-                if (lblCategory.Text!="")
-                {
-                    Icount = Convert.ToInt32(lblCategory.Text);
-                }
+            Int32 Icount = 0;
+            if (lblCategory.Text != "")
+            {
+                Icount = Convert.ToInt32(lblCategory.Text);
+            }
 
 
             lnkGenerate.Attributes.Add("onclick", "javascript:return " + "confirm('Are you sure you want to Seal Sign Generation? ')");
@@ -1486,7 +1450,7 @@ ansitional//EN"">");
 
             // GenrateExcel_toPDf(lblSchoolCode.Text);
             //ConvertExcelTopdf(Convert.ToString(ViewState["Filename"]));
-            if (ddlRe.SelectedIndex > 0 )
+            if (ddlRe.SelectedIndex > 0)
             {
                 string st = RetStringBuilderNew(lblSchoolCode.Text, ddlRe.SelectedValue, lblClusterCode.Text);
                 PrintCards(st);
@@ -1498,7 +1462,7 @@ ansitional//EN"">");
             }
 
         }
-        catch (Exception ex)
+        catch
         {
             throw;
         }
@@ -1514,12 +1478,12 @@ ansitional//EN"">");
         conditions += "  mstschool.SchoolCOde= '" + lblSchoolCode + "' ";
         Con = " and  isnull(FormNo,0)=0 and IsComplete=1 and EnrolmentMatching=1 ";
         SqlParameter[] cmdParameters = new SqlParameter[]
-		{
-			new SqlParameter("@con",conditions),
-            	new SqlParameter("@con1",Con),
+        {
+            new SqlParameter("@con",conditions),
+                new SqlParameter("@con1",Con),
          new SqlParameter("@Flag","3"),
-            
-		};
+
+        };
         DataTable dt = null;
         if (Convert.ToInt32(values) > 0)
         {
@@ -1538,15 +1502,13 @@ ansitional//EN"">");
         string lblSchoolCode = (gvr.FindControl("lblSchoolCode") as Label).Text;
         DropDownList ddlRe = (gvr.FindControl("ddlRe") as DropDownList);
         LinkButton lnkGenerate = gvr.FindControl("lnkGenerate") as LinkButton;
-        LinkButton lblCategory = gvr.FindControl("lblCategory") as LinkButton;
-        
+        LinkButton lblCategory = gvr.FindControl("lblCategory") as LinkButton;        
         string conditions = "";
         conditions += "  mstschool.SchoolCOde= '" + lblSchoolCode + "' ";
         SqlParameter[] cmdParameters = new SqlParameter[]
 {
 new SqlParameter("@con",conditions),
-         new SqlParameter("@Flag","1"),
-           
+         new SqlParameter("@Flag","1"),           
 };
         DataSet ds = null;
         if (Convert.ToInt32(values) > 0)
@@ -1582,8 +1544,7 @@ new SqlParameter("@con",conditions),
                             {
                             new SqlParameter("@UniqueChildCode",ds.Tables[0].Rows[j]["UniqueChildCode"]),
                                         new SqlParameter("@DiseCode", ds.Tables[0].Rows[j]["DiseCode"]),
-                                     new SqlParameter("@FormNo",i),
-           
+                                     new SqlParameter("@FormNo",i),           
                             };
                                 DataTable dt1 = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[Seal_sign_Update_MaleFemale]", p);
                             }
@@ -1600,8 +1561,7 @@ new SqlParameter("@con",conditions),
 {
 new SqlParameter("@UniqueChildCode",ds.Tables[0].Rows[j]["UniqueChildCode"]),
             new SqlParameter("@DiseCode", ds.Tables[0].Rows[j]["DiseCode"]),
-         new SqlParameter("@FormNo",i),
-           
+         new SqlParameter("@FormNo",i),           
 };
                                 DataTable dt1 = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[Seal_sign_Update_MaleFemale]", p);
                             }
@@ -1617,8 +1577,7 @@ new SqlParameter("@UniqueChildCode",ds.Tables[0].Rows[j]["UniqueChildCode"]),
 {
 new SqlParameter("@UniqueChildCode",ds.Tables[0].Rows[j]["UniqueChildCode"]),
             new SqlParameter("@DiseCode", ds.Tables[0].Rows[j]["DiseCode"]),
-         new SqlParameter("@FormNo",i),
-           
+         new SqlParameter("@FormNo",i),           
 };
                                 DataTable dt1 = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[Seal_sign_Update_MaleFemale]", p);
                             }
@@ -1639,8 +1598,7 @@ new SqlParameter("@UniqueChildCode",ds.Tables[0].Rows[j]["UniqueChildCode"]),
 {
 new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
             new SqlParameter("@DiseCode", ds.Tables[1].Rows[j]["DiseCode"]),
-         new SqlParameter("@FormNo",i),
-           
+         new SqlParameter("@FormNo",i),          
 };
                                     DataTable dt1 = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[Seal_sign_Update_MaleFemale]", p);
                                 }
@@ -1657,8 +1615,7 @@ new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
 {
 new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
             new SqlParameter("@DiseCode", ds.Tables[1].Rows[j]["DiseCode"]),
-         new SqlParameter("@FormNo",i),
-           
+         new SqlParameter("@FormNo",i),           
 };
                                     DataTable dt1 = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[Seal_sign_Update_MaleFemale]", p);
                                 }
@@ -1674,8 +1631,7 @@ new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
 {
 new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
             new SqlParameter("@DiseCode", ds.Tables[1].Rows[j]["DiseCode"]),
-         new SqlParameter("@FormNo",i),
-           
+         new SqlParameter("@FormNo",i),           
 };
                                     DataTable dt1 = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[Seal_sign_Update_MaleFemale]", p);
                                 }
@@ -1692,7 +1648,6 @@ new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
 new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
             new SqlParameter("@DiseCode", ds.Tables[1].Rows[j]["DiseCode"]),
          new SqlParameter("@FormNo",i),
-           
 };
                                     DataTable dt1 = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[Seal_sign_Update_MaleFemale]", p);
                                 }
@@ -1709,7 +1664,6 @@ new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
 new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
             new SqlParameter("@DiseCode", ds.Tables[1].Rows[j]["DiseCode"]),
          new SqlParameter("@FormNo",i),
-           
 };
                                     DataTable dt1 = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[Seal_sign_Update_MaleFemale]", p);
                                 }
@@ -1721,31 +1675,31 @@ new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
                             {
                                 if (j < ds.Tables[1].Rows.Count)
                                 {
-                                                                SqlParameter[] p = new SqlParameter[]
-                            {
+                                    SqlParameter[] p = new SqlParameter[]
+{
                             new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
                                         new SqlParameter("@DiseCode", ds.Tables[1].Rows[j]["DiseCode"]),
                                      new SqlParameter("@FormNo",i),
-           
-                            };
+
+};
                                     DataTable dt1 = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[Seal_sign_Update_MaleFemale]", p);
                                 }
                             }
                         }
 
-                          else if (i == Convert.ToInt32(ds.Tables[2].Rows[0]["FormNo"]) + NoofSet + 7)
+                        else if (i == Convert.ToInt32(ds.Tables[2].Rows[0]["FormNo"]) + NoofSet + 7)
                         {
                             for (int j = 72; j <= (12 * i); j++)
                             {
                                 if (j < ds.Tables[1].Rows.Count)
                                 {
-                                                                SqlParameter[] p = new SqlParameter[]
-                            {
+                                    SqlParameter[] p = new SqlParameter[]
+{
                             new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
                                         new SqlParameter("@DiseCode", ds.Tables[1].Rows[j]["DiseCode"]),
                                      new SqlParameter("@FormNo",i),
-           
-                            };
+
+};
                                     DataTable dt1 = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[Seal_sign_Update_MaleFemale]", p);
                                 }
                             }
@@ -2046,8 +2000,7 @@ new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
 {
 new SqlParameter("@UniqueChildCode",ds.Tables[0].Rows[j]["UniqueChildCode"]),
             new SqlParameter("@DiseCode", ds.Tables[0].Rows[j]["DiseCode"]),
-         new SqlParameter("@FormNo",i),
-           
+         new SqlParameter("@FormNo",i),           
 };
                                     DataTable dt1 = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[Seal_sign_Update_MaleFemale]", p);
                                 }
@@ -2064,8 +2017,7 @@ new SqlParameter("@UniqueChildCode",ds.Tables[0].Rows[j]["UniqueChildCode"]),
 {
 new SqlParameter("@UniqueChildCode",ds.Tables[0].Rows[j]["UniqueChildCode"]),
             new SqlParameter("@DiseCode", ds.Tables[0].Rows[j]["DiseCode"]),
-         new SqlParameter("@FormNo",i),
-           
+         new SqlParameter("@FormNo",i),           
 };
                                     DataTable dt1 = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[Seal_sign_Update_MaleFemale]", p);
                                 }
@@ -2081,8 +2033,7 @@ new SqlParameter("@UniqueChildCode",ds.Tables[0].Rows[j]["UniqueChildCode"]),
 {
 new SqlParameter("@UniqueChildCode",ds.Tables[0].Rows[j]["UniqueChildCode"]),
             new SqlParameter("@DiseCode", ds.Tables[0].Rows[j]["DiseCode"]),
-         new SqlParameter("@FormNo",i),
-           
+         new SqlParameter("@FormNo",i),           
 };
                                     DataTable dt1 = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[Seal_sign_Update_MaleFemale]", p);
                                 }
@@ -2105,8 +2056,7 @@ new SqlParameter("@UniqueChildCode",ds.Tables[0].Rows[j]["UniqueChildCode"]),
 {
 new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
             new SqlParameter("@DiseCode", ds.Tables[1].Rows[j]["DiseCode"]),
-         new SqlParameter("@FormNo",i),
-           
+         new SqlParameter("@FormNo",i),           
 };
                                     DataTable dt1 = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[Seal_sign_Update_MaleFemale]", p);
                                 }
@@ -2123,8 +2073,7 @@ new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
 {
 new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
             new SqlParameter("@DiseCode", ds.Tables[1].Rows[j]["DiseCode"]),
-         new SqlParameter("@FormNo",i),
-           
+         new SqlParameter("@FormNo",i),           
 };
                                     DataTable dt1 = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[Seal_sign_Update_MaleFemale]", p);
                                 }
@@ -2140,8 +2089,7 @@ new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
 {
 new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
             new SqlParameter("@DiseCode", ds.Tables[1].Rows[j]["DiseCode"]),
-         new SqlParameter("@FormNo",i),
-           
+         new SqlParameter("@FormNo",i),           
 };
                                     DataTable dt1 = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[Seal_sign_Update_MaleFemale]", p);
                                 }
@@ -2157,8 +2105,7 @@ new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
 {
 new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
             new SqlParameter("@DiseCode", ds.Tables[1].Rows[j]["DiseCode"]),
-         new SqlParameter("@FormNo",i),
-           
+         new SqlParameter("@FormNo",i),           
 };
                                     DataTable dt1 = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[Seal_sign_Update_MaleFemale]", p);
                                 }
@@ -2174,8 +2121,7 @@ new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
 {
 new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
             new SqlParameter("@DiseCode", ds.Tables[1].Rows[j]["DiseCode"]),
-         new SqlParameter("@FormNo",i),
-           
+         new SqlParameter("@FormNo",i),           
 };
                                     DataTable dt1 = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[Seal_sign_Update_MaleFemale]", p);
                                 }
@@ -2191,8 +2137,7 @@ new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
 {
 new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
             new SqlParameter("@DiseCode", ds.Tables[1].Rows[j]["DiseCode"]),
-         new SqlParameter("@FormNo",i),
-           
+         new SqlParameter("@FormNo",i),           
 };
                                     DataTable dt1 = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[Seal_sign_Update_MaleFemale]", p);
                                 }
@@ -2315,14 +2260,12 @@ new SqlParameter("@UniqueChildCode",ds.Tables[1].Rows[j]["UniqueChildCode"]),
         LoadData();
         lblCategory.Text = "";
     }
-
     protected void PrintCards(string RetStringBuilder)
     {
-       
-        string a = HttpContext.Current.Server.MapPath("~/Mou/Testhtml.htm");
+        string a = HttpContext.Current.Server.MapPath(Comman.GetImagePath("MouPath") + "/" + "Testhtml.htm");
 
         string FIleName = ddlDistrict.SelectedItem.Text + "_" + DateTime.Now.ToString("dd_MM_yyyy_hhmmssfff") + "Testhtml" + ".htm";
-        string b = HttpContext.Current.Server.MapPath("~/Mou/" + FIleName + "");
+        string b = HttpContext.Current.Server.MapPath(Comman.GetImagePath("MouPath") + "/" + FIleName + "");
 
 
         File.Copy(a, b, true);

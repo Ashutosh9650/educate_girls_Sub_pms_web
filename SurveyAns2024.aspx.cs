@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Data;
-using System.Data.SqlClient;
-using System.Data.SqlTypes;
-using System.Collections;
-using System.Configuration;
-using System.IO;
-using System.Threading;
-using System.Web.UI.HtmlControls;
-using Newtonsoft.Json;
 public partial class SurveyAns2024 : System.Web.UI.Page
 {
     [System.Runtime.InteropServices.ComVisible(true)]
@@ -53,7 +48,6 @@ public partial class SurveyAns2024 : System.Web.UI.Page
                 {
                     FillParticiparticipate(ddlForm.SelectedValue);
                     FillQuestion1(Convert.ToInt32(ddlForm.SelectedValue));
-                
                     Session["FormID"] = ddlForm.SelectedValue;
                 }
             }
@@ -182,17 +176,16 @@ public partial class SurveyAns2024 : System.Web.UI.Page
 
 
     }
-
     public void FillFormName()
     {
         //string UserID = Session["UserID"].ToString();
-        
+
         DataTable dt = new DataTable();
         //int FormLevel;
-       
-            dt = Get_DataFor3Filter("USP_GetSurveyOnAgencyAndLevelForm", "", ddlForm.SelectedValue.ToString(), "");
-            //dt = objBLL.Select_All_Data("MSTForm", "FormID,FormName", "IsDeleted = 0 and FormLevel = " + FormLevel  + " ", "", "");
-          
+
+        dt = Get_DataFor3Filter("USP_GetSurveyOnAgencyAndLevelForm", "", ddlForm.SelectedValue.ToString(), "");
+        //dt = objBLL.Select_All_Data("MSTForm", "FormID,FormName", "IsDeleted = 0 and FormLevel = " + FormLevel  + " ", "", "");
+
         ddlForm.DataSource = dt;
         ddlForm.DataTextField = "FormName";
         ddlForm.DataValueField = "FormID";
@@ -226,9 +219,8 @@ public partial class SurveyAns2024 : System.Web.UI.Page
     {
         DataTable dt = new DataTable();
         //hdnconditions.Value = Condition.ToString();
-        dt = Get_DataFor3Filter("USP_GetQuestionTraining2024User", "0", FormID.ToString(),"0");
+        dt = Get_DataFor3Filter("USP_GetQuestionTraining2024User", "0", FormID.ToString(), "0");
         Session["Ism"] = dt;
-        //DataListQuestion.DataSource = dt;
         //DataListQuestion.DataBind();
         fillQuestions(dt);
         //SetSkipLogicAttribute();
@@ -267,7 +259,7 @@ public partial class SurveyAns2024 : System.Web.UI.Page
                 return;
             }
         }
-       if (ddlParticipate.SelectedIndex > 0)
+        if (ddlParticipate.SelectedIndex > 0)
         {
             FillQuestion(Convert.ToInt32(ddlForm.SelectedValue));
         }
@@ -276,9 +268,7 @@ public partial class SurveyAns2024 : System.Web.UI.Page
             dialog.Text = "";
             Savebutton.Text = "";
         }
-      
         DataTable dt = objBLL1.Get_DataFor8Filter("rptQuestionvaldation", ddlForm.SelectedValue, ddlParticipate.SelectedValue);
-       
     }
 
     public void fillQuestions(DataTable dt)
@@ -287,8 +277,8 @@ public partial class SurveyAns2024 : System.Web.UI.Page
         string Type, Questionid, Length;
         DataTable dtTempMSCommon = new DataTable();
         int QuestionType = 0;
-        DataTable dtMSCommon = Get_DataFor2Filter("USP_GetoptionsforWebSurvey", "4",ddlForm.SelectedValue);
-        int GID =0;
+        DataTable dtMSCommon = Get_DataFor2Filter("USP_GetoptionsforWebSurvey", "4", ddlForm.SelectedValue);
+        int GID = 0;
         int MGID = 0;
         sb.Append("<div class='container mt-3'> <div class='col-xl-12 col-lg-12 col-md-12 col-sm-12 m - auto p-0'><form class='form-horizontal'><table id='questions'  width='100%'> ");
         int icount = 0;
@@ -297,12 +287,12 @@ public partial class SurveyAns2024 : System.Web.UI.Page
         {
             Questionid = dt.Rows[i]["QuestionId"].ToString();
             Length = dt.Rows[i]["MaxLenght"].ToString();
-            QuestionType= Convert.ToInt32(dt.Rows[i]["QuestionType"].ToString());
-            Type = gettypeofQuestion(dt.Rows[i]["QestionTypeID"].ToString(), dt.Rows[i]["Flag"].ToString(), dtMSCommon, dtTempMSCommon, Questionid, Length,Convert.ToInt32(dt.Rows[i]["MaskValidation"].ToString()), dt.Rows[i]["Value"].ToString(), dt.Rows[i]["QuestionAns"].ToString());
+            QuestionType = Convert.ToInt32(dt.Rows[i]["QuestionType"].ToString());
+            Type = gettypeofQuestion(dt.Rows[i]["QestionTypeID"].ToString(), dt.Rows[i]["Flag"].ToString(), dtMSCommon, dtTempMSCommon, Questionid, Length, Convert.ToInt32(dt.Rows[i]["MaskValidation"].ToString()), dt.Rows[i]["Value"].ToString(), dt.Rows[i]["QuestionAns"].ToString());
             icount = icount + 1;
             if (dt.Rows[i]["QestionTypeID"].ToString() == "9" && dt.Rows[i]["GroupID"].ToString() == "1")
             {
-                GID =Convert.ToInt32( Questionid);
+                GID = Convert.ToInt32(Questionid);
                 DataRow[] dr = dt.Select("GroupID=" + GID + "");
                 if (dr.Length > 0)
                 {
@@ -316,16 +306,17 @@ public partial class SurveyAns2024 : System.Web.UI.Page
                 // sb.Append("<fieldset class='box -border'> <legend class='box-border'>" + dt.Rows[i]["Question"].ToString().Replace("'", "") + "</legend>");
                 //  sb.Append("<tr class='header' style='background-color:#354ea0; font-size:15px; font-weight:bold;'><td style='width:100px;vertical-align: top'><span> " + dt.Rows[i]["QuestionNo"].ToString() + " </span></td><td colspan = '2'>" + dt.Rows[i]["Question"].ToString().Replace("'", "") + " <table id='WebSurtte' class='table table-bordered' style='font-weight: 400;font-size: 14px;'  width='100%'>");
             }
-            else  if (dt.Rows[i]["QestionTypeID"].ToString() == "9")
+            else if (dt.Rows[i]["QestionTypeID"].ToString() == "9")
             {
 
-             //  sb.Append("<tr class='header' style='background-color:#354ea0; font-size:15px; font-weight:bold;'><td style='width:100px;vertical-align: top'><span> " + dt.Rows[i]["QuestionNo"].ToString() + " </span></td><td colspan = '2'>" + dt.Rows[i]["Question"].ToString().Replace("'", "") + " </td></tr>");
+                //  sb.Append("<tr class='header' style='background-color:#354ea0; font-size:15px; font-weight:bold;'><td style='width:100px;vertical-align: top'><span> " + dt.Rows[i]["QuestionNo"].ToString() + " </span></td><td colspan = '2'>" + dt.Rows[i]["Question"].ToString().Replace("'", "") + " </td></tr>");
                 sb.Append("<tr><td><table  id='questions1' class='w-100'><tr class=" + Questionid + " ><td style='width:50px'><span> " + dt.Rows[i]["QuestionNo"].ToString() + " </span></td><td >" + dt.Rows[i]["Question"].ToString().Replace("'", "") + "  </td></tr></table></td></tr> ");
 
                 // sb.Append("<fieldset class='box -border'> <legend class='box-border'>" + dt.Rows[i]["Question"].ToString().Replace("'", "") + "</legend>");
             }
-            else if (Convert.ToInt32( dt.Rows[i]["GroupID"].ToString())>0)
-            {   string Idmm = "";
+            else if (Convert.ToInt32(dt.Rows[i]["GroupID"].ToString()) > 0)
+            {
+                string Idmm = "";
                 if (Convert.ToInt32(dt.Rows[i]["IsQuestionMandatory"]) == 1)
                 {
                     Idmm = "<lable style = 'color: Red' > *</ lable >";
@@ -340,11 +331,10 @@ public partial class SurveyAns2024 : System.Web.UI.Page
                 string Idmm = "";
                 if (QuestionType == 2)
                 {
-                   
-                   // sb.Append("<tr class=" + Questionid + " style='background-color:#ffdfba'><td style='width:2%'><span> " + dt.Rows[i]["QuestionNo"].ToString() + " </span></td><td width='48%' class='fs'>" + dt.Rows[i]["Question"].ToString().Replace("'", "") + " </td>");
+                    // sb.Append("<tr class=" + Questionid + " style='background-color:#ffdfba'><td style='width:2%'><span> " + dt.Rows[i]["QuestionNo"].ToString() + " </span></td><td width='48%' class='fs'>" + dt.Rows[i]["Question"].ToString().Replace("'", "") + " </td>");
                     string img = ResolveUrl("~/Survey/" + dt.Rows[i]["ImageUpload"].ToString());
-                   
-                   
+
+
                     if (Convert.ToInt32(dt.Rows[i]["IsQuestionMandatory"]) == 1)
                     {
                         Idmm = "<lable style = 'color: Red' > *</ lable >";
@@ -352,7 +342,7 @@ public partial class SurveyAns2024 : System.Web.UI.Page
                     sb.Append("<tr><td><table  id='questions1' class='w-100'><tr class=" + Questionid + " ><td style='width:50px'><span> " + dt.Rows[i]["QuestionNo"].ToString() + " </span></td><td class='fs' >" + dt.Rows[i]["Question"].ToString().Replace("'", "") + "  </br><img  Height = '80px' Width = '100px' BorderStyle = 'Ridge' BorderWidth = '1px' src = " + img + "> " + Idmm + "</td></tr><tr><td style='width:50px'><td>" + Type + "</td></tr></table></td></tr> ");
 
                     //sb.Append("<tr class=" + Questionid + " style='background-color:#ffdfba'><td style='width:2%'><span> " + dt.Rows[i]["QuestionNo"].ToString() + " </span></td><td width='48%' class='fs'>" + dt.Rows[i]["Question"].ToString().Replace("'", "") + " </br><img  Height = '80px' Width = '100px' BorderStyle = 'Ridge' BorderWidth = '1px' src = " + img + "> " + Idmm + " </td>");
-               }
+                }
                 else
                 {
                     if (Convert.ToInt32(dt.Rows[i]["IsQuestionMandatory"]) == 1)
@@ -361,7 +351,7 @@ public partial class SurveyAns2024 : System.Web.UI.Page
 
                         Idmm = "<lable style = 'color: Red' > *</ lable >";
                     }
-                  //  sb.Append("<tr class=" + Questionid + " style='background-color:#ffdfba'><td style='width:2%'><span> " + dt.Rows[i]["QuestionNo"].ToString() + " </span></td><td width='48%' class='fs'>" + dt.Rows[i]["Question"].ToString().Replace("'", "") + "   " + Idmm + "</td>");
+                    //  sb.Append("<tr class=" + Questionid + " style='background-color:#ffdfba'><td style='width:2%'><span> " + dt.Rows[i]["QuestionNo"].ToString() + " </span></td><td width='48%' class='fs'>" + dt.Rows[i]["Question"].ToString().Replace("'", "") + "   " + Idmm + "</td>");
                     sb.Append("<tr><td><table  id='questions1' class='w - 100'><tr class=" + Questionid + " ><td style='width:50px'><span> " + dt.Rows[i]["QuestionNo"].ToString() + " </span></td><td class='fs'>" + dt.Rows[i]["Question"].ToString().Replace("'", "") + "   " + Idmm + "</td></tr><tr><td style='width:50px'><td>" + Type + "</td></tr></table></td></tr> ");
 
                 }
@@ -369,12 +359,10 @@ public partial class SurveyAns2024 : System.Web.UI.Page
             }
             if (dt.Rows[i]["GroupID"].ToString() != "1")
             {
-                
-                    if (icount == GroupCOunt)
-                    {
-                       sb.Append("</table></td></tr>");
-                    }
-                
+                if (icount == GroupCOunt)
+                {
+                    sb.Append("</table></td></tr>");
+                }
             }
             MGID = Convert.ToInt32(dt.Rows[i]["GroupID"]);
 
@@ -391,7 +379,7 @@ public partial class SurveyAns2024 : System.Web.UI.Page
         //14300/14301/14302
     }
 
-    public string gettypeofQuestion(string Qtype, string flag, DataTable dtcommon, DataTable dttempcommon, string Questionid, string Length, int MaskValidation, string value,string QuestionAns)
+    public string gettypeofQuestion(string Qtype, string flag, DataTable dtcommon, DataTable dttempcommon, string Questionid, string Length, int MaskValidation, string value, string QuestionAns)
     {
         //string Ntextboxhtml = "<input type='text' class='form-control' maxlength='" + Length + "' onchange='return checkDec(this);' Style='margin-top: 5px' id='" + Questionid + "' name='Numeric' placeholder='Numeric Value'>";
         string Dtextboxhtml = "<input type='date' class='form-control'  Style='margin-top: 5px' id='" + Questionid + "' name='Date' placeholder='dd/MM/yyyy'>";
@@ -521,13 +509,13 @@ public partial class SurveyAns2024 : System.Web.UI.Page
             Qtype = FingerPrnthtml;
         }
         else if (Qtype == "11")
-        { 
+        {
             string Stextboxhtml = "";
 
             Stextboxhtml = "<input type='text' maxlength='" + Length + "' Style='width:250px;height:60px;' id='" + Questionid + "' name='Text' placeholder='Text Box' >";
 
-          //  Stextboxhtml = "<textarea  type='text' class='form-control' maxlength='" + Length + "' Style='width:250px;height:150px;' id='" + Questionid + "' name='textarea'  placeholder='Multiline Text' >";
-           Qtype = Stextboxhtml;
+            //  Stextboxhtml = "<textarea  type='text' class='form-control' maxlength='" + Length + "' Style='width:250px;height:150px;' id='" + Questionid + "' name='textarea'  placeholder='Multiline Text' >";
+            Qtype = Stextboxhtml;
 
         }
         else if (Qtype == "3")
@@ -553,8 +541,6 @@ public partial class SurveyAns2024 : System.Web.UI.Page
             DataRow[] dr2 = dtcommon.Select("Flag = " + flag);
             if (dr2.Length > 0)
                 dttempcommon = dr2.CopyToDataTable();
-
-         
             DataTable dt = Select_All_Data("tblQuestionMapping", "*", "ParentQuestionId = " + Questionid + "", "", "");
             //--------- if skiplogic apply
             if (dt.Rows.Count > 0)
@@ -578,7 +564,7 @@ public partial class SurveyAns2024 : System.Web.UI.Page
                             {
                                 Qtype = Qtype + "<input type='radio' class='inp'  value='" + dttempcommon.Rows[i]["ID"] + "' name='" + Questionid + "'><em class='labs'>" + dttempcommon.Rows[i]["Value"].ToString().Replace("'", "") + "</em><br />";
                             }
-                       }
+                        }
                     }
                 }
                 else
@@ -633,26 +619,21 @@ public partial class SurveyAns2024 : System.Web.UI.Page
 
             if (QuestionAns.Length > 0)
             {
-               
-                    Qtype = Qtype + "<option type='checkbox'  value=" + 0 + ">--Select --</option>";
-         
+                Qtype = Qtype + "<option type='checkbox'  value=" + 0 + ">--Select --</option>";
+
                 string[] words = QuestionAns.Trim().Split(',');
                 foreach (var word in words)
                 {
                     for (int i = 0; i < dttempcommon.Rows.Count; i++)
                     {
-                      
-                           if (dttempcommon.Rows[i]["ID"].ToString() == word)
+                        if (dttempcommon.Rows[i]["ID"].ToString() == word)
                         {
                             if (i == 0)
                             {
-                            
                                 Qtype = Qtype + "<option type='checkbox' value=" + dttempcommon.Rows[i]["ID"] + ">" + dttempcommon.Rows[i]["Value"] + "</option>";
                             }
                             else
-
-                            {
-                                
+                            {                                
                                 Qtype = Qtype + "<option type='checkbox'  value=" + dttempcommon.Rows[i]["ID"] + ">" + dttempcommon.Rows[i]["Value"] + "</option>";
                             }
                         }
@@ -695,9 +676,6 @@ public partial class SurveyAns2024 : System.Web.UI.Page
 
         return dt;
     }
-
-   
-
     public bool CheckSkipLogic(int questionID, int nextQuestionID, int flagValue, DataTable dtLogic)
     {
         return dtLogic.AsEnumerable().Where(x => x.Field<int?>("ParentQuestionId") == questionID && x.Field<int?>("DependentQuestionId") == nextQuestionID && x.Field<string>("FlagValue").ToString() == flagValue.ToString()).Any();
@@ -808,7 +786,7 @@ public partial class SurveyAns2024 : System.Web.UI.Page
                     string FileName = Convert.ToString(fplUpload.PostedFile.FileName).Trim();//Path.GetFileName(excelFileUpload.PostedFile.FileName);
                                                                                              //ViewState["FileName"] = FileName;
                     hdnfilename.Value = FileName + DateTime.Now.ToString();
-                    string FilePath = Server.MapPath("~/SurveyFiles/") + FileName;
+                    string FilePath = Server.MapPath(Comman.GetImagePath("SurveyFilesPath") + "/") + FileName;
                     fplUpload.SaveAs(FilePath);
 
                 }
@@ -819,7 +797,7 @@ public partial class SurveyAns2024 : System.Web.UI.Page
 
 
             }
-            catch (Exception ex)
+            catch
             {
                 //StatusLabel.Text = "Upload status: The file could not be uploaded. The following error occured: " + ex.Message;
             }
@@ -836,21 +814,18 @@ public partial class SurveyAns2024 : System.Web.UI.Page
     [System.Web.Services.WebMethod(EnableSession = true)]
     public static string Savefileupload(string Fil)
     {
-       
         string FilePath = "";
         //if (fplUpload.HasFile)
         //{
         //    try
         //    {
         //        //string Extension = Path.GetExtension(fplUpload.PostedFile.FileName);
-              
-
         //        //if ((Extension == ".jpg") || (Extension == ".jpeg") || (Extension == ".png") || (Extension == ".xls") || (Extension == ".xlsx") || (Extension == ".docx") || (Extension == ".pdf"))
         //        //{
         //        //    string FileName = Convert.ToString(fplUpload.PostedFile.FileName).Trim();//Path.GetFileName(excelFileUpload.PostedFile.FileName);
         //        //                                                                             //ViewState["FileName"] = FileName;
 
-        //        //    FilePath = HttpContext.Current.Server.MapPath("~/SurveyFiles/") + FileName;
+        //        //    FilePath = HttpContext.Current.Server.MapPath(Comman.GetImagePath("SurveyFilesPath") + "/") + FileName;
         //        //    fplUpload.SaveAs(FilePath);
 
         //        //}
@@ -861,7 +836,7 @@ public partial class SurveyAns2024 : System.Web.UI.Page
 
 
         //    }
-        //    catch (Exception ex)
+        //    catch
         //    {
         //        //StatusLabel.Text = "Upload status: The file could not be uploaded. The following error occured: " + ex.Message;
         //    }
@@ -875,7 +850,7 @@ public partial class SurveyAns2024 : System.Web.UI.Page
         //}
         return FilePath;
     }
-        [System.Web.Services.WebMethod(EnableSession = true)]
+    [System.Web.Services.WebMethod(EnableSession = true)]
     public static string Savedata(string data, string StateID, string DistrictID, string Blockid, string FormID, string FinalFlag, string Year, string Month)
     {
         string returndata = "";
@@ -883,62 +858,63 @@ public partial class SurveyAns2024 : System.Web.UI.Page
         {
 
             DataTable dtCheck = HttpContext.Current.Session["Ism"] as DataTable;
-                string FormEvalGUID = "", GUID = "";
-                string UserID ="0";
-                string GUIDold ="0";
-                  string Flag = "0";
-                if (GUIDold == "0")
-                {
-                    GUID = Guid.NewGuid().ToString();
-                    FormEvalGUID = GUID + DateTime.Now;
-                }
-                else
-                {
-                    FormEvalGUID = GUIDold;
-                }
-                DataTable finaldt = (DataTable)JsonConvert.DeserializeObject(data, (typeof(DataTable)));
-                DataColumn newCol = new DataColumn("FormEvalGUID", typeof(string));
-                newCol.DefaultValue = FormEvalGUID.ToString();
-                newCol.AllowDBNull = true;
-                finaldt.Columns.Add(newCol);
-                string FID = HttpContext.Current.Session["FormID"] as string;
-                string point = "";
+            string FormEvalGUID = "", GUID = "";
+            string UserID = "0";
+            string GUIDold = "0";
+            string Flag = "0";
+            if (GUIDold == "0")
+            {
+                GUID = Guid.NewGuid().ToString();
+                FormEvalGUID = GUID + DateTime.Now;
+            }
+            else
+            {
+                FormEvalGUID = GUIDold;
+            }
+            DataTable finaldt = (DataTable)JsonConvert.DeserializeObject(data, (typeof(DataTable)));
+            DataColumn newCol = new DataColumn("FormEvalGUID", typeof(string));
+            newCol.DefaultValue = FormEvalGUID.ToString();
+            newCol.AllowDBNull = true;
+            finaldt.Columns.Add(newCol);
+            string FID = HttpContext.Current.Session["FormID"] as string;
+            string point = "";
             clsMain objBLL = new clsMain();
-            DataTable    dtcheck = objBLL.Get_DataFor8Filter("rptQuestionvaldation", FID, DistrictID);
+            DataTable dtcheck = objBLL.Get_DataFor8Filter("rptQuestionvaldation", FID, DistrictID);
             if (dtcheck.Rows.Count > 0)
             {
                 returndata = "Data Already Submitted" + "___" + Flag;
             }
             else
             {
-              
+			  
 
-             
+
+
                 for (int i = 0; i < dtCheck.Rows.Count; i++)
                 {
-                    int IsQuestionMandatory = Convert.ToInt32( dtCheck.Rows[i]["IsQuestionMandatory"]);
+                    int IsQuestionMandatory = Convert.ToInt32(dtCheck.Rows[i]["IsQuestionMandatory"]);
                     int QuestionId = Convert.ToInt32(dtCheck.Rows[i]["QuestionId"]);
 
                     string QuestionNo = Convert.ToString(dtCheck.Rows[i]["QuestionNo"]);
-                    if (IsQuestionMandatory==1)
+                    if (IsQuestionMandatory == 1)
                     {
                         if (finaldt != null)
                         {
                             DataRow[] dr = finaldt.Select("QuestionId ='" + QuestionId + "'");
-                             if(dr.Length>0)
+                            if (dr.Length > 0)
                             {
 
                             }
-                             else
+                            else
                             {
-                                returndata += "Question No:"+ QuestionNo.ToString()+"  Mandatory\n";
+                                returndata += "Question No:" + QuestionNo.ToString() + "  Mandatory\n";
                             }
                         }
                     }
                 }
                 if (returndata.Length > 0)
                 {
-                    returndata = returndata + "___" + Flag; 
+                    returndata = returndata + "___" + Flag;
                 }
                 else
                 {
@@ -947,19 +923,19 @@ public partial class SurveyAns2024 : System.Web.UI.Page
                     if (dt != null)
                     {
                         point = dt.Rows[0]["ReturnValue"].ToString();
-                       // rptSurveyAnsScore
+                        // rptSurveyAnsScore
                         if (point == "1")
                         {
                             string mg = "Data Submitted Successfully.";
                             clsMain objBLL1 = new clsMain();
                             DataTable dtEv = objBLL1.Get_DataFor8Filter("rptSurveyAnsScore", FID, DistrictID);
-                            if (dtEv.Rows.Count>0)
+                            if (dtEv.Rows.Count > 0)
                             {
-                                if (Convert.ToInt32(dtEv.Rows[0]["Score"])>0)
+                                if (Convert.ToInt32(dtEv.Rows[0]["Score"]) > 0)
                                 {
                                     mg = "Data Submitted Successfully.  Your Total Score : " + dtEv.Rows[0]["Score"] + "";
                                 }
-                           
+
                             }
                             Flag = "1";
                             HttpContext.Current.Session["Flag"] = null;
@@ -988,10 +964,10 @@ public partial class SurveyAns2024 : System.Web.UI.Page
                         returndata = "Please Fill Form." + '-' + Flag;
                     }
                 }
-              
+
             }
         }
-        catch (Exception ex)
+        catch
         {
             returndata = "Please Fill Form." + "___" + "0";
         }
@@ -1023,8 +999,8 @@ public partial class SurveyAns2024 : System.Web.UI.Page
     }
     public DataTable Get_DataFor4Filter(string ProcedureName, string Filter1, string Filter2, string Filter3, string Filter4)
     {
-                DataTable dtcombo = new DataTable();
-                try
+         DataTable dtcombo = new DataTable();
+         try
                 {
                     SqlParameter[] paramvT = new SqlParameter[]
         {
