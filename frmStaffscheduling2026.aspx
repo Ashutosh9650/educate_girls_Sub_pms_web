@@ -687,7 +687,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                          <div class="form-group" id="div1" runat="server" visible="false">
+                                                          <div class="form-group" id="divotherSkill" runat="server" visible="false">
                                                     <div class="row">
                                                         <label class="col-sm-4"> Other (Specify)  <span style="color: Red">*</span></label>
                                                         <div class="col-sm-8">

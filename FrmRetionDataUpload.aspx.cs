@@ -328,8 +328,7 @@ public partial class FrmRetionDataUpload : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            lbl_messages.Text = ex.ToString();
-            ModalAlert.Show();
+            
         }
         finally
         {

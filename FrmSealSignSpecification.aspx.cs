@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+
 public partial class FrmSealSignSpecification : System.Web.UI.Page
 {
     clsMain objMain = new clsMain();
@@ -32,7 +36,7 @@ public partial class FrmSealSignSpecification : System.Web.UI.Page
                 string[] a = QueryString.Split(',');
                 if (Session["user_level"].ToString() == "145")
                 {
-                    string strQry = "Select * from mst3Block  where Blockcode='" + Convert.ToString(a[0].ToString()) + "' ";
+                  string  strQry = "Select * from mst3Block  where Blockcode='" + Convert.ToString(a[0].ToString()) + "' ";
 
 
                     DataTable dtBlock = objMain.LoadData(strQry);
@@ -43,23 +47,24 @@ public partial class FrmSealSignSpecification : System.Web.UI.Page
                 {
                     ddlDistrict.SelectedValue = Session["NewDistrictCode"].ToString();
                 }
+                  
                 ddlBlock.SelectedValue = Convert.ToString(a[0].ToString());
                 ddlBlock_SelectedIndexChanged(ddlBlock, null);
                 ddlserachblock.SelectedValue = Convert.ToString(a[0].ToString());
                 ddlBlockserachblock_SelectedIndexChanged(ddlBlock, null);
                 ddlPanchayat.SelectedValue = Convert.ToString(a[1].ToString());
-                ddlCluster.SelectedValue = Convert.ToString(a[1].ToString());
+              ddlCluster.SelectedValue = Convert.ToString(a[1].ToString());
                 ddlPanchayat_SelectedIndexChanged(ddlPanchayat, null);
                 ddlCluster_SelectedIndexChanged(ddlPanchayat, null);
-                string s = a[2];
-                foreach (ListItem item in ddlVillage.Items)
-                {
-                    if (item.Value == s)
+                string s=a[2];
+                    foreach (ListItem item in ddlVillage.Items)
                     {
-                        item.Selected = true;
-
+                        if (item.Value == s)
+                        {
+                            item.Selected = true;
+                           
+                        }
                     }
-                }
                 //foreach (ListItem item in ddlVillageD2d.Items)
                 //{
                 //    if (item.Value == s)
@@ -72,24 +77,24 @@ public partial class FrmSealSignSpecification : System.Web.UI.Page
             }
             TabContainer1.ActiveTabIndex = 0;
 
-            if (Convert.ToString(Session["user_level"]) == "39" || Convert.ToString(Session["user_level"]) == "30" || Convert.ToString(Session["user_level"]) == "136" || Convert.ToString(Session["user_level"]) == "145")
+            if (Convert.ToString(Session["user_level"]) == "39" || Session["user_level"].ToString() == "30"  || Convert.ToString(Session["user_level"]) == "136" || Convert.ToString(Session["user_level"]) == "145")
             {
                 btnSumbit.Visible = true;
                 //TabPanel2.Visible = false;
             }
-            else if (Convert.ToString(Session["user_level"]) == "19" || Convert.ToString(Session["user_level"]) == "137")
+            else if (Convert.ToString(Session["user_level"]) == "19" || Convert.ToString(Session["user_level"]) == "137") 
             {
                 btnSumbit.Visible = false;
 
             }
-            /// BtnBoSubmit.Attributes.Add("onclick", "javascript:return " + "confirm('Are you sure you want to Delete? ')");
+           /// BtnBoSubmit.Attributes.Add("onclick", "javascript:return " + "confirm('Are you sure you want to Delete? ')");
         }
 
     }
     #region Button click event
     protected void btnSdh_Click(object sender, EventArgs e)
     {
-        if (pnlMainddd.Visible == true)
+        if (pnlMainddd.Visible ==true)
         {
             pnlMainddd.Visible = false;
         }
@@ -98,7 +103,7 @@ public partial class FrmSealSignSpecification : System.Web.UI.Page
             pnlMainddd.Visible = true;
         }
     }
-    protected void btnSerach_Click(object sender, EventArgs e)
+        protected void btnSerach_Click(object sender, EventArgs e)
     {
         try
         {
@@ -129,7 +134,7 @@ public partial class FrmSealSignSpecification : System.Web.UI.Page
                 return;
             }
         }
-        catch
+        catch (Exception ex)
         {
 
             throw;
@@ -542,7 +547,7 @@ public partial class FrmSealSignSpecification : System.Web.UI.Page
             return;
         }
     }
-    protected void btnMatch_Click(object sender, EventArgs e)
+        protected void btnMatch_Click(object sender, EventArgs e)
     {
         int indcount1 = 0, indD2d = 0;
 
@@ -561,7 +566,7 @@ public partial class FrmSealSignSpecification : System.Web.UI.Page
             ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please select single matching entry from D2d list')</script>", false);
             return;
         }
-        string UniqueIDLeft = lblUniqueCode.Text;
+      string   UniqueIDLeft = lblUniqueCode.Text;
         string UniqueIDRight = "";
         foreach (GridViewRow Itemst in gvD2d.Rows)
         {
@@ -571,6 +576,9 @@ public partial class FrmSealSignSpecification : System.Web.UI.Page
                 UniqueIDRight = lblD2dUniqueCode.Text;
             }
         }
+
+      
+
         string strQry = "     select UniqueChildCode as de,DOBNew,	CChildName,	FatherName, IsD2dContact from rptTblOSSCDeatils with(nolock) where UniqueChildCode='" + UniqueIDRight + "' and  IsD2dContact =1  ";
         DataTable dtV = objMain.LoadData(strQry);
         if (dtV.Rows.Count > 0)
@@ -597,6 +605,7 @@ public partial class FrmSealSignSpecification : System.Web.UI.Page
                 msg = "\r\nContact FatherName =" + dtV.Rows[0]["FatherName"].ToString().ToUpper() + " and Enrolment FatherName =" + dtV1.Rows[0]["FatherName"].ToString().ToUpper() + " Mismatch ";
                 Label5.Text = msg;
             }
+          
             Button2.Visible = false;
             Button4.Visible = true;
             MpexdrDistrict.Show();
@@ -660,10 +669,14 @@ public partial class FrmSealSignSpecification : System.Web.UI.Page
                     D2dContact = lblIsD2dContact.Text;
                     indcount1++;
                 }
+
             }
+
+
             if (indD2d == 1 && indcount1 == 1)
             {
                 string msg = "";
+              
                 MatchData(indcount1, indD2d);
 
             }
@@ -679,7 +692,7 @@ public partial class FrmSealSignSpecification : System.Web.UI.Page
             throw;
         }
     }
-    protected void BtnBoSubmit_Click(object sender, EventArgs e)
+        protected void BtnBoSubmit_Click(object sender, EventArgs e)
     {
         try
         {
@@ -703,6 +716,7 @@ public partial class FrmSealSignSpecification : System.Web.UI.Page
                     EChildName = lblChildName.Text;
                     EFatherName = lblFathersName.Text;
                     indD2d++;
+                  
                 }
 
             }
@@ -722,15 +736,17 @@ public partial class FrmSealSignSpecification : System.Web.UI.Page
                 }
 
             }
+          
+
             if (indD2d == 1 && indcount1 == 1)
             {
                 string msg = "";
                 Label5.Text = "";
                 Label4.Text = "";
                 Label3.Text = "";
-                if (DDob.Length > 0)
+                if (DDob.Length>0 )
                 {
-                    msg = "Contact DOB =" + Convert.ToDateTime(DDob).ToString("dd/MM/yyy") + " and Enrolment DOB =" + Convert.ToDateTime(EDob).ToString("dd/MM/yyy") + " Mismatch ";
+                    msg = "Contact DOB ="+ Convert.ToDateTime(DDob).ToString("dd/MM/yyy") + " and Enrolment DOB =" + Convert.ToDateTime(EDob).ToString("dd/MM/yyy") + " Mismatch ";
                     Label3.Text = msg;
                 }
                 if (DChildName.Length > 0)
@@ -872,7 +888,7 @@ public partial class FrmSealSignSpecification : System.Web.UI.Page
     protected void MatchData(int indcount2, int indD2d)
     {
         string UniqueIDLeft = "", UniqueIDRight = "";
-        if (Convert.ToString(Session["user_level"]) == "39" || Convert.ToString(Session["user_level"]) == "30" || Convert.ToString(Session["user_level"]) == "136" || Convert.ToString(Session["user_level"]) == "145")
+        if (Convert.ToString(Session["user_level"]) == "39" || Session["user_level"].ToString() == "30"  || Convert.ToString(Session["user_level"]) == "136" || Convert.ToString(Session["user_level"]) == "145")
         {
 
             if (TabContainer1.ActiveTabIndex == 0)
@@ -1100,6 +1116,7 @@ public partial class FrmSealSignSpecification : System.Web.UI.Page
                 }
                 if (UniqueIDRight != "" && UniqueIDLeft != "")
                 {
+                   
                     int Ret = Insert_Update(UniqueIDLeft, UniqueIDRight, 10);
                     if (Ret > 0)
                     {
@@ -1178,9 +1195,10 @@ public partial class FrmSealSignSpecification : System.Web.UI.Page
             using (SqlCommand dbSqlCommand = (SqlCommand)dbSqlconnection.CreateCommand())
             {
                 dbSqlCommand.CommandType = CommandType.StoredProcedure;
-                dbSqlCommand.CommandText = "SP_Seal_Sign_Specification_Update";
+                dbSqlCommand.CommandText = "SP_Seal_Sign_Specification_Update2026";
                 dbSqlCommand.Parameters.AddWithValue("@UniqueCodeE", UniqueIDLeft);
                 dbSqlCommand.Parameters.AddWithValue("@UniqueCodeD", UniqueIDRight);
+                dbSqlCommand.Parameters.AddWithValue("@UserName", Convert.ToString(Session["username"]));
                 dbSqlCommand.Parameters.AddWithValue("@Flag", Flag);
                 SqlParameter ReturnAffectedRows = new SqlParameter("@RowAffected", System.Data.SqlDbType.Int);
                 ReturnAffectedRows.Direction = ParameterDirection.Output;
@@ -1192,7 +1210,7 @@ public partial class FrmSealSignSpecification : System.Web.UI.Page
         }
         catch (SqlException exp)
         {
-            throw;
+            throw exp;
         }
         finally
         {
@@ -1233,7 +1251,7 @@ public partial class FrmSealSignSpecification : System.Web.UI.Page
     //            gvD2d.DataBind();
     //        }
     //    }
-    //    catch
+    //    catch (Exception ex)
     //    {
 
     //        throw;
@@ -1248,7 +1266,7 @@ public partial class FrmSealSignSpecification : System.Web.UI.Page
             lblUniqueCode.Text = gvReport.DataKeys[iIndex]["UniqueCode"].ToString();
             // FillControls(TBCode);
             Int32 Flag = 0;
-            if (Convert.ToString(Session["user_level"]) == "39" || Convert.ToString(Session["user_level"]) == "30" || Convert.ToString(Session["user_level"]) == "136" || Convert.ToString(Session["user_level"]) == "145")
+            if (Convert.ToString(Session["user_level"]) == "39" || Session["user_level"].ToString() == "30"  || Convert.ToString(Session["user_level"]) == "136" || Convert.ToString(Session["user_level"]) == "145")
             {
 
                 Flag = 1;
@@ -1547,6 +1565,10 @@ new SqlParameter("@condtion", Frist)
         {
             conditions = "DistrictCode ='" + ddlDistrict.SelectedValue + "' and  DividedBlock=1 and BlockCode in(  " + Session["BlockCode"].ToString() + " )";
         }
+        if ( Session["user_level"].ToString() == "30")
+        {
+            conditions = "DistrictCode ='" + ddlDistrict.SelectedValue + "' and  DividedBlock=1 and BlockCode in(  " + Session["blockCodeMul"].ToString() + " )";
+        }
         else
         {
             conditions = "DistrictCode ='" + ddlDistrict.SelectedValue + "' and  DividedBlock=1 ";
@@ -1568,7 +1590,7 @@ new SqlParameter("@condtion", Frist)
         ddlPanchayat.DataValueField = "ClusterCode";
         ddlPanchayat.DataBind();
 
-        // objComman.BindDLL("mstcluster", "ClusterCode,dbo.TitleCase(upper(ClusterName)) as ClusterName", conditions, "ClusterName", "asc", ddlPanchayat, "ClusterName", "ClusterCode", "--Select--");
+       // objComman.BindDLL("mstcluster", "ClusterCode,dbo.TitleCase(upper(ClusterName)) as ClusterName", conditions, "ClusterName", "asc", ddlPanchayat, "ClusterName", "ClusterCode", "--Select--");
         //objComman.BindDLL("mstPanchayat", "PanchayatCode,dbo.TitleCase(upper(PanchayatName)) as PanchayatName", conditions, "PanchayatName", "asc", ddlPanchayat, "PanchayatName", "PanchayatCode", "--Select--");
     }
     public void FillCBClusterNew()
@@ -1590,7 +1612,7 @@ new SqlParameter("@condtion", Frist)
         {
             conditions = "DistrictCode ='" + ddlDistrict.SelectedValue + "'  and BlockCode ='" + ddlBlock.SelectedValue + "' and  ClusterCode='" + ddlPanchayat.SelectedValue + "'  ";
         }
-        string strQry = "  SELECT mst5Village.VillageCode, dbo.TitleCase(upper(VillageName)) as VillageName FROM mst5Village  where " + conditions + "  order by VillageName   ";
+            string strQry = "  SELECT mst5Village.VillageCode, dbo.TitleCase(upper(VillageName)) as VillageName FROM mst5Village  where " + conditions + "  order by VillageName   ";
         DataTable dtVillage = objMain.LoadData(strQry);
         ddlVillage.DataSource = dtVillage;
         ddlVillage.DataTextField = "VillageName";
@@ -1640,7 +1662,9 @@ new SqlParameter("@condtion", Frist)
         {
             conditions += " and mst5Village.BlockCode = '" + ddlBlock.SelectedValue + "' ";
         }
-        if (ddlPanchayat.SelectedValue == "1")
+
+      
+        if (ddlPanchayat.SelectedValue=="1")
         {
 
         }
@@ -1699,7 +1723,8 @@ new SqlParameter("@condtion", Frist)
         {
             conditions += " and mst5Village.DistrictCode = '" + ddlDistrict.SelectedValue + "' ";
         }
-        if (pnlMainddd.Visible == true)
+       
+        if (pnlMainddd.Visible==true)
         {
             if (ddlserachblock.SelectedIndex > 0)
             {
@@ -1740,7 +1765,7 @@ new SqlParameter("@condtion", Frist)
         string FristConNew = FilterConditionNew();
         string FristCon1 = FristCon;
         Int32 Flag = 0;
-        if (Convert.ToString(Session["user_level"]) == "39" || Convert.ToString(Session["user_level"]) == "30" || Convert.ToString(Session["user_level"]) == "136" || Convert.ToString(Session["user_level"]) == "145")
+        if (Convert.ToString(Session["user_level"]) == "39" || Session["user_level"].ToString() == "30" || Convert.ToString(Session["user_level"]) == "136" || Convert.ToString(Session["user_level"]) == "145")
         {
             FristCon1 += " and IsDoBoFlag =1 ";
             Flag = 1;
@@ -1763,7 +1788,7 @@ new SqlParameter("@condtion", Frist)
 
             dt.DefaultView.Sort = "MatchingCount desc,ChildName asc,fathersName asc";
             dtManual.DefaultView.Sort = "MatchingCount desc,ChildName asc,fathersName asc";
-            if (Convert.ToString(Session["user_level"]) == "39" || Convert.ToString(Session["user_level"]) == "30" || Convert.ToString(Session["user_level"]) == "136" || Convert.ToString(Session["user_level"]) == "145")
+            if (Convert.ToString(Session["user_level"]) == "39" || Session["user_level"].ToString() == "30"  || Convert.ToString(Session["user_level"]) == "136" || Convert.ToString(Session["user_level"]) == "145")
             {
                 gvReport.DataSource = dt.DefaultView.ToTable();
                 gvReport.DataBind();
@@ -1854,7 +1879,7 @@ new SqlParameter("@condtion", Frist)
     }
     protected void ddlBlockserachblock_SelectedIndexChanged(object sender, EventArgs e)
     {
-        // FillCBCluster();
+       // FillCBCluster();
         FillCBClusterNew();
     }
     protected void ddlPanchayat_SelectedIndexChanged(object sender, EventArgs e)
@@ -1865,6 +1890,8 @@ new SqlParameter("@condtion", Frist)
     {
         FillCVillageNew();
     }
+
+    
     protected void ddlVillage_SelectedIndexChanged(object sender, EventArgs e)
     {
     }

@@ -987,6 +987,7 @@ public partial class frmStaffscheduling2026 : System.Web.UI.Page
         divSkill.Visible = false;
         divOther.Visible = false;
         divOther1.Visible = false;
+        divotherSkill.Visible = false;
         if (Convert.ToInt32(ddlStype.SelectedValue) == 1 || Convert.ToInt32(ddlStype.SelectedValue) == 3)
         {
             if (Convert.ToInt32(ddlLearning.SelectedValue) == 15)
@@ -1029,11 +1030,11 @@ public partial class frmStaffscheduling2026 : System.Web.UI.Page
         if (Convert.ToInt32(ddlSkill.SelectedValue) == 20)
         {
             txtOtherskill.Text = "";
-            divOther.Visible = true;
+            divotherSkill.Visible = true;
         }
         else
         {
-            txtOtherskill.Visible = false;
+            divotherSkill.Visible = false;
         }
         MpexdrDistrict.Show();
     }
@@ -1789,6 +1790,7 @@ public partial class frmStaffscheduling2026 : System.Web.UI.Page
         ddlTraingMode.SelectedIndex = 0;
         ddlSkill.SelectedIndex = 0;
         divSkill.Visible = false;
+        divotherSkill.Visible = false;
         MpexdrDistrict.Show();
     }
     protected void Button1_Click(object sender, EventArgs e)
