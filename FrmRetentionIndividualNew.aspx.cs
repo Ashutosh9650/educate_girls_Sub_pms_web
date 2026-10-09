@@ -848,14 +848,14 @@ public partial class FrmRetentionIndividualNew : System.Web.UI.Page
             DataTable dtcountCheck = objMain.LoadData(strQry);
             if (dtcountCheck.Rows.Count > 0)
             {
-                if (dtcountCheck.Rows.Count == 1)
-                {
-                    ddlYear.Enabled = false;
-                }
-                else
-                {
-                    ddlYear.Enabled = true;
-                }
+                //if (dtcountCheck.Rows.Count == 1)
+                //{
+                //    ddlYear.Enabled = false;
+                //}
+                //else
+                //{
+                //    ddlYear.Enabled = true;
+                //}
             }
             else
             {
@@ -1475,7 +1475,7 @@ public partial class FrmRetentionIndividualNew : System.Web.UI.Page
             }
             else
             {
-                conditions = "StateCode  in('" + ddlState.SelectedValue + "') and DistrictCode in(" + Session["DistrictCode"].ToString() + ") and mst2District.FYear ='" + ddlYear.SelectedItem.Text + "' ";
+                conditions = "StateCode  in('" + ddlState.SelectedValue + "') and DistrictCode in(" + Session["DistrictCodeNew"].ToString() + ") and mst2District.FYear ='" + ddlYear.SelectedItem.Text + "' ";
 
                 //conditions = " RDistrictCode  in(select DistrictCode from mst2District where DistrictCode in(select districtcode from MstUser where UserName = '" + Convert.ToString(Session["username"]) + "'))  and mst2District.FYear ='" + ddlYear.SelectedItem.Text + "' ";
             }

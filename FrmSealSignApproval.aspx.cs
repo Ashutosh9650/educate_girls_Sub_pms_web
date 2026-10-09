@@ -1707,13 +1707,13 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
                                 Convert.ToBoolean(DoAv)),
 
                             new SqlParameter("@DOB",
-                                Convert.ToDateTime(ChildDOB)),
+                                Convert.ToDateTime(ChildDOB).ToString("yyyy-MM-dd")),
 
                             new SqlParameter("@AgeAson",
                                 Convert.ToInt32(Age)),
 
                             new SqlParameter("@AsOnDate",
-                                Convert.ToDateTime(AsDob)),
+                                Convert.ToDateTime(AsDob).ToString("yyyy-MM-dd")),
 
                             new SqlParameter("@ModifyDate",
                                 DateTime.Now),
@@ -1726,7 +1726,7 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
 
                             new SqlParameter("@UniqueChildCode",
                                 Convert.ToString(Session["UnquieId"]))
-   };
+                };
 
             icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "USP_Update_tblEnrolment", cmdParameters);
 
@@ -1734,109 +1734,109 @@ public partial class FrmSealSignApproval : System.Web.UI.Page
             if (Convert.ToString(Session["EnStatus"]) == "1")
             {
                 SqlParameter[] cmdParameters1 = new SqlParameter[]
-  {
-    new SqlParameter("@HHNo",
-        txtHHNo.Text.Trim()),
+                      {
+                        new SqlParameter("@HHNo",
+                            txtHHNo.Text.Trim()),
 
-    new SqlParameter("@SurvayDate",
-        Convert.ToDateTime(DateAdminision)),
+                        new SqlParameter("@SurvayDate",
+                            Convert.ToDateTime(DateAdminision)),
 
-    new SqlParameter("@SocialCategory",
-        Convert.ToInt32(ddlScat.SelectedValue)),
-    new SqlParameter("@ChildName",
-        ChildName),
+                        new SqlParameter("@SocialCategory",
+                            Convert.ToInt32(ddlScat.SelectedValue)),
+                        new SqlParameter("@ChildName",
+                            ChildName),
 
-    new SqlParameter("@FathersName",
-        FathersName),
+                        new SqlParameter("@FathersName",
+                            FathersName),
 
-    new SqlParameter("@Gender",
-        Convert.ToInt32(Gender)),
-    new SqlParameter("@DOB",
-        Convert.ToDateTime(ChildDOB)),
+                        new SqlParameter("@Gender",
+                            Convert.ToInt32(Gender)),
+                        new SqlParameter("@DOB",
+                            Convert.ToDateTime(ChildDOB).ToString("yyyy-MM-dd")),
 
-    new SqlParameter("@AgeAson",
-        Convert.ToInt32(Age)),
+                        new SqlParameter("@AgeAson",
+                            Convert.ToInt32(Age)),
 
-    new SqlParameter("@DoChild",
-        Convert.ToInt32(dllClass.SelectedValue)),
+                        new SqlParameter("@DoChild",
+                            Convert.ToInt32(dllClass.SelectedValue)),
 
-    new SqlParameter("@ModifyDate",
-        DateTime.Now),
+                        new SqlParameter("@ModifyDate",
+                            DateTime.Now),
 
-    new SqlParameter("@ModifyBy",
-        Convert.ToString(Session["username"])),
+                        new SqlParameter("@ModifyBy",
+                            Convert.ToString(Session["username"])),
 
-    new SqlParameter("@UniqueCode",
-        Convert.ToString(Session["UnquieId"]))
-  };
+                        new SqlParameter("@UniqueCode",
+                            Convert.ToString(Session["UnquieId"]))
+                      };
 
                 icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "USP_Update_tblDTD", cmdParameters1);
-                if (icount > 0)
+               
+            }
+            if (icount > 0)
+            {
+                ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved sucessfully')</script>", false);
+
+                txtChildName.Text = "";
+                txtFatherName.Text = "";
+                txtHHNo.Text = "";
+                txtSrno.Text = "";
+                txtSamgra.Text = "";
+
+
+                txtHHNo.Focus();
+                txtBirth.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                ddlEduationStatus.SelectedIndex = 0;
+                //  Response.Write("<script>window.close();</" + "script>");
+                string strQry = "";
+                conditions = "";
+                conditions = " v.StateCode='" + ddlState.SelectedValue.ToString() + "'";
+
+                if (ddlDistrict.SelectedIndex > 0)
                 {
-                    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved sucessfully')</script>", false);
+                    conditions = conditions + " and v.DistrictCode='" + ddlDistrict.SelectedValue.ToString() + "' ";
+                }
 
-                    txtChildName.Text = "";
-                    txtFatherName.Text = "";
-                    txtHHNo.Text = "";
-                    txtSrno.Text = "";
-                    txtSamgra.Text = "";
-
-
-                    txtHHNo.Focus();
-                    txtBirth.Text = DateTime.Now.ToString("dd/MM/yyyy");
-                    ddlEduationStatus.SelectedIndex = 0;
-                    //  Response.Write("<script>window.close();</" + "script>");
-                    string strQry = "";
-                    conditions = "";
-                    conditions = " v.StateCode='" + ddlState.SelectedValue.ToString() + "'";
-
-                    if (ddlDistrict.SelectedIndex > 0)
-                    {
-                        conditions = conditions + " and v.DistrictCode='" + ddlDistrict.SelectedValue.ToString() + "' ";
-                    }
-
-                    if (ddlBlock.SelectedIndex > 0)
-                    {
-                        conditions = conditions + " and v.BlockCode='" + ddlBlock.SelectedValue.ToString() + "' ";
-                    }
-                    if (ddlVillage.SelectedIndex > 0)
-                    {
-                        conditions = conditions + " and v.ClusterCode='" + ddlVillage.SelectedValue.ToString() + "' ";
-                    }
-                    if (ddlSchool.SelectedIndex > 0)
-                    {
-                        conditions = conditions + " and tblEnrolment.SchoolCode='" + ddlSchool.SelectedValue.ToString() + "' ";
-                    }
-                    if (ddlFc.SelectedIndex > 0)
-                    {
-                        conditions = conditions + " and tblEnrolment.CreateBy='" + ddlFc.SelectedValue.ToString() + "' ";
-                    }
-                    if (ddlVillageNew.SelectedIndex > 0)
-                    {
-                        conditions = conditions + " and v.Villagecode='" + ddlVillageNew.SelectedValue.ToString() + "' ";
-                    }
-                    conditions = conditions + " and SealFormImage='" + lblDisplay.Text + "' ";
-
-                    SqlParameter[] parm1 = new SqlParameter[]
+                if (ddlBlock.SelectedIndex > 0)
                 {
+                    conditions = conditions + " and v.BlockCode='" + ddlBlock.SelectedValue.ToString() + "' ";
+                }
+                if (ddlVillage.SelectedIndex > 0)
+                {
+                    conditions = conditions + " and v.ClusterCode='" + ddlVillage.SelectedValue.ToString() + "' ";
+                }
+                if (ddlSchool.SelectedIndex > 0)
+                {
+                    conditions = conditions + " and tblEnrolment.SchoolCode='" + ddlSchool.SelectedValue.ToString() + "' ";
+                }
+                if (ddlFc.SelectedIndex > 0)
+                {
+                    conditions = conditions + " and tblEnrolment.CreateBy='" + ddlFc.SelectedValue.ToString() + "' ";
+                }
+                if (ddlVillageNew.SelectedIndex > 0)
+                {
+                    conditions = conditions + " and v.Villagecode='" + ddlVillageNew.SelectedValue.ToString() + "' ";
+                }
+                conditions = conditions + " and SealFormImage='" + lblDisplay.Text + "' ";
+
+                SqlParameter[] parm1 = new SqlParameter[]
+            {
 
                new SqlParameter("@Con",  conditions),
                  new SqlParameter("@Flag",  1),
-                };
+            };
 
 
-                    DataTable dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[SP_GET_Seal_Sign]", parm1);
-                    GVSealSign.DataSource = dt;
-                    GVSealSign.DataBind();
-                    //  LoadData();
+                DataTable dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[SP_GET_Seal_Sign]", parm1);
+                GVSealSign.DataSource = dt;
+                GVSealSign.DataBind();
+                //  LoadData();
 
-                }
-                else
-                {
-
-                }
             }
+            else
+            {
 
+            }
         }
     }
     public bool CheckAllphanumeric(string txtHhno)

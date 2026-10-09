@@ -721,7 +721,9 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <asp:Label class="control-label col-sm-4" runat="server" ID="lblDob" Text="Calling Date"></asp:Label>
+                                                                     <label class="control-label col-sm-4" for="Name">
+                                                                        Calling Date</label>
+                             
                                                                     <div class="col-sm-8">
 
                                                                         <asp:TextBox Enabled="false" runat="server" ID="txtDate" autocomplete="off" ondrop="return false;"

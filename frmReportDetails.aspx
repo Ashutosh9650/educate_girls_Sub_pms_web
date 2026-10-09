@@ -437,10 +437,10 @@
 
 
                         <li class="li-width">
-                            <asp:LinkButton ID="LnkTeamBalika" Visible="true" runat="server" Text="Team Balika"
+                            <asp:LinkButton ID="LnkTeamBalika" Visible="false" runat="server" Text="Team Balika"
                                 Style="color: white;" OnClick="LnkTeamBalika_OnClick"></asp:LinkButton></li>
                         <li class="li-width">
-                            <asp:LinkButton ID="LinkButton10" Visible="true" runat="server" Text="Team Balika Training"
+                            <asp:LinkButton ID="LinkButton10" Visible="false" runat="server" Text="Team Balika Training"
                                 Style="color: white;" OnClick="LnkTeamBalikaTraining_OnClick"></asp:LinkButton></li>
                         <li class="li-width">
                             <asp:LinkButton ID="LnkUserRole" Visible="true" runat="server" Text="User Master"

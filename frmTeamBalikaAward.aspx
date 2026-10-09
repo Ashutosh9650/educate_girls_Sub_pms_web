@@ -419,7 +419,9 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <asp:Label class="control-label col-sm-4" runat="server" ID="lblDob" Text="Award Date"></asp:Label>
+                                                                      <label class="control-label col-sm-4" for="Name">
+                                                                        Award Date</label>
+                    
                                                                     <div class="col-sm-8">
 
                                                                         <asp:TextBox Enabled="false" runat="server" ID="txtDate" autocomplete="off" ondrop="return false;"

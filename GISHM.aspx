@@ -13,12 +13,15 @@
     <link href="Leaflet2/LeafletClustersMarkers/MarkerCluster.Default.css" rel="stylesheet" />
     <link href="Leaflet2/LeafletClustersMarkers/MarkerCluster.css" rel="stylesheet" />
 
-    <script src="Leaflet2/LeafletClustersMarkers/leaflet.markercluster.js"></script>
+    <script type="text/javascript" src="Leaflet2/LeafletClustersMarkers/leaflet.markercluster.js"></script>
     <script src="Scripts/comman.js" type="text/javascript"></script>
     <%--     <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>--%>
-    <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
+    <%--<script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>--%>
+    <script type="text/javascript" src="js/JS/easy-button.js"></script>
+
+    <%--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">--%>
+    <link rel="stylesheet" href="css/CSS/easy-button.css">
     <script src="Leaflet2/bundle.js"></script>
 
     <script src="Leaflet2/leaflet.groupedlayercontrol.min.js"></script>
@@ -29,20 +32,31 @@
     <link href="Leaflet2/leaflet-search.css" rel="stylesheet" type="text/css" />
 
 
-    <link type="text/css" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap.min.css">
-    <link type="text/css" href="https://cdn.datatables.net/fixedheader/3.4.0/css/fixedHeader.bootstrap.min.css">
+    <%--<link type="text/css" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap.min.css">--%>
+    <link type="text/css" href="css/CSS/dataTables.bootstrap.min.css">
 
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <%--<link type="text/css" href="https://cdn.datatables.net/fixedheader/3.4.0/css/fixedHeader.bootstrap.min.css">--%>
+    <link type="text/css" href="css/CSS/fixedHeader.bootstrap.min.css">
+
+    <%--<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.0.js"></script>--%>
+    <script type="text/javascript" src="js/JS/jquery-3.7.0.js"></script>
+
     <script type="text/javascript" src="Scripts/jquery.dataTables.min.js"></script>
     <%--<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>--%>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>
+    <%--<script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap.min.js"></script>--%>
+    <script type="text/javascript" src="js/JS/dataTables.bootstrap.min.js"></script>
+    <%--<script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>--%>
+    <script type="text/javascript" src="js/JS/dataTables.fixedHeader.min.js"></script>
 
     <!-- Esri Leaflet CSS and JS -->
-    <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css" />
-    <script src="https://unpkg.com/esri-leaflet/dist/esri-leaflet.js"></script>
+    <%--<link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css" />--%>
+    <link rel="stylesheet" href="css/CSS/esri-leaflet-geocoder.css" />
+
+    <%--<script src="https://unpkg.com/esri-leaflet/dist/esri-leaflet.js"></script>--%>
+    <script type="text/javascript" src="js/JS/esri-leaflet.js"></script>
         <!-- map Loader -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+    <%--<script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>--%>
+    <script type="text/javascript" src="js/JS/spin.min.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -1456,7 +1470,10 @@
                                                     fillOpacity: 0.1,
                                                     zIndex: -1
                                                 };
-
+                                                ImageryLyr = L.tileLayer(
+                                                    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+                                                    { maxZoom: 18, attribution: 'Tiles &copy; Esri' }
+                                                ).addTo(map);
                                                 var Terrain = L.tileLayer(BaseUrls, BaseLyrOptionsM('mapbox/outdoors-v11')),
                                                     StreetLyr = L.tileLayer(BaseUrls, BaseLyrOptionsM('mapbox/streets-v11')),
                                                     GrayLyr = L.tileLayer(BaseUrls, BaseLyrOptionsM('mapbox/light-v9'));

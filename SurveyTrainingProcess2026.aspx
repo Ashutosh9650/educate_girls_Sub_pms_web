@@ -270,11 +270,11 @@
 
             if (Vdist.value == '2') {
                 window.open(
-                    "https://testpms.educategirls.ngo/SurveyAnspre.aspx?ID=" + panel.value + "", "_blank");
+                    "https://pms.educategirls.ngo/SurveyAnspre.aspx?ID=" + panel.value + "", "_blank");
             }
             else {
                 window.open(
-                    "https://testpms.educategirls.ngo/SurveyAns2024.aspx?ID=" + panel.value + "", "_blank");
+                    "https://pms.educategirls.ngo/SurveyAns2024.aspx?ID=" + panel.value + "", "_blank");
             }
         }
 

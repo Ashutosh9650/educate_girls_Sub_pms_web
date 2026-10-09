@@ -174,7 +174,7 @@
         function SetTarget() {
                      window.document.forms[0].target = "_blank";
                  }
-    </script >
+    </script>
 
 
     <link rel="shortcut icon" href="#">

@@ -603,6 +603,15 @@
             </div>--%>
                  <%--   </div>--%>
                     <ul class="nav navbar-nav" style="margin: 0px">
+
+
+                         <li class="li-width">
+                            <asp:LinkButton ID="LnkTeamBalika" Visible="true" runat="server" Text="Team Balika"
+                                Style="color: white;" OnClick="LnkTeamBalika_OnClick"></asp:LinkButton></li>
+                        <li class="li-width">
+                            <asp:LinkButton ID="LinkButton16" Visible="true" runat="server" Text="Team Balika Training"
+                                Style="color: white;" OnClick="LnkTeamBalikaTraining_OnClick"></asp:LinkButton></li>
+
                         <li class="li-width">
                             <asp:LinkButton ID="LinkButton5" runat="server" Visible="false" Text="Enrollment Plan" Style="color: white;" OnClick="btnEnroll_Click"></asp:LinkButton></li>
 

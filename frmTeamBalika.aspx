@@ -330,6 +330,32 @@
     }
 </script>--%>
 <style type="text/css">
+
+    /* Round photo frame: always a perfect circle */
+.tb-photo-wrap {
+    position: absolute;
+    left: 27.5%;
+    top: 28.5%;
+    width: 45%;
+    padding-top: 45%;          /* same as width, so the box is always square */
+    border-radius: 50%;
+    overflow: hidden;          /* cuts the photo to the circle */
+    background-color: #eb2027;
+}
+
+/* Photo fills the whole circle, no blank space */
+.tb-photo-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+    object-position: center top;
+    border-radius: 50%;
+}
+    /* Team Balika photo: always a full circle */
+
     .ui-datepicker {
         z-index: 99 !important
     }
@@ -1927,8 +1953,9 @@ function ShowTBDetails(tbCode) {
                                                                                             <td style="padding: 8px 15px;">
                                                                                                 <div style="position: relative;">
                                                                                                     <img src="./images/backgroundsvg.png" style="width: 100%;" alt="">
-                                                                                                    <asp:Image runat="server" ID="TBImagePHIM" Style="position: absolute; width: 42.5%;height: 126px; left: 29.3%; top: 28.8%; background-color: #eb2027; border-radius: 50%;"
-                                                                                                         alt="" />
+                                                                                                  <div class="tb-photo-wrap">
+    <asp:Image runat="server" ID="TBImagePHIM" CssClass="tb-photo-img" alt="" />
+</div>
                                                                                                 </div>
                                                                                             </td>
                                                                                         </tr>

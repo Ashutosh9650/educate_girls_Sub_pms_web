@@ -359,7 +359,7 @@ public partial class frmDonorReportTB : System.Web.UI.Page
                chkDistrict.DataValueField = "DistrictCode";
                chkDistrict.DataBind();
                string strQry;
-               strQry = "Select * from mst2District where   DistrictCode in(" + Session["DistrictCode"].ToString() + ")";
+               strQry = "Select DistrictCode from mst2District where   DistrictCode in(" + Session["DistrictCode"].ToString() + ")";
                DataTable dtcountCheck = objMain.LoadData(strQry);
                if (dtcountCheck.Rows.Count > 0)
                {
@@ -5350,4 +5350,459 @@ public partial class frmDonorReportTB : System.Web.UI.Page
 
 
        }
+
+    protected void LnkTeamBalika_OnClick(object sender, EventArgs e)
+    {
+        ViewState["1"] = 8;
+     
+        LoadMasterData(1);
+    
+    }
+
+    protected void LnkTeamBalikaTraining_OnClick(object sender, EventArgs e)
+    {
+        ViewState["1"] = 48;
+
+        LoadMasterDataTeamBalikaTraining(3);
+     
+    }
+    public void LoadMasterDataTeamBalikaTraining(int Flag)
+    {
+        conditions = "";
+        string ddlBlock = "";
+        string ddlDistrict = "";
+        string ddlPhan = "";
+        string ddlVillage = "";
+        string ddlStatecode = "";
+        foreach (ListItem item in ChkState.Items)
+        {
+            if (item.Selected)
+            {
+
+                ddlStatecode += "'" + item.Value + "'" + ",";
+
+
+            }
+        }
+
+        if (ddlStatecode.Length > 0)
+        {
+            ddlStatecode = ddlStatecode.Substring(0, ddlStatecode.LastIndexOf(","));
+        }
+        foreach (ListItem item in chkDistrict.Items)
+        {
+            if (item.Selected)
+            {
+
+                ddlDistrict += "'" + item.Value + "'" + ",";
+
+
+            }
+        }
+
+        if (ddlDistrict.Length > 0)
+        {
+            ddlDistrict = ddlDistrict.Substring(0, ddlDistrict.LastIndexOf(","));
+        }
+        foreach (ListItem item in chkBlock.Items)
+        {
+            if (item.Selected)
+            {
+
+                ddlBlock += "'" + item.Value + "'" + ",";
+
+
+            }
+        }
+
+        if (ddlBlock.Length > 0)
+        {
+            ddlBlock = ddlBlock.Substring(0, ddlBlock.LastIndexOf(","));
+        }
+
+     
+
+        if (ddlPhan.Length > 0)
+        {
+            ddlPhan = ddlPhan.Substring(0, ddlPhan.LastIndexOf(","));
+        }
+        foreach (ListItem item in chkVillage.Items)
+        {
+            if (item.Selected)
+            {
+
+                ddlVillage += "'" + item.Value + "'" + ",";
+
+
+            }
+        }
+
+        if (ddlVillage.Length > 0)
+        {
+            ddlVillage = ddlVillage.Substring(0, ddlVillage.LastIndexOf(","));
+        }
+        lblTotalCount.Text = "";
+
+
+        string condition = string.Empty;
+        if (Flag == 2)
+        {
+            if (ddlStatecode.Length > 0)
+            {
+                conditions += " Where V.StateCode in(" + ddlStatecode + ") ";
+
+            }
+        }
+        else
+        {
+            if (ddlYear.SelectedIndex > 0)
+            {
+                conditions += "    where V.Fyear = '" + ddlYear.SelectedItem.Text + "' ";
+
+            }
+            if (ddlStatecode.Length > 0)
+            {
+                conditions += " and V.StateCode in(" + ddlStatecode + ") ";
+
+            }
+        }
+
+        if (ddlDistrict.Length > 0)
+        {
+            conditions += " and V.DistrictCode in(" + ddlDistrict + ") ";
+
+        }
+
+   
+        if (ddlPhan.Length > 0)
+        {
+            conditions += " and V.PanchayatCode in(" + ddlPhan + ") ";
+        }
+        if (ddlVillage.Length > 0)
+        {
+            conditions += " and V.VillageCode in(" + ddlVillage + ") ";
+        }
+        if (Flag == 3)
+        {
+            string Year = ddlYear.SelectedItem.Text;
+            string[] Year1 = Year.Split('-');
+            if (ddlYear.SelectedItem.Text == "2016-2017")
+            {
+                if (ddlYear.SelectedIndex > 0)
+                {
+                    conditions += "    And FromDate <= '" + Year1[1] + "-03-31'";
+                }
+            }
+            else
+            {
+                if (ddlYear.SelectedIndex > 0)
+                {
+
+                    conditions += " and (Year([FromDate])*10000)+(Month([FromDate])*100+Day([FromDate])) Between  '" + Year1[0] + "0401'  and '" + Year1[1] + "0331'";
+                    // conditions += "    And FromDate >= '" + Year1[0] + "-04-01' and ToDate<='" + Year1[1] + "-03-31'";
+
+
+                }
+            }
+        }
+
+        SqlParameter[] parm = new SqlParameter[]
+            {
+
+            new SqlParameter("@Condition", conditions),
+            new SqlParameter("@Flag", Flag),
+                new SqlParameter("@Year", ddlYear.SelectedValue)
+
+                 };
+        DataTable dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptMasterTeamBailkTraining2026New]", parm);
+
+
+        ViewState["D2dUser"] = dt;
+
+      
+
+        if (ViewState["1"].ToString() == "7")
+        {
+            lblTotalCount.Text = (dt.Rows.Count).ToString();
+            if (dt.Rows.Count > 0)
+            {
+                ExportToCSVFile(dt, "TBTraining");
+            }
+            else
+            {
+               
+            }
+
+        }
+        else if (ViewState["1"].ToString() == "8")
+        {
+            lblTotalCount.Text = (dt.Rows.Count).ToString();
+            if (dt.Rows.Count > 0)
+            {
+                ExportToCSVFile(dt, "TBTraining");
+            }
+            else
+            {
+               
+            }
+
+        }
+        if (ViewState["1"].ToString() == "48")
+        {
+            lblTotalCount.Text = (dt.Rows.Count).ToString();
+            if (dt.Rows.Count > 1)
+            {
+                ExportToCSVFile(dt, "TBTraining");
+            }
+            else
+            {
+                
+            }
+
+        }
+        else
+        {
+           
+            lblTotalCount.Text = (dt.Rows.Count).ToString();
+        }
+
+
+    }
+    public void LoadMasterData(int Flag)
+    {
+        conditions = "";
+        string ddlBlock = "";
+        string ddlDistrict = "";
+        string ddlPhan = "";
+        string ddlVillage = "";
+        string ddlStatecode = "";
+        foreach (ListItem item in ChkState.Items)
+        {
+            if (item.Selected)
+            {
+
+                ddlStatecode += "'" + item.Value + "'" + ",";
+
+
+            }
+        }
+
+        if (ddlStatecode.Length > 0)
+        {
+            ddlStatecode = ddlStatecode.Substring(0, ddlStatecode.LastIndexOf(","));
+        }
+        foreach (ListItem item in chkDistrict.Items)
+        {
+            if (item.Selected)
+            {
+
+                ddlDistrict += "'" + item.Value + "'" + ",";
+
+
+            }
+        }
+
+        if (ddlDistrict.Length > 0)
+        {
+            ddlDistrict = ddlDistrict.Substring(0, ddlDistrict.LastIndexOf(","));
+        }
+        foreach (ListItem item in chkBlock.Items)
+        {
+            if (item.Selected)
+            {
+
+                ddlBlock += "'" + item.Value + "'" + ",";
+
+
+            }
+        }
+
+        if (ddlBlock.Length > 0)
+        {
+            ddlBlock = ddlBlock.Substring(0, ddlBlock.LastIndexOf(","));
+        }
+
+      
+        foreach (ListItem item in chkVillage.Items)
+        {
+            if (item.Selected)
+            {
+
+                ddlVillage += "'" + item.Value + "'" + ",";
+
+
+            }
+        }
+
+        if (ddlVillage.Length > 0)
+        {
+            ddlVillage = ddlVillage.Substring(0, ddlVillage.LastIndexOf(","));
+        }
+        lblTotalCount.Text = "";
+
+
+        string condition = string.Empty;
+        if (Flag == 9)
+        {
+            if (Convert.ToString(Session["username"]) == "PMSAdmin" || Convert.ToString(Session["username"]) == "SuperAdmin" || Convert.ToString(Session["username"]) == "EGE7557")
+            {
+                Flag = 10;
+            }
+            if (ddlStatecode.Length > 0)
+            {
+                conditions += " and V.StateCode in(" + ddlStatecode + ") ";
+
+            }
+        }
+        else
+        {
+            if (ddlYear.SelectedIndex > 0)
+            {
+                conditions += "    where V.Fyear = '" + ddlYear.SelectedItem.Text + "' ";
+
+            }
+            if (ddlStatecode.Length > 0)
+            {
+                conditions += " and V.StateCode in(" + ddlStatecode + ") ";
+
+            }
+        }
+
+        if (ddlDistrict.Length > 0)
+        {
+            conditions += " and V.DistrictCode in(" + ddlDistrict + ") ";
+
+        }
+
+       
+        
+        if (ddlPhan.Length > 0)
+        {
+            conditions += " and V.PanchayatCode in(" + ddlPhan + ") ";
+        }
+        if (ddlVillage.Length > 0)
+        {
+            conditions += " and V.VillageCode in(" + ddlVillage + ") ";
+        }
+        if (Flag == 3)
+        {
+            string Year = ddlYear.SelectedItem.Text;
+            string[] Year1 = Year.Split('-');
+            if (ddlYear.SelectedItem.Text == "2016-2017")
+            {
+                if (ddlYear.SelectedIndex > 0)
+                {
+                    conditions += "    And FromDate <= '" + Year1[1] + "-03-31'";
+                }
+            }
+            else
+            {
+                if (ddlYear.SelectedIndex > 0)
+                {
+                    conditions += "    And FromDate >= '" + Year1[0] + "-04-01' and ToDate<='" + Year1[1] + "-03-31'";
+
+
+                }
+            }
+        }
+        DataTable dt = null;
+        if (Flag == 1)
+        {
+            string Year = ddlYear.SelectedItem.Text;
+            string[] Year1 = Year.Split('-');
+            string fDate = "And FromDate >= '" + Year1[0] + "-04-01' and ToDate<= '" + Year1[1] + "-03-31'";
+            dt = LoadMasterDataNewTr(conditions, Flag, fDate);
+        }
+        else
+
+        {
+            if (Convert.ToInt32(ddlYear.SelectedValue) >= 2026)
+            {
+                dt = LoadMasterDataNew2026(conditions, Flag);
+            }
+            else if (Convert.ToInt32(ddlYear.SelectedValue) == 2024 | Convert.ToInt32(ddlYear.SelectedValue) == 2025)
+            {
+                dt = objMain.LoadMasterDataNew(conditions, Flag);
+            }
+            // dt = objMain.LoadMasterDataNew(conditions, Flag);
+        }
+        ViewState["D2dUser"] = dt;
+
+      
+
+        if (ViewState["1"].ToString() == "7")
+        {
+            lblTotalCount.Text = (dt.Rows.Count).ToString();
+            if (dt.Rows.Count > 1500)
+            {
+                ExportToCSVFile(dt, "TeamBalika");
+            }
+            else
+            {
+                
+            }
+
+        }
+        else if (ViewState["1"].ToString() == "8")
+        {
+            lblTotalCount.Text = (dt.Rows.Count).ToString();
+            if (dt.Rows.Count > 0)
+            {
+                ExportToCSVFile(dt, "TeamBalika");
+            }
+            else
+            {
+              
+            }
+
+        }
+        else if (ViewState["1"].ToString() == "9")
+        {
+            lblTotalCount.Text = (dt.Rows.Count).ToString();
+
+            ExportToCSVFile(dt, "TeamBalika");
+
+
+        }
+        if (ViewState["1"].ToString() == "48")
+        {
+            lblTotalCount.Text = (dt.Rows.Count).ToString();
+            if (dt.Rows.Count > 0)
+            {
+                ExportToCSVFile(dt, "TeamBalika");
+            }
+            else
+            {
+            }
+
+        }
+        else
+        {
+           
+            lblTotalCount.Text = (dt.Rows.Count).ToString();
+        }
+
+
+    }
+
+    public DataTable LoadMasterDataNew2026(string condition, int Flag)
+    {
+        SqlParameter[] cmdParameters = new SqlParameter[]
+        {
+            new SqlParameter("@Condition", condition),
+            new SqlParameter("@Flag", Flag)
+        };
+        return SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[Report_Master_DataNew2026]", cmdParameters);
+    }
+    public DataTable LoadMasterDataNewTr(string condition, int Flag, string fromdate)
+    {
+        SqlParameter[] cmdParameters = new SqlParameter[]
+        {
+            new SqlParameter("@Condition", condition),
+            new SqlParameter("@Flag", Flag),
+             new SqlParameter("@Fdate", fromdate),
+
+        };
+        return SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[Report_Master_TeamBail]", cmdParameters);
+    }
 }

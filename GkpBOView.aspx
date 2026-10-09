@@ -604,6 +604,16 @@
             var blockCode = $("#<%=ddlBlock.ClientID%>").val();
             var panchayatCode = $("#<%=ddlPanchayat.ClientID%>").val();
                var villageCode = $("#<%=ddlschool.ClientID%>").val();
+
+               if (blockCode != null && $.trim(blockCode).length > 10) {
+
+               } else {
+                   alert("Please select Block");
+                   return false
+               }
+
+
+
                LoadCounts();
                
     $.ajax({

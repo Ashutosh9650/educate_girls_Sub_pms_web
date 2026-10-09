@@ -293,7 +293,8 @@
                                                                             runat="server"></asp:Label>
                                                                         <asp:Label ID="lblchild_key" ForeColor="Black" Visible="false"    Text='<%# Eval("child_key") %>' Font-Names="Calibri" ItemStyle-ForeColor="#333"
                                                                             runat="server"></asp:Label>
-                                                                        
+                                                                         <asp:Label ID="lblcurrent_sr" ForeColor="Black" Visible="false"    Text='<%# Eval("current_sr") %>' Font-Names="Calibri" ItemStyle-ForeColor="#333"
+                                                                            runat="server"></asp:Label>
                                                                     </ItemTemplate>
                                                                 </asp:TemplateField>
                                                                 <asp:TemplateField HeaderText="DISECode">
@@ -400,6 +401,12 @@
                                                                 <asp:TemplateField HeaderText="CV-Class Error">
                                                                     <ItemTemplate>
                                                                         <asp:Label ID="lblCVClassError" ForeColor="Black" Text='<%# Eval("CV-Class Error") %>' runat="server"></asp:Label>
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateField>
+
+                                                                <asp:TemplateField HeaderText="current_sr">
+                                                                    <ItemTemplate>
+                                                                        <asp:Label ID="lblCVClauuussError" ForeColor="Black" Text='<%# Eval("current_sr") %>' runat="server"></asp:Label>
                                                                     </ItemTemplate>
                                                                 </asp:TemplateField>
                                                                  <asp:TemplateField HeaderText="regular_attendance">

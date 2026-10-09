@@ -273,7 +273,7 @@ public partial class SurveyTrainingProcess2026 : System.Web.UI.Page
                 txtTotalQuestions.Text = "";
                 GvQuestion.DataSource = null;
                 GvQuestion.DataBind();
-
+                Session["dtParticiparticipate"] = null;
                 DataTable Participarticipate = new DataTable();
                 Participarticipate = Get_DataFor1Filter("USP_Tarining_Participarticipate20262027shul", ddlSchedue.SelectedValue.ToString());
 

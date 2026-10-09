@@ -4,6 +4,7 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="Server">
     <script src="js/jquery-2.1.4.min.js" type="text/javascript"></script>
+
       <style>
        
        
@@ -24,17 +25,17 @@
 
     </style>
     <style type="text/css">
-        .header {
+       /* .header {
             position: absolute;
             margin-top: -44px;
-        }
+        }*/
     </style>
     <style type="text/css">
-        body {
+      /*  body {
             font-family: Arial;
             font-size: 10pt;
         }
-
+*/
         table {
             border: 1px solid #ccc;
         }

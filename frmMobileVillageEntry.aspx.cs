@@ -1894,16 +1894,16 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
     }
     protected void btnSave_Click(object sender, EventArgs e)
     {
-        string RVal = SetTextBoxFocusSelect(this.Page);
-        if (!InterventionSql_Injection(RVal))
-        {
-        }
-        else
-        {
-            ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Spurious input detected. Data rejected')</script>", false);
+        //string RVal = SetTextBoxFocusSelect(this.Page);
+        //if (!InterventionSql_Injection(RVal))
+        //{
+        //}
+        //else
+        //{
+        //    ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Spurious input detected. Data rejected')</script>", false);
 
-            return;
-        }
+        //    return;
+        //}
         SaveData();
     }
     protected void ddlVilage_SelectedIndexChanged(object sender, EventArgs e)
@@ -6321,7 +6321,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Update_tblActivityUpdate_Village", cmdParameters);
 
             }
-            if (InsertTS == true)
+            if (icount>0)
             {
 
                 ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Saved sucessfully')</script>", false);
@@ -6953,7 +6953,7 @@ public partial class frmMobileVillageEntry : System.Web.UI.Page
                 icount = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Insert_tblActivityUpdate_Village", cmdParameters1);
 
             }
-            if (icount >0)
+            if (icount > 0)
             {
 
 

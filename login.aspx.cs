@@ -230,7 +230,34 @@ public partial class login : System.Web.UI.Page
                                         {
                                             distMul = distMul.Substring(0, distMul.LastIndexOf(","));
                                         }
-                                        Session["DistrictCode"] = dist;
+                                        DataTable dtGIS867 = ds.Tables[9];
+                                        string blockMul = "";
+
+                                        if (dtGIS867.Rows.Count > 0)
+                                        {
+                                            foreach (DataRow dr in dtGIS867.Rows)
+                                            {
+                                                blockMul += "'" + dr["Blockcode"] + "'" + ",";
+
+                                            }
+                                        }
+                                        if (blockMul.Length > 0)
+                                        {
+                                            blockMul = blockMul.Substring(0, blockMul.LastIndexOf(","));
+                                        }
+                                        Session["blockCodeMul"] = blockMul;
+
+                                        if (ds.Tables[0].Rows[0]["RID"].ToString() == "4" || ds.Tables[0].Rows[0]["RID"].ToString() == "6")
+                                        {
+
+                                            string MDist = "'" + ds.Tables[0].Rows[0]["NewDistrictCode"].ToString() + "'" + "";
+                                            Session["DistrictCode"] = MDist;
+                                        }
+                                        else
+                                        {
+                                            Session["DistrictCode"] = dist;
+                                        }
+
                                         Session["BlockCode"] = Block;
 
                                         Session["DistrictCodeNew"] = dist;

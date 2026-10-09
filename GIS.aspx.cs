@@ -1,20 +1,13 @@
 ﻿using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Presentation;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Services;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 public partial class GIS : System.Web.UI.Page
 {
     clsMain objMain = new clsMain();
@@ -29,7 +22,7 @@ public partial class GIS : System.Web.UI.Page
         {
             if (Convert.ToString(Session["username"]) != "")
             {
-                
+
                 string userlevelrole = Convert.ToString(Session["user_level_Role"]);
                 //if (userlevelrole == "1")
                 //{
@@ -46,10 +39,10 @@ public partial class GIS : System.Web.UI.Page
                 //    ddlDistrict.Enabled = false;
                 //    ddlBlock.Enabled = false;
                 //}
-                
+
                 //else
                 //{
-                
+
                 //    ddlYear.Enabled = false;
                 //    ddlState.Enabled = false;
                 //    ddlDistrict.Enabled = true;
@@ -217,7 +210,7 @@ public partial class GIS : System.Web.UI.Page
         DataTable dt = new DataTable();
         dt = (HttpContext.Current.Session["tblLocDetails"] as DataTable);
 
-       
+
         ExeclHeatMap(dt);
         //var ws = wb.Worksheets.Add(dt, "Coverage_Report");
         //ws.Tables.FirstOrDefault().ShowAutoFilter = false;
@@ -236,7 +229,7 @@ public partial class GIS : System.Web.UI.Page
     public void ExeclHeatMap(DataTable dtMain1)
     {
 
-        string StartupPath = Server.MapPath("~/Export");
+        string StartupPath = Server.MapPath(Comman.GetImagePath("ExportPath"));
         string filepath = "";
         XLWorkbook wb = new XLWorkbook();
         wb = new XLWorkbook(StartupPath + "\\Coverage.xlsx");
@@ -288,13 +281,13 @@ public partial class GIS : System.Web.UI.Page
                 Response.End();
             }
         }
-        catch (Exception ex)
+        catch
         {
             throw;
         }
 
     }
-    
+
     public static readonly string conStr = Convert.ToString(System.Configuration.ConfigurationManager.AppSettings["ConStr"]);
 
     [WebMethod]

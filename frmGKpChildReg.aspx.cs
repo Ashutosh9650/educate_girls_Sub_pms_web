@@ -433,7 +433,7 @@ public partial class frmGKpChildReg : System.Web.UI.Page
             chkDistrict.DataValueField = "DistrictCode";
             chkDistrict.DataBind();
             string strQry;
-            strQry = "Select * from mst2District where   DistrictCode in(" + Session["DistrictCode"].ToString() + ")";
+            strQry = "Select DistrictCode from mst2District where   DistrictCode in(" + Session["DistrictCode"].ToString() + ")";
             DataTable dtcountCheck = objMain.LoadData(strQry);
             if (dtcountCheck.Rows.Count > 0)
             {
@@ -2291,7 +2291,7 @@ public partial class frmGKpChildReg : System.Web.UI.Page
         if (Convert.ToInt32(ddlYear.SelectedValue) >= 2025)
         {
             dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "rptgkpsummaryNew202307New2026", cmdParameters);
-
+            //rptgkpsummaryNew202307New2026
             if (dt.Rows.Count > 0)
             {
                 objMain.ReportDownload("GKP Summary", "GKP Report", Convert.ToString(Session["username"]));
@@ -8634,17 +8634,29 @@ public partial class frmGKpChildReg : System.Web.UI.Page
         string StartupPath = Server.MapPath("~/Export");
         string filepath = "";
         XLWorkbook wb = new XLWorkbook();
-        wb = new XLWorkbook(StartupPath + "\\GKPReport2024.xlsx");
+        string str = "";
+        DataTable dt = dtMain1;
+        Int32 ii = Convert.ToInt32(dt.Rows.Count) + 3;
+        if (Convert.ToInt32(ddlYear.SelectedValue) >= 2026)
+        {
+            wb = new XLWorkbook(StartupPath + "\\GKPReport2026.xlsx");
+            str = "A4:BI" + ii;
+        }
+        else
+        {
+            wb = new XLWorkbook(StartupPath + "\\GKPReport2024.xlsx");
+            str = "A4:AY" + ii;
+        }
         var ws = wb.Worksheet(1);
 
-        DataTable dt = dtMain1;
+        
 
         //DataTable dt1 = dtMain1.Tables[1];
 
         //dt1.Columns.Remove("RowNo");
         ws.Cell(3, 1).InsertData(dt.Rows);
-        Int32 ii = Convert.ToInt32(dt.Rows.Count) + 3;
-        string str = "A4:AY" + ii;
+       
+        
         ws.Range(str).Style.Border.SetTopBorder(XLBorderStyleValues.Thin);
         ws.Range(str).Style.Border.SetBottomBorder(XLBorderStyleValues.Thin);
 

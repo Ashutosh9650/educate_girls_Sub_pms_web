@@ -1892,6 +1892,16 @@ new SqlParameter("@Filter3",Filter3),
         };
         return SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[GetUserLoginAuthenticateFC]", cmdParameters);
     }
+    public DataTable GetUserLoginAuthenticateFC2026(string UserName, string Password, string IMi)
+    {
+        SqlParameter[] cmdParameters = new SqlParameter[]
+        {
+            new SqlParameter("@UserName", UserName),
+            new SqlParameter("@Password", Password),
+                new SqlParameter("@IMEINo", IMi)
+        };
+        return SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[GetUserLoginAuthenticateFC2026]", cmdParameters);
+    }
     public DataTable Get_Check_PasswordNewBO(string UserName, string Password, string IMi)
     {
         SqlParameter[] cmdParameters = new SqlParameter[]

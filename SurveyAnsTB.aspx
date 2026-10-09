@@ -141,7 +141,7 @@
 
         //    }
         //});
-       
+
         //function Fill_Zone(ddlID) {
 
         //    var objvr = {};
@@ -184,182 +184,180 @@
                     }
                 });
             }
-            
+
         }
         function savedata() {
-         
-          
+
+
             var Participate = $('#ddlParticipate').val();
-            var FomeID = $('#txtFomeID').val();
+
             if (Participate == "0") {
                 alert('Please enter  Participant');
             }
             else {
-              
-               
-                    var listData = [];
-                    // var data = {};
+
+
+                var listData = [];
+                // var data = {};
                 $('#questions1 tr').each(function () {
-                        if ($(this).hasClass('header')) {
+                    if ($(this).hasClass('header')) {
 
-                        } else {
+                    } else {
 
-                            try {
-                             
-
-                                var elem6 = $(this).find('select')[0]
+                        try {
 
 
-
-                                if (elem6.name == "Dropdown") {
-
-                                    var e = document.getElementById(elem6.id);
-
-                                    var dlr = e.value;
-                                    if (dlr > 0) {
-                                        listData.push({ "QuestionId": elem6.id, "QuestionValue": e.value })
-                                    }
-                                    else {
-
-                                    }
-
-                                }
-
-                            } catch (Exception) {
-
-                            }
-
-                        }
-                    })
-                $('#questions1 tr').each(function () {
-                        if ($(this).hasClass('header')) {
-
-                        } else {
-
-                            try {
-
-                                var elem = $(this).find('input')[0]
-
-                               
+                            var elem6 = $(this).find('select')[0]
 
 
-                                if (elem.name == "Numeric" || elem.name == "Text" || elem.name == "Date") {
 
-                                    if (elem.value != '')
-                                        listData.push({ "QuestionId": elem.id, "QuestionValue": elem.value })
-                                    // alert(elem.name + "_" + elem.id + "_" + elem.value)
+                            if (elem6.name == "Dropdown") {
+
+                                var e = document.getElementById(elem6.id);
+
+                                var dlr = e.value;
+                                if (dlr > 0) {
+                                    listData.push({ "QuestionId": elem6.id, "QuestionValue": e.value })
                                 }
                                 else {
-                                    if (elem.type == "file") {
-                                        ;
-                                        var ValImage = "lbl" + elem.id;
-                                        var kk = $('#' + ValImage).val();
-                                        // Imageuploaddata(elem.id);
-                                        if (kk.length > 0) {
-                                            listData.push({ "QuestionId": elem.id, "QuestionValue": kk })
-                                        }
-                                    }
-                                    if (elem.type == "radio") {
-
-                                        for (var i = 0; i < $(this).children()[1].children.length; i++) {
-                                            if ($(this).children()[1].children[i].type == "radio") {
-                                                ;
-                                                if ($(this).children()[1].children[i].checked == true)
-                                                {
-                                                    ;
-                                                    listData.push({ "QuestionId": $(this).children()[1].children[i].name, "QuestionValue": $(this).children()[1].children[i].value })
-                                                        }
-                                            }
-                                        }
-                                    }
-
-                                    else if (elem.type == "checkbox") {
-                                        ;
-                                        var checkedValue = '';
-                                       
-                                        for (var i = 0; i < $(this).children()[1].children.length; i++) {
-                                            if ($(this).children()[1].children[i].type == "checkbox") {
-                                            
-                                                if ($(this).children()[1].children[i].checked == true) {
-                                                    if (checkedValue == '')
-                                                        checkedValue = $(this).children()[1].children[i].value;
-                                                    else
-                                                        checkedValue += "," + $(this).children()[1].children[i].value;
-                                                    // alert("Checkbox_"+$(this).children()[2].children[i].name + "_" + $(this).children()[2].children[i].value)
-                                                }
-                                            }
-                                        }
-                                        if (checkedValue.length > 0) {
-                                     
-                                            listData.push({ "QuestionId": $(this).children()[1].children[0].name, "QuestionValue": checkedValue })
-                                        }
-                                        // alert("Checkbox_" + $(this).children()[2].children[i].name + "_" + checkedValue)
-                                    }
-
 
                                 }
-                            } catch (Exception) {
 
                             }
 
-                        }
-                    })
-                    try {
-                        var stateid, districtid, blockid, formid, FinalFlag;
-                        stateid = $('#hdnStateId').val();
-                        districtid = $('#ddlParticipate').val();
-                        blockid = $('#hdnblock').val();
-                        formid = $('#hdnformid').val();
-                        FinalFlag = $(':input[type="button"]').val();
-                        var Year = $('#ddlyear').val();
-                        var Month = $('#ddlmonths').val();
-                        ShowProgress();
-                        $.ajax({
-                            type: "POST",
-                            url: "SurveyAnsTB.aspx/Savedata",
-                            data: "{data:'" + JSON.stringify(listData) + "',StateID:'" + stateid + "', DistrictID:'" + districtid + "', Blockid:'" + blockid + "', FormID:'" + formid + "',FinalFlag:'" + FinalFlag + "',Year:'" + Year + "',Month:'" + Month + "'}",
-                            contentType: "application/json; charset=utf-8",
-                            dataType: "json",
+                        } catch (Exception) {
 
-                            success: function (response) {
-                                var scrpt = response.d.split('___');
-                                var Sd = scrpt[1];
-                                if (Sd == 1) {
-                                    ;
-                                    document.getElementById("questions").style.visibility = "hidden";
-                                    document.getElementById("IDSub").style.visibility = "hidden";
-                                    document.getElementById("ddlParticipate").style.visibility = "hidden";
-                                    document.getElementById("MainID").style.visibility = "hidden";
-                                    document.getElementById("lblmsg").style.visibility = "hidden";
-                                    $('#lblmsg1').text(scrpt[0]);
-                                    window.scrollTo(0, 0);
-                                }
-                                else
-                                {
-                                    alert(response.d);
-                                }
-                                EndProgress();
-                                //if (response.d == "Data Submitted Successfully.") {
-                                //    window.location = "SurveyAns.aspx";
-                                //}
-                                //else if (response.d == "Data Update Successfully.") {
-                                //    window.location = "SurveyAns.aspx";
-                                //}
-                                //else if (response.d == "Data Final Submitted.") {
-                                //    window.location = "SurveyAns.aspx";
-                                //}
-                                //else {
-                                //    window.location = "SurveyAns.aspx";
-                                //}
-                            },
-                            failure: function (response) {
-                                alert(response.d);
-                            },
-                        });
-                    } catch (e) {
+                        }
 
                     }
-                
+                })
+                $('#questions1 tr').each(function () {
+                    if ($(this).hasClass('header')) {
+
+                    } else {
+
+                        try {
+
+                            var elem = $(this).find('input')[0]
+
+
+
+
+                            if (elem.name == "Numeric" || elem.name == "Text" || elem.name == "Date") {
+
+                                if (elem.value != '')
+                                    listData.push({ "QuestionId": elem.id, "QuestionValue": elem.value })
+                                // alert(elem.name + "_" + elem.id + "_" + elem.value)
+                            }
+                            else {
+                                if (elem.type == "file") {
+
+                                    var ValImage = "lbl" + elem.id;
+                                    var kk = $('#' + ValImage).val();
+                                    // Imageuploaddata(elem.id);
+                                    if (kk.length > 0) {
+                                        listData.push({ "QuestionId": elem.id, "QuestionValue": kk })
+                                    }
+                                }
+                                if (elem.type == "radio") {
+
+                                    for (var i = 0; i < $(this).children()[1].children.length; i++) {
+                                        if ($(this).children()[1].children[i].type == "radio") {
+
+                                            if ($(this).children()[1].children[i].checked == true) {
+
+                                                listData.push({ "QuestionId": $(this).children()[1].children[i].name, "QuestionValue": $(this).children()[1].children[i].value })
+                                            }
+                                        }
+                                    }
+                                }
+
+                                else if (elem.type == "checkbox") {
+
+                                    var checkedValue = '';
+
+                                    for (var i = 0; i < $(this).children()[1].children.length; i++) {
+                                        if ($(this).children()[1].children[i].type == "checkbox") {
+
+                                            if ($(this).children()[1].children[i].checked == true) {
+                                                if (checkedValue == '')
+                                                    checkedValue = $(this).children()[1].children[i].value;
+                                                else
+                                                    checkedValue += "," + $(this).children()[1].children[i].value;
+                                                // alert("Checkbox_"+$(this).children()[2].children[i].name + "_" + $(this).children()[2].children[i].value)
+                                            }
+                                        }
+                                    }
+                                    if (checkedValue.length > 0) {
+
+                                        listData.push({ "QuestionId": $(this).children()[1].children[0].name, "QuestionValue": checkedValue })
+                                    }
+                                    // alert("Checkbox_" + $(this).children()[2].children[i].name + "_" + checkedValue)
+                                }
+
+
+                            }
+                        } catch (Exception) {
+
+                        }
+
+                    }
+                })
+                try {
+                    var stateid, districtid, blockid, formid, FinalFlag;
+                    stateid = $('#hdnStateId').val();
+                    districtid = $('#ddlParticipate').val();
+                    blockid = $('#hdnblock').val();
+                    formid = $('#hdnformid').val();
+                    FinalFlag = $(':input[type="button"]').val();
+                    var Year = $('#ddlyear').val();
+                    var Month = $('#ddlmonths').val();
+                    ShowProgress();
+                    $.ajax({
+                        type: "POST",
+                        url: "SurveyAnsTB.aspx/Savedata",
+                        data: "{data:'" + JSON.stringify(listData) + "',StateID:'" + stateid + "', DistrictID:'" + districtid + "', Blockid:'" + blockid + "', FormID:'" + formid + "',FinalFlag:'" + FinalFlag + "',Year:'" + Year + "',Month:'" + Month + "'}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+
+                        success: function (response) {
+                            var scrpt = response.d.split('___');
+                            var Sd = scrpt[1];
+                            if (Sd == 1) {
+
+                                document.getElementById("questions").style.visibility = "hidden";
+                                document.getElementById("IDSub").style.visibility = "hidden";
+                                document.getElementById("ddlParticipate").style.visibility = "hidden";
+                                document.getElementById("MainID").style.visibility = "hidden";
+                                document.getElementById("lblmsg").style.visibility = "hidden";
+                                $('#lblmsg1').text(scrpt[0]);
+                                window.scrollTo(0, 0);
+                            }
+                            else {
+                                alert(scrpt[0]);
+                            }
+                            EndProgress();
+                            //if (response.d == "Data Submitted Successfully.") {
+                            //    window.location = "SurveyAns.aspx";
+                            //}
+                            //else if (response.d == "Data Update Successfully.") {
+                            //    window.location = "SurveyAns.aspx";
+                            //}
+                            //else if (response.d == "Data Final Submitted.") {
+                            //    window.location = "SurveyAns.aspx";
+                            //}
+                            //else {
+                            //    window.location = "SurveyAns.aspx";
+                            //}
+                        },
+                        failure: function (response) {
+                            alert(response.d);
+                        },
+                    });
+                } catch (e) {
+
+                }
+
             }
             // alert(listData);
         }
@@ -428,7 +426,7 @@
         }
 
         function FN14351(Questionid) {
-            ;
+
             var val1 = $('#14343').val();
             var val2 = $('#14344').val();
             var perto = val2 * 100 / val1;
@@ -472,7 +470,7 @@
         }
 
         function getBlock() {
-            ;
+
             try {
                 if ($('#ddlParticipate').val() != 0) {
                     $.ajax({
@@ -484,14 +482,12 @@
 
                         success: function (response) {
                             if (response != 0) {
-                                if (response.d == "Data Allready Submitted")
-                                {
+                                if (response.d == "Data Allready Submitted") {
                                     alert(response.d);
 
                                     document.getElementById("IDSub").style.display = "block";
                                 }
-                                else
-                                {
+                                else {
                                     document.getElementById("IDSub").style.display = "none";
 
                                 }
@@ -512,61 +508,56 @@
 
             }
 
-         
-      
+
+
         }
 
 
         function getBlockNew() {
-            ;
-            
+
+
             var gg = $('[id*=ddlParticipate]').val();
             try {
-            
-                    $.ajax({
-                        type: "POST",
-                        url: "SurveyAnsTB.aspx/getBlock",
-                        data: "{DistrictID:'" + gg + "'}",
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
 
-                        success: function (response)
-                        {
-                            var scrpt = response.d.split('___');
-                            var Sd = scrpt[1];
-                            var Sdms = scrpt[0];
-                            var ParName = scrpt[2];
-                            ;
-                            if (Sdms == 'Submitted')
-                            {
-                                $('#ddlParticipate').val(Sd);
-                               
-                            }
-                            if (Sdms == 'Participant not Found')
-                            {
-                                alert(scrpt[0]);
-                                $('#ddlParticipate').val(Sd);
-                               
-                            }
-                            if (Sdms == 'Data Already Submitted')
-                            {
-                              
-                                $('#ddlParticipate').val(Sd);
-                                alert(scrpt[0]);
+                $.ajax({
+                    type: "POST",
+                    url: "SurveyAnsTB.aspx/getBlock",
+                    data: "{DistrictID:'" + gg + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
 
-                            }
-                        },
-                        failure: function (response) {
-                            alert(response.d);
-                        },
-                    });
-              
-            } catch (e)
-            {
+                    success: function (response) {
+                        var scrpt = response.d.split('___');
+                        var Sd = scrpt[1];
+                        var Sdms = scrpt[0];
+                        var ParName = scrpt[2];
+
+                        if (Sdms == 'Submitted') {
+                            $('#ddlParticipate').val(Sd);
+
+                        }
+                        if (Sdms == 'Participant not Found') {
+                            alert(scrpt[0]);
+                            $('#ddlParticipate').val(Sd);
+
+                        }
+                        if (Sdms == 'Data Already Submitted') {
+
+                            $('#ddlParticipate').val(Sd);
+                            alert(scrpt[0]);
+
+                        }
+                    },
+                    failure: function (response) {
+                        alert(response.d);
+                    },
+                });
+
+            } catch (e) {
 
             }
-         
-         
+
+
 
         }
 
@@ -580,7 +571,7 @@
             return false;
         }
         function isNumberKey(txt, evt) {
-            ;
+
             var charCode = (evt.which) ? evt.which : evt.keyCode;
             if (charCode == 46 && charCode == 127) {
                 if (txt.value.indexOf('.') === 1) {
@@ -619,12 +610,12 @@
         //    return true;
         //}
         function ValidateEmail(txt) {
-           
+
             var mailformat = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-           // var mailformat = /^w+([.-]?w+)*@w+([.-]?w+)*(.w{2,3})+$/;
+            // var mailformat = /^w+([.-]?w+)*@w+([.-]?w+)*(.w{2,3})+$/;
             if (txt.value.match(mailformat)) {
-                  //The pop up alert for a valid email address
-                
+                //The pop up alert for a valid email address
+
                 return true;
             }
             else {
@@ -634,7 +625,7 @@
             }
         }
         function validateOnlyText(txt) {
-           
+
             if (!/^[a-zA-Z]*$/g.test(txt.value)) {
                 alert("Only characters allow");
                 txt.value = "";
@@ -656,13 +647,13 @@
                 txt.value = "";
             }
 
-           
+
         }
-       
+
         function alphanumeric(txt) {
             var letters = /^[0-9a-zA-Z]+$/;
             if (txt.value.match(letters)) {
-                
+
                 return true;
             }
             else {
@@ -700,20 +691,19 @@
         }
         function NotOnlyNumeric(txt) {
             var hh = txt.value;
-            if (!isNaN(hh))
-            {
+            if (!isNaN(hh)) {
 
                 alert('Please input altest one characters only');
                 txt.value = "";
                 return false;
-               
+
             }
             else {
-               
+
                 return true;
-               
+
             }
-           
+
         }
         function CheckMobile(value) {
             var mob = /^[6-9]{1}[0-9]{9}$/;
@@ -1066,8 +1056,7 @@
                                                     <asp:DropDownList ID="ddlParticipate"
                                                          OnSelectedIndexChanged="ddlParticipate_SelectedIndexChanged" AutoPostBack="true" runat="server" 
                                                                     class="form-control " />
-                                                              <asp:TextBox ID="txtFomeID" runat="server"  style="display:none;"  class="form-control "></asp:TextBox>
-                                                
+                                                              
                                                             </div>
                                                            
                                         </div>

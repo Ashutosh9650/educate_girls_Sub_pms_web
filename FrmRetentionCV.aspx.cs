@@ -120,7 +120,7 @@ public partial class FrmRetentionCV : System.Web.UI.Page
             }
             else
             {
-                conditions = "StateCode  in('" + ddlState.SelectedValue + "') and DistrictCode in(" + Session["DistrictCode"].ToString() + ") and mst2District.FYear ='" + ddlYear.SelectedItem.Text + "' ";
+                conditions = "StateCode  in('" + ddlState.SelectedValue + "') and DistrictCode in(" + Session["DistrictCodeNew"].ToString() + ") and mst2District.FYear ='" + ddlYear.SelectedItem.Text + "' ";
 
                 //conditions = " RDistrictCode  in(select DistrictCode from mst2District where DistrictCode in(select districtcode from MstUser where UserName = '" + Convert.ToString(Session["username"]) + "'))  and mst2District.FYear ='" + ddlYear.SelectedItem.Text + "' ";
             }
@@ -447,7 +447,7 @@ public partial class FrmRetentionCV : System.Web.UI.Page
         else
         {
             conditions = "";
-            conditions = "StateCode ='" + ddlState.SelectedValue + "' and DistrictCode in(" + Session["DistrictCode"].ToString() + ") and Fyear= '" + ddlYear.SelectedItem.Text + "' ";
+            conditions = "StateCode ='" + ddlState.SelectedValue + "' and DistrictCode in(" + Session["DistrictCodeNew"].ToString() + ") and Fyear= '" + ddlYear.SelectedItem.Text + "' ";
             objComman.BindDLL("mst2District", "DistrictCode,dbo.TitleCase(upper(DistrictName)) as DistrictName", conditions, "DistrictName", "asc", ddlDistrict, "DistrictName", "DistrictCode", "--Select--");
             string strQry;
             strQry = "Select * from mst2District where   DistrictCode in(" + Session["DistrictCode"].ToString() + ")";
@@ -750,14 +750,20 @@ public partial class FrmRetentionCV : System.Web.UI.Page
             Label lblCVLastAttendanceError = (Label)Gv_Profile_Search.Rows[i].FindControl("lblCVLastAttendanceError");
             Label lblregularattendance = (Label)Gv_Profile_Search.Rows[i].FindControl("lblregularattendance");
             Label lblchild_key = (Label)Gv_Profile_Search.Rows[i].FindControl("lblchild_key");
-
+            Label lblcurrent_sr = (Label)Gv_Profile_Search.Rows[i].FindControl("lblcurrent_sr");
             
+
+
             int CFlag = 0;
             int RFlag = 0;
             if (chkFormName.Checked == true)
             {
                 RFlag = Convert.ToInt32(lblFlag.Text);
-            if (RFlag==8)
+                if (RFlag == 13)
+                {
+                    CFlag =2;
+                }
+                    if (RFlag==8)
             {
                 if (lblCVClassError.Text == "Error" )
                 {
@@ -794,7 +800,7 @@ public partial class FrmRetentionCV : System.Web.UI.Page
            
                 Chcount = Chcount + 1;
 
-                int icount = SaveENromentCV(lblUniqueChildCode.Text, lblchild_key.Text, Convert.ToString(Session["username"]), Flag,CFlag,RFlag, lblClass.Text, Att, Convert.ToInt32(lblRe.Text));
+                int icount = SaveENromentCV(lblUniqueChildCode.Text, lblchild_key.Text, Convert.ToString(Session["username"]), Flag,CFlag,RFlag, lblClass.Text, Att, Convert.ToInt32(lblRe.Text), lblcurrent_sr.Text.ToString());
                     Fcount = icount;
                
               
@@ -833,7 +839,7 @@ public partial class FrmRetentionCV : System.Web.UI.Page
                 Chcount = Chcount + 1;
 
 
-                int icount = SaveENromentCV(lblUniqueChildCode.Text, lblchild_key.Text, Convert.ToString(Session["username"]), 2, 0, 0, "", "",0);
+                int icount = SaveENromentCV(lblUniqueChildCode.Text, lblchild_key.Text, Convert.ToString(Session["username"]), 2, 0, 0, "", "",0,"");
 
                 Fcount = icount;
             
@@ -850,7 +856,7 @@ public partial class FrmRetentionCV : System.Web.UI.Page
            
         }
     }
-    public int SaveENromentCV(string strMainIDNo, string CVUniqueID, string UserName, int Flag, int CFlag,  int RFlag,string PresentClass,string LastPresentDate,int RE)
+    public int SaveENromentCV(string strMainIDNo, string CVUniqueID, string UserName, int Flag, int CFlag,  int RFlag,string PresentClass,string LastPresentDate,int RE, string Sr  )
     {
         SqlParameter[] cmdParameters = new SqlParameter[]
         {
@@ -864,7 +870,7 @@ public partial class FrmRetentionCV : System.Web.UI.Page
       new SqlParameter("@LastPresentDate", LastPresentDate),
   new SqlParameter("@RE",RE),
 
-      
+        new SqlParameter("@NewSR",Sr),
 
 
         };

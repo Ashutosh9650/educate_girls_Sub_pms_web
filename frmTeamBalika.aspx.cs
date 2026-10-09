@@ -1685,7 +1685,7 @@ public partial class frmTeamBalika : System.Web.UI.Page
 
         string outputPdf =
             Path.Combine(folder, "IdCard.pdf");
-        DataTable dtmstMNew = objMain.LoadData(" SELECT[UniqueCode],ImagePath,DistirctOffice,egvillagecode,RequestedDate, [TBCode],[TBName],[Villagename], mstCluster.ClusterName, DistrictName,[Gender],[Active],[FatherName],[MotherName], RIGHT('0' + CAST(DAY([DOB]) AS VARCHAR(2)), 2) + '-' +    LEFT(DATENAME(MONTH, [DOB]), 3) + '-' + CAST(YEAR([DOB]) AS VARCHAR(4)) AS DOB,[AgeAson],[AsOnDate],[Contact], RIGHT('0' + CAST(DAY([DOB]) AS VARCHAR(2)), 2) +'-' + LEFT(DATENAME(MONTH, DateofJoining), 3) + '-' + CAST(YEAR(DateofJoining) AS VARCHAR(4)) AS DateofJoining,[PriorWorkYearMonth],[TBCode] as UniqueId ,isnull(IsSmartPhone, 0) IsSmartPhone,AlternetPhoneNo FROM[dbo].[mstTeamBalika]        inner join mst5Village on mst5Village.VillageCode = mstTeamBalika.VillageCode inner join mst2District on mst2District.DistrictCode = mst5Village.DistrictCode left join mstCluster on mstCluster.ClusterCode = mst5Village.ClusterCode where UniqueCode ='" + ViewState["TBCode"] + "'");
+        DataTable dtmstMNew = objMain.LoadData(" SELECT[UniqueCode],ImagePath,DistirctOffice,egvillagecode,RequestedDate, [TBCode],[TBName],[Villagename], mstCluster.ClusterName, DistrictName,[Gender],[Active],[FatherName],[MotherName], REPLACE(CONVERT(VARCHAR(11), [DOB], 106), ' ', '-')           AS DOB,[AgeAson],[AsOnDate],[Contact],  REPLACE(CONVERT(VARCHAR(11), DateofJoining, 106), ' ', '-')   AS DateofJoining,[PriorWorkYearMonth],[TBCode] as UniqueId ,isnull(IsSmartPhone, 0) IsSmartPhone,AlternetPhoneNo FROM[dbo].[mstTeamBalika]        inner join mst5Village on mst5Village.VillageCode = mstTeamBalika.VillageCode inner join mst2District on mst2District.DistrictCode = mst5Village.DistrictCode left join mstCluster on mstCluster.ClusterCode = mst5Village.ClusterCode where UniqueCode ='" + ViewState["TBCode"] + "'");
         IdCardModel model = new IdCardModel();
 
         if (dtmstMNew.Rows.Count > 0)
@@ -1910,24 +1910,44 @@ public partial class frmTeamBalika : System.Web.UI.Page
 
                 if (!string.IsNullOrEmpty(model.PhotoPath) && File.Exists(model.PhotoPath))
                 {
-                    Image photo = iTextSharp.text.Image.GetInstance(model.PhotoPath);
+                    iTextSharp.text.Image photo = iTextSharp.text.Image.GetInstance(model.PhotoPath);
 
-                    float diameter = 130f;
-                    float x = 237f;              // lower-left of the photo box (same as before)
-                    float y = 565f;
-                    float r = diameter / 2f;     // radius
-                    float cx = x + r;            // circle center X
-                    float cy = y + r;            // circle center Y
+                    // Circle in the template (PDF points, origin = bottom-left of page)
+                    const float cx = 301.5f;
+                    const float cy = 623f;
+                    const float r = 77f;
+                    float d = r * 2f;
 
-                    photo.ScaleAbsolute(diameter, diameter);
-                    photo.SetAbsolutePosition(x, y);
+                    // "Cover" scaling: fill the circle, crop the extra (no stretching)
+                    float scale = Math.Max(d / photo.Width, d / photo.Height);
+                    float w = photo.Width * scale;
+                    float h = photo.Height * scale;
+                    photo.ScaleAbsolute(w, h);
 
+                    // Centre horizontally; align top of photo with top of circle
+                    float px = cx - (w / 2f);
+                    float py = (cy + r) - h;
+                    photo.SetAbsolutePosition(px, py);
+
+                    // 1) White background + clip + photo
                     cb1.SaveState();
-                    cb1.Circle(cx, cy, r);       // define circular clip path
+                    cb1.SetColorFill(BaseColor.WHITE);
+                    cb1.Circle(cx, cy, r);
+                    cb1.Fill();
+
+                    cb1.Circle(cx, cy, r);
                     cb1.Clip();
-                    cb1.NewPath();               // apply clip without drawing the circle
-                    cb1.AddImage(photo);         // image now shows only inside the circle
-                    cb1.RestoreState();          // stop clipping so nothing else is affected
+                    cb1.NewPath();
+                    cb1.AddImage(photo);
+                    cb1.RestoreState();
+
+                    // 2) Red border LAST, so it sits on top of the photo edge
+                    cb1.SaveState();
+                    cb1.SetColorStroke(new BaseColor(237, 28, 36));
+                    cb1.SetLineWidth(4f);
+                    cb1.Circle(cx, cy, r);
+                    cb1.Stroke();
+                    cb1.RestoreState();
                 }
                 //---------------- PAGE 2 (back) ----------------//
                 const float X2 = 143f;
@@ -2296,24 +2316,48 @@ public partial class frmTeamBalika : System.Web.UI.Page
     string panchayatCode,
     string villageCode)
     {
-        string str = " WHERE ApprovalStatus in (1,2,3) ";
+        string str = " WHERE 1=1 ";
 
         if (!string.IsNullOrEmpty(stateCode) && stateCode != "0")
-            str += " AND mst5Village.StateCode='" + stateCode + "'";
+            str += " AND v.StateCode='" + stateCode + "'";
 
-        str += " AND mst5Village.DistrictCode='" + districtCode + "'";
+        str += " AND v.DistrictCode='" + districtCode + "'";
 
         if (!string.IsNullOrEmpty(blockCode) && blockCode != "0")
-            str += " AND mst5Village.BlockCode='" + blockCode + "'";
+            str += " AND v.BlockCode='" + blockCode + "'";
 
         if (!string.IsNullOrEmpty(panchayatCode) && panchayatCode != "0")
-            str += " AND mst5Village.PanchayatCode='" + panchayatCode + "'";
+            str += " AND v.PanchayatCode='" + panchayatCode + "'";
 
         if (!string.IsNullOrEmpty(villageCode) && villageCode != "0")
-            str += " AND mst5Village.VillageCode='" + villageCode + "'";
+            str += " AND v.VillageCode='" + villageCode + "'";
 
         clsMain objMain = new clsMain();
-        DataTable dt = objMain.LoadData(" SELECT isnull(ApprovalStatus,0) as ApprovalStatus, COUNT(*) as Cnt FROM[dbo].[mstTeamBalika]            inner join mst5Village on mst5Village.VillageCode=mstTeamBalika.VillageCode or  mst5Village.refVillage16=mstTeamBalika.VillageCode	or  mst5Village.refVillage17=mstTeamBalika.VillageCode	or  mst5Village.refVillage18=mstTeamBalika.VillageCode	or  mst5Village.refVillage19=mstTeamBalika.VillageCode	or  mst5Village.refVillage20=mstTeamBalika.VillageCode	 	or  mst5Village.refVillage21=mstTeamBalika.VillageCode or  mst5Village.refVillage22=mstTeamBalika.VillageCode	or  mst5Village.refVillage23=mstTeamBalika.VillageCode or  mst5Village.refVillage24=mstTeamBalika.VillageCode  or  mst5Village.refVillage25=mstTeamBalika.VillageCode inner join mst2District on mst2District.DistrictCode = mst5Village.DistrictCode left join mstCluster on mstCluster.ClusterCode = mst5Village.ClusterCode " + str + "  group by ApprovalStatus"); // Your DB Method
+
+        string query = "";
+query += "; WITH VillageCodes AS";
+        query += "(";
+        query += "SELECT DISTINCT vc.Code ";
+    query += "FROM dbo.mst5Village v ";
+        query += "INNER JOIN dbo.mst2District d ON d.DistrictCode = v.DistrictCode ";
+        query += " CROSS APPLY (VALUES ";
+        query += "   (v.VillageCode),  (v.refVillage16), (v.refVillage17), (v.refVillage18), ";
+        query += "  (v.refVillage19), (v.refVillage20), (v.refVillage21), (v.refVillage22),";
+        query += "  (v.refVillage23), (v.refVillage24), (v.refVillage25) ";
+        query += " ) vc(Code) ";
+        query += " " + str + " ";
+
+        query += " AND vc.Code IS NOT NULL";
+        query += ")";
+        query += " SELECT tb.ApprovalStatus,";
+        query += "  COUNT(*) AS Cnt ";
+        query += " FROM dbo.mstTeamBalika tb ";
+        query += " INNER JOIN VillageCodes c ON c.Code = tb.VillageCode ";
+        query += " WHERE tb.ApprovalStatus IN (1, 2, 3) ";
+        query += "GROUP BY tb.ApprovalStatus;";
+
+        // DataTable dt = objMain.LoadData(" SELECT isnull(ApprovalStatus,0) as ApprovalStatus, COUNT(*) as Cnt FROM[dbo].[mstTeamBalika]            inner join mst5Village on mst5Village.VillageCode=mstTeamBalika.VillageCode or  mst5Village.refVillage16=mstTeamBalika.VillageCode	or  mst5Village.refVillage17=mstTeamBalika.VillageCode	or  mst5Village.refVillage18=mstTeamBalika.VillageCode	or  mst5Village.refVillage19=mstTeamBalika.VillageCode	or  mst5Village.refVillage20=mstTeamBalika.VillageCode	 	or  mst5Village.refVillage21=mstTeamBalika.VillageCode or  mst5Village.refVillage22=mstTeamBalika.VillageCode	or  mst5Village.refVillage23=mstTeamBalika.VillageCode or  mst5Village.refVillage24=mstTeamBalika.VillageCode  or  mst5Village.refVillage25=mstTeamBalika.VillageCode inner join mst2District on mst2District.DistrictCode = mst5Village.DistrictCode left join mstCluster on mstCluster.ClusterCode = mst5Village.ClusterCode " + str + "  group by ApprovalStatus"); // Your DB Method
+        DataTable dt = objMain.LoadData(" "+ query + "");
 
         // start all at 0 so missing statuses still return "0"
         var counts = new Dictionary<string, string>
@@ -2890,7 +2934,7 @@ public partial class frmTeamBalika : System.Web.UI.Page
         }
 
 
-        DataTable   dtmstMNew = objMain.LoadData(" SELECT [UniqueCode], RequestedDate,[TBCode],EgVillagecode,[TBName],[Villagename],ApprovalStatus, mstCluster.ClusterName, DistrictName,[Gender],[Active],[FatherName],[MotherName], RIGHT('0' + CAST(DAY([DOB]) AS VARCHAR(2)), 2) + '-' +    LEFT(DATENAME(MONTH, [DOB]), 3) + '-' + CAST(YEAR([DOB]) AS VARCHAR(4)) AS DOB,[AgeAson],[AsOnDate],[Contact], RIGHT('0' + CAST(DAY([DOB]) AS VARCHAR(2)), 2) +'-' + LEFT(DATENAME(MONTH, DateofJoining), 3) + '-' + CAST(YEAR(DateofJoining) AS VARCHAR(4)) AS DateofJoining,[PriorWorkYearMonth],[TBCode] as UniqueId ,isnull(IsSmartPhone, 0) IsSmartPhone,AlternetPhoneNo FROM[dbo].[mstTeamBalika] inner join mst5Village on mst5Village.VillageCode = mstTeamBalika.VillageCode inner join mst2District on mst2District.DistrictCode = mst5Village.DistrictCode left join mstCluster on mstCluster.ClusterCode = mst5Village.ClusterCode where UniqueCode ='" + pSchoolCOde + "'");
+        DataTable   dtmstMNew = objMain.LoadData(" SELECT [UniqueCode], RequestedDate,[TBCode],EgVillagecode,[TBName],[Villagename],ApprovalStatus, mstCluster.ClusterName, DistrictName,[Gender],[Active],[FatherName],[MotherName],REPLACE(CONVERT(VARCHAR(11), [DOB], 106), ' ', '-')           AS DOB  ,[AgeAson],[AsOnDate],[Contact], REPLACE(CONVERT(VARCHAR(11), DateofJoining, 106), ' ', '-')   AS DateofJoining  ,[PriorWorkYearMonth],[TBCode] as UniqueId ,isnull(IsSmartPhone, 0) IsSmartPhone,AlternetPhoneNo FROM[dbo].[mstTeamBalika] inner join mst5Village on mst5Village.VillageCode = mstTeamBalika.VillageCode inner join mst2District on mst2District.DistrictCode = mst5Village.DistrictCode left join mstCluster on mstCluster.ClusterCode = mst5Village.ClusterCode where UniqueCode ='" + pSchoolCOde + "'");
 
         if (dtmstMNew.Rows.Count > 0)
         {

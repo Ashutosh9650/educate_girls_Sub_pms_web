@@ -4,13 +4,19 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="Server">
-    <link href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" rel="stylesheet" />
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-    <script src="Scripts/comman.js" type="text/javascript"></script>
-    <link rel="stylesheet"
-        href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+    <%--<link href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" rel="stylesheet" />--%>
+    <link href="css/CSS/jquery-ui.css" rel="stylesheet" />
 
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <%--<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>--%>
+    <script type="text/javascript" src="js/JS/jquery-ui.min.js"></script>
+
+    <script src="Scripts/comman.js" type="text/javascript"></script>
+    <%--<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />--%>
+
+    <link rel="stylesheet" href="css/CSS/jquery.dataTables.min.css" />
+
+    <%--<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>--%>
+    <script type="text/javascript" src="js/JS/jquery.dataTables.min.js"></script>
 
 
 
@@ -22,30 +28,45 @@
     <link href="Leaflet2/LeafletClustersMarkers/MarkerCluster.Default.css" rel="stylesheet" />
     <link href="Leaflet2/LeafletClustersMarkers/MarkerCluster.css" rel="stylesheet" />
 
-    <script src="Leaflet2/leaflet.spin.js"></script>
-    <script src="Leaflet2/leaflet.spin.min.js"></script>
+    <script type="text/javascript" src="Leaflet2/leaflet.spin.js"></script>
+    <script type="text/javascript" src="Leaflet2/leaflet.spin.min.js"></script>
 
-    <script src="Leaflet2/LeafletClustersMarkers/leaflet.markercluster.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
-    <script src="Leaflet2/bundle.js"></script>
+    <script type="text/javascript" src="Leaflet2/LeafletClustersMarkers/leaflet.markercluster.js"></script>
+    <%--<script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>--%>
+    <script type="text/javascript" src="js/JS/easy-button.js"></script>
 
-    <script src="Leaflet2/leaflet.groupedlayercontrol.min.js"></script>
+    <%--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">--%>
+    <link rel="stylesheet" href="css/CSS/easy-button.css">
 
-    <script src="Leaflet2/leaflet.spin.min.js" charset="utf-8"></script>
-    <script src="Leaflet2/L.Control.Locate.js"></script>
-    <script src="Leaflet2/leaflet-search.js"></script>
+    <script type="text/javascript" src="Leaflet2/bundle.js"></script>
+
+    <script type="text/javascript" src="Leaflet2/leaflet.groupedlayercontrol.min.js"></script>
+
+    <script type="text/javascript" src="Leaflet2/leaflet.spin.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="Leaflet2/L.Control.Locate.js"></script>
+    <script type="text/javascript" src="Leaflet2/leaflet-search.js"></script>
     <link href="Leaflet2/leaflet-search.css" rel="stylesheet" type="text/css" />
 
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>
+    <%--<script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>--%>
+    <script type="text/javascript" src="js/JS/jquery.dataTables.min.js"></script>
+
+    <%--<script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap.min.js"></script>--%>
+    <script type="text/javascript" src="js/JS/dataTables.bootstrap.min.js"></script>
+
+    <%--<script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>--%>
+    <script type="text/javascript" src="js/JS/dataTables.fixedHeader.min.js"></script>
+
 
     <!-- Esri Leaflet CSS and JS -->
-    <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css" />
-    <script src="https://unpkg.com/esri-leaflet/dist/esri-leaflet.js"></script>
+    <%--<link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css" />--%>
+    <link rel="stylesheet" href="css/CSS/esri-leaflet-geocoder.css" />
+
+    <%--<script src="https://unpkg.com/esri-leaflet/dist/esri-leaflet.js"></script>--%>
+    <script type="text/javascript" src="js/JS/esri-leaflet.js"></script>
+
     <!-- map Loader -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+    <%--<script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>--%>
+    <script type="text/javascript" src="js/JS/spin.min.js"></script>
 
 
     <style>
@@ -1719,7 +1740,7 @@
                     var distvalue = '<%= Session["DistrictCodeGIS2026"] %>';
                     if (distvalue == '') {
                         if (FYear == '2026-2027') {
-                          
+
                             $('[id$=ddlDistrict]').val("715EA2AFF7CE4AF080AF7CD81#22.6094#74.5233");
                         }
                         else {
@@ -2722,11 +2743,25 @@
                 //}
 
                 function initializeBaseLayers(mapInstance, isSecondMap) {
+
                     StreetLyr = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         maxZoom: 19,
                         attribution: '&copy; OpenStreetMap contributors'
                     });
-                    ImageryLyr = L.esri.basemapLayer('Imagery');
+
+                    var ImageryLyr = null;
+                    try {
+                        if (L.esri && typeof L.esri.basemapLayer === 'function') {
+                            ImageryLyr = L.esri.basemapLayer('Imagery');
+                        }
+                    } catch (e) {
+                        console.warn('esri basemap unavailable', e);
+                    }
+                    //StreetLyr = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    //    maxZoom: 19,
+                    //    attribution: '&copy; OpenStreetMap contributors'
+                    //});
+                    //ImageryLyr = L.esri.basemapLayer('Imagery');
                     var BaseUrls =
                         'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoia3dyaXNhY2l3cm0iLCJhIjoiY2xma3p3NmpoMDBhaTNwbnV1NnVkMGp2ZCJ9.1ASKnwxbjSZxZGiXn0xl4Q';
 

@@ -5,6 +5,30 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="Server">
     <style type="text/css">
+
+        /* ===== FC radio fix (SAC Quarter Update + School infrastructure) ===== */
+.fc-radio {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    margin: 0;
+}
+.fc-radio input[type="radio"] {
+    position: static !important;
+    margin: 0 5px 0 0 !important;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+.fc-radio label {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    vertical-align: middle;
+}
         .chkBoxList tr {
             height: 25px;
         }
@@ -27,7 +51,43 @@
         .tabl-que tr th, .tabl-que tr td {
             vertical-align: middle;
         }
+
+        /* ===== Section 3 - Enrollment (SAC look) ===== */
+        tr.sac-head > td { background: #f6c5cb !important; color: #8b1a3a; font-weight: bold; font-size: 14px; padding: 6px 8px !important; border-color: #fff !important; vertical-align: middle !important; }
+        tr.sac-row > td { background: #fbe8df !important; border-color: #fff !important; vertical-align: middle !important; }
+        tr.sac-row:hover > td { background: #f8ddd2 !important; }
+        .sac-no { display: inline-block; min-width: 26px; padding: 1px 6px; margin-right: 8px; background: #fbe8df; color: #8b1a3a; border-radius: 3px; text-align: center; font-size: 13px; }
+        .sac-head .ico { font-size: 16px; vertical-align: middle; margin-right: 3px; }
+        .sac-lbl { color: #3b3b3b; font-weight: 600; padding-left: 12px !important; }
+        .sac-lbl small { display: block; color: #8a7a74; font-weight: normal; font-size: 11px; }
+        tr.sac-row input[type=text] { width: 52px !important; height: 28px !important; margin: 0 auto; text-align: center;
+            border: 1.5px solid #7c7c7c !important; border-radius: 3px !important; box-shadow: none; padding: 2px 4px; }
+        tr.sac-row input[type=text]:focus { border-color: #8b1a3a !important; outline: none; }
+        tr.sac-total > td { background: #f6c5cb !important; font-weight: bold; }
+        tr.sac-total input[type=text] { background: #fff5f7 !important; font-weight: bold; color: #8b1a3a; cursor: not-allowed; }
     </style>
+    <script type="text/javascript">
+        // ===== Section 3: auto total of enrollment (Class 1 - 8) =====
+        function calcEnrollTotal() {
+            var sum = function (cls) {
+                var t = 0, els = document.getElementsByClassName(cls);
+                for (var i = 0; i < els.length; i++) {
+                    var v = parseInt(els[i].value, 10);
+                    if (!isNaN(v)) t += v;
+                }
+                return t;
+            };
+            var g = sum('enr-girl'), b = sum('enr-boy');
+            var tg = document.getElementById('<%=txtEnrollGirlTotal.ClientID %>');
+            var tb = document.getElementById('<%=txtEnrollBoyTotal.ClientID %>');
+            var lbl = document.getElementById('lblEnrollGrandTotal');
+            if (tg) tg.value = g;
+            if (tb) tb.value = b;
+            if (lbl) lbl.innerHTML = 'Total (Girls + Boys) : ' + (g + b);
+        }
+        if (window.addEventListener) window.addEventListener('load', calcEnrollTotal);
+        else if (window.attachEvent) window.attachEvent('onload', calcEnrollTotal);
+    </script>
     <script type="text/javascript">
         function checkdataSmc() {
             debugger;
@@ -3543,7 +3603,7 @@
                                 </button>
                             </div>
                             <div class="collapse navbar-collapse" id="Div1">
-                                <div class="thumbnail" style="height: 715px">
+                                <div class="thumbnail" style="height: 715px; overflow-y: auto; overflow-x: hidden;">
                                     <asp:ImageButton ID="ImageButton5" OnClick="btnSacUpdate_Click" runat="server" Width="30"
                                         Height="25" CssClass="pull-right" ImageUrl="~/images/Reset.png"></asp:ImageButton>
                                     <table class="table table-striped table-bordered table-hover">
@@ -3555,16 +3615,23 @@
                                                         SAC Quarter Update
                                                     </p>
                                                 </td>
-                                                <td colspan="5">
-                                                    <asp:RadioButton ID="rblSacTB" Visible="false" Style="margin-left: 19px;" GroupName="shhTB" CssClass="radio"
-                                                        runat="server" />
-
-                                                    <asp:RadioButton ID="rblSacFB" Style="margin-left: 19px;" GroupName="sacTB" CssClass="radio"
-                                                        runat="server" />
-                                                    FC
-                                                </td>
+                                                   <td colspan="5" style="vertical-align: middle;">
+                                            <asp:RadioButton ID="rblSacTB" Visible="false" GroupName="shhTB" runat="server" />
+                                            <asp:RadioButton ID="rblSacFB" GroupName="sacTB" Text="FC"
+                                                CssClass="fc-radio" runat="server" />
+                                        </td>
                                             </tr>
+                                             <tr>
+                                                <td>
+                                                    <p class="text-danger" style="margin: 0px; font-weight: bold;">
+                                                       Dise Code
+                                                    </p>
+                                                </td>
+                                                <td colspan="4">
+                                                    <asp:TextBox ID="txtSacDiseCode" onkeypress="return isNumberKey(this,event);" MaxLength="10" runat="server" CssClass="form-control"></asp:TextBox>
+                                                </td>
 
+                                            </tr>
                                             <tr>
                                                 <td>
                                                     <p class="text-danger" style="margin: 0px; font-weight: bold;">
@@ -3627,7 +3694,7 @@
                                                 </td>
                                             </tr>
 
-                                            <tr>
+                                            <tr runat="server" visible="false">
                                                 <td style="width: 60%;">Regular Health Checkup
                                                 </td>
                                                 <td>
@@ -3654,10 +3721,10 @@
                                                 </td>
 
                                             </tr>
-                                            <tr>
+                                            <tr runat="server" visible="false">
                                                 <td colspan="6" style="text-align: center; font-weight: bold; padding: 12px;">Admission in School</td>
                                             </tr>
-                                            <tr>
+                                            <tr runat="server" visible="false">
                                                 <td>
                                                     <p class="text-danger" style="margin: 0px; font-weight: bold;">
                                                 </td>
@@ -3688,7 +3755,7 @@
                                                 </td>
                                             </tr>
 
-                                            <tr>
+                                            <tr runat="server" visible="false">
                                                 <td style="width: 60%;">Admission of girls
                                                 </td>
                                                 <td>
@@ -3714,7 +3781,7 @@
                                                         onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control"></asp:TextBox>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <tr runat="server" visible="false">
                                                 <td style="width: 60%;">Admission of boys
                                                 </td>
                                                 <td>
@@ -3738,7 +3805,7 @@
                                                         onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control"></asp:TextBox>
                                                 </td>
                                             </tr>
-
+                                            <div runat="server" id="fff" visible="false">
                                             <tr>
                                                 <td colspan="6" style="text-align: center; font-weight: bold; padding: 12px;">Regularity/Retention</td>
                                             </tr>
@@ -3870,6 +3937,182 @@
                                                         onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control"></asp:TextBox>
                                                 </td>
                                             </tr>
+                                                </div>
+                                            <%-- ===== 3. School Enrollment (Enrollment) - NEW ===== --%>
+                                            <div id="divSac" runat="server" >
+                                            <tr class="sac-head">
+                                                <td colspan="4"><span class="sac-no"></span>School Enrollment</td>
+                                                <td align="center"><span class="ico">👧</span>Girls</td>
+                                                <td align="center"><span class="ico">👦</span>Boys</td>
+                                            </tr>
+
+                            
+
+                                 
+
+                                            <tr class="sac-row">
+                                                <td colspan="4" class="sac-lbl">Enrollment of all children - Class 1
+                                                   
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtEnrollGirlCls1" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="3" oninput="calcEnrollTotal();"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control enr-girl"></asp:TextBox>
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtEnrollBoyCls1" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="3" oninput="calcEnrollTotal();"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control enr-boy"></asp:TextBox>
+                                                </td>
+                                            </tr>
+                                           
+                                            <tr class="sac-row">
+                                                <td colspan="4" class="sac-lbl">Enrollment of all children - Class 2
+                                                  
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtEnrollGirlCls2" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="3" oninput="calcEnrollTotal();"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control enr-girl"></asp:TextBox>
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtEnrollBoyCls2" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="3" oninput="calcEnrollTotal();"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control enr-boy"></asp:TextBox>
+                                                </td>
+                                            </tr>
+                                            <tr class="sac-row">
+                                                <td colspan="4" class="sac-lbl">Enrollment of all children - Class 3
+                                                  
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtEnrollGirlCls3" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="3" oninput="calcEnrollTotal();"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control enr-girl"></asp:TextBox>
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtEnrollBoyCls3" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="3" oninput="calcEnrollTotal();"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control enr-boy"></asp:TextBox>
+                                                </td>
+                                            </tr>
+                                                  
+
+                                            <tr class="sac-row">
+                                                <td colspan="4" class="sac-lbl">Enrollment of all children - Class 4
+                                                  
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtEnrollGirlCls4" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="3" oninput="calcEnrollTotal();"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control enr-girl"></asp:TextBox>
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtEnrollBoyCls4" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="3" oninput="calcEnrollTotal();"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control enr-boy"></asp:TextBox>
+                                                </td>
+                                            </tr>
+                                            <tr class="sac-row">
+                                                <td colspan="4" class="sac-lbl">Enrollment of all children - Class 5
+                                                   
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtEnrollGirlCls5" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="3" oninput="calcEnrollTotal();"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control enr-girl"></asp:TextBox>
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtEnrollBoyCls5" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="3" oninput="calcEnrollTotal();"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control enr-boy"></asp:TextBox>
+                                                </td>
+                                            </tr>
+                                                <asp:Panel runat="server" id="div5to8" >
+                                            <tr class="sac-row">
+                                                <td colspan="4" class="sac-lbl">Enrollment of all children - Class 6
+                                                   
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtEnrollGirlCls6"  autocomplete="off" Width="60px" ondrop="return false;" MaxLength="3" oninput="calcEnrollTotal();"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control enr-girl"></asp:TextBox>
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtEnrollBoyCls6" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="3" oninput="calcEnrollTotal();"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control enr-boy"></asp:TextBox>
+                                                </td>
+                                            </tr>
+                                            <tr class="sac-row">
+                                                <td colspan="4" class="sac-lbl">Enrollment of all children - Class 7
+                                                  
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtEnrollGirlCls7" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="3" oninput="calcEnrollTotal();"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control enr-girl"></asp:TextBox>
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtEnrollBoyCls7" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="3" oninput="calcEnrollTotal();"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control enr-boy"></asp:TextBox>
+                                                </td>
+                                            </tr>
+                                            <tr class="sac-row">
+                                                <td colspan="4" class="sac-lbl">Enrollment of all children - Class 8
+                                                  
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtEnrollGirlCls8" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="3" oninput="calcEnrollTotal();"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control enr-girl"></asp:TextBox>
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtEnrollBoyCls8" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="3" oninput="calcEnrollTotal();"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control enr-boy"></asp:TextBox>
+                                                </td>
+                                            </tr>
+                                                    </asp:Panel>
+                                            <%-- ===== Total Enrollment (auto calculated: Class 1 to 8) ===== --%>
+                                            <tr class="sac-row sac-total">
+                                                <td colspan="4" class="sac-lbl">Total Enrollment (Class 1 - 8)
+                                                    
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtEnrollGirlTotal" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="4" Enabled="false" tabindex="-1"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control"></asp:TextBox>
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtEnrollBoyTotal" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="4" Enabled="false"  tabindex="-1"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control"></asp:TextBox>
+                                                </td>
+                                            </tr>
+                                            <%-- ===== Teachers ===== --%>
+                                    
+
+                                                 <tr class="sac-head">
+                                                <td colspan="4">NIPUN Vidyalaya Assessment 2025-26</td>
+                                                <td align="center"><span class="ico">👧</span>Girls</td>
+                                                <td align="center"><span class="ico">👦</span>Boys</td>
+                                            </tr>
+
+                                        <div id="div26" runat="server" >
+                                                  <tr class="sac-row">
+                                                <td colspan="4" class="sac-lbl"> Class 1
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtLastYearFClass1" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="3"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control"></asp:TextBox>
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtLastYearMClass1" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="3"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control"></asp:TextBox>
+                                                </td>
+                                            </tr>
+                                            <tr class="sac-row">
+                                                <td colspan="4" class="sac-lbl">Class 2
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtLastYearFClass2" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="3"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control"></asp:TextBox>
+                                                </td>
+                                                <td align="center">
+                                                    <asp:TextBox ID="txtLastYearMClass2" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="3"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" CssClass="form-control"></asp:TextBox>
+                                                </td>
+                                            </tr>
+                                         
+
+                                   </div>
+
+                                                </div>
+                                            <%-- ===== End Section 3 ===== --%>
                                         </tbody>
                                     </table>
                                 </div>
@@ -3922,15 +4165,11 @@
 
                                             </tr>
                                             <tr>
-                                                <td>
-                                                    <asp:RadioButton ID="rblPhysicalTB" Style="margin-left: 19px;" Visible="false" GroupName="sa4c2TB"
-                                                        CssClass="radio" runat="server" />
-
-
-                                                    <asp:RadioButton ID="rblPhysicalFC" Style="margin-left: 19px;" GroupName="sac2TB"
-                                                        CssClass="radio" runat="server" />
-                                                    FC
-                                                </td>
+                                                <td style="vertical-align: middle;">
+                                                            <asp:RadioButton ID="rblPhysicalTB" Visible="false" GroupName="sa4c2TB" runat="server" />
+                                                            <asp:RadioButton ID="rblPhysicalFC" GroupName="sac2TB" Text="FC"
+                                                                CssClass="fc-radio" runat="server" />
+                                                        </td>
                                                 <td>
                                                     <p class="text-danger" style="margin: 0px; font-weight: bold;">
                                                         Initial Status
@@ -3994,7 +4233,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td style="width: 60%;">Seprate Toilet for girls
+                                                <td style="width: 60%;">Separate Toilet for Girls
                                                 </td>
 
                                                 <td align="center">
@@ -4145,8 +4384,8 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td style="width: 60%;">Male Teacher
+                                                 <tr>
+                                                <td style="width: 60%;">Permanent Teachers (Male)
                                                 </td>
                                                 <td>
                                                     <asp:TextBox ID="txtMaleTeacher2" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="2"
@@ -4161,8 +4400,8 @@
                                                         onkeypress="return isNumberKey(this,event);" runat="server" class="form-control"></asp:TextBox>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td style="width: 60%;">Female Teacher
+                                                     <tr>
+                                                <td style="width: 60%;">Permanent Teachers (Female)   
                                                 </td>
                                                 <td>
                                                     <asp:TextBox ID="txtFemaleTeacher2" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="2"
@@ -4177,8 +4416,42 @@
                                                         onkeypress="return isNumberKey(this,event);" runat="server" class="form-control"></asp:TextBox>
                                                 </td>
                                             </tr>
+                                             <tr>
+                                                <td style="width: 60%;">Temporary Teachers(Male)
+                                                </td>
+                                                <td>
+                                                    <asp:TextBox ID="txtTMaleTeacher2" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="2"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" class="form-control" Enabled="false"></asp:TextBox>
+                                                </td>
+                                                <td>
+                                                    <asp:TextBox ID="txtTMaleTeacher1" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="2"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" class="form-control" Enabled="false"></asp:TextBox>
+                                                </td>
+                                                <td>
+                                                    <asp:TextBox ID="txtTMaleTeacher" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="2"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" class="form-control"></asp:TextBox>
+                                                </td>
+                                            </tr>
+                                   
                                             <tr>
-                                                <td style="width: 60%;">Availablity of books
+                                                <td style="width: 60%;">Temporary Teachers (Female)   
+                                                </td>
+                                                <td>
+                                                    <asp:TextBox ID="txtTFemaleTeacher2" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="2"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" class="form-control" Enabled="false"></asp:TextBox>
+                                                </td>
+                                                <td>
+                                                    <asp:TextBox ID="txtTFemaleTeacher1" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="2"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" class="form-control" Enabled="false"></asp:TextBox>
+                                                </td>
+                                                <td>
+                                                    <asp:TextBox ID="txtTFemaleTeacher" autocomplete="off" Width="60px" ondrop="return false;" MaxLength="2"
+                                                        onkeypress="return isNumberKey(this,event);" runat="server" class="form-control"></asp:TextBox>
+                                                </td>
+                                            </tr>
+                                              
+                                            <tr>
+                                                <td style="width: 60%;">Use of GKP++ Kit 
                                                 </td>
                                                 <td align="center">
                                                     <div>
@@ -4253,6 +4526,7 @@
                                                 <asp:TextBox ID="lblFurniture" BorderStyle="None" Width="1" runat="server" class="addcss21"></asp:TextBox>
                                                 <asp:TextBox ID="lblTapWaterFacility" BorderStyle="None" Width="1" runat="server" class="addcss22"></asp:TextBox>
                                             </tr>
+                                    
                                             <div id="DV" style="display: none" runat="server">
 
                                                 <tr>
@@ -4423,7 +4697,7 @@
                                                     </td>
                                                 </tr>
 
-                                                <tr>
+                                                <tr style="display:none">
                                                     <td style="width: 60%;">Blackboards in all classrooms
                                                     </td>
                                                     <td align="center">
@@ -4589,7 +4863,7 @@
                                                     </td>
                                                 </tr>
 
-                                                <tr>
+                                                <tr id="dii" style="display:none">
                                                     <td style="width: 60%;">Furniture (Desk-Bench)
                                                     </td>
                                                     <td align="center">
@@ -4645,6 +4919,8 @@
                                                     </td>
                                                 </tr>
                                             </div>
+
+                                               
                                         </tbody>
                                     </table>
                                 </div>

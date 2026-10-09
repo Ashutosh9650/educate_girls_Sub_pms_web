@@ -926,7 +926,7 @@ tr.paging {
 }
 
 label {
-    text-align: left;
+    text-align: left !important;
 }
 
 .container-fluid {
@@ -946,4 +946,14 @@ label {
 }
 .panel-heading {
     padding: 5px 15px !important;
+}
+
+.padd_0{
+    padding-left:0px;
+    padding-right:0px;
+}
+.form-horizontal .control-label {
+    text-align: left !important;
+    margin-bottom: 0;
+    padding-top: 7px;
 }

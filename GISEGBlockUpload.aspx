@@ -6,10 +6,13 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="Server">
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/shpjs@latest/dist/shp.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <%--<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />--%>
+    <link rel="stylesheet" href="css/CSS/leaflet.css" />
+    <%--<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>--%>
+    <script type="text/javascript" src="js/JS/leaflet.js"></script>
+    <script type="text/javascript" src="js/JS/shp.min.js"></script>
+    <%--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">--%>
+    <link rel="stylesheet" href="css/CSS/all.min.css">
     <link href="leaflet2/leaflet.fullscreen.css" rel="stylesheet" type="text/css" />
     <script src="leaflet2/Leaflet.fullscreen.js" type="text/javascript"></script>
 
@@ -1128,7 +1131,7 @@
         //    {
         //        alert("please select village layer"); return;
         //    }
-            
+
         //});
 
         function uploadAndExport() {
@@ -1187,7 +1190,7 @@
                     alert("Geoserver Export failed!");
                 }
             });
-            
+
         }
         function enableWMSHover(geourl, layer) {
 

@@ -55,7 +55,7 @@ public partial class SurveyAnsTB : System.Web.UI.Page
                     FillParticiparticipate(ddlForm.SelectedValue);
                     //         FillQuestion(Convert.ToInt32(ddlForm.SelectedValue));
 
-                    //  Session["FormID"] = ddlForm.SelectedValue;
+                     Session["FormID"] = ddlForm.SelectedValue;
                     hdnformid.Value = ddlForm.SelectedValue;
                     Session["Fdate"] = DateTime.Now;
                 }

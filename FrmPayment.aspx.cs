@@ -9,6 +9,9 @@ using System.Web.SessionState;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using System.IO;
+using System.Web;
+using ClosedXML.Excel;
 public partial class FrmPayment : System.Web.UI.Page
 {
     clsMain objMain = new clsMain();
@@ -305,23 +308,23 @@ public partial class FrmPayment : System.Web.UI.Page
     {
         try
         {
-            if (ddlFMonth.SelectedIndex > 0 && ddlToMonth.SelectedIndex > 0)
-            {
-                if (Convert.ToInt32(ddlToMonth.SelectedValue) == DateTime.Now.Month)
-                {
-                    ScriptManager.RegisterStartupScript(Page, base.GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('You can not download the report since the month is not completed!!')</script>", false);
-                    return;
-                }
-                if (Convert.ToInt32(ddlFMonth.SelectedValue) == DateTime.Now.Month)
-                {
-                    ScriptManager.RegisterStartupScript(Page, base.GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('You can not download the report since the month is not completed!!')</script>", false);
-                    return;
-                }
-                else
-                {
-                    ScriptManager.RegisterStartupScript(Page, base.GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Select From & To month')</script>", false);
-                }
-            }
+            //if (ddlFMonth.SelectedIndex > 0 && ddlToMonth.SelectedIndex > 0)
+            //{
+            //    if (Convert.ToInt32(ddlToMonth.SelectedValue) == DateTime.Now.Month)
+            //    {
+            //        ScriptManager.RegisterStartupScript(Page, base.GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('You can not download the report since the month is not completed!!')</script>", false);
+            //        return;
+            //    }
+            //    if (Convert.ToInt32(ddlFMonth.SelectedValue) == DateTime.Now.Month)
+            //    {
+            //        ScriptManager.RegisterStartupScript(Page, base.GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('You can not download the report since the month is not completed!!')</script>", false);
+            //        return;
+            //    }
+            //    else
+            //    {
+            //        ScriptManager.RegisterStartupScript(Page, base.GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Select From & To month')</script>", false);
+            //    }
+            //}
 
             if (ddlFMonth.SelectedIndex > 0 && ddlToMonth.SelectedIndex > 0)
             {
@@ -595,6 +598,7 @@ public partial class FrmPayment : System.Web.UI.Page
         string conditions1 = "";
         string ddlBlock = "";
         string ddlDistrict = "";
+        string ddlDistrictName = "";
         string ddlstate = "";
 
         foreach (ListItem item in ChkState.Items)
@@ -619,10 +623,13 @@ public partial class FrmPayment : System.Web.UI.Page
 
                 ddlDistrict += "'" + item.Value + "'" + ",";
 
-
+                ddlDistrictName += "" + item.Text + "" + ",";
             }
         }
-
+        if (ddlDistrictName.Length > 0)
+        {
+            ddlDistrictName = ddlDistrictName.Substring(0, ddlDistrictName.LastIndexOf(","));
+        }
         if (ddlDistrict.Length > 0)
         {
             ddlDistrict = ddlDistrict.Substring(0, ddlDistrict.LastIndexOf(","));
@@ -672,36 +679,61 @@ public partial class FrmPayment : System.Web.UI.Page
         //}
 
 
-        int Fyear = 0, Fyear1 = 0;
+        //int Fyear = 0, Fyear1 = 0;
         int lastDayOfMonth = DateTime.DaysInMonth(Convert.ToInt32(DateTime.Now.Year.ToString()), Convert.ToInt32(ddlToMonth.SelectedValue));
-        if (Convert.ToInt32(ddlToMonth.SelectedValue) <= 3)
+        //if (Convert.ToInt32(ddlToMonth.SelectedValue) <= 3)
+        //{
+
+        //    Fyear = Convert.ToInt32(DateTime.Now.Year.ToString()) - 1;
+        //}
+        //else
+        //{
+        //    Fyear = Convert.ToInt32(DateTime.Now.Year.ToString());
+        //}
+        //if (Convert.ToInt32(ddlFMonth.SelectedValue) <= 3)
+        //{
+        //    Fyear1 = Convert.ToInt32(DateTime.Now.Year.ToString()) - 1;
+
+        //}
+        //else
+        //{
+        //    Fyear1 = Convert.ToInt32(DateTime.Now.Year.ToString());
+        //}
+        //string Fdate = "01/" + ddlFMonth.SelectedValue + "/" + Fyear1;
+        //string Tdate = lastDayOfMonth + "/" + ddlToMonth.SelectedValue + "/" + Fyear;
+        //string Fdate1 = "01/" + "04" + "/" + ddlYear.SelectedValue;
+
+        int fyStartYear = Convert.ToInt32(ddlYear.SelectedValue);
+        int fromMonth = Convert.ToInt32(ddlFMonth.SelectedValue);
+        int toMonth = Convert.ToInt32(ddlToMonth.SelectedValue);
+
+        // Apr–Dec belong to the start year, Jan–Mar belong to the next year
+        int Fyear1 = (fromMonth <= 3) ? fyStartYear + 1 : fyStartYear;
+        int Fyear = (toMonth <= 3) ? fyStartYear + 1 : fyStartYear;
+
+        DateTime fromDate = new DateTime(Fyear1, fromMonth, 1);
+        DateTime toDate = new DateTime(Fyear, toMonth, DateTime.DaysInMonth(Fyear, toMonth));
+
+        // Validation: From month must not be after To month
+        if (fromDate > toDate)
         {
-            Fyear = Convert.ToInt32(DateTime.Now.Year.ToString());
+            ScriptManager.RegisterStartupScript(this, GetType(), "alert",
+                "alert('From Month cannot be greater than To Month');", true);
+            return;
         }
-        else
-        {
-            Fyear = Convert.ToInt32(DateTime.Now.Year.ToString()) - 1;
-        }
-        if (Convert.ToInt32(ddlFMonth.SelectedValue) <= 3)
-        {
-            Fyear1 = Convert.ToInt32(DateTime.Now.Year.ToString());
-        }
-        else
-        {
-            Fyear1 = Convert.ToInt32(DateTime.Now.Year.ToString()) - 1;
-        }
-        string Fdate = "01/" + ddlFMonth.SelectedValue + "/" + Fyear1;
-        string Tdate = lastDayOfMonth + "/" + ddlToMonth.SelectedValue + "/" + Fyear;
-        string Fdate1 = "01/" + "04" + "/" + ddlYear.SelectedValue;
+
+        string Fdate = fromDate.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+        string Tdate = toDate.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+        string Fdate1 = new DateTime(fyStartYear, 4, 1).ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
         string conditions2 = "";
 
         if (ddlToMonth.SelectedIndex > 0)
         {
             if (ddlFMonth.SelectedIndex > 0)
             {
-                conditions1 = conditions1 + " and convert(date, [tblChildAttendanceGKP2023].SysDate) between '" + Convert.ToDateTime(Fdate).ToString("yyyy-MM-dd") + "' and '" + Convert.ToDateTime(Tdate).ToString("yyyy-MM-dd") + "' ";
+                conditions1 = conditions1 + " and convert(date, [tblChildAttendanceGKP2026].SysDate) between '" + Convert.ToDateTime(Fdate).ToString("yyyy-MM-dd") + "' and '" + Convert.ToDateTime(Tdate).ToString("yyyy-MM-dd") + "' ";
 
-                conditions2 = " and convert(date, [tblChildAttendanceGKP2023].SysDate) between '" + Convert.ToDateTime(Fdate1).ToString("yyyy-MM-dd") + "' and '" + Convert.ToDateTime(Tdate).ToString("yyyy-MM-dd") + "' ";
+                conditions2 = " and convert(date, [tblChildAttendanceGKP2026].SysDate) between '" + Convert.ToDateTime(Fdate1).ToString("yyyy-MM-dd") + "' and '" + Convert.ToDateTime(Tdate).ToString("yyyy-MM-dd") + "' ";
 
             }
         }
@@ -717,12 +749,14 @@ public partial class FrmPayment : System.Web.UI.Page
                  
 
         };
-        DataTable dataTable = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptPaymentReport2024]", cmdParameters);
+        DataTable dataTable = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptPaymentReport2025]", cmdParameters);
+        //rptPaymentReport2024
         lblTotalCount.Text = dataTable.Rows.Count.ToString();
         ViewState["dt"] = dataTable;
         if (dataTable.Rows.Count > 0)
         {
-            ExporttoExcel(dataTable, "PaymentReport");
+            string str = "Freelancer_GKP_Session_Payment_" + ddlDistrictName;
+            ExportToExcel2026(dataTable, str);
         }
       
     }
@@ -862,4 +896,442 @@ public partial class FrmPayment : System.Web.UI.Page
             throw;
         }
     }
+    public void ExportToExcel2026(DataTable table, string FileName)
+    {
+        // ---------- Settings ----------
+        decimal ratePerSession = 360;          // Per Session Rate (Rs.) - shown in F2 only
+        const int COL_SESSIONS = 11;           // index of "# Sessions" in the DataTable
+        const int COL_PAYMENT = 12;            // index of "Total Payment (Rs.)" in the DataTable
+        const int COL_DISE = 7;                // index of "School DISE Code"
+
+        string[] headers =
+        {
+            "S.No", "Freelancer Code", "Freelancer Name", "District", "Block Name",
+            "Cluster Name", "School Name", "School DISE Code", "GKP Level - Hindi",
+            "GKP Level - English", "GKP Level - Math",
+            "# Sessions Completed by Freelancer", "Total Payment (Rs.)"
+        };
+        double[] widths = { 7.86, 15.14, 16.43, 10.86, 13.14, 14.86, 25.14, 14.43, 13.14, 12.57, 13, 17.86, 13.14 };
+
+        XLColor titleColor = XLColor.FromHtml("#1F4E78");
+        XLColor headerFill = XLColor.FromHtml("#F8CBAD");
+        XLColor dataFill = XLColor.FromHtml("#E2EFDA");
+        XLColor inputFill = XLColor.FromHtml("#FFFF00");
+        XLColor inputFont = XLColor.FromHtml("#0000FF");
+
+        // ---------- Date range (same financial-year logic as your old code) ----------
+        int currentYear = DateTime.Now.Year;
+        int fromMonth = Convert.ToInt32(ddlFMonth.SelectedValue);
+        int toMonth = Convert.ToInt32(ddlToMonth.SelectedValue);
+        int fromYear = fromMonth <= 3 ? currentYear : currentYear - 1;
+        int toYear = toMonth <= 3 ? currentYear : currentYear - 1;
+        DateTime fromDate = new DateTime(fromYear, fromMonth, 1);
+        DateTime toDate = new DateTime(toYear, toMonth, DateTime.DaysInMonth(toYear, toMonth));
+
+        string district = table.Rows.Count > 0 ? table.Rows[0][3].ToString().Trim().ToUpper() : "";
+
+        using (var wb = new XLWorkbook())
+        {
+            var ws = wb.Worksheets.Add("GKP_Freelancer_Payment");
+            ws.Style.Font.FontName = "Calibri";
+            ws.Style.Font.FontSize = 11;
+
+            for (int c = 0; c < widths.Length; c++)
+                ws.Column(c + 1).Width = widths[c];
+
+            // ---------- Row 1 : Title ----------
+            var title = ws.Range("A1:M1").Merge();
+            title.Value = "Foundation to Educate Girls Globally";
+            title.Style.Font.Bold = true;
+            title.Style.Font.FontSize = 18;
+            title.Style.Font.FontColor = titleColor;
+            title.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+            // ---------- Row 2 : District / Rate / Dates ----------
+            ws.Cell("A2").Value = "District:";
+            ws.Range("D2:E2").Merge().Value = "Per Session Rate (Rs.):";
+            ws.Cell("H2").Value = "From Date:";
+            ws.Cell("K2").Value = "To Date:";
+            ws.Range("A2:M2").Style.Font.Bold = true;
+
+            ws.Cell("B2").Value = district;
+            ws.Cell("F2").Value = (double)ratePerSession;
+            ws.Cell("I2").Value = fromDate;
+            ws.Cell("L2").Value = toDate;
+            ws.Cell("I2").Style.DateFormat.Format = "dd/MM/yyyy";
+            ws.Cell("L2").Style.DateFormat.Format = "dd/MM/yyyy";
+
+            foreach (var addr in new[] { "B2", "F2", "I2", "L2" })
+            {
+                var cell = ws.Cell(addr);
+                cell.Style.Font.Bold = false;
+                cell.Style.Font.FontColor = inputFont;
+                cell.Style.Fill.BackgroundColor = inputFill;
+                cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+            }
+            ws.Range("A1:M2").Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+
+            // ---------- Row 4 : Column headers ----------
+            const int headerRow = 4;
+            for (int c = 0; c < headers.Length; c++)
+                ws.Cell(headerRow, c + 1).Value = headers[c];
+
+            var hdr = ws.Range(headerRow, 1, headerRow, headers.Length);
+            hdr.Style.Font.Bold = true;
+            hdr.Style.Fill.BackgroundColor = headerFill;
+            hdr.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            hdr.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+            hdr.Style.Alignment.WrapText = true;
+            ws.Row(headerRow).Height = 44.25;
+
+            // ---------- Data rows ----------
+            int firstData = headerRow + 1;
+            int r = firstData;
+            decimal totalSessions = 0;
+            decimal totalPayment = 0;
+
+            foreach (DataRow dataRow in table.Rows)
+            {
+                // Columns A..K (text / info)
+                for (int j = 0; j < COL_SESSIONS; j++)
+                {
+                    object v = dataRow[j];
+                    var cell = ws.Cell(r, j + 1);
+                    if (v == null || v == DBNull.Value) continue;
+
+                    string s = v.ToString().Trim();
+                    double num;
+
+                    if (j == 0 && double.TryParse(s, out num))
+                    {
+                        cell.Value = num;                                   // S.No
+                    }
+                    else if (j == COL_DISE && s.Length <= 15 && double.TryParse(s, out num))
+                    {
+                        cell.Value = num;                                   // DISE code as number
+                        cell.Style.NumberFormat.Format = "0";               // no 9.42E+09
+                    }
+                    else
+                    {
+                        cell.Value = s;                                     // long codes stay text
+                    }
+                }
+
+                // Column L : sessions,  Column M : payment (from DataTable, no formula)
+                decimal sessions = 0;
+                decimal payment = 0;
+                decimal.TryParse(Convert.ToString(dataRow[COL_SESSIONS]), out sessions);
+                decimal.TryParse(Convert.ToString(dataRow[COL_PAYMENT]), out payment);
+
+                ws.Cell(r, 12).Value = (double)sessions;
+                ws.Cell(r, 13).Value = (double)payment;
+
+                totalSessions += sessions;
+                totalPayment += payment;
+                r++;
+            }
+            int lastData = r - 1;
+
+            if (lastData >= firstData)
+            {
+                var info = ws.Range(firstData, 1, lastData, 11);
+                info.Style.Fill.BackgroundColor = dataFill;
+                info.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                info.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                info.Style.Alignment.WrapText = true;
+
+                var amounts = ws.Range(firstData, 12, lastData, 13);
+                amounts.Style.Fill.BackgroundColor = headerFill;
+                amounts.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+                ws.Range(firstData, 13, lastData, 13).Style.NumberFormat.Format = "#,##0";
+            }
+
+            // Table borders (header + data)
+            var tbl = ws.Range(headerRow, 1, Math.Max(lastData, headerRow), 13);
+            tbl.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+            tbl.Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+            hdr.Style.Border.BottomBorder = XLBorderStyleValues.Medium;
+
+            // ---------- Total row (plain values, no formula) ----------
+            int totalRow = lastData + 1;
+            ws.Cell(totalRow, 11).Value = "Total:";
+            ws.Cell(totalRow, 12).Value = (double)totalSessions;
+            ws.Cell(totalRow, 13).Value = (double)totalPayment;
+
+            var tot = ws.Range(totalRow, 1, totalRow, 13);
+            tot.Style.Font.Bold = true;
+            tot.Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+            var totAmt = ws.Range(totalRow, 12, totalRow, 13);
+            totAmt.Style.Fill.BackgroundColor = headerFill;
+            totAmt.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            totAmt.Style.Border.InsideBorder = XLBorderStyleValues.Medium;
+            ws.Cell(totalRow, 13).Style.NumberFormat.Format = "#,##0";
+
+            // ---------- Signature block ----------
+            int boxTop = totalRow + 1;
+            int sig = totalRow + 3;           // "Prepared by" titles
+            int boxBottom = sig + 2;          // "Date:" lines
+
+            int[] sigCols = { 2, 7, 12 };     // B, G, L
+            string[] sigTitles = { "Prepared by", "Verified by", "Approved by" };
+
+            for (int k = 0; k < sigCols.Length; k++)
+            {
+                var t = ws.Cell(sig, sigCols[k]);
+                t.Value = sigTitles[k];
+                t.Style.Font.Bold = true;
+
+                ws.Cell(sig + 1, sigCols[k]).Value = "Name: ____________________";
+                ws.Cell(sig + 2, sigCols[k]).Value = "Date: ____________________";
+
+                // left-align and no wrap so the text flows into the next column
+                ws.Range(sig, sigCols[k], sig + 2, sigCols[k]).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+                ws.Range(sig, sigCols[k], sig + 2, sigCols[k]).Style.Alignment.WrapText = false;
+            }
+
+            // Remove any inner borders, then draw the outer box A..M
+            var sigBox = ws.Range(boxTop, 1, boxBottom, 13);
+            sigBox.Style.Border.InsideBorder = XLBorderStyleValues.None;
+            sigBox.Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+
+            // ---------- Send to browser ----------
+            string fileName = FileName + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + ".xlsx";
+
+            using (var ms = new MemoryStream())
+            {
+                wb.SaveAs(ms);
+
+                HttpResponse resp = HttpContext.Current.Response;
+                resp.Clear();
+                resp.ClearContent();
+                resp.ClearHeaders();
+                resp.Buffer = true;
+                resp.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                resp.AddHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+                resp.AddHeader("Content-Length", ms.Length.ToString());
+                resp.BinaryWrite(ms.ToArray());
+                resp.Flush();
+                resp.SuppressContent = true;                               // stop page HTML being appended
+                HttpContext.Current.ApplicationInstance.CompleteRequest(); // instead of Response.End()
+            }
+        }
+    }
+    //public void ExportToExcel2026(DataTable table, string FileName)
+    //{
+    //    // ---------- Settings ----------
+    //    decimal ratePerSession = 360;          // Per Session Rate (Rs.) - change or read from DB/config
+    //    const int COL_SESSIONS = 11;           // index of "# Sessions" in the DataTable
+    //    const int COL_DISE = 7;                // index of "School DISE Code"
+
+    //    string[] headers =
+    //    {
+    //    "S.No", "Freelancer Code", "Freelancer Name", "District", "Block Name",
+    //    "Cluster Name", "School Name", "School DISE Code", "GKP Level - Hindi",
+    //    "GKP Level - English", "GKP Level - Math",
+    //    "# Sessions Completed by Freelancer", "Total Payment (Rs.)"
+    //};
+    //    double[] widths = { 7.86, 15.14, 16.43, 10.86, 13.14, 14.86, 25.14, 14.43, 13.14, 12.57, 13, 17.86, 13.14 };
+
+    //    XLColor titleColor = XLColor.FromHtml("#1F4E78");
+    //    XLColor headerFill = XLColor.FromHtml("#F8CBAD");
+    //    XLColor dataFill = XLColor.FromHtml("#E2EFDA");
+    //    XLColor inputFill = XLColor.FromHtml("#FFFF00");
+    //    XLColor inputFont = XLColor.FromHtml("#0000FF");
+
+    //    // ---------- Date range (same financial-year logic as your old code) ----------
+    //    int currentYear = DateTime.Now.Year;
+    //    int fromMonth = Convert.ToInt32(ddlFMonth.SelectedValue);
+    //    int toMonth = Convert.ToInt32(ddlToMonth.SelectedValue);
+    //    int fromYear = fromMonth <= 3 ? currentYear : currentYear - 1;
+    //    int toYear = toMonth <= 3 ? currentYear : currentYear - 1;
+    //    DateTime fromDate = new DateTime(fromYear, fromMonth, 1);
+    //    DateTime toDate = new DateTime(toYear, toMonth, DateTime.DaysInMonth(toYear, toMonth));
+
+    //    string district = table.Rows.Count > 0 ? table.Rows[0][3].ToString().Trim().ToUpper() : "";
+
+    //    using (var wb = new XLWorkbook())
+    //    {
+    //        var ws = wb.Worksheets.Add("GKP_Freelancer_Payment");
+    //        ws.Style.Font.FontName = "Calibri";
+    //        ws.Style.Font.FontSize = 11;
+
+    //        for (int c = 0; c < widths.Length; c++)
+    //            ws.Column(c + 1).Width = widths[c];
+
+    //        // ---------- Row 1 : Title ----------
+    //        var title = ws.Range("A1:M1").Merge();
+    //        title.Value = "Foundation to Educate Girls Globally";
+    //        title.Style.Font.Bold = true;
+    //        title.Style.Font.FontSize = 18;
+    //        title.Style.Font.FontColor = titleColor;
+    //        title.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+    //        // ---------- Row 2 : District / Rate / Dates ----------
+    //        ws.Cell("A2").Value = "District:";
+    //        ws.Range("D2:E2").Merge().Value = "Per Session Rate (Rs.):";
+    //        ws.Cell("H2").Value = "From Date:";
+    //        ws.Cell("K2").Value = "To Date:";
+    //        ws.Range("A2:M2").Style.Font.Bold = true;
+
+    //        ws.Cell("B2").Value = district;
+    //        ws.Cell("F2").Value = (double)ratePerSession;
+    //        ws.Cell("I2").Value = fromDate;
+    //        ws.Cell("L2").Value = toDate;
+    //        ws.Cell("I2").Style.DateFormat.Format = "dd/MM/yyyy";
+    //        ws.Cell("L2").Style.DateFormat.Format = "dd/MM/yyyy";
+
+    //        foreach (var addr in new[] { "B2", "F2", "I2", "L2" })
+    //        {
+    //            var cell = ws.Cell(addr);
+    //            cell.Style.Font.Bold = false;
+    //            cell.Style.Font.FontColor = inputFont;
+    //            cell.Style.Fill.BackgroundColor = inputFill;
+    //            cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+    //            cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+    //        }
+    //        ws.Range("A1:M2").Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+
+    //        // ---------- Row 4 : Column headers ----------
+    //        const int headerRow = 4;
+    //        for (int c = 0; c < headers.Length; c++)
+    //            ws.Cell(headerRow, c + 1).Value = headers[c];
+
+    //        var hdr = ws.Range(headerRow, 1, headerRow, headers.Length);
+    //        hdr.Style.Font.Bold = true;
+    //        hdr.Style.Fill.BackgroundColor = headerFill;
+    //        hdr.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+    //        hdr.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+    //        hdr.Style.Alignment.WrapText = true;
+    //        ws.Row(headerRow).Height = 44.25;
+
+    //        // ---------- Data rows ----------
+    //        int firstData = headerRow + 1;
+    //        int r = firstData;
+    //        foreach (DataRow dataRow in table.Rows)
+    //        {
+    //            // Columns A..K (text / info)
+    //            for (int j = 0; j < COL_SESSIONS; j++)
+    //            {
+    //                object v = dataRow[j];
+    //                var cell = ws.Cell(r, j + 1);
+    //                if (v == null || v == DBNull.Value) continue;
+
+    //                string s = v.ToString().Trim();
+    //                double num;
+
+    //                if (j == 0 && double.TryParse(s, out num))
+    //                {
+    //                    cell.Value = num;                                   // S.No
+    //                }
+    //                else if (j == COL_DISE && s.Length <= 15 && double.TryParse(s, out num))
+    //                {
+    //                    cell.Value = num;                                   // DISE code as number
+    //                    cell.Style.NumberFormat.Format = "0";               // no 9.42E+09
+    //                }
+    //                else
+    //                {
+    //                    cell.Value = s;                                     // long codes stay text
+    //                }
+    //            }
+
+    //            // Column L : sessions,  Column M : payment = sessions x rate
+    //            decimal sessions = 0;
+    //            decimal.TryParse(Convert.ToString(dataRow[COL_SESSIONS]), out sessions);
+    //            ws.Cell(r, 12).Value = (double)sessions;
+    //            //ws.Cell(r, 13).FormulaA1 = "L" + r + "*$F$2";
+    //            r++;
+    //        }
+    //        int lastData = r - 1;
+
+    //        if (lastData >= firstData)
+    //        {
+    //            var info = ws.Range(firstData, 1, lastData, 11);
+    //            info.Style.Fill.BackgroundColor = dataFill;
+    //            info.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+    //            info.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+    //            info.Style.Alignment.WrapText = true;
+
+    //            var amounts = ws.Range(firstData, 12, lastData, 13);
+    //            amounts.Style.Fill.BackgroundColor = headerFill;
+    //            amounts.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+    //            ws.Range(firstData, 13, lastData, 13).Style.NumberFormat.Format = "#,##0";
+    //        }
+
+    //        // Table borders (header + data)
+    //        var tbl = ws.Range(headerRow, 1, Math.Max(lastData, headerRow), 13);
+    //        tbl.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+    //        tbl.Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+    //        hdr.Style.Border.BottomBorder = XLBorderStyleValues.Medium;
+
+    //        // ---------- Total row ----------
+    //        int totalRow = lastData + 1;
+    //        ws.Cell(totalRow, 11).Value = "Total:";
+    //        if (lastData >= firstData)
+    //        {
+    //            ws.Cell(totalRow, 12).FormulaA1 = "SUM(L" + firstData + ":L" + lastData + ")";
+    //            ws.Cell(totalRow, 13).FormulaA1 = "SUM(M" + firstData + ":M" + lastData + ")";
+    //        }
+    //        else
+    //        {
+    //            ws.Cell(totalRow, 12).Value = 0;
+    //            ws.Cell(totalRow, 13).Value = 0;
+    //        }
+    //        var tot = ws.Range(totalRow, 1, totalRow, 13);
+    //        tot.Style.Font.Bold = true;
+    //        tot.Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+    //        var totAmt = ws.Range(totalRow, 12, totalRow, 13);
+    //        totAmt.Style.Fill.BackgroundColor = headerFill;
+    //        totAmt.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+    //        totAmt.Style.Border.InsideBorder = XLBorderStyleValues.Medium;
+    //        ws.Cell(totalRow, 13).Style.NumberFormat.Format = "#,##0";
+
+    //        // ---------- Signature block ----------
+    //        int boxTop = totalRow + 1;        // row 66 in your sample
+    //        int sig = totalRow + 3;           // row 68 : "Prepared by" titles
+    //        int boxBottom = sig + 2;          // row 70 : "Date:" lines
+
+    //        int[] sigCols = { 2, 7, 12 };     // B, G, L
+    //        string[] sigTitles = { "Prepared by", "Verified by", "Approved by" };
+
+    //        for (int k = 0; k < sigCols.Length; k++)
+    //        {
+    //            var t = ws.Cell(sig, sigCols[k]);
+    //            t.Value = sigTitles[k];
+    //            t.Style.Font.Bold = true;
+
+    //            ws.Cell(sig + 1, sigCols[k]).Value = "Name: ____________________";
+    //            ws.Cell(sig + 2, sigCols[k]).Value = "Date: ____________________";
+
+    //            // left-align and no wrap so the text flows into the next column
+    //            ws.Range(sig, sigCols[k], sig + 2, sigCols[k]).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+    //            ws.Range(sig, sigCols[k], sig + 2, sigCols[k]).Style.Alignment.WrapText = false;
+    //        }
+
+    //        // Remove any inner borders, then draw the outer box A..M
+    //        var sigBox = ws.Range(boxTop, 1, boxBottom, 13);
+    //        sigBox.Style.Border.InsideBorder = XLBorderStyleValues.None;
+    //        sigBox.Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+    //        // ---------- Send to browser ----------
+    //        string fileName = FileName + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + ".xlsx";
+
+    //        using (var ms = new MemoryStream())
+    //        {
+    //            wb.SaveAs(ms);
+
+    //            HttpResponse resp = HttpContext.Current.Response;
+    //            resp.Clear();
+    //            resp.ClearContent();
+    //            resp.ClearHeaders();
+    //            resp.Buffer = true;
+    //            resp.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    //            resp.AddHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+    //            resp.AddHeader("Content-Length", ms.Length.ToString());
+    //            resp.BinaryWrite(ms.ToArray());
+    //            resp.Flush();
+    //            resp.SuppressContent = true;                               // stop page HTML being appended
+    //            HttpContext.Current.ApplicationInstance.CompleteRequest(); // instead of Response.End()
+    //        }
+    //    }
+    //}
 }

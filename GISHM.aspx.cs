@@ -19,6 +19,10 @@ public partial class GISHM : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
+
+
+
+
             if (Convert.ToString(Session["username"]) != "")
             {
                 string userlevelrole = Convert.ToString(Session["user_level_Role"]);
@@ -43,6 +47,8 @@ public partial class GISHM : System.Web.UI.Page
                     ddlDistrict.Enabled = true;
                     ddlBlock.Enabled = true;
                 }
+
+
             }
             else
             {
@@ -51,6 +57,8 @@ public partial class GISHM : System.Web.UI.Page
 
         }
     }
+
+
     [WebMethod(EnableSession = true)]
     public static string Get_MapDetails(string ValidID, string ValidID1, string ValidID2, string ValidID3, string ValidID4, string ValidID5, string ValidID6, string ValidID7)
     {
@@ -72,6 +80,7 @@ public partial class GISHM : System.Web.UI.Page
         //{ }
         //else { LanguageID = "1"; }
         clsMain objMain1 = new clsMain();
+
         if (ValidID6 == "1")
         {
             objMain1.ReportDownload("Quality Enrolment", "Heat Map", Convert.ToString(HttpContext.Current.Session["username"]));
@@ -123,6 +132,7 @@ public partial class GISHM : System.Web.UI.Page
                   new SqlParameter("@Groupby",ValidID5),
                    new SqlParameter("@Report",ValidID6),
                      new SqlParameter("@YearID",ValidID7)
+
         };
 
         DataTable dt = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Get_HeatMap2024", p);
@@ -237,6 +247,7 @@ public partial class GISHM : System.Web.UI.Page
         //DataTable dtClw = new DataTable();
         //string AppName = "HeatMap_Report";//ddl_Rerservior.SelectedItem.Text;// TypeName = ddl_DataType.SelectedItem.Text;
         //string filename = AppName + "_" + DateTime.Now.ToString("ddMMyyyy_hhmmss");
+
         DataTable dt = new DataTable();
         dt = (HttpContext.Current.Session["tblLocDetails1"] as DataTable);
         ExeclHeatMap(dt);
@@ -256,6 +267,7 @@ public partial class GISHM : System.Web.UI.Page
     }
     public void ExeclHeatMap(DataTable dtMain1)
     {
+
         string StartupPath = Server.MapPath(Comman.GetImagePath("ExportPath"));
         string filepath = "";
         XLWorkbook wb = new XLWorkbook();
@@ -328,6 +340,8 @@ public partial class GISHM : System.Web.UI.Page
 
         ws.Range(str55).Style.Border.SetLeftBorder(XLBorderStyleValues.Thin);
         ws.Range(str55).Style.Border.SetRightBorder(XLBorderStyleValues.Thin);
+
+
         filepath = StartupPath + "\\" + ddlReportType.SelectedItem.Text + "" + "_" + System.DateTime.Now.ToString("hhssmmfff") + ".xlsx";
         wb.SaveAs(filepath);
         Response.ContentType = ContentType;

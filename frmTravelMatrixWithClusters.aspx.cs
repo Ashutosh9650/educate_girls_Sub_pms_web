@@ -2368,7 +2368,7 @@ public partial class frmTravelMatrixWithClusters : System.Web.UI.Page
 
         if (Convert.ToInt32(ddlMode.SelectedValue) == 2 || Convert.ToInt32(ddlMode.SelectedValue) == 3 || Convert.ToInt32(ddlMode.SelectedValue) == 4 || Convert.ToInt32(ddlMode.SelectedValue) == 5)
         {
-            if (Convert.ToInt32(rblDist1.SelectedValue) == 1)
+            if (rblDist1.SelectedValue == "1")
             {
                 FileuploadExpensevehicle.Enabled = true;
                 pndVic.Enabled = true;

@@ -38,15 +38,14 @@ public class ExportdataWebservice : System.Web.Services.WebService
     }
 
 
-
     [WebMethod]
     public string GetReportStatus(string UserName)
     {
         string condition = "";
         SqlParameter[] para = new SqlParameter[] {
-          
+
             new SqlParameter("@UserName",UserName),
-          
+
             };
 
 
@@ -91,11 +90,11 @@ public class ExportdataWebservice : System.Web.Services.WebService
     public string GetMasterData(string UserName)
     {
 
-       
-        SqlParameter[] para = new SqlParameter[] { 
-           
+
+        SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
-           
+
             };
 
 
@@ -121,8 +120,8 @@ public class ExportdataWebservice : System.Web.Services.WebService
         sReturn = JsonConvert.SerializeObject(sqldata);
         return sReturn;
     }
-  
-  
+
+
     [WebMethod]
     public string GetMasterDataTablet(string UserName, string Password)
     {
@@ -131,7 +130,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.CheckPassword(UserName, checkpass);
 
@@ -145,10 +144,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
             }
 
 
-            SqlParameter[] para = new SqlParameter[] { 
-           
+            SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
-           
+
             };
 
             try
@@ -192,7 +191,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.CheckPasswordNew(UserName, checkpass, IMEINo);
 
@@ -207,10 +206,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
 
 
-            SqlParameter[] para = new SqlParameter[] { 
-           
+            SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
-           
+
             };
 
             try
@@ -254,7 +253,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.CheckPasswordNew(UserName, checkpass, IMEINo);
 
@@ -269,10 +268,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
 
 
-            SqlParameter[] para = new SqlParameter[] { 
-           
+            SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@VillageCode",VillageCode),
-           
+
             };
 
             try
@@ -332,10 +331,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
 
 
-            SqlParameter[] para = new SqlParameter[] { 
-           
+            SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@VillageCode",VillageCode),
-           
+
             };
 
             try
@@ -379,7 +378,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewBO(UserName, checkpass, IMEINo);
 
@@ -394,10 +393,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
 
 
-            SqlParameter[] para = new SqlParameter[] { 
-           
+            SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
-           
+
             };
 
             try
@@ -442,7 +441,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewBO(UserName, checkpass, IMEINo);
 
@@ -457,10 +456,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
 
 
-            SqlParameter[] para = new SqlParameter[] { 
-           
+            SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
-           
+
             };
 
             try
@@ -524,7 +523,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
             case 4:
                 tablename = "TblActivityUpdate_Office_BO";
                 break;
-             case 5:
+            case 5:
                 tablename = "tblTotal";
                 break;
             case 6:
@@ -572,7 +571,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
             case 4:
                 tablename = "TblActivityUpdate_Office_BO";
                 break;
-           
+
             default:
                 tablename = "NoName";
                 break;
@@ -610,16 +609,16 @@ public class ExportdataWebservice : System.Web.Services.WebService
                 tablename = "MstUser";
 
                 break;
-           
+
             case 6:
                 tablename = "mstLookup";
                 break;
-            
+
 
             case 7:
                 tablename = "MSTtopicDiscuss";
                 break;
-           
+
             default:
                 tablename = "NoName";
                 break;
@@ -730,7 +729,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
             case 27:
                 tablename = "tblVisitors";
                 break;
-           
+
             case 28:
                 tablename = "MstCampNo";
                 break;
@@ -777,7 +776,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                 tablename = "MstSubLearningCampMaster";
                 break;
 
-           
+
             case 43:
                 tablename = "tblChildRegistrationSchool";
                 break;
@@ -998,7 +997,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -1012,10 +1011,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
             }
 
 
-            SqlParameter[] para = new SqlParameter[] { 
-           
+            SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
-           
+
             };
 
             try
@@ -1060,7 +1059,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -1074,10 +1073,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
             }
 
 
-            SqlParameter[] para = new SqlParameter[] { 
-           
+            SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
-           
+
             };
 
             try
@@ -1129,7 +1128,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -1143,10 +1142,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
             }
 
 
-            SqlParameter[] para = new SqlParameter[] { 
-           
+            SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
-           
+
             };
 
             try
@@ -1191,7 +1190,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -1304,7 +1303,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -1318,10 +1317,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
             }
 
 
-            SqlParameter[] para = new SqlParameter[] { 
-           
+            SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
-           
+
             };
 
             try
@@ -1365,7 +1364,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.CheckPasswordNew(UserName, checkpass, IMEINo);
 
@@ -1379,8 +1378,8 @@ public class ExportdataWebservice : System.Web.Services.WebService
             }
 
 
-            SqlParameter[] para = new SqlParameter[] { 
-           
+            SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
              new SqlParameter("@Flag",Flag),
             };
@@ -1412,7 +1411,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                 {
                     sReturn = "0";
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -1437,7 +1436,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -1451,10 +1450,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
             }
 
 
-            SqlParameter[] para = new SqlParameter[] { 
-           
+            SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
-           
+
             };
 
             try
@@ -1523,10 +1522,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
             }
 
 
-            SqlParameter[] para = new SqlParameter[] { 
-           
+            SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
-           
+
             };
 
             try
@@ -1594,11 +1593,11 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
 
 
-            SqlParameter[] para = new SqlParameter[] { 
-           
+            SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
               new SqlParameter("@Villagecode",Villagecode),
-           
+
             };
 
 
@@ -1658,11 +1657,11 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
 
 
-            SqlParameter[] para = new SqlParameter[] { 
-           
+            SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
               new SqlParameter("@Villagecode",Villagecode),
-           
+
             };
 
 
@@ -1748,11 +1747,11 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
 
 
-            SqlParameter[] para = new SqlParameter[] { 
-           
+            SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
               new SqlParameter("@Villagecode",Villagecode),
-           
+
             };
 
 
@@ -1790,7 +1789,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         return sReturn;
     }
 
-    
+
     [WebMethod]
     public string GetMasterDataTabletVillageWiseCOunt(string UserName, string Password, string Villagecode)
     {
@@ -1814,11 +1813,11 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
 
 
-            SqlParameter[] para = new SqlParameter[] { 
-           
+            SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
               new SqlParameter("@Villagecode",Villagecode),
-           
+
             };
 
 
@@ -1876,11 +1875,11 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
 
 
-            SqlParameter[] para = new SqlParameter[] { 
-           
-           
+            SqlParameter[] para = new SqlParameter[] {
+
+
               new SqlParameter("@Villagecode",Villagecode),
-           
+
             };
 
 
@@ -1918,11 +1917,11 @@ public class ExportdataWebservice : System.Web.Services.WebService
     public string GetMasterUser(string UserName, string Password)
     {
         string condition = "";
-        SqlParameter[] para = new SqlParameter[] { 
-           
+        SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
              new SqlParameter("@Password",Password),
-           
+
             };
 
 
@@ -1956,10 +1955,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
     public string GetMasterState(string UserName)
     {
         string condition = "";
-        SqlParameter[] para = new SqlParameter[] { 
-           
+        SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
-             
+
             };
 
 
@@ -1994,10 +1993,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
     public string GetMasterStateTest(string UserName)
     {
         string condition = "";
-        SqlParameter[] para = new SqlParameter[] { 
-           
+        SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
-             
+
             };
 
 
@@ -2028,14 +2027,14 @@ public class ExportdataWebservice : System.Web.Services.WebService
     }
 
 
-     [WebMethod]
-     public string GetMasterStateNew(string UserName)
+    [WebMethod]
+    public string GetMasterStateNew(string UserName)
     {
         string condition = "";
-        SqlParameter[] para = new SqlParameter[] { 
-           
+        SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
-             
+
             };
 
 
@@ -2070,10 +2069,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
     public string GetMasterStateTestNew(string UserName)
     {
         string condition = "";
-        SqlParameter[] para = new SqlParameter[] { 
-           
+        SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
-             
+
             };
 
 
@@ -2108,11 +2107,11 @@ public class ExportdataWebservice : System.Web.Services.WebService
     public string GetMasterVillage(string Condition, Int32 flag)
     {
 
-        SqlParameter[] para = new SqlParameter[] { 
-           
+        SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@Condition",Condition),
                new SqlParameter("@Flag",flag),
-           
+
             };
 
 
@@ -2187,10 +2186,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
     {
 
         string condition = "";
-        SqlParameter[] para = new SqlParameter[] { 
-           
+        SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@Villagecode",Villagecode),
-             
+
             };
 
 
@@ -2225,10 +2224,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
     {
 
         string condition = "";
-        SqlParameter[] para = new SqlParameter[] { 
-           
+        SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@Villagecode",Villagecode),
-             
+
             };
 
 
@@ -2263,10 +2262,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
     {
 
         string condition = "";
-        SqlParameter[] para = new SqlParameter[] { 
-           
+        SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@BlockCode",BlockCode),
-             
+
             };
 
 
@@ -2301,11 +2300,11 @@ public class ExportdataWebservice : System.Web.Services.WebService
     {
 
         string condition = "";
-        SqlParameter[] para = new SqlParameter[] { 
-           
+        SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@Villagecode",Villagecode),
                new SqlParameter("@DateNo",DateNo),
-             
+
             };
 
 
@@ -2339,10 +2338,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
     {
 
         string condition = "";
-        SqlParameter[] para = new SqlParameter[] { 
-           
+        SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@Villagecode",Villagecode),
-             
+
             };
 
 
@@ -2379,10 +2378,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
     {
 
         string condition = "";
-        SqlParameter[] para = new SqlParameter[] { 
-           
+        SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@Villagecode",Villagecode),
-             
+
             };
 
 
@@ -2418,10 +2417,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
     {
 
         string condition = "";
-        SqlParameter[] para = new SqlParameter[] { 
-           
+        SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@Villagecode",Villagecode),
-             
+
             };
 
 
@@ -2457,10 +2456,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
     {
         string condition = "";
         SqlParameter[] para = new SqlParameter[] {
-          
+
             new SqlParameter("@Condation",Con),
-          
-            
+
+
             };
         string sReturn = string.Empty;
         DataSet dttabletdata = new DataSet();
@@ -2484,11 +2483,11 @@ public class ExportdataWebservice : System.Web.Services.WebService
     {
         string condition = "";
         SqlParameter[] para = new SqlParameter[] {
-          
+
             new SqlParameter("@UserName",UserName),
             new SqlParameter("@ReportFlag",ReportFlag),
             new SqlParameter("@ReportDate",ReportDate),
-            
+
             };
         string sReturn = string.Empty;
         DataSet dttabletdata = new DataSet();
@@ -2511,13 +2510,13 @@ public class ExportdataWebservice : System.Web.Services.WebService
     {
         string condition = "";
         SqlParameter[] para = new SqlParameter[] {
-          
+
             new SqlParameter("@Flag",Flag),
             new SqlParameter("@StateCode",StateCode),
             new SqlParameter("@DistCode",DistCode),
              new SqlParameter("@BlockCode",BlockCode),
                 new SqlParameter("@PCode",PCode),
-            
+
             };
         string sReturn = string.Empty;
         DataSet dttabletdata = new DataSet();
@@ -2569,7 +2568,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
             new SqlParameter("@DistCode",DistCode),
              new SqlParameter("@BlockCode",BlockCode),
                 new SqlParameter("@PCode",PCode),
-            
+
             };
         string sReturn = string.Empty;
         DataSet dttabletdata = new DataSet();
@@ -2839,74 +2838,74 @@ public class ExportdataWebservice : System.Web.Services.WebService
             case 12:
                 tablename = "tblVerification";
                 break;
-            
+
             case 13:
                 tablename = "mstTeamBalika";
                 break;
-               
+
             case 14:
                 tablename = "tblChildRegistration";
                 break;
-            
+
             case 15:
                 tablename = "tblChildAttendance";
                 break;
-               
+
             case 16:
                 tablename = "tblVisitors";
                 break;
-             case 17:
+            case 17:
                 tablename = "tblCLLSG";
                 break;
-             case 18:
+            case 18:
                 tablename = "TblCommunitySMC";
                 break;
-             case 19:
+            case 19:
                 tablename = "TblSMCAttendance";
                 break;
-             case 20:
+            case 20:
                 tablename = "tblLCGChildRegistration";
                 break;
-             case 21:
+            case 21:
                 tablename = "tblLSGChildAttendance";
                 break;
-             case 22:
+            case 22:
                 tablename = "mstInfluencerProfile";
                 break;
-             case 23:
+            case 23:
                 tablename = "tblChildandEnrolment";
                 break;
-             case 24:
+            case 24:
                 tablename = "tblChildRegistrationAGP";
                 break;
-             case 25:
+            case 25:
                 tablename = "tblChildAttendanceAGP";
                 break;
-             case 26:
+            case 26:
                 tablename = "tblVisitorsAGP";
                 break;
-             case 27:
+            case 27:
                 tablename = "MstLearningCampMasterAgp";
                 break;
-             case 28:
+            case 28:
                 tablename = "tblAttendanceImage";
                 break;
-             case 29:
+            case 29:
                 tablename = "tblChildRegistrationSchool";
                 break;
-             case 30:
+            case 30:
                 tablename = "tblChildAttendanceSchool";
                 break;
-             case 31:
+            case 31:
                 tablename = "tblVisitorsSchool";
                 break;
-             case 32:
+            case 32:
                 tablename = "tblAttendanceImageSchool";
                 break;
-             case 33:
+            case 33:
                 tablename = "tblChildAttendanceLifeskill";
                 break;
-             case 34:
+            case 34:
                 tablename = "tblChildRegistrationBalsabha";
                 break;
             case 35:
@@ -3133,7 +3132,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
             case 23:
                 tablename = "tblHoliday";
                 break;
-                
+
             default:
                 tablename = "NoName";
                 break;
@@ -3197,10 +3196,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
             case 13:
                 tablename = "TblActivityUpdate_Office_BO";
                 break;
-                  case 14:
+            case 14:
                 tablename = "mstGKPDeatils";
                 break;
-                
+
             default:
                 tablename = "NoName";
                 break;
@@ -3277,7 +3276,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                 tablename = "tblDTDMobileActivity";
                 break;
 
-           
+
             default:
                 tablename = "NoName";
                 break;
@@ -3482,7 +3481,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
             int UserID = 0;
             if (UserName.Trim() != "" && Pass.Trim() != "")
             {
-                string checkpass = objPass.CreatePasswordHashSecurityAudit(Pass);
+                string checkpass = objPass.CreatePasswordHashNew(Pass);
 
                 DataTable dtUser = objComman.GetUserAuthenticate(UserName, Pass);
 
@@ -3508,24 +3507,24 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
                     foreach (DataRow dr1 in dtTbl_User_Login.Rows)
                     {
-                        
+
                         string LoginTime = dr1["LoginTime"].ToString();
-    
-                      if (Convert.ToInt32( LoginTime.Length.ToString()) > 9)
-                      {
-                          string strnew = dr1["LoginTime"].ToString().Substring(6, 1);
-                          if (strnew == "a")
-                          {
-                              string v = LoginTime.Replace("a.m.", "AM");
-                              dr1["LoginTime"] = v;
-                          }
-                          else
-                          {
-                              string v = LoginTime.Replace("p.m.", "PM");
-                              dr1["LoginTime"] = v;
-                          }
-                        
-                      }
+
+                        if (Convert.ToInt32(LoginTime.Length.ToString()) > 9)
+                        {
+                            string strnew = dr1["LoginTime"].ToString().Substring(6, 1);
+                            if (strnew == "a")
+                            {
+                                string v = LoginTime.Replace("a.m.", "AM");
+                                dr1["LoginTime"] = v;
+                            }
+                            else
+                            {
+                                string v = LoginTime.Replace("p.m.", "PM");
+                                dr1["LoginTime"] = v;
+                            }
+
+                        }
                     }
 
                     DataSet dsResult = new DataSet();
@@ -3586,7 +3585,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                     DataTable dtTbl_User_Login = objComman.CreateDataTable("Tbl_GKP");
                     dtTbl_User_Login = SetColumnsOrdinal(dsMyData.Tables["Tbl_GKP"], dtTbl_User_Login);
 
-                 
+
 
                     DataSet dsResult = new DataSet();
                     dsResult = objComman.Tablet_Post_Session_Tbl_GKP(dtTbl_User_Login, UserID, sData);
@@ -3889,7 +3888,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                     DataTable dtTbl_User_Login = objComman.CreateDataTable("Tbl_User_LoginNewLoginInt");
                     dtTbl_User_Login = SetColumnsOrdinal(dsMyData.Tables["Tbl_User_Login"], dtTbl_User_Login);
 
-                   
+
                     DataSet dsResult = new DataSet();
                     dsResult = objComman.Tablet_Post_Session_User_LoginNewDateAsInt(dtTbl_User_Login, UserID, sData);
                     sReturn = JsonConvert.SerializeObject(dsResult);
@@ -3976,7 +3975,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                                 dr1["LoginTime"] = v;
                             }
 
-                           
+
                         }
                     }
                     DataSet dsResult = new DataSet();
@@ -4972,7 +4971,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                 fs.Dispose();
             }
 
-          
+
             return "OK";
         }
         catch (Exception ex)
@@ -5141,7 +5140,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
     }
 
 
-  
+
 
 
     [WebMethod]
@@ -5548,7 +5547,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
     }
 
-  
+
 
     [WebMethod]
     [ScriptMethod(UseHttpGet = true)]
@@ -5911,13 +5910,13 @@ public class ExportdataWebservice : System.Web.Services.WebService
                 if (UserName.Trim() != "")
                 {
                     Password ojbP = new Password();
-                    string NewPassWord = ojbP.CreatePasswordHashSecurityAudit(Password.Trim());
-                    SqlParameter[] pr = new SqlParameter[] 
-                    { 
+                    string NewPassWord = ojbP.CreatePasswordHashNew(Password.Trim());
+                    SqlParameter[] pr = new SqlParameter[]
+                    {
                        new SqlParameter("@UserID",UserName.ToString()),
-                      
+
                        new SqlParameter("@NewPwd",NewPassWord),
-        
+
                    };
                     int result = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Sp_Change_User_PasswordNew", pr);
                     if (result > 0)
@@ -5964,13 +5963,13 @@ public class ExportdataWebservice : System.Web.Services.WebService
                 if (UserName.Trim() != "")
                 {
                     Password ojbP = new Password();
-                    string NewPassWord = ojbP.CreatePasswordHashSecurityAudit(Password.Trim());
-                    SqlParameter[] pr = new SqlParameter[] 
-                    { 
+                    string NewPassWord = ojbP.CreatePasswordHashNew(Password.Trim());
+                    SqlParameter[] pr = new SqlParameter[]
+                    {
                        new SqlParameter("@UserID",UserName.ToString()),
-                      
+
                        new SqlParameter("@NewPwd",NewPassWord),
-        
+
                    };
                     int result = SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "Sp_Change_User_PasswordNew", pr);
                     if (result > 0)
@@ -6059,7 +6058,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
     {
         DateTime _DateTime = DateTime.Now;
         string StartupPath = Server.MapPath("~/");
-        Int32 mMonth = DateTime.Today.Month-1;
+        Int32 mMonth = DateTime.Today.Month - 1;
         int pmonth = mMonth + 1;
         Int32 cYear = DateTime.Today.Year;
         Int32 oldYear = DateTime.Today.Year;
@@ -6075,13 +6074,13 @@ public class ExportdataWebservice : System.Web.Services.WebService
         }
         string startdate = "";
         string enddate = "";
-       
+
 
         startdate = "21" + "/" + mMonth + "/" + cYear + "";
-           enddate = "20" + "/" + pmonth + "/" + cYear + "";
+        enddate = "20" + "/" + pmonth + "/" + cYear + "";
 
-       
-      
+
+
         if (Convert.ToInt32(DateTime.Now.Day) >= 21 && Convert.ToInt32(DateTime.Now.Day) <= 31 || Convert.ToInt32(DateTime.Now.Day) >= 01 && Convert.ToInt32(DateTime.Now.Day) <= 08)
         {
 
@@ -6094,20 +6093,20 @@ public class ExportdataWebservice : System.Web.Services.WebService
                 if (Convert.ToDateTime(dtHoliday.Rows[0]["PDate"].ToString()).ToString("yyyy-MM-dd") == Convert.ToDateTime(DateTime.Now).ToString("yyyy-MM-dd"))
                 {
                     DataTable dtemployeeCheck = objMain.Select_All_Data("MstUser inner join tblTravelMatrixDeatils on  MstUser.UserID=tblTravelMatrixDeatils.UserID inner join mst2District on mst2District.districtcode=MstUser.DistrictCode inner join mst3Block on mst3Block.blockcode=MstUser.blockcode ", "distinct  mst2District.districtname,BlockName,mst3Block.BlockCode,LockDay,mst2District.districtCode ", "mYear=" + cYear + " and mMonth=" + pmonth + " and  (SubmissionStatus is null or SubmissionStatus ='') ", "", "");
-                      if (dtemployeeCheck.Rows.Count > 0)
-                      {
-                           for (int E = 0; E < dtemployeeCheck.Rows.Count; E++)
-                            {
-                                GenerateExcel("", dtemployeeCheck.Rows[E]["BlockCode"].ToString(), dtemployeeCheck.Rows[E]["BlockName"].ToString(), pmonth.ToString(), cYear.ToString(), startdate, enddate, dtemployeeCheck.Rows[E]["districtCode"].ToString());
+                    if (dtemployeeCheck.Rows.Count > 0)
+                    {
+                        for (int E = 0; E < dtemployeeCheck.Rows.Count; E++)
+                        {
+                            GenerateExcel("", dtemployeeCheck.Rows[E]["BlockCode"].ToString(), dtemployeeCheck.Rows[E]["BlockName"].ToString(), pmonth.ToString(), cYear.ToString(), startdate, enddate, dtemployeeCheck.Rows[E]["districtCode"].ToString());
 
-                            }
+                        }
 
-                           string StudentTSInsertQuery = " Update mstTravelLockDate set Status=1  where mMonth=" + pmonth + " and TypeID=1 ";
-                         //  bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
-                      }
+                        string StudentTSInsertQuery = " Update mstTravelLockDate set Status=1  where mMonth=" + pmonth + " and TypeID=1 ";
+                       // bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
+                    }
 
                 }
-                
+
             }
 
         }
@@ -6123,7 +6122,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
             if (dtHoliday.Rows.Count > 0)
             {
                 if (Convert.ToDateTime(dtHoliday.Rows[0]["PDate"].ToString()).ToString("yyyy-MM-dd") == Convert.ToDateTime(DateTime.Now).ToString("yyyy-MM-dd"))
-            
+
                 {
 
                     DataTable dtemployeeCheck = objMain.Select_All_Data("MstUser inner join tblTravelMatrixDeatils on  MstUser.UserID=tblTravelMatrixDeatils.UserID inner join mst2District on mst2District.districtcode=MstUser.DistrictCode inner join mst3Block on mst3Block.blockcode=MstUser.blockcode ", "distinct  mst2District.districtname,BlockName,LockDay ,CONVERT(varchar,BOApprovalDate,103) as BOApprovalDate", "mYear=" + cYear + " and mMonth=" + pmonth + " and SubmissionStatus='P' ", "", "");
@@ -6152,11 +6151,11 @@ public class ExportdataWebservice : System.Web.Services.WebService
             if (dtHoliday.Rows.Count > 0)
             {
                 if (Convert.ToDateTime(dtHoliday.Rows[0]["PDate"].ToString()).ToString("yyyy-MM-dd") == Convert.ToDateTime(DateTime.Now).ToString("yyyy-MM-dd"))
-            
+
                 {
                     DataTable dtemployeeCheck = objMain.Select_All_Data("MstUser inner join tblTravelMatrixDeatils on  MstUser.UserID=tblTravelMatrixDeatils.UserID inner join mst2District on mst2District.districtcode=MstUser.DistrictCode inner join mst3Block on mst3Block.blockcode=MstUser.blockcode ", "distinct  mst2District.districtname,BlockName,LockDay ,CONVERT(varchar,AdminApprovalDate,103) as BOApprovalDate", "mYear=" + cYear + " and mMonth=" + pmonth + " and SubmissionStatus='A' ", "", "");
 
-                 //   DataTable dtemployeeCheck = objMain.Select_All_Data("MstUser inner join tblTravelMatrixDeatils on  MstUser.UserID=tblTravelMatrixDeatils.UserID inner join mst2District on mst2District.districtcode=MstUser.DistrictCode inner join mst3Block on mst3Block.blockcode=MstUser.blockcode ", "distinct  mst2District.districtname,BlockName,LockDay ,CONVERT(varchar,BOApprovalDate,103) as BOApprovalDate", "mYear=" + cYear + " and mMonth=" + pMonth + " and SubmissionStatus='P' ", "", "");
+                    //   DataTable dtemployeeCheck = objMain.Select_All_Data("MstUser inner join tblTravelMatrixDeatils on  MstUser.UserID=tblTravelMatrixDeatils.UserID inner join mst2District on mst2District.districtcode=MstUser.DistrictCode inner join mst3Block on mst3Block.blockcode=MstUser.blockcode ", "distinct  mst2District.districtname,BlockName,LockDay ,CONVERT(varchar,BOApprovalDate,103) as BOApprovalDate", "mYear=" + cYear + " and mMonth=" + pMonth + " and SubmissionStatus='P' ", "", "");
                     if (dtemployeeCheck.Rows.Count > 0)
                     {
                         for (int E = 0; E < dtemployeeCheck.Rows.Count; E++)
@@ -6165,7 +6164,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
                         }
                         string StudentTSInsertQuery = " Update mstTravelLockDate set Status=1  where mMonth=" + pmonth + " and TypeID=3 ";
-                      //  bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
+                        //bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
                     }
                 }
 
@@ -6173,10 +6172,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
         }
 
-       
 
-       
-        
+
+
+
         return "";
     }
     //public string GeneraateMail()
@@ -6292,20 +6291,20 @@ public class ExportdataWebservice : System.Web.Services.WebService
     //    string dateNew =Convert.ToDateTime(enddate).ToString("yyyy-MM-dd");
     //    DataRow[] drRow;
     //    DataRow[] drRowHoli;
-      
+
     //    if (Convert.ToInt32(DateTime.Now.Day) >= 21 && Convert.ToInt32(DateTime.Now.Day) <= 31 || Convert.ToInt32(DateTime.Now.Day) >= 01 && Convert.ToInt32(DateTime.Now.Day) <= 08)
     //    {
     //        if ( Convert.ToDateTime(dateNew)>Convert.ToDateTime(date) )
     //        {
     //            DataTable dtemployeeCheck = objMain.Select_All_Data("MstUser inner join tblTravelMatrixDeatils on  MstUser.UserID=tblTravelMatrixDeatils.UserID inner join mst2District on mst2District.districtcode=MstUser.DistrictCode inner join mst3Block on mst3Block.blockcode=MstUser.blockcode ", "distinct  mst2District.districtname,BlockName,mst3Block.BlockCode,LockDay,mst2District.districtCode ", "mYear=" + cYear + " and mMonth=" + mMonth + " and  (SubmissionStatus is null or SubmissionStatus ='') ", "", "");
-                
+
     //             if (dtemployeeCheck.Rows.Count > 0)
     //             {
     //                 Int32 Days = 0;
     //                 Int32 DaysNew = 0;
     //                 Int32 iCount = 0;
     //                 DateTime FinalDate = Convert.ToDateTime(enddate);
-                  
+
     //                 DaysNew = Convert.ToInt32(dtemployeeCheck.Rows[0]["LockDay"]);
     //                 for (int E = 0; E < dtemployeeCheck.Rows.Count; E++)
     //                 {
@@ -6329,9 +6328,9 @@ public class ExportdataWebservice : System.Web.Services.WebService
     //                         //{
     //                         //    FinalDateNew = Convert.ToDateTime(FinalDateNew).AddDays(1);
     //                         //}
-                               
-                            
-                               
+
+
+
     //                     }
 
     //                     DateTime d1 = Convert.ToDateTime(FinalDate);
@@ -6344,12 +6343,12 @@ public class ExportdataWebservice : System.Web.Services.WebService
     //                     {
     //                         GenerateExcel("", dtemployeeCheck.Rows[E]["BlockCode"].ToString(), dtemployeeCheck.Rows[E]["BlockName"].ToString(), mMonth.ToString(), cYear.ToString(), startdate, enddate, dtemployeeCheck.Rows[E]["districtCode"].ToString());
 
-                       
+
     //                     }
 
 
     //                 }
-                   
+
 
     //             }
 
@@ -6375,7 +6374,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
     //                         {
     //                             Days = Days + 1;
     //                         }
-                           
+
     //                         string str = FinalDateAdmin.ToString("ddd");
     //                         if (str == "Sun")
     //                         {
@@ -6391,7 +6390,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
     //                     }
 
     //                 }
-                    
+
 
     //             }
 
@@ -6441,7 +6440,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
     {
         DateTime _DateTime = DateTime.Now;
         string StartupPath = Server.MapPath("~/");
-        Int32 mMonth = DateTime.Now.Month-1;
+        Int32 mMonth = DateTime.Now.Month - 1;
         int pmonth = mMonth + 1;
         Int32 cYear = DateTime.Today.Year;
         Int32 oldYear = DateTime.Today.Year;
@@ -6450,7 +6449,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
             cYear = cYear - 1;
             oldYear = cYear - 1;
         }
-        if (Convert.ToInt32(DateTime.Now.Day) >= 1 && Convert.ToInt32(DateTime.Now.Day) <=8)
+        if (Convert.ToInt32(DateTime.Now.Day) >= 1 && Convert.ToInt32(DateTime.Now.Day) <= 8)
         {
             mMonth = Convert.ToInt32(DateTime.Now.Month) - 2;
             pmonth = mMonth + 1;
@@ -6488,7 +6487,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                 #region PDF
                 string empname = "", empcode = "", designation = "", district = "", Block = "", cluster = "", depatment = ""; ;
                 DataTable dtemployee = objMain.Select_All_Data("MstUser inner join tblTravelMatrixDeatils on  MstUser.UserID=tblTravelMatrixDeatils.UserID inner join  Mstuserrole on  MstUser.UserLevel= Mstuserrole.Role_Level inner join tblemployeedetails on tblemployeedetails.EmployeeID=MstUser.UserName inner join mst2District on mst2District.districtcode=MstUser.DistrictCode inner join mst3Block on mst3Block.blockcode=MstUser.blockcode inner join mst5Village on mst5Village.villagecode=MstUser.villagecode", "distinct FristName as name,mstuser.UserName as code,Mstuserrole.Role as desg,Department ,mst2District.districtname,BlockName,VillageName as cluster", "mYear=" + cYear + "  and tblTravelMatrixDeatils.UserID=" + dtemployeeCheck.Rows[E]["UserID"].ToString() + " and mMonth=" + pmonth + " and SubmissionStatus='F' and GenerateFlag=0 ", "", "");
-              
+
                 if (dtemployee.Rows.Count > 0)
                 {
 
@@ -6512,7 +6511,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                     startdate = dtTravelRang.Rows[0]["FromDay"].ToString() + "/" + 12 + "/" + oldYear + "";
                     enddate = dtTravelRang.Rows[0]["ToDay"].ToString() + "/" + 01 + "/" + cYear + "";
 
-                  
+
                 }
                 else if (mMonth == 2)
                 {
@@ -6524,7 +6523,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                     startdate = dtTravelRang.Rows[0]["FromDay"].ToString() + "/" + mMonth + "/" + cYear + "";
                     enddate = dtTravelRang.Rows[0]["ToDay"].ToString() + "/" + pmonth + "/" + cYear + "";
 
-                 
+
 
                 }
                 else if (mMonth == 3)
@@ -6537,7 +6536,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                     startdate = dtTravelRang.Rows[0]["FromDay"].ToString() + "/" + mMonth + "/" + cYear + "";
                     enddate = dtTravelRang.Rows[0]["ToDay"].ToString() + "/" + pmonth + "/" + cYear + "";
 
-                
+
 
                 }
                 else if (mMonth == 4)
@@ -6550,7 +6549,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                     startdate = dtTravelRang.Rows[0]["FromDay"].ToString() + "/" + 4 + "/" + cYear + "";
                     enddate = dtTravelRang.Rows[0]["ToDay"].ToString() + "/" + pmonth + "/" + cYear + "";
 
-                   
+
                 }
                 else
                 {
@@ -6563,8 +6562,8 @@ public class ExportdataWebservice : System.Web.Services.WebService
                     enddate = dtTravelRang.Rows[0]["ToDay"].ToString() + "/" + pmonth + "/" + cYear + "";
 
 
-                   }
-      
+                }
+
 
                 //  string imageURLLogo = Server.MapPath(".") + "/images/logo-new1.png";
 
@@ -6576,7 +6575,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
 
                 DataTable dttravelmatrixdetails = objMain.Select_All_Data("tblTravelMatrixDeatils", "convert(varchar,TravelDate,103) as Fromdate,convert(varchar,TravelDate,103) as Todate,LoginTime as TimeIn,logouttime as Timeout, [FromVillagename] as [FromVillagename],[ToVillagename] ,isnull(RevisedFare,0) as LC,isnull(RevisedDAAdmin,0) as DA", "mYear=" + cYear + " and tblTravelMatrixDeatils.UserID=" + dtemployeeCheck.Rows[E]["UserID"].ToString() + "   and mMonth=" + pmonth + " and SubmissionStatus='F' and GenerateFlag=0 ", "TravelDate", "ASC");
-          
+
                 int tot = 0;
                 int DA = 0;
                 //if (pageindex <= 15)
@@ -6632,8 +6631,8 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
                 sb.Append("<table border=1 width='100%' cellspacing='2' cellpadding='2' style=' font-size:17px; border-color:#dddddd'> ");
                 sb.Append("<tr style='font-size:10px'>");
-               
-            
+
+
                 sb.Append("<td width='14%' valign='top'>" + depatment + "</td>");
                 sb.Append("<td width='14%' valign='top'></td>");
                 sb.Append("<td width='15%' valign='top'></td>");
@@ -6686,7 +6685,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                     //int rownum = 5;
                     //int p = 5;
 
-                  
+
                     for (int i = 0; i < dttravelmatrixdetails.Rows.Count; i++)
                     {
 
@@ -7042,7 +7041,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
 
 
-                string Fullfilename = dtemployeeCheck.Rows[E]["Code"].ToString() +".pdf";
+                string Fullfilename = dtemployeeCheck.Rows[E]["Code"].ToString() + ".pdf";
 
 
                 string path = StartupPath1 + "Travel vouchers\\" + str1 + "\\" + str2 + "\\" + DIst + "\\" + BlockName + "\\" + Fullfilename;
@@ -7067,7 +7066,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                 }
 
                 string StudentTSInsertQuery = " Update tblTravelMatrixDeatils set GenerateFlag=0  where mYear=" + cYear + " and mMonth=" + mMonth + " and UserID= " + dtemployeeCheck.Rows[E]["UserID"].ToString() + " ";
-              //  bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
+               // bool UpdateTs = objMain.AddUpdate(StudentTSInsertQuery);
                 #endregion
             }
 
@@ -7101,13 +7100,13 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
 
 
-           GeneraatePDF();
+            GeneraatePDF();
             GeneraateMail();
             try
             {
-               
-                    sReturn = "0";
-               
+
+                sReturn = "0";
+
 
             }
             catch (Exception ex)
@@ -7123,239 +7122,239 @@ public class ExportdataWebservice : System.Web.Services.WebService
         return sReturn;
     }
 
-    private void GenerateExcel(string FIleName,string blockCode,string blockName,string Mmonth,string mYear,string startdate, string enddate,string DistCode)
+    private void GenerateExcel(string FIleName, string blockCode, string blockName, string Mmonth, string mYear, string startdate, string enddate, string DistCode)
     {
         try
         {
             string conditions = " where mst3Block.BlockCode ='" + blockCode + "'";
-          //  conditions = conditions + " and TravelDate between ( '" + Convert.ToDateTime(startdate).ToString("yyyy-MM-dd") + " ') and  ( '" + Convert.ToDateTime(enddate).ToString("yyyy-MM-dd") + "')";
+            //  conditions = conditions + " and TravelDate between ( '" + Convert.ToDateTime(startdate).ToString("yyyy-MM-dd") + " ') and  ( '" + Convert.ToDateTime(enddate).ToString("yyyy-MM-dd") + "')";
             conditions = conditions + " and mMonth=" + Mmonth + " and mYear=" + mYear + "";
-    
+
             SqlParameter[] cmdParameters = new SqlParameter[]
-		    {   
-			new SqlParameter("@Con", conditions),
+            {
+            new SqlParameter("@Con", conditions),
             new SqlParameter("@month", Mmonth),
             new SqlParameter("@Year",mYear),
-			new SqlParameter("@flag", "4")
-		    };
+            new SqlParameter("@flag", "4")
+            };
             DataTable dataTable = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptTADAStatusReport]", cmdParameters);
             System.Text.StringBuilder sw = new System.Text.StringBuilder();
 
-                DataTable dt = dataTable.Copy();
-                if (dt.Rows.Count > 0)
+            DataTable dt = dataTable.Copy();
+            if (dt.Rows.Count > 0)
+            {
+                #region Excel Download
+                //string Fullfilename1 = "" + blockName + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + ".xls";
+                //string fileName = Server.MapPath("~/DataBackup/" + Fullfilename1 + "");
+                //StreamWriter sw = new StreamWriter(fileName, false);
+
+                //sw.Write(@"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.0 Transitional//EN"">");
+                //HttpContext.Current.Response.Charset = "utf-8";
+                //HttpContext.Current.Response.ContentEncoding = System.Text.Encoding.GetEncoding("windows-1250");
+                string imageURLLogo = Server.MapPath(".") + "/images/logo-new1.png";
+
+
+                //sw.Append("<table width='100%' cellspacing='0' cellpadding='2'>");
+
+
+
+
+
+
+
+                sw.Append("<table width='100%' border=1 cellspacing='2' cellpadding='2' style=' font-size:17px; border-color:#dddddd;BACKGROUND-COLOR:Red'> ");
+
+                sw.Append("<tr style='font-size:20px;font-weight:bold'>");
+                sw.Append("<td style='font-size:20px;text-align:center'>Foundation to Educate Girls Globally <img  width='50%' height='50%' src='" + imageURLLogo + "' alt='Bird' /> </td>");
+
+                sw.Append("</tr>");
+                sw.Append("</table>");
+
+                sw.Append("<table border=1 width='100%' cellspacing='2' cellpadding='2' style='border-color:#dddddd'>");
+
+
+
+                // sb.Append("<tr  bgColor='#A9D08E' style='font-size:12px;font-weight:bold'><td  style='display:none' width='14%'>Date from:</td><td width='14%'>Time In:</td><td width='15%'>Date To</td><td width='15%'>Time Out</td><td width='15%'>Travelling from</td><td width='15%'>Travelling to</td><td width='15%'>Purpose of Visit</td><td width='15%'>Lodging (Guest House/Hotel)</td><td width='15%'>Self Paid / BTC (applicable for hotel booking)</td><td width='15%'>Mode of Travel</td><td width='15%'>Local conveyance</td><td width='15%'>Lodging</td><td width='15%'>DA</td><td width='15%'>Travel Expenses</td><td width='15%'>Others</td><td width='15%'>Total</td></tr>");
+                sw.Append("<tr  bgColor='#A9D08E' style='font-size:12px;font-weight:bold'><td width='14%'>Sr No.</td><td width='14%'>District Name</td></td><td width='14%'>Block Name</td><td width='15%'>Travel Period</td><td width='15%'>Total Amount</td><td width='15%'>	BO Approval Status</td><td width='15%'>BO Approval Date</td><td width='15%'>Admin Verification Status</td><td width='15%'>Admin Verification Date</td><td width='15%'>Processed for Payment</td><td width='15%'>Processed Date</td></tr>");
+
+                sw.Append("</table>");
+
+
+
+
+                //string HeaderStyle = "border:.3pt solid windowtext; font-weight:700;   word-wrap: normal; word-break: break-all; ";
+
+                //sw.Append("<table>");
+
+                //sw.Append("<tr style='font-width:bold;'>");
+
+                //sw.Append("<th class='header'  style='" + HeaderStyle + "  width:2%;'> 	Sr No.	</th>");
+
+                //sw.Append("<th class='header'  style='" + HeaderStyle + "  width:2%;'> 	Block Name	</th>");
+                //sw.Append("<th class='header'  style='" + HeaderStyle + "  width:2%;'> 	Travel Period	</th>");
+                //sw.Append("<th class='header'  style='" + HeaderStyle + "  width:2%;'> 	Total Amount	</th>");
+
+                //sw.Append("<th class='header'  style='" + HeaderStyle + "  width:2%;'> 	BO Approval Status	</th>");
+                //sw.Append("<th class='header'  style='" + HeaderStyle + "  width:2%;'> 	BO Approval Date	</th>");
+                //sw.Append("<th class='header'  style='" + HeaderStyle + "  width:2%;'> 	Admin Verification Status	</th>");
+                //sw.Append("<th class='header'  style='" + HeaderStyle + "  width:2%;'> 	Admin Verification Date	</th>");
+                //sw.Append("<th class='header'  style='" + HeaderStyle + "  width:2%;'> 	Processed for Payment	</th>");
+                //sw.Append("<th class='header'  style='" + HeaderStyle + "  width:2%;'> 	Processing Date	</th>");
+
+                //sw.Append("</tr>");
+
+                //String RowStyle = "border:.1pt solid windowtext; font-weight:100; font-size:9pt;rowspan=2;";
+
+                //String RowStyle1 = "border:.1pt solid windowtext; font-weight:100; font-size:9pt;rowspan=2;background:#FFFF00;";
+
+
+                //String HeaderStyle1 = "border:.3pt solid windowtext; font-weight:700;   word-wrap: normal; word-break: break-all;text-align:center; ";
+
+                string villagecode = string.Empty;
+                for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    #region Excel Download
-                    //string Fullfilename1 = "" + blockName + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + ".xls";
-                    //string fileName = Server.MapPath("~/DataBackup/" + Fullfilename1 + "");
-                    //StreamWriter sw = new StreamWriter(fileName, false);
-
-                    //sw.Write(@"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.0 Transitional//EN"">");
-                    //HttpContext.Current.Response.Charset = "utf-8";
-                    //HttpContext.Current.Response.ContentEncoding = System.Text.Encoding.GetEncoding("windows-1250");
-                    string imageURLLogo = Server.MapPath(".") + "/images/logo-new1.png";
-
-
-                    //sw.Append("<table width='100%' cellspacing='0' cellpadding='2'>");
 
 
 
+                    sw.Append("<table border=1 width='100%' cellspacing='2' cellpadding='2' style=' font-size:10px; border-color:#dddddd;font-weight:normal'> ");
+                    sw.Append("<tr>");
+                    sw.Append("<td width='14%' valign='top'>" + dt.Rows[i]["Sr No."] + "</td>");
+                    sw.Append("<td width='15%' valign='top'>" + dt.Rows[i]["District/Office  Name"] + "</td>");
+                    sw.Append("<td width='15%' valign='top'>" + dt.Rows[i]["Block Name"] + "</td>");
+                    sw.Append("<td width='15%' valign='top'>" + dt.Rows[i]["Travel Period"] + "</td>");
+                    sw.Append("<td width='15%' valign='top'>" + dt.Rows[i]["Total Amount"] + "</td>");
+                    sw.Append("<td width='15%' valign='top'>" + dt.Rows[i]["BO Approval Status"] + "</td>");
+                    //sw.Append("<td width='14%' valign='top'></td>");
+                    //sw.Append("<td width='14%' valign='top'></td>");
+                    //sw.Append("<td width='15%' valign='top'></td>");
+                    //sw.Append("<td width='15%' valign='top'></td>");
+                    sw.Append("<td width='15%' valign='top'>" + dt.Rows[i]["BO Approval Date"] + "</td>");
+                    sw.Append("<td width='15%' valign='top'>" + dt.Rows[i]["Admin Verification Status"] + "</td>");
+                    sw.Append("<td width='15%' valign='top'>" + dt.Rows[i]["Admin Verification Date"] + "</td>");
+                    sw.Append("<td width='15%' valign='top'>" + dt.Rows[i]["Processed for Payment"] + "</td>");
+                    sw.Append("<td width='15%' valign='top'>" + dt.Rows[i]["Processing Date"] + "</td>");
 
-
-               
-
-                    sw.Append("<table width='100%' border=1 cellspacing='2' cellpadding='2' style=' font-size:17px; border-color:#dddddd;BACKGROUND-COLOR:Red'> ");
-
-                    sw.Append("<tr style='font-size:20px;font-weight:bold'>");
-                    sw.Append("<td style='font-size:20px;text-align:center'>Foundation to Educate Girls Globally <img  width='50%' height='50%' src='" + imageURLLogo + "' alt='Bird' /> </td>");
-
+                    //sw.Append("<td width='15%' valign='top'></td>");
+                    //sw.Append("<td width='15%' valign='top'></td>");
+                    //sw.Append("<td width='15%' valign='top'></td>");
                     sw.Append("</tr>");
-                    sw.Append("</table>");
-
-                    sw.Append("<table border=1 width='100%' cellspacing='2' cellpadding='2' style='border-color:#dddddd'>");
-
-                  
-
-                    // sb.Append("<tr  bgColor='#A9D08E' style='font-size:12px;font-weight:bold'><td  style='display:none' width='14%'>Date from:</td><td width='14%'>Time In:</td><td width='15%'>Date To</td><td width='15%'>Time Out</td><td width='15%'>Travelling from</td><td width='15%'>Travelling to</td><td width='15%'>Purpose of Visit</td><td width='15%'>Lodging (Guest House/Hotel)</td><td width='15%'>Self Paid / BTC (applicable for hotel booking)</td><td width='15%'>Mode of Travel</td><td width='15%'>Local conveyance</td><td width='15%'>Lodging</td><td width='15%'>DA</td><td width='15%'>Travel Expenses</td><td width='15%'>Others</td><td width='15%'>Total</td></tr>");
-                    sw.Append("<tr  bgColor='#A9D08E' style='font-size:12px;font-weight:bold'><td width='14%'>Sr No.</td><td width='14%'>District Name</td></td><td width='14%'>Block Name</td><td width='15%'>Travel Period</td><td width='15%'>Total Amount</td><td width='15%'>	BO Approval Status</td><td width='15%'>BO Approval Date</td><td width='15%'>Admin Verification Status</td><td width='15%'>Admin Verification Date</td><td width='15%'>Processed for Payment</td><td width='15%'>Processed Date</td></tr>");
 
                     sw.Append("</table>");
 
 
 
 
-                    //string HeaderStyle = "border:.3pt solid windowtext; font-weight:700;   word-wrap: normal; word-break: break-all; ";
-
-                    //sw.Append("<table>");
-
-                    //sw.Append("<tr style='font-width:bold;'>");
-
-                    //sw.Append("<th class='header'  style='" + HeaderStyle + "  width:2%;'> 	Sr No.	</th>");
-                 
-                    //sw.Append("<th class='header'  style='" + HeaderStyle + "  width:2%;'> 	Block Name	</th>");
-                    //sw.Append("<th class='header'  style='" + HeaderStyle + "  width:2%;'> 	Travel Period	</th>");
-                    //sw.Append("<th class='header'  style='" + HeaderStyle + "  width:2%;'> 	Total Amount	</th>");
-
-                    //sw.Append("<th class='header'  style='" + HeaderStyle + "  width:2%;'> 	BO Approval Status	</th>");
-                    //sw.Append("<th class='header'  style='" + HeaderStyle + "  width:2%;'> 	BO Approval Date	</th>");
-                    //sw.Append("<th class='header'  style='" + HeaderStyle + "  width:2%;'> 	Admin Verification Status	</th>");
-                    //sw.Append("<th class='header'  style='" + HeaderStyle + "  width:2%;'> 	Admin Verification Date	</th>");
-                    //sw.Append("<th class='header'  style='" + HeaderStyle + "  width:2%;'> 	Processed for Payment	</th>");
-                    //sw.Append("<th class='header'  style='" + HeaderStyle + "  width:2%;'> 	Processing Date	</th>");
-
-                    //sw.Append("</tr>");
-
-                    //String RowStyle = "border:.1pt solid windowtext; font-weight:100; font-size:9pt;rowspan=2;";
-
-                    //String RowStyle1 = "border:.1pt solid windowtext; font-weight:100; font-size:9pt;rowspan=2;background:#FFFF00;";
 
 
-                    //String HeaderStyle1 = "border:.3pt solid windowtext; font-weight:700;   word-wrap: normal; word-break: break-all;text-align:center; ";
-
-                    string villagecode = string.Empty;
-                    for (int i = 0; i < dt.Rows.Count; i++)
-                    {
-
-                      
-
-                        sw.Append("<table border=1 width='100%' cellspacing='2' cellpadding='2' style=' font-size:10px; border-color:#dddddd;font-weight:normal'> ");
-                        sw.Append("<tr>");
-                        sw.Append("<td width='14%' valign='top'>" + dt.Rows[i]["Sr No."] + "</td>");
-                        sw.Append("<td width='15%' valign='top'>" + dt.Rows[i]["District/Office  Name"] + "</td>");
-                        sw.Append("<td width='15%' valign='top'>" + dt.Rows[i]["Block Name"] + "</td>");
-                        sw.Append("<td width='15%' valign='top'>" + dt.Rows[i]["Travel Period"] + "</td>");
-                        sw.Append("<td width='15%' valign='top'>" + dt.Rows[i]["Total Amount"] + "</td>");
-                        sw.Append("<td width='15%' valign='top'>" + dt.Rows[i]["BO Approval Status"] + "</td>");
-                        //sw.Append("<td width='14%' valign='top'></td>");
-                        //sw.Append("<td width='14%' valign='top'></td>");
-                        //sw.Append("<td width='15%' valign='top'></td>");
-                        //sw.Append("<td width='15%' valign='top'></td>");
-                        sw.Append("<td width='15%' valign='top'>" + dt.Rows[i]["BO Approval Date"] + "</td>");
-                        sw.Append("<td width='15%' valign='top'>" + dt.Rows[i]["Admin Verification Status"] + "</td>");
-                        sw.Append("<td width='15%' valign='top'>" + dt.Rows[i]["Admin Verification Date"] + "</td>");
-                        sw.Append("<td width='15%' valign='top'>" + dt.Rows[i]["Processed for Payment"] + "</td>");
-                        sw.Append("<td width='15%' valign='top'>" + dt.Rows[i]["Processing Date"] + "</td>");
-
-                        //sw.Append("<td width='15%' valign='top'></td>");
-                        //sw.Append("<td width='15%' valign='top'></td>");
-                        //sw.Append("<td width='15%' valign='top'></td>");
-                        sw.Append("</tr>");
-
-                        sw.Append("</table>");
-
-                         
-                      
-
-                    
-
-                    }
-                    //Int32 TOtal = 0;
-                    //Int32 Local = 0;
-                    //Int32 DA = 0;
-                    //for (int j = 0; j < dt.Rows.Count; j++)
-                    //{
-
-
-                    //    if (dt.Rows[j]["Total Amount"].ToString() != "")
-                    //    {
-                    //        TOtal += Convert.ToInt32(dt.Rows[j]["Total Amount"]);
-                    //    }
-
-
-                      
-                       
-                    //}
-                    //sw.Append("<tr>");
-                    //sw.Append("<td colspan='10'  style='" + HeaderStyle1 + "'>Total</td>");
-                    //sw.Append("<td style='" + HeaderStyle + "'>" + TOtal + "</td>");
-                 
-                    //sw.Append("</tr>");
-                    //sw.Append("</table>");
-
-                    string Fullfilename = "TADAClaimStatusReport"+ "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + ".pdf";
-
-                    string StartupPath1 = AppDomain.CurrentDomain.BaseDirectory;
-
-                    string path = StartupPath1 + "Travel vouchers\\" + Fullfilename ;
-
-
-                    StringReader sr = new StringReader(sw.ToString());
-                    Document pdfDoc = new iTextSharp.text.Document(iTextSharp.text.PageSize.A2, 70f, 70f, 20f, 10f);
-                    HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
-
-
-                    using (MemoryStream memoryStream = new MemoryStream())
-                    {
-                        PdfWriter writer = PdfWriter.GetInstance(pdfDoc, memoryStream);
-                        pdfDoc.Open();
-                        pdfDoc.NewPage();
-                        htmlparser.Parse(sr);
-                        pdfDoc.Close();
-                        byte[] bytes = memoryStream.ToArray();
-                        memoryStream.Close();
-
-                        File.WriteAllBytes(path, bytes);
-                    }
-                    #region Mail
-                    //SqlParameter[] cmdParameter5 = new SqlParameter[]
-                    //{
-                    //    new SqlParameter("@Con", "where MstUser.UserID = '" + ddlFc.SelectedValue + "' "),
-                    //    new SqlParameter("@Con1", "where MstUser.BlockCode = '" + ddlBlock.SelectedValue + "'"),
-
-                    //};
-                    //DataSet dtEmail = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptTADAMail]", cmdParameter5);
-                    //if (dtEmail.Tables[0].Rows.Count > 0)
-                    //{
-                    string email = "";
-                 //  string email = "mukta.arora@educategirls.ngo";
-                   //string email = "aksingh06mca@gmail.com";
-                    //email = dtEmail.Tables[0].Rows[0]["EmaillID"].ToString();
-                    //string ccemail = dtEmail.Tables[1].Rows[0]["EmaillID"].ToString();
-                   DataTable dtemployeeEmail = objMain.Select_All_Data("MstUser inner join tblemployeedetails on tblemployeedetails.EmployeeID=MstUser.UserName ", " EmaillID,MstUser.Username ", " UserLevel=91 and ActiveStatus=1 and DistrictCode=" + DistCode + " ", "", "");
-
-                   if (dtemployeeEmail.Rows.Count > 0)
-                   {
-                       email = dtemployeeEmail.Rows[0]["EmaillID"].ToString();
-                   }
-                    if (email.Length > 0)
-                    {
-                        string str = "TA/DA Claim Status";
-                        MailMessage mail = new MailMessage();
-                        SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-                        mail.From = new MailAddress("PMS.Team@educategirls.ngo");
-                        mail.To.Add("" + email + "");//
-                        //if (ccemail.Length > 4)
-                        //{
-                        //    mail.CC.Add("" + ccemail + "");
-                        //}
-                        mail.Subject = str;
-                        //ViewState["Body"] = "Dear  " + ViewState["EmployeeName"].ToString() + ",<br/><br/> Your Leave  for  " + ViewState["Noofdays"].ToString() + " days from " + HiddenField1.Value + " to " + HiddenField2.Value + " has been rejected,<br/> Reason:" + cmb_Reason.SelectedItem.Text + " <br/>Remarks:" + TxtRemark.InnerText + "<br/><br/> Regards,<br/> Name:" + ViewState["Supempname"].ToString() + "<br/> Post:" + ViewState["superdesg"].ToString() + "<br/> ";
-                        string body = "Dear Sir/Madam,<br/><br/> Please find attached TA/DA Claim Status for the month " + Mmonth + "/" + mYear + " for your kind review.<br/><br/> Regards,<br/> PMS Team ";
-                        mail.IsBodyHtml = true;
-                        mail.Body = body;
-                        System.Net.Mail.Attachment attachment;
-                        if ((File.Exists(path)))
-                        {
-                            attachment = new System.Net.Mail.Attachment(path);
-                            mail.Attachments.Add(attachment);
-                        }
-                        System.Net.Mail.Attachment attachment1;
-                        SmtpServer.Port = 587;
-                        SmtpServer.Credentials = new System.Net.NetworkCredential("PMS.Team@educategirls.ngo", "PMSTeam2018");
-                        SmtpServer.EnableSsl = true;
-
-
-
-                        SmtpServer.Send(mail);
-
-
-                    }
-
-                    //}
-                    #endregion
-
-                    #endregion
                 }
-            
+                //Int32 TOtal = 0;
+                //Int32 Local = 0;
+                //Int32 DA = 0;
+                //for (int j = 0; j < dt.Rows.Count; j++)
+                //{
+
+
+                //    if (dt.Rows[j]["Total Amount"].ToString() != "")
+                //    {
+                //        TOtal += Convert.ToInt32(dt.Rows[j]["Total Amount"]);
+                //    }
+
+
+
+
+                //}
+                //sw.Append("<tr>");
+                //sw.Append("<td colspan='10'  style='" + HeaderStyle1 + "'>Total</td>");
+                //sw.Append("<td style='" + HeaderStyle + "'>" + TOtal + "</td>");
+
+                //sw.Append("</tr>");
+                //sw.Append("</table>");
+
+                string Fullfilename = "TADAClaimStatusReport" + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + ".pdf";
+
+                string StartupPath1 = AppDomain.CurrentDomain.BaseDirectory;
+
+                string path = StartupPath1 + "Travel vouchers\\" + Fullfilename;
+
+
+                StringReader sr = new StringReader(sw.ToString());
+                Document pdfDoc = new iTextSharp.text.Document(iTextSharp.text.PageSize.A2, 70f, 70f, 20f, 10f);
+                HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
+
+
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    PdfWriter writer = PdfWriter.GetInstance(pdfDoc, memoryStream);
+                    pdfDoc.Open();
+                    pdfDoc.NewPage();
+                    htmlparser.Parse(sr);
+                    pdfDoc.Close();
+                    byte[] bytes = memoryStream.ToArray();
+                    memoryStream.Close();
+
+                    File.WriteAllBytes(path, bytes);
+                }
+                #region Mail
+                //SqlParameter[] cmdParameter5 = new SqlParameter[]
+                //{
+                //    new SqlParameter("@Con", "where MstUser.UserID = '" + ddlFc.SelectedValue + "' "),
+                //    new SqlParameter("@Con1", "where MstUser.BlockCode = '" + ddlBlock.SelectedValue + "'"),
+
+                //};
+                //DataSet dtEmail = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptTADAMail]", cmdParameter5);
+                //if (dtEmail.Tables[0].Rows.Count > 0)
+                //{
+                string email = "";
+                //  string email = "mukta.arora@educategirls.ngo";
+                //string email = "aksingh06mca@gmail.com";
+                //email = dtEmail.Tables[0].Rows[0]["EmaillID"].ToString();
+                //string ccemail = dtEmail.Tables[1].Rows[0]["EmaillID"].ToString();
+                DataTable dtemployeeEmail = objMain.Select_All_Data("MstUser inner join tblemployeedetails on tblemployeedetails.EmployeeID=MstUser.UserName ", " EmaillID,MstUser.Username ", " UserLevel=91 and ActiveStatus=1 and DistrictCode=" + DistCode + " ", "", "");
+
+                if (dtemployeeEmail.Rows.Count > 0)
+                {
+                    email = dtemployeeEmail.Rows[0]["EmaillID"].ToString();
+                }
+                if (email.Length > 0)
+                {
+                    string str = "TA/DA Claim Status";
+                    MailMessage mail = new MailMessage();
+                    SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+                    mail.From = new MailAddress("PMS.Team@educategirls.ngo");
+                    mail.To.Add("" + email + "");//
+                                                 //if (ccemail.Length > 4)
+                                                 //{
+                                                 //    mail.CC.Add("" + ccemail + "");
+                                                 //}
+                    mail.Subject = str;
+                    //ViewState["Body"] = "Dear  " + ViewState["EmployeeName"].ToString() + ",<br/><br/> Your Leave  for  " + ViewState["Noofdays"].ToString() + " days from " + HiddenField1.Value + " to " + HiddenField2.Value + " has been rejected,<br/> Reason:" + cmb_Reason.SelectedItem.Text + " <br/>Remarks:" + TxtRemark.InnerText + "<br/><br/> Regards,<br/> Name:" + ViewState["Supempname"].ToString() + "<br/> Post:" + ViewState["superdesg"].ToString() + "<br/> ";
+                    string body = "Dear Sir/Madam,<br/><br/> Please find attached TA/DA Claim Status for the month " + Mmonth + "/" + mYear + " for your kind review.<br/><br/> Regards,<br/> PMS Team ";
+                    mail.IsBodyHtml = true;
+                    mail.Body = body;
+                    System.Net.Mail.Attachment attachment;
+                    if ((File.Exists(path)))
+                    {
+                        attachment = new System.Net.Mail.Attachment(path);
+                        mail.Attachments.Add(attachment);
+                    }
+                    System.Net.Mail.Attachment attachment1;
+                    SmtpServer.Port = 587;
+                    SmtpServer.Credentials = new System.Net.NetworkCredential("PMS.Team@educategirls.ngo", "PMSTeam2018");
+                    SmtpServer.EnableSsl = true;
+
+
+
+                    SmtpServer.Send(mail);
+
+
+                }
+
+                //}
+                #endregion
+
+                #endregion
+            }
+
         }
         catch (Exception ex)
         {
@@ -7369,12 +7368,12 @@ public class ExportdataWebservice : System.Web.Services.WebService
     public string Get_tblEnrolment_Temp(string UserName)
     {
         DataSet dttabletdata = new DataSet();
-        SqlParameter[] para = new SqlParameter[] {            
-            new SqlParameter("@UserName",UserName),            
+        SqlParameter[] para = new SqlParameter[] {
+            new SqlParameter("@UserName",UserName),
             };
-        string sReturn = string.Empty;      
+        string sReturn = string.Empty;
         dttabletdata = SqlHelper.GetDataSet(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "SP_Web_Get_tblEnrolment_Temp", para);
-       // DataSet sqldata = new DataSet("User");
+        // DataSet sqldata = new DataSet("User");
 
 
         DataSet sqldata = new DataSet("MyData");
@@ -7401,7 +7400,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         //    }
         //    catch (Exception ex)
         //    {
-               
+
         //        throw;
         //    }
         //    dtNew.TableName = dt.Columns[0].ColumnName;        
@@ -7484,7 +7483,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
     }
 
 
-      [WebMethod]
+    [WebMethod]
     [ScriptMethod(UseHttpGet = true)]
     public string InsertUpdateEnrollment_temp2020(string sData, string UserName, string Pass)
     {
@@ -7542,10 +7541,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
             string condition = "";
             SqlParameter[] para = new SqlParameter[] {
-         
+
            new SqlParameter("@UserName",UserName),
            new SqlParameter("@AndroidID",AndroidID),
-         
+
            };
 
 
@@ -8600,10 +8599,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
     }
 
     [WebMethod]
-    [ScriptMethod(UseHttpGet = true)]    
+    [ScriptMethod(UseHttpGet = true)]
     public string InsertUpdatetblCLLSG(string sData, string UserName, string Pass)
     {
-        
+
         string sReturn = string.Empty;
         try
         {
@@ -8762,7 +8761,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.CheckPasswordNew(UserName, checkpass, IMEINo);
 
@@ -8777,10 +8776,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
 
 
-            SqlParameter[] para = new SqlParameter[] { 
-           
+            SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
-           
+
             };
 
             try
@@ -8824,7 +8823,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.CheckPasswordNew(UserName, checkpass, IMEINo);
 
@@ -8839,10 +8838,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
 
 
-            SqlParameter[] para = new SqlParameter[] { 
-           
+            SqlParameter[] para = new SqlParameter[] {
+
             new SqlParameter("@UserName",UserName),
-           
+
             };
 
             try
@@ -8896,10 +8895,10 @@ public class ExportdataWebservice : System.Web.Services.WebService
             case 2:
                 tablename = "tblVerification";
                 break;
-                 case 3:
+            case 3:
                 tablename = "TotalCount";
                 break;
-                 case 4:
+            case 4:
                 tablename = "tblCLLSG";
                 break;
             case 5:
@@ -10423,7 +10422,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -10864,7 +10863,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         try
         {
             DataSet dtExportData = new DataSet();
-            int UserID =0;
+            int UserID = 0;
             if (UserName.Trim() != "" && Pass.Trim() != "")
             {
                 DataTable dtUser = objComman.GetUserAuthenticate(UserName, Pass);
@@ -10925,12 +10924,12 @@ public class ExportdataWebservice : System.Web.Services.WebService
                 DataTable dtUser = objComman.GetUserAuthenticate(UserName, Pass);
                 if (dtUser.Rows.Count > 0)
                 {
-                    UserID =  Convert.ToInt32(dtUser.Rows[0]["UserID"].ToString());
+                    UserID = Convert.ToInt32(dtUser.Rows[0]["UserID"].ToString());
                 }
             }
             if (UserID != 0)
             {
-               
+
                 DataSet dsMyData = new DataSet();
                 XmlDocument xdMyData = new XmlDocument();
                 sData = "{ \"rootNode\": {" + sData.Trim().TrimStart('{').TrimEnd('}') + "} }";
@@ -10941,11 +10940,11 @@ public class ExportdataWebservice : System.Web.Services.WebService
                 {
 
                     DataSet dsResult = new DataSet();
-                   
-                        DttblEnrolment_Temp = objComman.CreateDataTable("tblChildAttendanceGKP2022");
-                        DttblEnrolment_Temp = SetColumnsOrdinal(dsMyData.Tables["tblChildAttendanceGKP"], DttblEnrolment_Temp);
-                        dsResult = objComman.Tablet_Post_Session_Insert_Update_tblChildAttendanceGKP2022(DttblEnrolment_Temp);
-                   
+
+                    DttblEnrolment_Temp = objComman.CreateDataTable("tblChildAttendanceGKP2022");
+                    DttblEnrolment_Temp = SetColumnsOrdinal(dsMyData.Tables["tblChildAttendanceGKP"], DttblEnrolment_Temp);
+                    dsResult = objComman.Tablet_Post_Session_Insert_Update_tblChildAttendanceGKP2022(DttblEnrolment_Temp);
+
                     sReturn = JsonConvert.SerializeObject(dsResult);
                 }
 
@@ -10983,7 +10982,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                     UserID = Convert.ToString(dtUser.Rows[0]["Statecode"].ToString());
                 }
             }
-            if (UserID.Length>0)
+            if (UserID.Length > 0)
             {
                 DataSet dsMyData = new DataSet();
                 XmlDocument xdMyData = new XmlDocument();
@@ -10993,21 +10992,21 @@ public class ExportdataWebservice : System.Web.Services.WebService
                 DataTable DttblEnrolment_Temp = null;
                 if (dsMyData.Tables.Count >= 1)
                 {
-                    
+
                     DataSet dsResult = new DataSet();
-                    if (UserID== "23")
+                    if (UserID == "23")
                     {
                         DttblEnrolment_Temp = objComman.CreateDataTable("tblChildAttendanceGKP2022MP");
                         DttblEnrolment_Temp = SetColumnsOrdinal(dsMyData.Tables["tblChildAttendanceGKP"], DttblEnrolment_Temp);
                         dsResult = objComman.Tablet_Post_Session_Insert_Update_tblChildAttendanceGKP2022MP(DttblEnrolment_Temp);
                     }
-                   else if (UserID == "9")
+                    else if (UserID == "9")
                     {
                         DttblEnrolment_Temp = objComman.CreateDataTable("tblChildAttendanceGKP2022UP");
                         DttblEnrolment_Temp = SetColumnsOrdinal(dsMyData.Tables["tblChildAttendanceGKP"], DttblEnrolment_Temp);
                         dsResult = objComman.Tablet_Post_Session_Insert_Update_tblChildAttendanceGKP2022UP(DttblEnrolment_Temp);
                     }
-                  else
+                    else
                     {
                         DttblEnrolment_Temp = objComman.CreateDataTable("tblChildAttendanceGKP2022");
                         DttblEnrolment_Temp = SetColumnsOrdinal(dsMyData.Tables["tblChildAttendanceGKP"], DttblEnrolment_Temp);
@@ -11570,7 +11569,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -11713,11 +11712,11 @@ public class ExportdataWebservice : System.Web.Services.WebService
         string sReturn = string.Empty;
         try
         {
-          
+
             DataSet dtExportData = new DataSet();
             int UserID = 0;
-          
-           
+
+
             if (UserName.Trim() != "" && Pass.Trim() != "")
             {
                 DataTable dtUser = objComman.GetUserAuthenticate(UserName, Pass);
@@ -12514,7 +12513,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -12589,7 +12588,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
             case 4:
                 tablename = "tblAudioRecording";
                 break;
-           
+
             default:
                 tablename = "NoName";
                 break;
@@ -12861,7 +12860,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewBO(UserName, checkpass, IMEINo);
 
@@ -12951,8 +12950,8 @@ public class ExportdataWebservice : System.Web.Services.WebService
             case 1:
                 tablename = "tblSurveyExpansion";
                 break;
-          
-           
+
+
             default:
                 tablename = "NoName";
                 break;
@@ -13127,21 +13126,21 @@ public class ExportdataWebservice : System.Web.Services.WebService
             int UserID = 0;
             //if (UserName.Trim() != "" && Password.Trim() != "")
             //{
-                string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
-                DataTable dtUser = DBTask.GetUserLoginAuthenticateFC(UserName, checkpass, IMEINo);
+            DataTable dtUser = DBTask.GetUserLoginAuthenticateFC(UserName, checkpass, IMEINo);
 
 
-                if (dtUser.Rows.Count > 0)
-                {
-                    UserID = Convert.ToInt32(dtUser.Rows[0]["UserID"].ToString());
+            if (dtUser.Rows.Count > 0)
+            {
+                UserID = Convert.ToInt32(dtUser.Rows[0]["UserID"].ToString());
 
-                    sReturn = "{\"Table\":[{\"RetValue\":1}]}";
-                }
-                else
-                {
-                    sReturn = "{\"Table\":[{\"RetValue\":-5}]}";
-                }
+                sReturn = "{\"Table\":[{\"RetValue\":1}]}";
+            }
+            else
+            {
+                sReturn = "{\"Table\":[{\"RetValue\":-5}]}";
+            }
 
             //}
             //else
@@ -13157,7 +13156,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         return sReturn;
 
     }
-   
+
     [WebMethod]
     [ScriptMethod(UseHttpGet = true)]
     public string TabletPostSessionTablet_Post_Session_Insert_Update_Houshold2023(string sData, string UserName, string Pass)
@@ -13454,7 +13453,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -13465,7 +13464,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
             else
             {
                 string gg = Zip("0");
-               return gg;
+                return gg;
             }
 
 
@@ -13540,7 +13539,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -13579,7 +13578,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                     sqldata.Tables.Add(dtNew);
                     index++;
                 }
-              ///  sReturn = JsonConvert.SerializeObject(sqldata)  
+                ///  sReturn = JsonConvert.SerializeObject(sqldata)  
                 sReturn = JsonConvert.SerializeObject(sqldata);
                 sReturn = Zip(sReturn);
 
@@ -13609,7 +13608,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
             DataSet dtExportData = new DataSet();
             int UserID = 0;
 
-          
+
 
             if (UserName.Trim() != "" && Pass.Trim() != "")
             {
@@ -13664,7 +13663,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -13928,6 +13927,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                 dsMyData.ReadXml(new XmlNodeReader(xdMyData));
                 if (dsMyData.Tables.Count >= 1)
                 {
+                    DataSet dtex = objComman.Tablet_Post_Session_Insert_Update_Json(sData, UserName);
                     DataTable DttblEnrolment_Temp = objComman.CreateDataTable("tblEnrolment_Temp2024New");
                     DttblEnrolment_Temp = SetColumnsOrdinal(dsMyData.Tables["tblEnrolment_Temp"], DttblEnrolment_Temp);
                     DataSet dsResult = new DataSet();
@@ -13961,7 +13961,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            //string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            //string checkpass = objPass.CreatePasswordHashNew(Password);
 
             //DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -14095,7 +14095,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -14360,7 +14360,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                     DataSet dsResult = new DataSet();
                     //if (DtttblTravelMatrixExpens.Rows.Count > 0 && DtttblTravelMatrixPerDiem != null && DtttblTravelMatrixPerDiem != null)
                     //{
-                        dsResult = objComman.tablet_Post_Session_Insert_Update_tblTravelMatrixDeatils2024(DtttblTravelMatrixDeatils2024, DtttblTravelMatrixExpens, DtttblTravelMatrixPerDiem, dtTravelConsent);
+                    dsResult = objComman.tablet_Post_Session_Insert_Update_tblTravelMatrixDeatils2024(DtttblTravelMatrixDeatils2024, DtttblTravelMatrixExpens, DtttblTravelMatrixPerDiem, dtTravelConsent);
                     //}
                     //else  if (DtttblTravelMatrixExpens !=null  )
                     //{
@@ -14481,14 +14481,14 @@ public class ExportdataWebservice : System.Web.Services.WebService
         try
         {
 
-          
+
 
             string sDirectory = Server.MapPath("~/Travel");
 
-           
+
             byte[] sfilebytes = Convert.FromBase64String(filebytes);
 
-        
+
             MemoryStream ms = new MemoryStream(sfilebytes);
 
             if (!Directory.Exists(sDirectory))
@@ -14497,7 +14497,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
             sFilename = sDirectory + "\\" + sFilename;
             using (FileStream fs = new FileStream(sFilename, FileMode.Create, FileAccess.ReadWrite))
             {
-              
+
                 ms.WriteTo(fs);
 
                 // clean up
@@ -14531,7 +14531,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -14592,7 +14592,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -14723,7 +14723,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
         return tablename;
     }
-   
+
 
     [WebMethod]
     [ScriptMethod(UseHttpGet = true)]
@@ -14825,7 +14825,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                     }
                     sReturn = JsonConvert.SerializeObject(dsResult);
                 }
-    
+
             }
             else
             {
@@ -14848,7 +14848,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -14866,7 +14866,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
             SqlParameter[] para = new SqlParameter[] {
 
             new SqlParameter("@UserName",UserName),
-            
+
 
             };
 
@@ -14917,8 +14917,8 @@ public class ExportdataWebservice : System.Web.Services.WebService
             case 1:
                 tablename = "tblChildAttendanceGKPPlus";
                 break;
-        
-          
+
+
             default:
                 tablename = "NoName";
                 break;
@@ -14937,7 +14937,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            //string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            //string checkpass = objPass.CreatePasswordHashNew(Password);
 
             //DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -14991,16 +14991,16 @@ public class ExportdataWebservice : System.Web.Services.WebService
         return sReturn;
     }
 
-    protected string GeneraatePDFMainTest2(Int32 mmoth,Int32 mYear,string FCName,string FromNo )
+    protected string GeneraatePDFMainTest2(Int32 mmoth, Int32 mYear, string FCName, string FromNo)
     {
         string sb = "";
         string filename = "";
         try
         {
-          
+
             int FYear = mYear;
 
-           
+
             string empname = "", empcode = "", designation = "", district = "", Block = "", cluster = "", depatment = "", Reporting = "";
             //  DataTable dtemployee = objMain.Select_All_Data("MstUser inner join tblTravelMatrixDeatils2024AuditTrail on  MstUser.UserName=tblTravelMatrixDeatils2024AuditTrail.UserID inner join  Mstuserrole on  MstUser.UserLevel= Mstuserrole.Role_Level inner join mst2District on mst2District.districtcode=MstUser.DistrictCode inner join mst3Block on mst3Block.blockcode=MstUser.blockcode inner join mst5Village on mst5Village.villagecode=MstUser.villagecode    inner join MstUser u on u.blockcode=MstUser.blockcode and u.UserLevel=19 and U.ActiveStatus=1", "distinct mstuser.FristName as name,mstuser.UserName as code,Mstuserrole.Role as desg,'' Department ,mst2District.districtname,BlockName,VillageName as cluster,U.userName +'-'+ u.FristName  as [Reporting Manager]", "MstUser.UserName='" + ddlFC.SelectedValue + "' and mYear=" + mYear + " and mMonth=" + Convert.ToInt32(ddlMonth.SelectedValue) + "", "", "");
             //    DataTable dtemployee = objMain.Select_All_Data("MstUser inner join tblTravelMatrixDeatils2024 on  MstUser.UserName=tblTravelMatrixDeatils2024.UserID inner join  Mstuserrole on  MstUser.UserLevel= Mstuserrole.Role_Level inner join mst2District on mst2District.districtcode=MstUser.DistrictCode inner join mst3Block on mst3Block.blockcode=MstUser.blockcode inner join mst5Village on mst5Village.villagecode=MstUser.villagecode    left join MstUser u on u.blockcode=MstUser.blockcode and u.UserLevel=19 and U.ActiveStatus=1", "distinct mstuser.FristName as name,mstuser.UserName as code,Mstuserrole.Role as desg,'' Department ,mst2District.districtname,BlockName,VillageName as cluster,U.userName +'-'+ u.FristName  as [Reporting Manager]", "MstUser.UserName='" + FCName + "' and mYear=" + FYear + " and mMonth=" + mmoth + "", "", "");
@@ -16169,9 +16169,9 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
                 memoryStream.Close();
 
-                File.WriteAllBytes(sDirectory +"/TravelVoucher" + mmoth + "" + FC.Substring(0, 7) + DateTime.Now.ToString("ddMMyyyyhhmmss") + ".pdf", bytes);
+                File.WriteAllBytes(sDirectory + "/TravelVoucher" + mmoth + "" + FC.Substring(0, 7) + DateTime.Now.ToString("ddMMyyyyhhmmss") + ".pdf", bytes);
             }
-             filename = "Travelvoucher" + "" + mmoth + "" + FC.Substring(0, 7) + DateTime.Now.ToString("ddMMyyyhhmmss") + ".pdf";
+            filename = "Travelvoucher" + "" + mmoth + "" + FC.Substring(0, 7) + DateTime.Now.ToString("ddMMyyyhhmmss") + ".pdf";
 
 
 
@@ -16353,7 +16353,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         return sReturn;
     }
     [WebMethod]
-    [ScriptMethod(UseHttpGet = true)] 
+    [ScriptMethod(UseHttpGet = true)]
     public string InsertUpdateSurveyExpansion2024(string sData, string UserName, string Pass)
     {
         string sReturn = string.Empty;
@@ -16460,7 +16460,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         {
 
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Password);
+            string checkpass = objPass.CreatePasswordHashNew(Password);
 
             DataTable dtUser = DBTask.Get_Check_PasswordNewFC(UserName, checkpass, IMEINo);
 
@@ -17062,17 +17062,17 @@ public class ExportdataWebservice : System.Web.Services.WebService
                 dsMyData.ReadXml(new XmlNodeReader(xdMyData));
                 //if (dsMyData.Tables.Count >= 1)
                 //{
-                    DataTable tblSessionWiseDetails = objComman.CreateDataTable("tblSessionWiseDetails");
-                    DataTable tblLocationDetails = objComman.CreateDataTable("tblLocationDetails");
-     
-                    tblSessionWiseDetails = SetColumnsOrdinal(dsMyData.Tables["tblSessionWiseDetails"], tblSessionWiseDetails);
-                    tblLocationDetails = SetColumnsOrdinal(dsMyData.Tables["tblLocationDetails"], tblLocationDetails);
-                  
-                    DataSet dsResult = new DataSet();
-                  
-                    dsResult = objComman.Tablet_Post_Session_Insert_Update_SessionWiseDetails(tblSessionWiseDetails, tblLocationDetails);
-                    
-                    sReturn = JsonConvert.SerializeObject(dsResult);
+                DataTable tblSessionWiseDetails = objComman.CreateDataTable("tblSessionWiseDetails");
+                DataTable tblLocationDetails = objComman.CreateDataTable("tblLocationDetails");
+
+                tblSessionWiseDetails = SetColumnsOrdinal(dsMyData.Tables["tblSessionWiseDetails"], tblSessionWiseDetails);
+                tblLocationDetails = SetColumnsOrdinal(dsMyData.Tables["tblLocationDetails"], tblLocationDetails);
+
+                DataSet dsResult = new DataSet();
+
+                dsResult = objComman.Tablet_Post_Session_Insert_Update_SessionWiseDetails(tblSessionWiseDetails, tblLocationDetails);
+
+                sReturn = JsonConvert.SerializeObject(dsResult);
                 //}
 
                 //else
@@ -17408,7 +17408,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
 
     [WebMethod]
     [ScriptMethod(UseHttpGet = true)]
-    public string InsertUpdateSMCAttendanceChiild (string sData, string UserName, string Pass)
+    public string InsertUpdateSMCAttendanceChiild(string sData, string UserName, string Pass)
     {
         string sReturn = string.Empty;
         try
@@ -17540,11 +17540,11 @@ public class ExportdataWebservice : System.Web.Services.WebService
                 {
 
                     DataSet dsResult = new DataSet();
-                   
-                        DttblEnrolment_Temp = objComman.CreateDataTable("tblChildGyanodayaAttendanceGKPTemp");
-                        DttblEnrolment_Temp = SetColumnsOrdinal(dsMyData.Tables["tblChildGyanodayaAttendanceGKP"], DttblEnrolment_Temp);
-                        dsResult = objComman.Tablet_Post_Session_Insert_Update_tblChildGyanodayaAttendanceGKP2025(DttblEnrolment_Temp);
-                   
+
+                    DttblEnrolment_Temp = objComman.CreateDataTable("tblChildGyanodayaAttendanceGKPTemp");
+                    DttblEnrolment_Temp = SetColumnsOrdinal(dsMyData.Tables["tblChildGyanodayaAttendanceGKP"], DttblEnrolment_Temp);
+                    dsResult = objComman.Tablet_Post_Session_Insert_Update_tblChildGyanodayaAttendanceGKP2025(DttblEnrolment_Temp);
+
                     sReturn = JsonConvert.SerializeObject(dsResult);
                 }
 
@@ -17968,7 +17968,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                 dsMyData.ReadXml(new XmlNodeReader(xdMyData));
                 if (dsMyData.Tables.Count >= 1)
                 {
-                   DataSet dtex = objComman.Tablet_Post_Session_Insert_Update_Json(sData, UserName);
+                    DataSet dtex = objComman.Tablet_Post_Session_Insert_Update_Json(sData, UserName);
                     DataTable DttblEnrolment_Temp = objComman.CreateDataTable("Tbl_Photo_Attendance");
                     DttblEnrolment_Temp = SetColumnsOrdinal(dsMyData.Tables["Tbl_Photo_Attendance"], DttblEnrolment_Temp);
 
@@ -18059,7 +18059,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
         return sReturn;
     }
 
-   
+
 
     [WebMethod]
     public string UploadTraning(string filebytes, string sFilename)
@@ -18121,7 +18121,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
             DataSet dtExportData = new DataSet();
             int UserID = 0;
 
-            string checkpass = objPass.CreatePasswordHashSecurityAudit(Pass);
+            string checkpass = objPass.CreatePasswordHashNew(Pass);
 
 
             if (UserName.Trim() != "" && Pass.Trim() != "")
@@ -18196,12 +18196,12 @@ public class ExportdataWebservice : System.Web.Services.WebService
             DataTable dtUser = DBTask.Get_Check_PasswordNewBO(UserName, checkpass, IMEINo);
 
 
-          
 
-                if (dtUser.Rows.Count > 0)
-                {
-                    UserID = Convert.ToInt32(dtUser.Rows[0]["UserID"].ToString());
-                }
+
+            if (dtUser.Rows.Count > 0)
+            {
+                UserID = Convert.ToInt32(dtUser.Rows[0]["UserID"].ToString());
+            }
 
 
 
@@ -18330,7 +18330,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
             case 3:
                 tablename = "tblRandomSessionPhoto";
                 break;
-           
+
             default:
                 tablename = "NoName";
                 break;
@@ -18367,6 +18367,7 @@ public class ExportdataWebservice : System.Web.Services.WebService
                 dsMyData.ReadXml(new XmlNodeReader(xdMyData));
                 if (dsMyData.Tables.Count >= 1)
                 {
+                    DataSet dtex = objComman.Tablet_Post_Session_Insert_Update_Json(sData, UserName);
                     DataTable DttblEnrolment_Temp = objComman.CreateDataTable("tblEnrolment_Temp2026New");
                     DttblEnrolment_Temp = SetColumnsOrdinal(dsMyData.Tables["tblEnrolment_Temp"], DttblEnrolment_Temp);
                     DataSet dsResult = new DataSet();
@@ -18389,6 +18390,135 @@ public class ExportdataWebservice : System.Web.Services.WebService
             sReturn = "{\"Table\":[{\"RetValue\":-99}]}";
         }
         return sReturn;
+    }
+
+
+
+    [WebMethod]
+    [ScriptMethod(UseHttpGet = true)]
+    public string InsertUpdateVidhyaSabhaGKP2026(string sData, string UserName, string Pass, string IMEINo)
+    {
+        string sReturn = string.Empty;
+        try
+        {
+            DataSet dtExportData = new DataSet();
+            int UserID = 0;
+
+            string checkpass = objPass.CreatePasswordHashNew(Pass);
+
+
+            if (UserName.Trim() != "" && Pass.Trim() != "")
+            {
+                DataTable dtUser = objComman.GetUserAuthenticate(UserName, Pass);
+
+
+                if (dtUser.Rows.Count > 0)
+                {
+                    UserID = Convert.ToInt32(dtUser.Rows[0]["UserID"].ToString());
+                }
+
+
+            }
+
+            if (UserID != 0)
+            {
+                DataSet dsMyData = new DataSet();
+                XmlDocument xdMyData = new XmlDocument();
+                sData = "{ \"rootNode\": {" + sData.Trim().TrimStart('{').TrimEnd('}') + "} }";
+                xdMyData = (XmlDocument)JsonConvert.DeserializeXmlNode(sData);
+                dsMyData.ReadXml(new XmlNodeReader(xdMyData));
+                if (dsMyData.Tables.Count >= 1)
+                {
+                    DataTable dtVidhyaSabhaGKP = objComman.CreateDataTable("tblVidhyaSabhaGKP");
+                    dtVidhyaSabhaGKP = SetColumnsOrdinal(dsMyData.Tables["tblVidhyaSabhaGKP"], dtVidhyaSabhaGKP);
+
+                    DataTable dtUtsavGKP = objComman.CreateDataTable("tblUtsavGKP");
+
+                    dtUtsavGKP = SetColumnsOrdinal(dsMyData.Tables["tblUtsavGKP"], dtUtsavGKP);
+
+                    DataTable dtChildPreparationGKP = objComman.CreateDataTable("tblChildPreparationGKP2026");
+
+                    dtChildPreparationGKP = SetColumnsOrdinal(dsMyData.Tables["tblChildPreparationGKP"], dtChildPreparationGKP);
+
+
+                    DataSet dsResult = new DataSet();
+                    dsResult = objComman.Tablet_Post_Session_Insert_Update_InsertUpdateVidhyaSabhaGKP2026(dtVidhyaSabhaGKP, dtUtsavGKP, dtChildPreparationGKP);
+                    sReturn = JsonConvert.SerializeObject(dsResult);
+                }
+
+                else
+                {
+                    sReturn = "{\"Table\":[{\"RetValue\":-10}]}";
+                }
+            }
+            else
+            {
+                sReturn = "{\"Table\":[{\"RetValue\":-5}]}";
+            }
+        }
+        catch (Exception ex)
+        {
+            sReturn = "{\"Table\":[{\"RetValue\":-99}]}";
+        }
+        return sReturn;
+    }
+
+
+    [WebMethod]
+    [ScriptMethod(UseHttpGet = true)]
+    public string TabletPostSessionActivityUpdatSchool2026(string sData, string UserName, string Pass)
+    {
+
+        string sReturn = string.Empty;
+        try
+        {
+
+            DataSet dtExportData = new DataSet();
+            int UserID = 0;
+            if (UserName.Trim() != "" && Pass.Trim() != "")
+            {
+                DataTable dtUser = objComman.GetUserAuthenticate(UserName, Pass);
+
+                if (dtUser.Rows.Count > 0)
+                {
+                    UserID = Convert.ToInt32(dtUser.Rows[0]["UserID"].ToString());
+                }
+
+
+            }
+
+            if (UserID != 0)
+            {
+                DataSet dsMyData = new DataSet();
+                XmlDocument xdMyData = new XmlDocument();
+                sData = "{ \"rootNode\": {" + sData.Trim().TrimStart('{').TrimEnd('}') + "} }";
+                xdMyData = (XmlDocument)JsonConvert.DeserializeXmlNode(sData);
+                dsMyData.ReadXml(new XmlNodeReader(xdMyData));
+                if (dsMyData.Tables.Count >= 1)
+                {
+                    DataTable DttblActivityUpdate_School = objComman.CreateDataTable("tblActivityUpdate_SchoolNew2026");
+                    DttblActivityUpdate_School = SetColumnsOrdinal(dsMyData.Tables["tblActivityUpdate_School"], DttblActivityUpdate_School);
+                    DataSet dsResult = new DataSet();
+                    dsResult = objComman.Tablet_Post_Session_ActivityUpdate_School2026(DttblActivityUpdate_School, UserID, sData);
+                    sReturn = JsonConvert.SerializeObject(dsResult);
+                }
+
+                else
+                {
+                    sReturn = "{\"Table\":[{\"RetValue\":-10}]}";
+                }
+            }
+            else
+            {
+                sReturn = "{\"Table\":[{\"RetValue\":-5}]}";
+            }
+        }
+        catch (Exception)
+        {
+            sReturn = "{\"Table\":[{\"RetValue\":-99}]}";
+        }
+        return sReturn;
+
     }
 
 }

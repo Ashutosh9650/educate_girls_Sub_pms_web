@@ -504,6 +504,51 @@ public class Comman
         }
     }
 
+
+    public DataTable GetUserAuthenticate2026(string pUsername, string pPassword)
+    {
+        SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
+        try
+        {
+            string checkpass = objPass.CreatePasswordHashNew(pPassword);
+            if (sqlConnection.State != ConnectionState.Open)
+            {
+                sqlConnection.Open();
+            }
+
+            DataTable dbSqlDataSet = new DataTable();
+            SqlCommand sqlcmd = new SqlCommand();
+            sqlcmd.Connection = sqlConnection;
+            sqlcmd.CommandType = CommandType.StoredProcedure;
+            sqlcmd.CommandText = "Tablet_AuthenticateUser2026";
+            sqlcmd.Parameters.Add("@UserName", SqlDbType.NVarChar, 100).Value = pUsername;
+            sqlcmd.Parameters.Add("@Password", SqlDbType.NVarChar, 256).Value = pPassword;
+
+            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlcmd);
+
+            sqlDataAdapter.Fill(dbSqlDataSet);
+            return dbSqlDataSet;
+        }
+        catch (SqlException)
+        {
+            if (!(sqlConnection.State == ConnectionState.Closed))
+            {
+                sqlConnection.Close();
+                sqlConnection.Dispose();
+            }
+            //IUErrorDetail(e.ToString());
+            throw;
+        }
+        finally
+        {
+            if (!(sqlConnection.State == ConnectionState.Closed))
+            {
+                sqlConnection.Close();
+                sqlConnection.Dispose();
+            }
+
+        }
+    }
     public DataTable GetUserAuthenticate2024(string pUsername, string pPassword)
     {
         SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
@@ -10180,8 +10225,93 @@ public class Comman
 
         }
     }
+    public DataSet Tablet_Post_Session_Insert_Update_InsertUpdateVidhyaSabhaGKP2026(DataTable tblVidhyaSabhaGKP, DataTable tblUtsavGKP, DataTable tblChildPreparationGKP)
+    {
+        SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
+        try
+        {
+            if (sqlConnection.State != ConnectionState.Open)
+            {
+                sqlConnection.Open();
+            }
 
+            DataSet dbSqlDataSet = new DataSet();
+            SqlCommand sqlcmd = new SqlCommand();
+            sqlcmd.Connection = sqlConnection;
+            sqlcmd.CommandType = CommandType.StoredProcedure;
+            sqlcmd.CommandText = "Tablet_Post_Session_Insert_Update_tblVidhyaSabhaGKP2026";
+            sqlcmd.Parameters.AddWithValue("@tblVidhyaSabhaGKP", tblVidhyaSabhaGKP);
+            sqlcmd.Parameters.AddWithValue("@tblUtsavGKP", tblUtsavGKP);
+            sqlcmd.Parameters.AddWithValue("@tblChildPreparationGKP", tblChildPreparationGKP);
+            SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
+            da.Fill(dbSqlDataSet);
+            return dbSqlDataSet;
+        }
+        catch (SqlException e)
+        {
+            if (!(sqlConnection.State == ConnectionState.Closed))
+            {
+                sqlConnection.Close();
+                sqlConnection.Dispose();
+            }
+
+            throw e;
+        }
+        finally
+        {
+            if (!(sqlConnection.State == ConnectionState.Closed))
+            {
+                sqlConnection.Close();
+                sqlConnection.Dispose();
+            }
+
+        }
+    }
+
+    public DataSet Tablet_Post_Session_ActivityUpdate_School2026(DataTable DttblActivityUpdate_School, int iUserID, string sJason)
+    {
+        SqlConnection sqlConnection = new SqlConnection(SqlHelper.mainConnectionString);
+        try
+        {
+            if (sqlConnection.State != ConnectionState.Open)
+            {
+                sqlConnection.Open();
+            }
+
+            DataSet dbSqlDataSet = new DataSet();
+            SqlCommand sqlcmd = new SqlCommand();
+            sqlcmd.Connection = sqlConnection;
+            sqlcmd.CommandType = CommandType.StoredProcedure;
+            sqlcmd.CommandText = "Tablet_Post_Session_ActivityUpdate_School2026";
+            sqlcmd.Parameters.AddWithValue("@tblActivityUpdate_School", DttblActivityUpdate_School);
+            sqlcmd.Parameters.AddWithValue("@UserID", iUserID);
+            sqlcmd.Parameters.AddWithValue("@JSON", sJason);
+            SqlDataAdapter da = new SqlDataAdapter(sqlcmd);
+            da.Fill(dbSqlDataSet);
+            return dbSqlDataSet;
+        }
+        catch (SqlException e)
+        {
+            if (!(sqlConnection.State == ConnectionState.Closed))
+            {
+                sqlConnection.Close();
+                sqlConnection.Dispose();
+            }
+
+            throw e;
+        }
+        finally
+        {
+            if (!(sqlConnection.State == ConnectionState.Closed))
+            {
+                sqlConnection.Close();
+                sqlConnection.Dispose();
+            }
+
+        }
+    }
 }
+
 public class GoogleCaptchaResponse
 {
     [JsonProperty("success")]

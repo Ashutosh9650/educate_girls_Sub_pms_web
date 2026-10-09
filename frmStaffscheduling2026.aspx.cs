@@ -1127,6 +1127,19 @@ public partial class frmStaffscheduling2026 : System.Web.UI.Page
     protected void btnCop2y_Click(object sender, EventArgs e)
     {
     }
+    public int Insert_participateStatff(int SchedulerID, DataTable tbl_Tarining_Participarticipate)
+    {
+        DataTable dtcombo = new DataTable();
+
+        SqlParameter[] cmdParameters = new SqlParameter[]
+    {
+            new SqlParameter("@SchedulerID", SchedulerID),
+               new SqlParameter("@CreateBy", Convert.ToString(Session["username"] )),
+            new SqlParameter("@tbl_Tarining_Participarticipate", tbl_Tarining_Participarticipate)
+    };
+        return SqlHelper.ExecuteNonQuery(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[USP_StaffParticiparticipateinsert2026]", cmdParameters);
+
+    }
     protected void btnSaveNew_Click(object sender, EventArgs e)
     {
         string cond = "";
@@ -1254,7 +1267,7 @@ public partial class frmStaffscheduling2026 : System.Web.UI.Page
                 Skill = Convert.ToInt32(ddlSkill.SelectedValue);
                 if (Convert.ToInt32(ddlSkill.SelectedValue) == 20)
                 {
-                    if (txtOther.Text.Trim() == "")
+                    if (txtOtherskill.Text.Trim() == "")
                     {
                         ScriptManager.RegisterStartupScript(Page, GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('Please Enter the Other Skill Training Name')</script>", false);
                         MpexdrDistrict.Show();
@@ -1488,7 +1501,7 @@ public partial class frmStaffscheduling2026 : System.Web.UI.Page
                                 {
                                       dtentry.Rows[i]["SchedulerID"] = result;
                                 }
-                                int Parti_Success = objMain.Insert_participateStatff(result, dtentry);
+                                int Parti_Success = Insert_participateStatff(result, dtentry);
                             }
                     SqlParameter[] parm7 = new SqlParameter[]
                     {
@@ -1567,7 +1580,7 @@ public partial class frmStaffscheduling2026 : System.Web.UI.Page
                         {
                             dtentry.Rows[i]["SchedulerID"] = result;
                         }
-                        int Parti_Success = objMain.Insert_participateStatff(result, dtentry);
+                        int Parti_Success = Insert_participateStatff(result, dtentry);
                     }
 
                     SqlParameter[] parm7 = new SqlParameter[]
@@ -1654,7 +1667,7 @@ public partial class frmStaffscheduling2026 : System.Web.UI.Page
                     {
                         dtentry.Rows[i]["SchedulerID"] = result;
                     }
-                    int Parti_Success = objMain.Insert_participateStatff(result, dtentry);
+                    int Parti_Success = Insert_participateStatff(result, dtentry);
                 }
 
                 SqlParameter[] parm7 = new SqlParameter[]

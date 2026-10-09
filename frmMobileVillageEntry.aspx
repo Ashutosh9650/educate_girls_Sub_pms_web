@@ -13,6 +13,29 @@
         .chkBoxList td {
             width: 150px;
         }
+
+        /* ===== TB / FC radio fix (GSS + Mauhalla Meeting) ===== */
+.fc-radio {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    margin: 0;
+}
+.fc-radio input[type="radio"] {
+    position: static !important;
+    display: inline-block !important;
+    margin: 0 5px 0 0 !important;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}
+.fc-radio label {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+}
     </style>
     <script type="text/javascript">
         function SetMultilanguageNew(Flag, clsname) {
@@ -742,23 +765,24 @@
                                     Height="25" CssClass="pull-right" ImageUrl="~/images/Reset.png"></asp:ImageButton>
                                 <table class="table table table-bordered table-hover">
                                     <tbody>
-                                        <tr>
-                                            <td style="width: 150px;">
-                                                <p class="text-danger" style="margin: 0px; font-weight: bold;">
-                                                    <asp:CheckBox Enabled="false" ID="chkmcommmeting" runat="server" />
-                                                    GSS
-                                                </p>
-                                            </td>
-                                            <td style="padding        -left: 33px;">
-                                                <asp:RadioButton ID="chkcommmetingTB" GroupName="B" OnCheckedChanged="rblTb_Click" AutoPostBack="true" CssClass="radio" runat="server" />
-                                                <%--<input name="" value="" type="radio">--%>
-                                                    TB
-                                            </td>
-                                            <td style="padding        -left: 33px;">
-                                                <asp:RadioButton ID="chkcommmetingFC" GroupName="B" OnCheckedChanged="rblTb_Click" AutoPostBack="true" CssClass="radio" runat="server" />
-                                                FC
-                                            </td>
-                                        </tr>
+                                       <tr>
+    <td style="width: 150px;">
+        <p class="text-danger" style="margin: 0px; font-weight: bold;">
+            <asp:CheckBox Enabled="false" ID="chkmcommmeting" runat="server" />
+            GSS
+        </p>
+    </td>
+    <td style="vertical-align: middle;">
+        <asp:RadioButton ID="chkcommmetingTB" GroupName="B" Text="TB"
+            OnCheckedChanged="rblTb_Click" AutoPostBack="true"
+            CssClass="fc-radio" runat="server" />
+    </td>
+    <td style="vertical-align: middle;">
+        <asp:RadioButton ID="chkcommmetingFC" GroupName="B" Text="FC"
+            OnCheckedChanged="rblTb_Click" AutoPostBack="true"
+            CssClass="fc-radio" runat="server" />
+    </td>
+</tr>
 
                                         <tr runat="server" id="trGssId" visible="false">
                                             <td style="width: 150px;">
@@ -954,23 +978,24 @@
                                     Height="25" CssClass="pull-right" ImageUrl="~/images/Reset.png"></asp:ImageButton>
                                 <table class="table table table-bordered table-hover">
                                     <tbody>
-                                        <tr>
-                                            <td style="width: 150px;">
-                                                <p class="text-danger" style="margin: 0px; font-weight: bold;">
-                                                    <asp:CheckBox Enabled="false" ID="chkmuhala" runat="server" />
-                                                    Mauhalla Meeting
-                                                </p>
-                                            </td>
-                                            <td style="padding        -left: 33px;">
-                                                <asp:RadioButton ID="rblmuhulaTb" GroupName="C" OnCheckedChanged="rblTbmm_Click" AutoPostBack="true" CssClass="radio" runat="server" />
-
-                                                TB
-                                            </td>
-                                            <td style="padding        -left: 33px;">
-                                                <asp:RadioButton ID="rblmuhulaFC" GroupName="C" OnCheckedChanged="rblTbmm_Click" AutoPostBack="true" CssClass="radio" runat="server" />
-                                                FC
-                                            </td>
-                                        </tr>
+                                 <tr>
+    <td style="width: 150px;">
+        <p class="text-danger" style="margin: 0px; font-weight: bold;">
+            <asp:CheckBox Enabled="false" ID="chkmuhala" runat="server" />
+            Mauhalla Meeting
+        </p>
+    </td>
+    <td style="vertical-align: middle;">
+        <asp:RadioButton ID="rblmuhulaTb" GroupName="C" Text="TB"
+            OnCheckedChanged="rblTbmm_Click" AutoPostBack="true"
+            CssClass="fc-radio" runat="server" />
+    </td>
+    <td style="vertical-align: middle;">
+        <asp:RadioButton ID="rblmuhulaFC" GroupName="C" Text="FC"
+            OnCheckedChanged="rblTbmm_Click" AutoPostBack="true"
+            CssClass="fc-radio" runat="server" />
+    </td>
+</tr>
                                         <tr runat="server" id="trmmId" visible="false">
                                             <td style="width: 150px;">
                                                 <p class="text-danger" style="margin: 0px; font-weight: bold;">

@@ -429,7 +429,7 @@ public partial class SurveyExpansion : System.Web.UI.Page
             chkDistrict.DataValueField = "DistrictCode";
             chkDistrict.DataBind();
             string strQry;
-            strQry = "Select * from mst2District where   DistrictCode in(" + Session["DistrictCode"].ToString() + ")";
+            strQry = "Select DistrictCode from mst2District where   DistrictCode in(" + Session["DistrictCode"].ToString() + ")";
             DataTable dtcountCheck = objMain.LoadData(strQry);
             if (dtcountCheck.Rows.Count > 0)
             {

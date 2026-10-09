@@ -721,7 +721,7 @@
                                                     <div class="row">
                                                         <label class="col-sm-4">Training venue <span style="color: Red">*</span></label>
                                                         <div class="col-sm-8">
-                                                            <asp:TextBox ID="txtLoaction" runat="server" class="form-control">
+                                                            <asp:TextBox ID="txtLoaction" runat="server"  MaxLength="100" class="form-control">
                                                             </asp:TextBox>
                                                         </div>
                                                     </div>
@@ -731,7 +731,7 @@
                                                     <div class="row">
                                                         <label class="col-sm-4">Lat/Long  <span style="color: Red">*</span></label>
                                                         <div class="col-sm-8">
-                                                            <asp:TextBox ID="txtVenuLocation" onkeypress="return !/[a-zA-Z]/.test(event.key)" runat="server" class="form-control">
+                                                            <asp:TextBox ID="txtVenuLocation" onkeypress="return !/[a-zA-Z]/.test(event.key)"  MaxLength="100" runat="server" class="form-control">
                                                             </asp:TextBox>
 
                                                         </div>

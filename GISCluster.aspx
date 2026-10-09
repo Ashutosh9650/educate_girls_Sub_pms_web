@@ -5,42 +5,52 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="Server">
     <script type="text/javascript" src="Scripts/jquery-3.6.0.min.js"></script>
-<script src="leaflet2/leaflet.js" type="text/javascript"></script>
-<link href="leaflet2/leaflet.css" rel="stylesheet" type="text/css" />
-<link href="leaflet2/leaflet.fullscreen.css" rel="stylesheet" type="text/css" />
-<script src="leaflet2/Leaflet.fullscreen.js" type="text/javascript"></script>
-<script src="leaflet2/leaflet.zoomhome.min.js" type="text/javascript"></script>
-<link href="Leaflet2/LeafletClustersMarkers/MarkerCluster.Default.css" rel="stylesheet" />
-<link href="Leaflet2/LeafletClustersMarkers/MarkerCluster.css" rel="stylesheet" />
-<script src="Leaflet2/leaflet.spin.js"></script>
-<script src="Leaflet2/leaflet.spin.min.js"></script>
-<script src="Leaflet2/LeafletClustersMarkers/leaflet.markercluster.js"></script>
-<script src="Scripts/comman.js" type="text/javascript"></script>
+    <script src="leaflet2/leaflet.js" type="text/javascript"></script>
+    <link href="leaflet2/leaflet.css" rel="stylesheet" type="text/css" />
+    <link href="leaflet2/leaflet.fullscreen.css" rel="stylesheet" type="text/css" />
+    <script src="leaflet2/Leaflet.fullscreen.js" type="text/javascript"></script>
+    <script src="leaflet2/leaflet.zoomhome.min.js" type="text/javascript"></script>
+    <link href="Leaflet2/LeafletClustersMarkers/MarkerCluster.Default.css" rel="stylesheet" />
+    <link href="Leaflet2/LeafletClustersMarkers/MarkerCluster.css" rel="stylesheet" />
+    <script src="Leaflet2/leaflet.spin.js"></script>
+    <script src="Leaflet2/leaflet.spin.min.js"></script>
+    <script src="Leaflet2/LeafletClustersMarkers/leaflet.markercluster.js"></script>
+    <script src="Scripts/comman.js" type="text/javascript"></script>
 
-<!-- Leaflet EasyButton -->
-<script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
+    <!-- Leaflet EasyButton -->
+    <%--<script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>--%>
+    <script type="text/javascript" src="js/JS/easy-button.js"></script>
+    <%--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">--%>
+    <link type="text/css" rel="stylesheet" href="css/CSS/easy-button.css">
 
-<script src="Leaflet2/bundle.js"></script>
-<script src="Leaflet2/leaflet.groupedlayercontrol.min.js"></script>
-<script src="Leaflet2/leaflet.spin.min.js" charset="utf-8"></script>
-<script src="Leaflet2/L.Control.Locate.js"></script>
-<script src="Leaflet2/leaflet-search.js"></script>
-<link href="Leaflet2/leaflet-search.css" rel="stylesheet" type="text/css" />
+    <script src="Leaflet2/bundle.js"></script>
+    <script src="Leaflet2/leaflet.groupedlayercontrol.min.js"></script>
+    <script src="Leaflet2/leaflet.spin.min.js" charset="utf-8"></script>
+    <script src="Leaflet2/L.Control.Locate.js"></script>
+    <script src="Leaflet2/leaflet-search.js"></script>
+    <link href="Leaflet2/leaflet-search.css" rel="stylesheet" type="text/css" />
 
-<!-- DataTables CSS and JS -->
-<link type="text/css" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap.min.css">
-<link type="text/css" href="https://cdn.datatables.net/fixedheader/3.4.0/css/fixedHeader.bootstrap.min.css">
-<script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>
+    <!-- DataTables CSS and JS -->
+    <%--<link type="text/css" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap.min.css">--%>
+    <link type="text/css" href="css/CSS/dataTables.bootstrap.min.css">
+    <%--<link type="text/css" href="https://cdn.datatables.net/fixedheader/3.4.0/css/fixedHeader.bootstrap.min.css">--%>
+    <link type="text/css" href="css/CSS/fixedHeader.bootstrap.min.css">
+    <%--<script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>--%>
+    <script type="text/javascript" src="js/JS/jquery.dataTables.min.js"></script>
+    <%--<script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap.min.js"></script>--%>
+    <script type="text/javascript" src="js/JS/dataTables.bootstrap.min.js"></script>
+    <%--<script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>--%>
+    <script type="text/javascript" src="js/JS/dataTables.fixedHeader.min.js"></script>
 
-<!-- Esri Leaflet CSS and JS -->
-<link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css" />
-<script src="https://unpkg.com/esri-leaflet/dist/esri-leaflet.js"></script>
+    <!-- Esri Leaflet CSS and JS -->
+    <%--<link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css" />--%>
+    <link rel="stylesheet" href="css/CSS/esri-leaflet-geocoder.css" />
+    <%--<script src="https://unpkg.com/esri-leaflet/dist/esri-leaflet.js"></script>--%>
+    <script type="text/javascript" src="js/JS/esri-leaflet.js"></script>
 
-<!-- Map Loader -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+    <!-- Map Loader -->
+    <%--<script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>--%>
+    <script type="text/javascript" src="js/JS/spin.min.js"></script>
 
     <style type="text/css">
         .bg-white_1 {
@@ -1260,59 +1270,59 @@
                         submitted = status[0];
                         approved = status[0];
                     }
-                $('#btn_Submit_Cluster').hide();
-                $("#btn_Gen_Cluster").hide();
-                $('#btn_approve_Cluster').hide();
-                $('#btn_reject_Cluster').hide();
+                    $('#btn_Submit_Cluster').hide();
+                    $("#btn_Gen_Cluster").hide();
+                    $('#btn_approve_Cluster').hide();
+                    $('#btn_reject_Cluster').hide();
                     $("#btn_Unlock_Cluster").hide();
-                //////////submitted////////////////
+                    //////////submitted////////////////
                     if (submitted == "1") {
-                    $('#btn_Submit_Cluster').hide();
-                    $("#btn_Gen_Cluster").hide();
-                    $('#btn_approve_Cluster').hide();
-                    $('#btn_reject_Cluster').hide();
-                    $("#btn_Unlock_Cluster").hide();
-                    $('#lblrejectinfo').hide();
-                    $('#btn_Submit_Cluster').prop('disabled', true);
-                    $('#btn_Submit_Cluster').html('Cluster Submitted for Approval');
-                    $('#btn_Submit_Cluster').show();
-                    $('#btn_approve_Cluster').prop('disabled', false);
-                    $('#btn_reject_Cluster').prop('disabled', false);
-                    $("#btn_approve_Cluster").show();
-                    $("#btn_reject_Cluster").show();
-                    if (userlevel == "1") {
-                        $("#btn_Unlock_Cluster").show();
+                        $('#btn_Submit_Cluster').hide();
+                        $("#btn_Gen_Cluster").hide();
+                        $('#btn_approve_Cluster').hide();
+                        $('#btn_reject_Cluster').hide();
+                        $("#btn_Unlock_Cluster").hide();
+                        $('#lblrejectinfo').hide();
+                        $('#btn_Submit_Cluster').prop('disabled', true);
+                        $('#btn_Submit_Cluster').html('Cluster Submitted for Approval');
+                        $('#btn_Submit_Cluster').show();
+                        $('#btn_approve_Cluster').prop('disabled', false);
+                        $('#btn_reject_Cluster').prop('disabled', false);
+                        $("#btn_approve_Cluster").show();
+                        $("#btn_reject_Cluster").show();
+                        if (userlevel == "1") {
+                            $("#btn_Unlock_Cluster").show();
+                        }
                     }
-                }
                     else if (submitted == "2") {
-                    $('#btn_Submit_Cluster').hide();
-                    $("#btn_Gen_Cluster").hide();
-                    $('#btn_approve_Cluster').hide();
-                    $('#btn_reject_Cluster').hide();
-                    $("#btn_Unlock_Cluster").hide();
-                    $('#lblrejectinfo').hide();
+                        $('#btn_Submit_Cluster').hide();
+                        $("#btn_Gen_Cluster").hide();
+                        $('#btn_approve_Cluster').hide();
+                        $('#btn_reject_Cluster').hide();
+                        $("#btn_Unlock_Cluster").hide();
+                        $('#lblrejectinfo').hide();
 
-                }
-                else {
-                    $('#btn_Submit_Cluster').show();
-                    $("#btn_Gen_Cluster").hide();
-                    $('#btn_approve_Cluster').hide();
-                    $('#btn_reject_Cluster').hide();
-                    $("#btn_Unlock_Cluster").hide();
+                    }
+                    else {
+                        $('#btn_Submit_Cluster').show();
+                        $("#btn_Gen_Cluster").hide();
+                        $('#btn_approve_Cluster').hide();
+                        $('#btn_reject_Cluster').hide();
+                        $("#btn_Unlock_Cluster").hide();
 
-                    //$('#btn_Submit_Cluster').prop('disabled', false);
-                    //$('#btn_Submit_Cluster').html('Submit Cluster for DOL Approval');
-                    $("#btn_Gen_Cluster").show();
-                    //$('#btn_Submit_Cluster').show();
-                }
-                var b = $("[id$=ddlBlock]").val();
-                if (b != "") {
-                    $('#btn_Submit_Cluster').hide();
-                    $('#btn_approve_Cluster').hide();
-                    $('#btn_reject_Cluster').hide();
-                    $("#btn_Unlock_Cluster").hide();
-                    $('#lblrejectinfo').hide();
-                }
+                        //$('#btn_Submit_Cluster').prop('disabled', false);
+                        //$('#btn_Submit_Cluster').html('Submit Cluster for DOL Approval');
+                        $("#btn_Gen_Cluster").show();
+                        //$('#btn_Submit_Cluster').show();
+                    }
+                    var b = $("[id$=ddlBlock]").val();
+                    if (b != "") {
+                        $('#btn_Submit_Cluster').hide();
+                        $('#btn_approve_Cluster').hide();
+                        $('#btn_reject_Cluster').hide();
+                        $("#btn_Unlock_Cluster").hide();
+                        $('#lblrejectinfo').hide();
+                    }
 
                     //////////approved////////////////
 
@@ -1428,9 +1438,9 @@
 
               }--%>
 
-              
 
-                
+
+
 
                 function ShowHideDiv() {
 
@@ -3209,9 +3219,9 @@
                                                                         <button type="button" id="btn_Unlock_Cluster" class="btn btn-primary mx-2 unlock" onclick="confirmUnlock();">Unlock Cluster</button>
                                                                     </div>
                                                                     <div style="float: right" class="submitcluster">
-                                                                        
+
                                                                         <button type="button" id="btn_Submit_Cluster" class="btn btn-primary mx-2 submitcluster" onclick="confirmSubmit();">Submit Cluster for DOL Approval</button>
-                                                                        <label id="lblrejectinfo" style="display:none;">*Cluster Rejected</label>
+                                                                        <label id="lblrejectinfo" style="display: none;">*Cluster Rejected</label>
                                                                     </div>
                                                                     <div style="float: right" class="submit">
                                                                         <button type="button" id="btn_Submit_Cluster_BO" class="btn btn-primary mx-2 submit" onclick="confirmSubmitBO();">Submit Cluster IO</button>
@@ -3393,68 +3403,68 @@
                                             </div>
                                             <%--<div id="map">
                                                 </div>--%>
-                                                <div class="map-search-wrp">
+                                            <div class="map-search-wrp">
 
-                                                    <div class="form-map-on">
-                                                        <div class="row form-map-on-rwo">
-                                                            <div class="col">
-                                                                <div class="form-group">
-                                                                    <%--<label for="SearchType" class="linhei">Search Type:  </label>--%>
-                                                                    <asp:DropDownList ID="ddlSearchType" runat="server" class="form-control" onchange="toggleSearchType();">
-                                                                        <asp:ListItem Text="-- Search Type --" Value="0"></asp:ListItem>
-                                                                        <asp:ListItem Text="School Type" Value="1"></asp:ListItem>
-                                                                        <asp:ListItem Text="Village Status" Value="2"></asp:ListItem>
-                                                                        <asp:ListItem Text="Location" Value="3"></asp:ListItem>
-                                                                    </asp:DropDownList>
-                                                                </div>
+                                                <div class="form-map-on">
+                                                    <div class="row form-map-on-rwo">
+                                                        <div class="col">
+                                                            <div class="form-group">
+                                                                <%--<label for="SearchType" class="linhei">Search Type:  </label>--%>
+                                                                <asp:DropDownList ID="ddlSearchType" runat="server" class="form-control" onchange="toggleSearchType();">
+                                                                    <asp:ListItem Text="-- Search Type --" Value="0"></asp:ListItem>
+                                                                    <asp:ListItem Text="School Type" Value="1"></asp:ListItem>
+                                                                    <asp:ListItem Text="Village Status" Value="2"></asp:ListItem>
+                                                                    <asp:ListItem Text="Location" Value="3"></asp:ListItem>
+                                                                </asp:DropDownList>
                                                             </div>
-                                                            <div class="col school-type" style="display: none;">
-                                                                <div class="form-group">
-                                                                    <%--<label for="SchoolType" class="linhei">School Type:   </label>--%>
-                                                                    <asp:DropDownList ID="ddlSchoolType" runat="server" class="form-control">
-                                                                        <asp:ListItem Text="All" Value="0"></asp:ListItem>
-                                                                        <asp:ListItem Text="Primary" Value="1"></asp:ListItem>
-                                                                        <asp:ListItem Text="Upper Primary" Value="2"></asp:ListItem>
-                                                                        <asp:ListItem Text="Secondary" Value="3"></asp:ListItem>
-                                                                        <asp:ListItem Text="Senior Secondary" Value="4"></asp:ListItem>
-                                                                        <asp:ListItem Text="KGBV" Value="5"></asp:ListItem>
-                                                                        <%--<asp:ListItem Text="KGBV without school" Value="9"></asp:ListItem>--%>
-                                                                        <asp:ListItem Text="Madarsa" Value="6"></asp:ListItem>
-                                                                        <asp:ListItem Text="Maa-Baadi" Value="7"></asp:ListItem>
-                                                                        <asp:ListItem Text="Anganwari" Value="8"></asp:ListItem>
-                                                                    </asp:DropDownList>
-                                                                </div>
+                                                        </div>
+                                                        <div class="col school-type" style="display: none;">
+                                                            <div class="form-group">
+                                                                <%--<label for="SchoolType" class="linhei">School Type:   </label>--%>
+                                                                <asp:DropDownList ID="ddlSchoolType" runat="server" class="form-control">
+                                                                    <asp:ListItem Text="All" Value="0"></asp:ListItem>
+                                                                    <asp:ListItem Text="Primary" Value="1"></asp:ListItem>
+                                                                    <asp:ListItem Text="Upper Primary" Value="2"></asp:ListItem>
+                                                                    <asp:ListItem Text="Secondary" Value="3"></asp:ListItem>
+                                                                    <asp:ListItem Text="Senior Secondary" Value="4"></asp:ListItem>
+                                                                    <asp:ListItem Text="KGBV" Value="5"></asp:ListItem>
+                                                                    <%--<asp:ListItem Text="KGBV without school" Value="9"></asp:ListItem>--%>
+                                                                    <asp:ListItem Text="Madarsa" Value="6"></asp:ListItem>
+                                                                    <asp:ListItem Text="Maa-Baadi" Value="7"></asp:ListItem>
+                                                                    <asp:ListItem Text="Anganwari" Value="8"></asp:ListItem>
+                                                                </asp:DropDownList>
                                                             </div>
-                                                            <div class="col  village-status" style="display: none;">
-                                                                <div class="form-group">
-                                                                    <%--<label for="VillageStatus" class="linhei">Village Status: </label>--%>
-                                                                    <asp:DropDownList ID="ddlVillageStatus" runat="server" class="form-control ">
-                                                                        <asp:ListItem Text="--All--" Value="0"></asp:ListItem>
-                                                                        <asp:ListItem Text="Operational" Value="1"></asp:ListItem>
-                                                                        <asp:ListItem Text="Non-Operational" Value="2"></asp:ListItem>
-                                                                    </asp:DropDownList>
-                                                                </div>
+                                                        </div>
+                                                        <div class="col  village-status" style="display: none;">
+                                                            <div class="form-group">
+                                                                <%--<label for="VillageStatus" class="linhei">Village Status: </label>--%>
+                                                                <asp:DropDownList ID="ddlVillageStatus" runat="server" class="form-control ">
+                                                                    <asp:ListItem Text="--All--" Value="0"></asp:ListItem>
+                                                                    <asp:ListItem Text="Operational" Value="1"></asp:ListItem>
+                                                                    <asp:ListItem Text="Non-Operational" Value="2"></asp:ListItem>
+                                                                </asp:DropDownList>
                                                             </div>
-                                                            <div class="col  location" style="display: none;">
-                                                                <div class="form-group">
-                                                                    <%--<label for="latlong" class="linhei">
+                                                        </div>
+                                                        <div class="col  location" style="display: none;">
+                                                            <div class="form-group">
+                                                                <%--<label for="latlong" class="linhei">
                                                                         Location:
                                                                     </label>--%>
-                                                                    <input type="text" class="form-control" id="latitudelongitudeInput" placeholder="Latitude,Longitude" />
-                                                                </div>
+                                                                <input type="text" class="form-control" id="latitudelongitudeInput" placeholder="Latitude,Longitude" />
                                                             </div>
+                                                        </div>
 
-                                                            <div class="btn-primary-searh-map">
-                                                                <%--<label class="visibility-hidden"> Search   </label>--%>
-                                                                <div class="position-relative">
-                                                                    <input type="button" class="btn btn-sm search-mp btn-primary" onclick="callSerchType('','');addLayers();" />
-                                                                    <i class="fa fa-search" aria-hidden="true"></i>
-                                                                </div>
+                                                        <div class="btn-primary-searh-map">
+                                                            <%--<label class="visibility-hidden"> Search   </label>--%>
+                                                            <div class="position-relative">
+                                                                <input type="button" class="btn btn-sm search-mp btn-primary" onclick="callSerchType('','');addLayers();" />
+                                                                <i class="fa fa-search" aria-hidden="true"></i>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            
+                                            </div>
+
                                         </div>
                                         <script type="text/javascript">
 
@@ -3488,6 +3498,11 @@
 
 
                                                 if (!map) return;
+
+                                                ImageryLyr = L.tileLayer(
+                                                    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+                                                    { maxZoom: 18, attribution: 'Tiles &copy; Esri' }
+                                                ).addTo(map);
                                                 // Initialize the layers
                                                 GrayLyr = L.tileLayer(BaseUrls, BaseLyrOptionsM('mapbox/light-v9'));
                                                 StreetLyr = L.tileLayer(BaseUrls, BaseLyrOptionsM('mapbox/streets-v11'));
@@ -4597,7 +4612,7 @@
                             </div>
                         </div>
                     </div>
-                    </asp:Panel>
+                </asp:Panel>
             </div>
             <%--
                             <div class="modal-footer">
@@ -4668,7 +4683,7 @@
                                  </div>
                                  <div class="col-sm-8">
                                      <div>
-                                         <button type="button" id="btn_Gen_Cluster_Submit"  class="btn btn-primary" onclick="GenerateCluster('1');">Generate</button>
+                                         <button type="button" id="btn_Gen_Cluster_Submit" class="btn btn-primary" onclick="GenerateCluster('1');">Generate</button>
                                          <button type="button" id="btn_ReGen_Cluster_Submit" class="btn btn-primary" onclick="confirmRegenerate('2');">Regenerate</button>
                                          <button type="button" id="btn_Cancel" class="btn btn-primary" style="display: none;" onclick="HideModalGenerateCluster();">Cancel</button>
 

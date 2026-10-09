@@ -305,7 +305,7 @@ public partial class frmActivitySummaryReport : System.Web.UI.Page
             chkDistrict.DataValueField = "DistrictCode";
             chkDistrict.DataBind();
             string strQry;
-            strQry = "Select * from mst2District where   DistrictCode in(" + Session["DistrictCode"].ToString() + ")";
+            strQry = "Select DistrictCode from mst2District where   DistrictCode in(" + Session["DistrictCode"].ToString() + ")";
             DataTable dtcountCheck = objMain.LoadData(strQry);
             if (dtcountCheck.Rows.Count > 0)
             {
@@ -2153,7 +2153,7 @@ public partial class frmActivitySummaryReport : System.Web.UI.Page
         //dt1.Columns.Remove("RowNo");
         ws.Cell(2, 1).InsertData(table.Rows);
         Int32 ii = Convert.ToInt32(table.Rows.Count) + 1;
-        string str = "A3:Q" + ii;
+        string str = "A3:CF" + ii;
         ws.Range(str).Style.Border.SetTopBorder(XLBorderStyleValues.Thin);
         ws.Range(str).Style.Border.SetBottomBorder(XLBorderStyleValues.Thin);
 

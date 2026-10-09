@@ -179,7 +179,7 @@ public partial class FrmRetentionTracker : System.Web.UI.Page
         DataTable dtYear = objComman.Generate_Financial_Year();
         objComman.BindDLLMasterTable("mstSchool", "Type,ID", dtYear, conditions, "Type", "asc", ddlYear, "Type", "ID", "Select");
 
-        ddlYear.SelectedIndex = 1;
+        ddlYear.SelectedIndex = 2;
         //}
 
 
@@ -335,7 +335,7 @@ public partial class FrmRetentionTracker : System.Web.UI.Page
                 ddlState = ddlState.Substring(0, ddlState.LastIndexOf(","));
             }
             conditions = "";
-            conditions = "StateCode in(" + ddlState + ") and DistrictCode in(" + Session["DistrictCode"].ToString() + ") and Fyear= '" + ddlYear.SelectedItem.Text + "' ";
+            conditions = "StateCode in(" + ddlState + ") and DistrictCode in(" + Session["DistrictCodeNew"].ToString() + ") and Fyear= '" + ddlYear.SelectedItem.Text + "' ";
             //  objComman.BindDLL("mst2District", "DistrictCode,dbo.TitleCase(upper(DistrictName)) as DistrictName", conditions, "DistrictName", "asc", ddlDistrict, "DistrictName", "DistrictCode", "--Select--");
             string strQry1 = "  SELECT DistrictCode, dbo.TitleCase(upper(DistrictName))  as DistrictName FROM mst2District where " + conditions + "  order by DistrictName   ";
             DataTable dtDistrict = objMain.LoadData(strQry1);
@@ -346,7 +346,7 @@ public partial class FrmRetentionTracker : System.Web.UI.Page
             chkDistrict.DataValueField = "DistrictCode";
             chkDistrict.DataBind();
             string strQry;
-            strQry = "Select * from mst2District where   DistrictCode in(" + Session["DistrictCode"].ToString() + ")";
+            strQry = "Select DistrictCode from mst2District where   DistrictCode in(" + Session["DistrictCode"].ToString() + ")";
             DataTable dtcountCheck = objMain.LoadData(strQry);
             if (dtcountCheck.Rows.Count > 0)
             {
@@ -752,9 +752,10 @@ public partial class FrmRetentionTracker : System.Web.UI.Page
         }
         else if (Session["user_level_Role"].ToString() == "4")
         {
-            conditions = "DistrictCode in(" + ddlDistrict + ")   and BlockCode in( " + Session["BlockCode"].ToString() + " ) and FYear ='" + ddlYear.SelectedItem.Text + "' ";
+            conditions = " BlockCode in( " + Session["BlockCode"].ToString() + " )  ";
 
         }
+      
         else
         {
             conditions = "DistrictCode in(" + ddlDistrict + ")  ";
@@ -765,6 +766,32 @@ public partial class FrmRetentionTracker : System.Web.UI.Page
         {
             string strQry = "  SELECT BlockCode, dbo.TitleCase(upper(BlockName))  as BlockName  from mst3Block where Oldblockcode in( SELECT Oldblockcode FROM mst3Block where " + conditions + " ) and   FYear ='" + ddlYear.SelectedItem.Text + "'   ";
             dtDistrict = objMain.LoadData(strQry);
+            if (dtDistrict.Rows.Count>0)
+            {
+             
+            }
+            else
+            {
+                string strQry1 = "  SELECT BlockCode, dbo.TitleCase(upper(BlockName))  as BlockName  from mst3Block where EGBlockCode in( SELECT EGBlockCode FROM mst3Block where " + conditions + " ) and   FYear ='" + ddlYear.SelectedItem.Text + "'   ";
+                dtDistrict = objMain.LoadData(strQry1);
+            }
+        }
+        else if (ddlYear.SelectedValue.ToString() == "2025" && Session["user_level_Role"].ToString() == "4")
+        {
+            if (ddlYear.SelectedValue.ToString() == "2025" && Session["user_level_Role"].ToString() == "4")
+            {
+                string strQry = "  SELECT BlockCode, dbo.TitleCase(upper(BlockName))  as BlockName  from mst3Block where Oldblockcode in( SELECT Oldblockcode FROM mst3Block where " + conditions + " ) and   FYear ='" + ddlYear.SelectedItem.Text + "'   ";
+                dtDistrict = objMain.LoadData(strQry);
+                if (dtDistrict.Rows.Count > 0)
+                {
+
+                }
+                else
+                {
+                    string strQry1 = "  SELECT BlockCode, dbo.TitleCase(upper(BlockName))  as BlockName  from mst3Block where EGBlockCode in( SELECT EGBlockCode FROM mst3Block where " + conditions + " ) and   FYear ='" + ddlYear.SelectedItem.Text + "'   ";
+                    dtDistrict = objMain.LoadData(strQry1);
+                }
+            }
         }
         else
         {

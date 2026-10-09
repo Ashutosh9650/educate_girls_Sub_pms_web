@@ -55,9 +55,10 @@ public partial class frmtblNewReports : System.Web.UI.Page
                 txtDate.Text = DateTime.Now.ToString("dd/MM/yyyy");
                 txtTodate.Text = DateTime.Now.ToString("dd/MM/yyyy");
              
-                LinkButton2.Visible = true;
+                LinkButton2.Visible = false;
                 if (Convert.ToString(Session["username"]) == "PMSAdmin" || Convert.ToString(Session["username"]) == "SuperAdmin" )
                 {
+                    LinkButton2.Visible = true;
                     kkk.Visible = true;
                 }
                 else
@@ -433,7 +434,7 @@ public partial class frmtblNewReports : System.Web.UI.Page
             chkDistrict.DataValueField = "DistrictCode";
             chkDistrict.DataBind();
             string strQry;
-            strQry = "Select * from mst2District where   DistrictCode in(" + Session["DistrictCode"].ToString() + ")";
+            strQry = "Select DistrictCode from mst2District where   DistrictCode in(" + Session["DistrictCode"].ToString() + ")";
             DataTable dtcountCheck = objMain.LoadData(strQry);
             if (dtcountCheck.Rows.Count > 0)
             {

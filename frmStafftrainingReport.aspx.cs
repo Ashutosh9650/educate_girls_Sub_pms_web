@@ -131,28 +131,32 @@ public partial class frmStafftrainingReport : System.Web.UI.Page
 
 
         string condition = string.Empty;
-        if (Flag == 2)
+        //if (Flag == 2)
+        //{
+        //    if (ddlStatecode.Length > 0)
+        //    {
+        //        conditions += " Where V.StateCode in(" + ddlStatecode + ") ";
+
+        //    }
+        //}
+        //else
+        //{
+        //    if (ddlYear.SelectedIndex > 0)
+        //    {
+        //        conditions += "    where V.Fyear = '" + ddlYear.SelectedItem.Text + "' ";
+
+        //    }
+        //    if (ddlStatecode.Length > 0)
+        //    {
+        //        conditions += " and V.StateCode in(" + ddlStatecode + ") ";
+
+        //    }
+        //}
+        if (ddlYear.SelectedIndex > 0)
         {
-            if (ddlStatecode.Length > 0)
-            {
-                conditions += " Where V.StateCode in(" + ddlStatecode + ") ";
+            conditions += "    where V.Fyear = '" + ddlYear.SelectedItem.Text + "' ";
 
-            }
         }
-        else
-        {
-            if (ddlYear.SelectedIndex > 0)
-            {
-                conditions += "    where V.Fyear = '" + ddlYear.SelectedItem.Text + "' ";
-
-            }
-            if (ddlStatecode.Length > 0)
-            {
-                conditions += " and V.StateCode in(" + ddlStatecode + ") ";
-
-            }
-        }
-
         if (ddlDistrict.Length > 0)
         {
             conditions += " and V.DistrictCode in(" + ddlDistrict + ") ";
@@ -284,28 +288,32 @@ public partial class frmStafftrainingReport : System.Web.UI.Page
         string condition1 = string.Empty;
 
         string condition = string.Empty;
-        if (Flag == 2)
+        //if (Flag == 2)
+        //{
+        //    if (ddlStatecode.Length > 0)
+        //    {
+        //        conditions += " Where V.StateCode in(" + ddlStatecode + ") ";
+
+        //    }
+        //}
+        //else
+        //{
+        //    if (ddlYear.SelectedIndex > 0)
+        //    {
+        //        conditions += "    where V.Fyear = '" + ddlYear.SelectedItem.Text + "' ";
+
+        //    }
+        //    if (ddlStatecode.Length > 0)
+        //    {
+        //        conditions += " and V.StateCode in(" + ddlStatecode + ") ";
+
+        //    }
+        //}
+        if (ddlYear.SelectedIndex > 0)
         {
-            if (ddlStatecode.Length > 0)
-            {
-                conditions += " Where V.StateCode in(" + ddlStatecode + ") ";
+            conditions += "    where V.Fyear = '" + ddlYear.SelectedItem.Text + "' ";
 
-            }
         }
-        else
-        {
-            if (ddlYear.SelectedIndex > 0)
-            {
-                conditions += "    where V.Fyear = '" + ddlYear.SelectedItem.Text + "' ";
-
-            }
-            if (ddlStatecode.Length > 0)
-            {
-                conditions += " and V.StateCode in(" + ddlStatecode + ") ";
-
-            }
-        }
-
         if (ddlDistrict.Length > 0)
         {
             conditions += " and V.DistrictCode in(" + ddlDistrict + ") ";
@@ -1026,8 +1034,24 @@ public partial class frmStafftrainingReport : System.Web.UI.Page
             //chkDistrict.DataValueField = "DistrictCode";
             //chkDistrict.DataBind();
             string strQry;
-          
 
+            strQry = "Select DistrictCode from mst2District where   DistrictCode in(" + Session["DistrictCode"].ToString() + ")";
+            DataTable dtcountCheck = objMain.LoadData(strQry);
+            if (dtcountCheck.Rows.Count > 0)
+            {
+                if (dtcountCheck.Rows.Count == 1)
+                {
+                    ddlYear.Enabled = false;
+                }
+                else
+                {
+                    ddlYear.Enabled = true;
+                }
+            }
+            else
+            {
+                ddlYear.Enabled = true;
+            }
 
             //ddlDistrict.SelectedIndex = 1;
             foreach (ListItem item in chkDistrict.Items)
@@ -1140,12 +1164,260 @@ public partial class frmStafftrainingReport : System.Web.UI.Page
      
         ViewState["1"] = "216";
         LinkButton1.Visible = true;
-      
-        
-        AnnaualFCReport(3);
+
+        if (Convert.ToInt32(ddlYear.SelectedValue) >= 2026)
+        {
+            AnnaualFCReport(3);
+        }
+        else
+        {
+            AnnaualFCReportLastYear(3);
+        }
 
 
     }
+    public void AnnaualFCReportLastYear(Int32 Flag)
+    {
+        conditions = "";
+
+
+        string ddlDistrict = "";
+        string ddlDistrictName = "";
+        string StateName = "";
+        string ddlStatecode = "";
+        foreach (ListItem item in ChkState.Items)
+        {
+            if (item.Selected)
+            {
+
+                ddlStatecode += "'" + item.Value + "'" + ",";
+
+
+            }
+        }
+
+        if (ddlStatecode.Length > 0)
+        {
+            ddlStatecode = ddlStatecode.Substring(0, ddlStatecode.LastIndexOf(","));
+        }
+        foreach (ListItem item in ChkState.Items)
+        {
+            if (item.Selected)
+            {
+
+                StateName += "'" + item.Text + "'" + ",";
+
+
+            }
+        }
+
+        if (StateName.Length > 0)
+        {
+            StateName = StateName.Substring(0, StateName.LastIndexOf(","));
+        }
+        foreach (ListItem item in chkDistrict.Items)
+        {
+            if (item.Selected)
+            {
+
+                ddlDistrict += "'" + item.Value + "'" + ",";
+
+
+            }
+        }
+
+        if (ddlDistrict.Length > 0)
+        {
+            ddlDistrict = ddlDistrict.Substring(0, ddlDistrict.LastIndexOf(","));
+        }
+        foreach (ListItem item in chkDistrict.Items)
+        {
+            if (item.Selected)
+            {
+
+                ddlDistrictName += "'" + item.Text + "'" + ",";
+
+
+            }
+        }
+
+        if (ddlDistrictName.Length > 0)
+        {
+            ddlDistrictName = ddlDistrictName.Substring(0, ddlDistrictName.LastIndexOf(","));
+        }
+
+
+        string conditions2 = "";
+        conditions = "   ";
+        conditions = " where 1 =1 ";
+        conditions2 = " where 1 =1 ";
+
+        string conditions1 = "  ";
+        string conditions3 = "  ";
+        //if (Convert.ToInt32(ddlYear.SelectedValue) == 2018)
+        //{
+        //    if (ddlStatecode.Length > 0)
+        //    {
+        //        conditions = conditions + "  and  D.StateCode in(" + ddlStatecode + ") ";
+        //    }
+        //    //if (ddlDistrict.Length > 0)
+        //    //{
+        //    //    conditions = conditions + " and D.DistrictCode in(" + ddlDistrict + ") ";
+        //    //}
+        //}
+        //if (Convert.ToInt32(ddlYear.SelectedValue) == 2019)
+        //{
+
+        //    if (ddlStatecode.Length > 0)
+        //    {
+        //        conditions = conditions + "  and  D.StateCode in(" + ddlStatecode + ") ";
+        //    }
+        //    //if (ddlDistrict.Length > 0)
+        //    //{
+        //    //    conditions = conditions + " and D.DistrictCode in(" + ddlDistrict + ") ";
+        //    //}
+        //}
+
+
+        //if (ddlStatecode.Length > 0)
+        //{
+        //    if (ddlDistrict.Length > 0)
+        //    {
+        //        conditions = conditions + "  and D.StateCode in(8,9,23) ";
+        //    }
+        //    else
+        //    {
+        //        conditions = conditions + "  and D.StateCode in(" + ddlStatecode + ") ";
+        //    }
+        //}
+
+        conditions = conditions + "  and D.StateCode in('8','9','23','999','9A','9B','9C','9D') ";
+        //if (ddlDistrict.Length > 0)
+        //{
+        //    conditions = conditions + " and D.DistrictCode in(" + ddlDistrict + ") ";
+        //}
+
+        //if (ddlStatecode.Length > 0)
+        //{
+        //    if (ddlDistrict.Length > 0)
+        //    {
+        //        conditions1 = conditions1 + "  and  D.StateCode in(8,9,23)";
+        //    }
+        //    else
+        //    {
+        //        conditions1 = conditions1 + "  and  D.StateCode in(" + ddlStatecode + ") ";
+        //    }
+        //}
+        conditions1 = conditions1 + "  and  D.StateCode in('8','9','23','999','9A','9B','9C','9D')";
+        //if (ddlDistrict.Length > 0)
+        //{
+        //    conditions1 = conditions1 + " and D.DistrictCode in(" + ddlDistrict + ") ";
+        //}
+        if (txtDate.Text != "" && txtTodate.Text == "")
+        {
+            DateTime Fromdate = Convert.ToDateTime(txtDate.Text);
+            conditions += " and tblStaffTrainingSchedue.[FromDate] >=  '" + Fromdate.ToString("yyyy-MM-dd") + "' ";
+            conditions1 += " and tblStaffTrainingSchedue.[FromDate] >=  '" + Fromdate.ToString("yyyy-MM-dd") + "' ";
+
+            conditions2 += " and tblStaffScheduling.[FromDate] >=  '" + Fromdate.ToString("yyyy-MM-dd") + "' ";
+            conditions3 += " andt tblStaffScheduling.[FromDate] >=  '" + Fromdate.ToString("yyyy-MM-dd") + "' ";
+        }
+        if (txtTodate.Text != "" && txtDate.Text == "")
+        {
+            DateTime Todate = Convert.ToDateTime(txtTodate.Text);
+            conditions += " and tblStaffTrainingSchedue.[FromDate] <=  '" + Todate.ToString("yyyy-MM-dd") + "' ";
+            conditions1 += " and tblStaffTrainingSchedue.[FromDate] <=  '" + Todate.ToString("yyyy-MM-dd") + "' ";
+            conditions2 += " and tblStaffScheduling.[FromDate] <=  '" + Todate.ToString("yyyy-MM-dd") + "' ";
+            conditions3 += " and tblStaffScheduling.[FromDate] <=  '" + Todate.ToString("yyyy-MM-dd") + "' ";
+
+        }
+        if (txtDate.Text != "" && txtTodate.Text != "")
+        {
+            DateTime Fromdate = Convert.ToDateTime(txtDate.Text);
+            DateTime Todate = Convert.ToDateTime(txtTodate.Text);
+            conditions += " and tblStaffTrainingSchedue.[FromDate] >=  '" + Fromdate.ToString("yyyy-MM-dd") + "' and tblStaffTrainingSchedue.[FromDate] <=  '" + Todate.ToString("yyyy-MM-dd") + "'";
+            conditions += " and tblStaffTrainingSchedue.[FromDate] >=  '" + Fromdate.ToString("yyyy-MM-dd") + "' and tblStaffTrainingSchedue.[FromDate] <=  '" + Todate.ToString("yyyy-MM-dd") + "'";
+
+            conditions2 += " and tblStaffScheduling.[FromDate] >=  '" + Fromdate.ToString("yyyy-MM-dd") + "' and tblStaffScheduling.[FromDate] <=  '" + Todate.ToString("yyyy-MM-dd") + "'";
+            conditions3 += " and tblStaffScheduling.[FromDate] >=  '" + Fromdate.ToString("yyyy-MM-dd") + "' and tblStaffScheduling.[FromDate] <=  '" + Todate.ToString("yyyy-MM-dd") + "'";
+
+        }
+        string Year = ddlYear.SelectedItem.Text;
+        string[] Year1 = Year.Split('-');
+        if (ddlYear.SelectedIndex > 0)
+        {
+            conditions += "    And tblStaffTrainingSchedue.FromDate >= '" + Year1[0] + "-04-01' and tblStaffTrainingSchedue.ToDate<='" + Year1[1] + "-03-31'";
+            conditions1 += "    And tblStaffTrainingSchedue.FromDate >= '" + Year1[0] + "-04-01' and tblStaffTrainingSchedue.ToDate<='" + Year1[1] + "-03-31'";
+            conditions2 += "    And tblStaffScheduling.FromDate >= '" + Year1[0] + "-04-01' and tblStaffScheduling.ToDate<='" + Year1[1] + "-03-31'";
+            conditions3 += "    And tblStaffScheduling.FromDate >= '" + Year1[0] + "-04-01' and tblStaffScheduling.ToDate<='" + Year1[1] + "-03-31'";
+        }
+        SqlParameter[] cmdParameters = new SqlParameter[]
+        {
+            new SqlParameter("@Con",conditions),
+         new SqlParameter("@Con1",conditions1),
+                  new SqlParameter("@Con2",conditions2),
+                           new SqlParameter("@Con3",conditions3),
+            new SqlParameter("@Fyear",ddlYear.SelectedValue),
+
+
+        };
+        DataTable dataTable = null;
+        DataTable Dtnew = null;
+
+        dataTable = SqlHelper.GetDataTable(SqlHelper.mainConnectionString, CommandType.StoredProcedure, "[rptStaffTrainingReport2026]", cmdParameters);
+
+        if (ddlDistrict.Length > 0)
+        {
+            string expression = "[Emp DistrictName] in(" + ddlDistrictName + ") ";
+            var filteredDataRows = dataTable.Select(expression);
+
+            var filteredDataTable = new DataTable();
+
+            if (filteredDataRows.Length != 0)
+                filteredDataTable = filteredDataRows.CopyToDataTable();
+
+            Dtnew = filteredDataTable.Copy();
+        }
+        else if (ddlStatecode.Length > 0)
+        {
+            string expression = "[Emp State Name] in(" + StateName + ") ";
+            var filteredDataRows = dataTable.Select(expression);
+
+            var filteredDataTable = new DataTable();
+
+            if (filteredDataRows.Length != 0)
+                filteredDataTable = filteredDataRows.CopyToDataTable();
+
+            Dtnew = filteredDataTable.Copy();
+        }
+        else
+        {
+            Dtnew = dataTable.Copy();
+        }
+        ViewState["dt"] = Dtnew;
+
+        if (Dtnew.Rows.Count > 0)
+        {
+            if (Dtnew.Rows.Count > 1000)
+            {
+
+                ExportToCSVFile(Dtnew, " Stafftraining Report");
+            }
+            else
+            {
+                GV_DynamicGrid.DataSource = Dtnew;
+                GV_DynamicGrid.DataBind();
+            }
+
+            return;
+        }
+        GV_DynamicGrid.DataSource = null;
+        GV_DynamicGrid.DataBind();
+
+
+    }
+
+
     protected void AnnaualddrtAtt_Click(object sender, EventArgs e)
     {
 
